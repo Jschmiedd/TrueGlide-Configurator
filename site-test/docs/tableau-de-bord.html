@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tableau de bord · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Tableau de bord (groupe « Carte branchée ») s&#x27;ouvre une fois le drone connecté. Il résume l&#x27;état du drone, les fonctions TrueGlide actives, l&#x27;avancement de la mise en route, la version du firmware, et donne des raccourcis.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html" aria-current="page">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#drone">Drone</a></li>
+      <li><a href="#fonctions-trueglide">Fonctions TrueGlide</a></li>
+      <li><a href="#mise-en-route">Mise en route</a></li>
+      <li><a href="#firmware">Firmware</a></li>
+      <li><a href="#raccourcis">Raccourcis</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Tableau de bord</h1>
+<p class="chapeau">L'onglet <b>Tableau de bord</b> (groupe « Carte branchée ») s'ouvre une fois le drone connecté. Il résume l'état du drone, les fonctions TrueGlide actives, l'avancement de la mise en route, la version du firmware, et donne des raccourcis.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/tableau-de-bord.webp" alt="Onglet Tableau de bord en thème sombre : cadres Drone (batterie non mesurée, liaison radio 0 %, pas de GPS, armement bloqué avec RX_FAILSAFE et ANGLE), Fonctions TrueGlide, Mise en route 0 / 9, Firmware et Raccourcis"><img class="t-clair" src="../assets/img/onglets/tableau-de-bord-clair.webp" alt="Onglet Tableau de bord en thème clair : cadres Drone, Fonctions TrueGlide, Mise en route 0 / 9, Firmware et Raccourcis">
+  <figcaption>Capture du logiciel connecté au simulateur du firmware (SITL) sur PC : pas de vrais capteurs ni de récepteur, d'où « Non mesurée », 0 %, « Pas de GPS » et l'armement bloqué (RX_FAILSAFE, ANGLE). Le simulateur ne donne pas de nom de carte : la ligne sous le titre n'affiche que la version.</figcaption>
+</figure>
+
+<p>Sous le titre, une ligne donne le nom de la carte et la version du firmware (par exemple « SPEEDYBEEF405MINI · 2026.6.2 »). Les valeurs du cadre <b>Drone</b> sont relues deux fois par seconde.</p>
+
+<h2 id="drone">Drone</h2>
+<ul>
+  <li><b>Batterie</b> : tension mesurée par la carte, en V. Affiche « Non mesurée » si la tension est de 0,5 V ou moins (pas de batterie, ou capteur de tension non réglé). Si la carte a détecté le nombre d'éléments, une ligne ajoute par exemple « 4S · 3,9 V par élément ».</li>
+  <li><b>Liaison radio</b> : niveau RSSI reçu par la carte, en %. 0 % sans récepteur ou sans signal.</li>
+  <li><b>GPS</b> : nombre de satellites, avec « satellites · position trouvée » ou « satellites · pas encore de position ». Affiche « Pas de GPS » si aucun GPS n'est actif sur la carte.</li>
+  <li><b>Armement</b> : « Prêt à armer » ou « Armement bloqué ». Quand l'armement est bloqué, la liste dessous donne chaque raison (nom court du firmware, puis explication), par exemple <b>RX_FAILSAFE</b> : aucun signal valide du récepteur, ou <b>ANGLE</b> : la carte n'est pas assez à plat. L'interrupteur d'armement lui-même n'est pas compté comme un blocage.</li>
+</ul>
+
+<h2 id="fonctions-trueglide">Fonctions TrueGlide</h2>
+<p>État lu sur la carte à l'ouverture de l'onglet. Une fonction absente du firmware n'est pas listée.</p>
+<ul>
+  <li><b>Protection anti-surchauffe</b> : « Activé » avec la limite de température (°C) et/ou de courant (A), ou « Désactivé » si les deux limites sont à 0.</li>
+  <li><b>Relance moteur (désynchronisation)</b> : « Activé » ou « Désactivé ».</li>
+  <li><b>Speeder (angle de croisière)</b> : l'angle réglé, en degrés (60° par défaut). Le mode ne s'active que par un interrupteur.</li>
+  <li><b>Sorties commandées (PINIO)</b> : sorties de la carte reliées à un interrupteur de la radio (par exemple « PINIO1 → USER1 »). Le logiciel ne sait pas ce qui est branché sur la sortie (caméra, VTX…).</li>
+</ul>
+<p>Si le message « Ce firmware n'a pas les fonctions TrueGlide (ou la lecture a échoué). » s'affiche, la carte a un firmware Betaflight ou la lecture n'a pas abouti. Le bouton <b>Ouvrir les fonctions TrueGlide</b> mène à l'onglet <a href="protections.html">Protections</a>.</p>
+
+<h2 id="mise-en-route">Mise en route</h2>
+<p>Barre de progression et compteur (par exemple « 0 / 9 ») des 9 étapes de la mise en route guidée : Installation, Ports, Configuration, Récepteur, Modes, Alimentation et batterie, Moteurs, Failsafe, Fonctions TrueGlide. Chaque nom est un lien vers l'onglet. Un rond coché marque une étape validée.</p>
+<ul>
+  <li><b>Continuer : …</b> : ouvre la première étape non validée.</li>
+  <li>« Toutes les étapes sont réglées. » quand les 9 sont validées.</li>
+  <li><b>Afficher le guide</b> : visible si le guide a été masqué ; le fait réapparaître en haut des onglets.</li>
+</ul>
+<p>L'avancement est gardé dans le navigateur, pour chaque carte. Il n'est pas écrit sur la carte. Détail des étapes : <a href="mise-en-route.html#guide">Mise en route</a>.</p>
+
+<h2 id="firmware">Firmware</h2>
+<p>Ligne du firmware installé : modèle, version et révision entre parenthèses (par exemple « TRUENAV 2026.6.2 (8bf0276) »). Une carte qui n'a pas les fonctions TrueGlide est affichée « Betaflight ».</p>
+<ul>
+  <li><b>Chercher la mise à jour</b> : lit la liste des firmwares publiés (le seul moment où cet onglet contacte Internet). Réponses possibles : « À jour : … », « Nouvelle version publiée : … », « Pas de firmware publié pour … », ou « La carte ne donne pas son nom : choisissez-la dans Flasher le Firmware, mise à jour en ligne. ».</li>
+  <li><b>Mettre à jour</b> : apparaît si un firmware est publié pour cette carte et que sa révision n'est pas celle installée. Il déconnecte le drone, ouvre <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et y télécharge le fichier. Il faut ensuite cliquer sur <b>Flasher le Firmware</b>.</li>
+</ul>
+<div class="encart">La carte ne permet pas de distinguer <b>TRUENAV_LIGHT</b> de <b>TRUENAV</b> : les deux sont affichés <b>TRUENAV</b>, et <b>Mettre à jour</b> propose le fichier <b>TRUENAV</b>. Sur une carte <b>TRUENAV_LIGHT</b>, passez plutôt par <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et choisissez le modèle vous-même. Une carte Betaflight se voit proposer <b>TRUEGLIDE</b>.</div>
+
+<h2 id="raccourcis">Raccourcis</h2>
+<ul>
+  <li><b>Assistant de réglage</b> : ouvre l'onglet <a href="assistant-de-reglage.html">Assistant de réglage</a>.</li>
+  <li><b>Sauvegarder la configuration</b> : lit <code>diff all</code> sur la carte et télécharge un fichier texte nommé <code>trueglide_&lt;carte&gt;_&lt;date-heure&gt;.txt</code>. Le message « Configuration enregistrée : … » confirme, ou « Sauvegarde impossible : … » en cas d'échec. À faire avant de changer des réglages.</li>
+  <li><b>Visualiseur Blackbox</b> : ouvre l'onglet <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</li>
+  <li><b>Mémo</b> : ouvre la page Mémo de l'onglet <a href="memo-wiki.html">Mémo &amp; Wiki</a>.</li>
+</ul>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

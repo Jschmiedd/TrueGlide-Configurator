@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Plan de vol · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Plan de vol (groupe « Navigation GPS ») sert à préparer une mission GPS : une liste de points de passage posés sur une carte, avec altitude, vitesse et type d&#x27;action, puis à l&#x27;envoyer au contrôleur de vol des modèles TRUENAV et TRUENAV_LIGHT.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html" aria-current="page">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#disponibilite">Quand l&#x27;onglet est disponible</a></li>
+      <li><a href="#carte">Cadre Carte du plan de vol</a></li>
+      <li><a href="#liste">Cadre Liste des points de passage</a></li>
+      <li><a href="#point">Formulaire d&#x27;un point de passage</a></li>
+      <li><a href="#profil">Cadre Profil d&#x27;élévation</a></li>
+      <li><a href="#boutons">Boutons du bas</a></li>
+      <li><a href="#voler">Voler la mission</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Plan de vol</h1>
+<p class="chapeau">L'onglet <b>Plan de vol</b> (groupe « Navigation GPS ») sert à préparer une mission GPS : une liste de points de passage posés sur une carte, avec altitude, vitesse et type d'action, puis à l'envoyer au contrôleur de vol des modèles <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/plan-de-vol.webp" alt="Onglet Plan de vol : cadre Carte du plan de vol vide avec Veuillez patienter, cadre Liste des points de passage avec le bouton plus et le message Aucun point de passage défini, cadre Profil d'élévation vide ; boutons Effacer, Charger et Enregistrer en bas à droite"><img class="t-clair" src="../assets/img/onglets/plan-de-vol-clair.webp" alt="Même onglet Plan de vol en thème clair, sans point de passage">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Pas de GPS réel ; la carte est restée sur « Veuillez patienter... » car elle n'a pas pu se charger (elle a besoin d'Internet) et aucun point de passage n'est encore défini.</figcaption>
+</figure>
+
+<h2 id="disponibilite">Quand l'onglet est disponible</h2>
+<ul>
+  <li><b>Sans carte branchée</b> : l'onglet apparaît dans le menu en Mode Expert (bouton en forme de clé en haut de la fenêtre). On peut préparer un plan et le garder dans le logiciel, mais pas l'envoyer.</li>
+  <li><b>Carte branchée</b> : l'onglet n'apparaît que si le firmware contient le moteur de missions. C'est le cas des modèles <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b> (et du simulateur). Le modèle <b>TRUEGLIDE</b> de base ne l'a pas. Le moteur de missions demande un accéléromètre et ne sert pas aux ailes volantes.</li>
+</ul>
+<p>Le plan affiché est toujours gardé dans le logiciel. Les boutons <b>Charger</b> et <b>Enregistrer</b> ne sont actifs que connecté à un firmware qui a le moteur de missions.</p>
+<div class="encart">Le moteur de missions de Betaflight est récent et expérimental. Les missions <b>TRUENAV</b> ont été vérifiées en simulateur, <b>pas encore en vol réel</b>. Premiers essais : terrain dégagé, basse vitesse, toujours prêt à reprendre la main. Pour tout essai au sol batterie branchée : <b>Hélices retirées</b>.</div>
+
+<h2 id="carte">Cadre Carte du plan de vol</h2>
+<ul>
+  <li>Un clic sur la carte ajoute un point de passage à cet endroit. Un marqueur se déplace en le faisant glisser ; un clic simple le sélectionne.</li>
+  <li>La carte a besoin d'Internet. Tant qu'elle n'est pas prête, elle affiche « Veuillez patienter... ».</li>
+  <li>Pour se centrer, elle demande d'abord votre position au navigateur. Si c'est refusé ou impossible, une fenêtre propose de déduire une position approximative de votre adresse IP par geojs.io, un service tiers : rien n'est envoyé sans votre accord. Sans position, la carte s'ouvre sur Sydney (Australie) : déplacez-la vers votre terrain.</li>
+</ul>
+
+<h2 id="liste">Cadre Liste des points de passage</h2>
+<ul>
+  <li>Le bouton <b>+</b> ouvre le formulaire <b>Ajouter un point de passage</b>.</li>
+  <li>Chaque ligne montre le numéro d'ordre, la position (ou le type pour les points sans position), l'altitude en ft AMSL, la vitesse en nœuds et le type.</li>
+  <li>Glisser-déposer une ligne change l'ordre de la mission.</li>
+  <li>Le crayon ouvre <b>Modifier le point de passage</b> ; la corbeille supprime le point après confirmation.</li>
+</ul>
+
+<h2 id="point">Formulaire d'un point de passage</h2>
+<ul>
+  <li><b>Type de point de passage</b> : voir le tableau ci-dessous.</li>
+  <li><b>Latitude</b> (−90 à 90°) et <b>Longitude</b> (−180 à 180°), au millionième de degré.</li>
+  <li><b>Altitude</b> en <b>ft AMSL</b> (pieds au-dessus du niveau de la mer, pas au-dessus du sol) : 0 à 50 000. Valeur par défaut : 400 ft. Pensez à ajouter l'altitude du terrain : voir le profil d'élévation plus bas.</li>
+  <li><b>Vitesse</b> en <b>nœuds</b> : 0 à 500, par pas de 0,1. Valeur par défaut : 10 nœuds (environ 5 m/s).</li>
+  <li><b>Durée d'attente</b> (type Attente) ou <b>Durée du délai</b> (type Délai), en minutes : 0 à 60.</li>
+  <li><b>Circuit d'attente</b> (type Attente) : <b>Cercle</b>, <b>En huit</b> ou <b>Orbite</b>.</li>
+  <li><b>Vitesse de lacet</b> en °/s (type Limite de vitesse de lacet) : 0 à 720.</li>
+</ul>
+<div class="tableau"><table>
+  <thead><tr><th>Type</th><th>Position</th><th>Champs utilisés</th></tr></thead>
+  <tbody>
+    <tr><td><b>Survol</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Passage à proximité</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Attente</b></td><td>oui</td><td>position, altitude, vitesse, durée d'attente, circuit</td></tr>
+    <tr><td><b>Atterrissage</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Décollage</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Changer d'altitude</b></td><td>non</td><td>altitude ; s'applique au point suivant</td></tr>
+    <tr><td><b>Délai</b></td><td>non</td><td>durée du délai ; s'applique au point suivant</td></tr>
+    <tr><td><b>Limite de vitesse de lacet</b></td><td>non</td><td>vitesse de lacet en °/s ; s'applique au point suivant</td></tr>
+  </tbody>
+</table></div>
+<p>Les trois derniers types n'ont pas de position : ils ne sont pas dessinés sur la carte ni sur le profil d'élévation.</p>
+<p>Le firmware garde au plus 30 points de passage (valeur par défaut de sa construction).</p>
+
+<h2 id="profil">Cadre Profil d'élévation</h2>
+<p>Sans point de passage, il affiche « Ajoutez des points de passage pour voir le profil d'élévation ». Ensuite, en haut : <b>Distance totale</b>, <b>Temps de vol</b> (calculé avec les vitesses saisies : c'est une estimation), <b>Altitude min</b>, <b>Altitude max</b>, <b>Élév. sol</b> (moyenne) et <b>Élév. sol max</b>, en pieds. Le graphique montre l'altitude de la mission au-dessus du relief, avec les lignes « Sol moy. » et « Sol max ». L'altitude du sol est demandée au service en ligne open-elevation.com : sans Internet, elle n'est pas disponible. Vérifiez que la mission reste bien au-dessus du sol et des obstacles sur tout le trajet.</p>
+
+<h2 id="boutons">Boutons du bas</h2>
+<ul>
+  <li><b>Effacer</b> : supprime tous les points après confirmation (« Effacer le plan de vol »). Connecté à un firmware avec le moteur de missions, la mission est aussi effacée dans le contrôleur de vol et sauvegardée.</li>
+  <li><b>Charger</b> : lit la mission enregistrée dans le contrôleur de vol (commande CLI <code>waypoint list</code>) et remplace le plan affiché.</li>
+  <li><b>Enregistrer</b> : efface la mission du contrôleur (<code>waypoint clear</code>), envoie chaque point (<code>waypoint insert</code>), puis sauvegarde (<code>save</code>). Les pieds et les nœuds sont convertis en centimètres et en cm/s pour le firmware.</li>
+</ul>
+<p>À l'ouverture de l'onglet, carte branchée : si le plan du logiciel est vide, la mission du contrôleur est chargée. Sinon, une fenêtre demande s'il faut la charger (<b>Charger depuis le FC</b>) ou garder le plan actuel (<b>Conserver l'actuel</b>), pour pouvoir l'enregistrer ensuite dans le contrôleur.</p>
+
+<h2 id="voler">Voler la mission</h2>
+<ol>
+  <li>Enregistrez la mission dans le contrôleur, puis relisez-la avec <b>Charger</b> pour vérifier.</li>
+  <li>Dans l'onglet <a href="modes.html">Modes</a>, mettez le mode <b>AUTOPILOT</b> sur un interrupteur. Avec les modèles <b>TRUENAV</b>, rien ne change en vol tant qu'aucun mode de navigation n'est sur un interrupteur.</li>
+  <li>Vérifiez le GPS dans l'onglet <a href="gps.html">GPS</a> (accroche stable) et le retour en cas de perte radio dans l'onglet <a href="failsafe.html">Failsafe</a>.</li>
+  <li>Premier essai : terrain dégagé, mission courte et basse vitesse, le pouce sur l'interrupteur pour reprendre la main.</li>
+</ol>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

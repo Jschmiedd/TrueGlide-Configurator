@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Récepteur · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Récepteur (groupe « Installation du drone ») sert à choisir comment la carte reçoit la radio (protocole du récepteur), l&#x27;ordre des voies, la plage des manches et le lissage des commandes. Il montre en direct la valeur de chaque voie, pour vérifier que chaque manche et chaque interrupteur bouge dans le bon sens.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html" aria-current="page">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#previsualisation">Prévisualisation et barres des voies</a></li>
+      <li><a href="#recepteur">Cadre « Récepteur »</a></li>
+      <li><a href="#telemetrie-rssi">Télémétrie, RSSI et ordre des voies</a></li>
+      <li><a href="#plage-des-manches">Plage des manches et bandes neutres</a></li>
+      <li><a href="#rc-smoothing">RC Smoothing (lissage des commandes)</a></li>
+      <li><a href="#graphique">Graphique des voies</a></li>
+      <li><a href="#verifier">Vérifier les voies</a></li>
+      <li><a href="#boutons">Boutons du bas</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Récepteur</h1>
+<p class="chapeau">L'onglet <b>Récepteur</b> (groupe « Installation du drone ») sert à choisir comment la carte reçoit la radio (protocole du récepteur), l'ordre des voies, la plage des manches et le lissage des commandes. Il montre en direct la valeur de chaque voie, pour vérifier que chaque manche et chaque interrupteur bouge dans le bon sens.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/recepteur.webp" alt="Onglet Récepteur en thème sombre : note d'aide, aperçu 3D du drone, cadre orange Failsafe actif, barres des voies Roll, Pitch, Yaw, Throttle et AUX 1 à 4 vides, cadres Récepteur, Télémétrie, RSSI, Ordre des voies AETR1234, Plage des manches, Bande neutre RC et RC Smoothing, puis le graphique des voies"><img class="t-clair" src="../assets/img/onglets/recepteur-clair.webp" alt="Onglet Récepteur en thème clair : note d'aide, aperçu 3D du drone, cadre Failsafe actif, barres des voies vides, cadres Récepteur, Télémétrie, RSSI, Ordre des voies, Plage des manches, Bande neutre RC et RC Smoothing, puis le graphique des voies">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC : aucun récepteur n'est branché. D'où le cadre « Failsafe actif », les barres de voies vides, les valeurs à 0 dans le graphique et le <b>Mode du récepteur</b> sur « &lt;Sélectionner&gt; ».</figcaption>
+</figure>
+
+<div class="encart">Vérifiez toujours que le failsafe fonctionne (onglet <a href="failsafe.html">Failsafe</a>) : radio coupée, le drone doit réagir comme prévu. Faites l'essai <b>hélices retirées</b>.</div>
+
+<h2 id="previsualisation">Prévisualisation et barres des voies</h2>
+<ul>
+  <li><b>Prévisualisation</b> : un petit modèle 3D tourne selon les manches de roulis, tangage et lacet, avec vos réglages de rates. Il simule une rotation : il ne montre pas l'attitude réelle du drone.</li>
+  <li><b>Failsafe actif</b> : cadre orange affiché quand la carte est en failsafe ou a perdu la liaison radio. Les valeurs des voies affichées sont alors celles du failsafe, pas celles de votre radio. Les barres deviennent orange.</li>
+  <li>Barres <b>Roll [A]</b>, <b>Pitch [E]</b>, <b>Yaw [R]</b>, <b>Throttle [T]</b>, puis <b>AUX 1</b>, <b>AUX 2</b>… : une barre par voie, avec sa valeur en microsecondes (µs). Échelle de 800 à 2200. Sans voie active, les barres sont vides et sans chiffre.</li>
+</ul>
+
+<h2 id="recepteur">Cadre « Récepteur »</h2>
+<ul>
+  <li><b>Mode du récepteur</b> : comment la radio arrive à la carte.
+    <ul>
+      <li><b>Série (via UART)</b> : récepteur sur un port série (ExpressLRS, Crossfire, SBUS…). Le cas le plus courant.</li>
+      <li><b>Rx SPI (par exemple, Rx intégrée)</b> : récepteur intégré à la carte.</li>
+      <li><b>PPM/CPPM (fil unique)</b>, <b>PWM (un fil par canal)</b> : anciens récepteurs, si le firmware les contient.</li>
+      <li><b>MSP (contrôle via port MSP)</b> : commandes envoyées par MSP (par exemple depuis le logiciel).</li>
+    </ul>
+  </li>
+  <li><b>Type de récepteur série</b> (mode Série) : protocole du récepteur. Pour ExpressLRS, choisissez <code>CRSF</code>. La liste a un champ de recherche. Les protocoles absents du firmware sont grisés ; un message prévient si le protocole choisi n'est pas pris en charge. Le port du récepteur doit avoir <b>Serial Rx</b> dans l'onglet <a href="ports.html">Ports</a>.</li>
+  <li><b>Récepteur Bus SPI</b> (mode Rx SPI) : protocole du récepteur intégré (FrSky, FlySky, Spektrum, <code>EXPRESSLRS</code>…).</li>
+  <li><b>Phrase de Bind</b> (récepteur SPI ExpressLRS seulement) : la phrase d'appairage ExpressLRS. Les 6 nombres entre parenthèses sont l'identifiant calculé depuis la phrase. Le logiciel garde la phrase en mémoire sur cet ordinateur.</li>
+  <li><b>ID Model Match</b> (récepteur SPI ExpressLRS) : numéro de modèle ExpressLRS, de 0 à 255.</li>
+</ul>
+
+<h2 id="telemetrie-rssi">Télémétrie, RSSI et ordre des voies</h2>
+<ul>
+  <li><b>Télémétrie</b> → <b>Sortie télémétrie</b> : envoie la télémétrie de la carte vers la radio par le récepteur.</li>
+  <li><b>RSSI</b> → <b>entrée RSSI analogique</b> : lit la force du signal sur une broche analogique de la carte.</li>
+  <li><b>RSSI</b> → <b>Canal RSSI</b> : voie qui porte la force du signal (AUX 1 et suivantes), ou <b>Désactivé</b>.</li>
+  <li><b>Ordre des voies</b> : 8 lettres, A (ailerons = roulis), E (profondeur = tangage), R (dérive = lacet), T (gaz), puis 1 à 4 (voies AUX). Le menu à côté propose <b>FrSky / Futaba / Hitec (AETR1234)</b> et <b>Spektrum / Graupner / JR (TAER1234)</b>. Pour ExpressLRS et la plupart des radios EdgeTX, c'est en général AETR1234. Une saisie incorrecte (pas 8 lettres, lettre en double) est annulée.</li>
+</ul>
+<p>Changer le mode du récepteur, la sortie télémétrie ou l'entrée RSSI analogique demande un redémarrage de la carte : le bouton d'enregistrement s'en charge.</p>
+
+<h2 id="plage-des-manches">Plage des manches et bandes neutres</h2>
+<p>Valeurs en microsecondes (µs).</p>
+<ul>
+  <li><b>'Manche en bas'</b> (1000 à 1200) : sous cette valeur, le manche est considéré en bas.</li>
+  <li><b>Manche au neutre</b> (1401 à 1599) : valeur du centre des manches.</li>
+  <li><b>'Manche en haut'</b> (1800 à 2000) : au-dessus de cette valeur, le manche est considéré en haut.</li>
+  <li><b>Bande neutre RC</b> (0 à 32) : zone morte autour du centre pour le roulis et le tangage.</li>
+  <li><b>Bande neutre Yaw</b> (0 à 100) : zone morte autour du centre pour le lacet.</li>
+  <li><b>bande neutre gaz 3D</b> (0 à 100) : zone neutre des gaz, pour le mode 3D seulement.</li>
+</ul>
+<p>Dans la radio, réglez les voies pour aller d'environ 1000 à 2000, avec le centre à 1500.</p>
+
+<h2 id="rc-smoothing">RC Smoothing (lissage des commandes)</h2>
+<ul>
+  <li><b>RC Smoothing</b> : active le lissage des commandes radio.</li>
+  <li><b>Type de coupure du setpoint</b> : <b>Auto</b> (conseillé) ou <b>Manuel</b>. En <b>Manuel</b>, le champ <b>Fréquence de coupure de l'entrée (setpoint)</b> apparaît (Hz, 0 à 255).</li>
+  <li><b>Facteur auto Setpoint</b> (0 à 250) : plus haut = commandes plus lisses mais plus de retard. Le texte d'aide du logiciel donne 30 par défaut.</li>
+  <li><b>Type de coupure des gaz</b> : <b>Auto</b> ou <b>Manuel</b> ; en <b>Manuel</b>, <b>Fréquence de coupure des gaz</b> (Hz, 0 à 255).</li>
+  <li><b>Facteur auto des gaz</b> (0 à 250) : visible en <b>Auto</b>.</li>
+</ul>
+<p>Le mode <b>Manuel</b> est déconseillé avec les protocoles dont la cadence change en vol (Crossfire, ExpressLRS).</p>
+
+<h2 id="graphique">Graphique des voies</h2>
+<p>En bas, un graphique trace les dernières valeurs de chaque voie (axe de 800 à 2200). À droite, les valeurs en direct de <b>Roulis [A] :</b>, <b>Tangage [E] :</b>, <b>Lacet [R] :</b> et <b>Gaz [T] :</b>. Le menu règle la cadence de lecture (10 ms à 1000 ms, gardée d'une session à l'autre) ; <b>Réinitialiser</b> la remet à 50 ms.</p>
+
+<h2 id="verifier">Vérifier les voies</h2>
+<ol>
+  <li>Allumez la radio, puis branchez la batterie, <b>hélices retirées</b>.</li>
+  <li>Le cadre <b>Failsafe actif</b> doit disparaître et les barres doivent montrer des valeurs.</li>
+  <li>Manche de roulis à droite : seule la barre <b>Roll [A]</b> doit monter. Faites de même pour le tangage (manche vers l'avant = valeur qui monte), le lacet et les gaz.</li>
+  <li>Si une barre ne correspond pas, corrigez l'<b>Ordre des voies</b>. Si le sens est inversé, inversez la voie dans la radio.</li>
+  <li>Basculez chaque interrupteur : la barre AUX correspondante doit changer.</li>
+</ol>
+
+<h2 id="boutons">Boutons du bas</h2>
+<ul>
+  <li><b>Enregistrer</b> : envoie les réglages et les enregistre dans la carte. Si le mode du récepteur, la télémétrie ou le RSSI analogique ont changé, la carte redémarre. Actif seulement après un changement.</li>
+  <li>Flèche à côté : <b>Enregistrer</b> ou <b>Rafraîchir</b> (relit les réglages de la carte et abandonne les changements non enregistrés).</li>
+  <li><b>Appairer le récepteur</b> : visible seulement si la carte sait lancer l'appairage ; envoie une demande d'appairage au récepteur.</li>
+  <li><b>Émulateur radio</b> : visible seulement en mode <b>MSP</b> ; ouvre une petite fenêtre avec des manches virtuels qui envoient les commandes à la carte.</li>
+</ul>
+<p>Étape suivante : attribuer les interrupteurs dans l'onglet <a href="modes.html">Modes</a>.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>
