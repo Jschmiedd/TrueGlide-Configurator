@@ -730,13 +730,13 @@
         "message": "Afficher le guide"
     },
     "tfGuideHelp_setup": {
-        "message": "Vérifier que le modèle 3D suit les mouvements du drone et calibrer l'accéléromètre, drone posé à plat."
+        "message": "Vérifier que le modèle 3D suit les mouvements du drone. La calibration de l'accéléromètre, drone posé à plat, se fait dans l'onglet Capteurs."
     },
     "tfGuideHelp_ports": {
         "message": "Indiquer sur quel UART sont branchés le récepteur, le GPS, la VTX et la télémétrie ESC. Enregistrer avec le bouton de l'onglet."
     },
     "tfGuideHelp_configuration": {
-        "message": "Régler l'orientation de la carte, le protocole moteur (DShot) et les fonctions utiles. Enregistrer avec le bouton de l'onglet."
+        "message": "Choisir les fonctions utiles et les bips. L'orientation de la carte se règle dans l'onglet Capteurs et le protocole moteur (DShot) dans l'onglet Moteurs. Enregistrer avec le bouton de l'onglet."
     },
     "tfGuideHelp_receiver": {
         "message": "Choisir le protocole du récepteur (CRSF pour ELRS) et vérifier que chaque voie bouge dans le bon sens."
@@ -1077,6 +1077,9 @@
     "trueglideIntro": {
         "message": "Réglages propres au firmware TrueGlide. Ils sont tous désactivés ou neutres par défaut : le drone vole exactement comme avec le firmware de base non modifié tant qu'on ne les active pas. Enregistrer redémarre le contrôleur de vol."
     },
+    "trueglideIntroNavigation": {
+        "message": "Sécurité de la navigation GPS : les réglages du retour GPS (GPS RESCUE) et du failsafe sont ceux de Betaflight, ceux des missions sont propres à TRUENAV. Vérifier chaque valeur avant de voler. Enregistrer redémarre le contrôleur de vol."
+    },
     "trueglideUnsupported": {
         "message": "Ce contrôleur de vol n'a pas le firmware TrueGlide (ou son firmware est trop ancien pour le CLI par MSP). Flasher TrueGlide pour utiliser ces réglages."
     },
@@ -1285,7 +1288,7 @@
         "message": "Missions TRUENAV"
     },
     "trueglideTruenavHelp": {
-        "message": "Les missions s'envoient depuis Mission Planner ou QGroundControl par la télémétrie MAVLink, ou se dessinent dans l'onglet Flight Plan."
+        "message": "Les missions s'envoient depuis Mission Planner ou QGroundControl par la télémétrie MAVLink, ou se dessinent dans l'onglet Plan de vol."
     },
     "trueglideSetting_mav_mission_home_item": {
         "message": "Point 0 = home (Mission Planner)"
@@ -1313,7 +1316,31 @@
         "message": "Sélection du fichier..."
     },
     "autotuneAnalyzing": {
-        "message": "Analyse de données chrip..."
+        "message": "Analyse des données chirp..."
+    },
+    "autotuneProgressSelecting": {
+        "message": "Choix du fichier..."
+    },
+    "autotuneProgressReading": {
+        "message": "Lecture de {{file}}..."
+    },
+    "autotuneProgressBoundaries": {
+        "message": "Recherche des journaux dans le fichier..."
+    },
+    "autotuneProgressParsing": {
+        "message": "Lecture du journal {{index}} sur {{count}}..."
+    },
+    "autotuneErrorNoLogs": {
+        "message": "Aucun journal trouvé dans le fichier."
+    },
+    "autotuneErrorNoChirp": {
+        "message": "Aucune donnée chirp dans les journaux de ce fichier."
+    },
+    "autotuneErrorAnalysis": {
+        "message": "L'analyse a échoué."
+    },
+    "autotuneErrorPicker": {
+        "message": "Impossible d'ouvrir le choix du fichier."
     },
     "autotuneBandwidth": {
         "message": "Bande passante"
@@ -1361,7 +1388,7 @@
         "message": "{{count}} échantillons"
     },
     "autotuneSampleRate": {
-        "message": "Fréquence d'échantillonnage : {{rate}} Hz"
+        "message": "Fréquence d'échantillonnage"
     },
     "autotuneImportAnother": {
         "message": "Importer un autre"
@@ -1430,13 +1457,13 @@
         "message": "Pic de Sensibilité"
     },
     "autotuneOvershoot": {
-        "message": "Excès"
+        "message": "Dépassement"
     },
     "autotuneRiseTime": {
         "message": "Temps de montée"
     },
     "autotuneSettlingTime": {
-        "message": "Temps de descente"
+        "message": "Temps de stabilisation"
     },
     "autotuneSpectrogramTitle": {
         "message": "Spectrogramme (Gyro)"
@@ -1663,7 +1690,7 @@
         "message": "Les firmwares non compatibles avec cette application <span class=\"message-negative\">ne sont pas supportés<\/span>, à part en mode CLI."
     },
     "firmwareUpgradeRequired": {
-        "message": "La version actuelle de l'application peut ne pas prendre en charge la version du firmware sur cet appareil.<br><br>L'application essaiera d'accéder au CLI sur l'appareil - si elle réussit, vous pouvez voir la version actuelle du firmware en envoyant la commande <code>version<\/code> dans le CLI.<br><br>Vous pouvez aussi mettre à jour vers une version plus récente du firmware. Utilisez le CLI pour sauvegarder votre configuration avant de flasher (voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)). Mais gardez à l'esprit que les sauvegardes des anciennes versions du firmware peuvent ne pas être transférées correctement lors de la restauration sur une version plus récente. Les modes, l'OSD, les rates et les ports devraient être transférés sans problème, mais soyez prudent avec les PID et les réglages du failsafe."
+        "message": "La version actuelle de l'application peut ne pas prendre en charge la version du firmware sur cet appareil.<br><br>L'application essaiera d'accéder au CLI sur l'appareil - si elle réussit, vous pouvez voir la version actuelle du firmware en envoyant la commande <code>version<\/code> dans le CLI.<br><br>Vous pouvez aussi mettre à jour vers une version plus récente du firmware. Utilisez le CLI pour sauvegarder votre configuration avant de flasher (voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)). Mais gardez à l'esprit que les sauvegardes des anciennes versions du firmware peuvent ne pas être transférées correctement lors de la restauration sur une version plus récente. Les modes, l'OSD, les rates et les ports devraient être transférés sans problème, mais soyez prudent avec les PID et les réglages du failsafe."
     },
     "resetToCustomDefaultsDialog": {
         "message": "Des valeurs de réglage par défaut sont disponibles pour cette carte. Avec des valeurs par défaut propres à cette carte, celle-ci devrait fonctionner correctement.<br\/>Souhaitez vous appliquer les réglages par défaut propres à cette carte ?"
@@ -1856,13 +1883,13 @@
         "message": "Participation"
     },
     "defaultContributingText": {
-        "message": "TrueGlide progresse grâce aux retours des pilotes : notez les problèmes rencontrés et vos résultats en vol. Pour de l'aide, voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)."
+        "message": "TrueGlide progresse grâce aux retours des pilotes : notez les problèmes rencontrés et vos résultats en vol. Pour de l'aide, voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)."
     },
     "defaultFacebookText": {
-        "message": "Pour de l'aide sur TrueGlide, voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)."
+        "message": "Pour de l'aide sur TrueGlide, voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)."
     },
     "defaultRedditText": {
-        "message": "Pour de l'aide sur TrueGlide, voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)."
+        "message": "Pour de l'aide sur TrueGlide, voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)."
     },
     "defaultCommunityHead": {
         "message": "Communauté"
@@ -1886,10 +1913,10 @@
         "message": "La documentation TrueGlide est disponible dans le Mémo et le Wiki TrueGlide.<br \/><br \/>"
     },
     "defaultDocumentation1": {
-        "message": "Le Wiki TrueGlide explique les réglages : voir l'onglet Manuels &amp; Aide."
+        "message": "Le Wiki TrueGlide explique les réglages : voir l'onglet Mémo &amp; Wiki."
     },
     "defaultDocumentation2": {
-        "message": "Le Mémo TrueGlide résume l'essentiel : voir l'onglet Manuels &amp; Aide."
+        "message": "Le Mémo TrueGlide résume l'essentiel : voir l'onglet Mémo &amp; Wiki."
     },
     "defaultSupportHead": {
         "message": "Support"
@@ -1907,16 +1934,16 @@
         "message": "<a href=\"http:\/\/www.rcgroups.com\/forums\/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">Discussions sur RC Groups<\/a>"
     },
     "defaultSupport2": {
-        "message": "Wiki TrueGlide (onglet Manuels &amp; Aide)"
+        "message": "Wiki TrueGlide (onglet Mémo &amp; Wiki)"
     },
     "defaultSupport3": {
         "message": "<a href=\"https:\/\/www.youtube.com\/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Vidéos de Joshua Bardwell sur le firmware 4.3<\/a>"
     },
     "defaultSupport4": {
-        "message": "Mémo TrueGlide (onglet Manuels &amp; Aide)"
+        "message": "Mémo TrueGlide (onglet Mémo &amp; Wiki)"
     },
     "defaultSupport5": {
-        "message": "Mémo et Wiki TrueGlide (onglet Manuels &amp; Aide)"
+        "message": "Mémo et Wiki TrueGlide (onglet Mémo &amp; Wiki)"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrer l'accéléromètre"
@@ -2054,6 +2081,9 @@
     "initialSetupCpuTempNotSupported": {
         "message": "Aucune prise en charge de l'API MSP avant 1.46"
     },
+    "initialSetupCpuTempUnavailable": {
+        "message": "Non fournie par cette carte"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
@@ -2066,7 +2096,7 @@
         "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
-        "message": "$1 dBm"
+        "message": "$1 %"
     },
     "initialSetupMCU": {
         "message": "MCU:"
@@ -2448,7 +2478,7 @@
         "message": "LED RGB multicolore"
     },
     "featureLED_STRIPTip": {
-        "message": "Active la prise en charge des bandes de LED RVB multicolores, à configurer dans l'onglet Bande LED"
+        "message": "Active la prise en charge des bandes de LED RVB multicolores, à configurer dans l'onglet Bandeau LED"
     },
     "featureDISPLAY": {
         "message": "Ecran OLED"
@@ -2536,7 +2566,10 @@
         "message": "<strong>Note:<\/strong> lors d'une contradiction entre les fonctionnalités actives. Le micrologiciel désactive les fonctionnalités en conflit\/<br \/><strong>Note:<\/strong> configurer les ports série <span class=\"message-negative\">avant<\/span> d'activer des fonctionnalités qui les utilisent."
     },
     "configurationSerialRXHelp": {
-        "message": "&#8226; L'UART pour le récepteur doit être réglé sur « Rx série » (dans l'onglet <i>Ports<\/i> )<br>&#8226; Sélectionnez le format de données correct à partir du menu déroulant, ci-dessous:"
+        "message": "&#8226; L'UART pour le récepteur doit être réglé sur « Serial Rx » (dans l'onglet <i>Ports</i> )<br>&#8226; Sélectionnez le format de données correct à partir du menu déroulant, ci-dessous:"
+    },
+    "configurationSaveFailed": {
+        "message": "Échec de l'enregistrement de la configuration."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Note:<\/strong> le RX SPI ne fonctionne que si la carte est équipée ou connectée à un bus SPI."
@@ -3146,10 +3179,10 @@
         "message": "VTX (MSP + Displayport)"
     },
     "pidTuningProfileOption": {
-        "message": "Profile $1"
+        "message": "Profil $1"
     },
     "pidTuningRateProfileOption": {
-        "message": "Profile rate $1"
+        "message": "Profil de rates $1"
     },
     "portsFunction_LIDAR_TF": {
         "message": "Benewake LIDAR"
@@ -3215,7 +3248,7 @@
         "description": "Anti Gravity Threshold Parameter"
     },
     "pidTuningAntiGravityHelp": {
-        "message": "L'anti Gravité renforce I (et, en 4.3, P) pendant et peu de temps après le changement rapide de l'accélérateur, augmentant la stabilité d'attitude pendant les pompes à papillon.<br><br>Des valeurs de gain plus élevées peuvent améliorer la stabilité sur les machines de basse autorité ou celles avec un centre de gravité décalé."
+        "message": "L'anti Gravité renforce I (et, en 4.3, P) pendant et peu de temps après le changement rapide de l'accélérateur, augmentant la stabilité d'attitude pendant les montées et descentes rapides des gaz.<br><br>Des valeurs de gain plus élevées peuvent améliorer la stabilité sur les machines de basse autorité ou celles avec un centre de gravité décalé."
     },
     "pidTuningDerivative": {
         "message": "<b>D<\/b>érivée",
@@ -3581,7 +3614,7 @@
         "message": "Rateprofile chargé: <strong class=\"message-positive\">$1<\/strong>"
     },
     "pidTuningDataRefreshed": {
-        "message": "PID données <strong>raffraîchit<\/strong>"
+        "message": "Données PID <strong>rafraîchies<\/strong>"
     },
     "pidTuningEepromSaved": {
         "message": "$t(eeprom_saved_ok.message)",
@@ -3614,7 +3647,10 @@
         "message": "ID Model Match"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong>Vérifiez toujours que votre Failsafe fonctionne correctement !<\/strong><\/b> Les réglages se trouvent dans l'onglet Failsafe, qui nécessite le mode Expert.<br> &#8226; <b>Utilisez le dernier firmware de l'émetteur !<\/b><br> &#8226; <strong>Désactivez le filtre ADC matériel<\/strong> dans l'émetteur si vous utilisez OpenTx ou EdgeTx.<br>Configuration de base : configurez correctement les réglages « Récepteur ». Choisissez la bonne « Correspondance des voies » pour votre radio. Vérifiez que les barres de roulis, tangage et autres bougent correctement. Ajustez les valeurs de fin de course ou de plage des voies dans l'émetteur entre ~1000 et ~2000, et réglez le point milieu sur 1500. Pour plus d'informations, voir <strong>le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)<\/strong>."
+        "message": "&#8226;  <b><strong>Vérifiez toujours que votre Failsafe fonctionne correctement !</strong></b> Les réglages se trouvent dans l'onglet Failsafe.<br> &#8226; <b>Utilisez le dernier firmware de l'émetteur !</b><br> &#8226; <strong>Désactivez le filtre ADC matériel</strong> dans l'émetteur si vous utilisez OpenTx ou EdgeTx.<br>Configuration de base : configurez correctement les réglages « Récepteur ». Choisissez la bonne « Correspondance des voies » pour votre radio. Vérifiez que les barres de roulis, tangage et autres bougent correctement. Ajustez les valeurs de fin de course ou de plage des voies dans l'émetteur entre ~1000 et ~2000, et réglez le point milieu sur 1500. Pour plus d'informations, voir <strong>le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)</strong>."
+    },
+    "receiverConfigSaved": {
+        "message": "Configuration enregistrée."
     },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe actif"
@@ -3746,7 +3782,7 @@
         "message": "Autoriser le contrôle"
     },
     "auxiliaryHelp": {
-        "message": "Configurer les modes en utilisant une combinaison de plages et\/ou des liens vers d’autres modes (les liens sont supportés sur BF 4.0 et versions ultérieures). Utiliser des <strong>plages<\/strong>pour assigner des interrupteurs aux modes sur votre émetteur. Utiliser un <strong>lien<\/strong> pour activer un mode lorsqu'un autre mode est activé. <strong>Exceptions :<\/strong> L'ARMEMENT ne peut PAS être lié à un autre mode (amont et avale), les modes ne peuvent pas être liés à d'autres modes configurés en liens (liens chaînés). Plusieurs plages\/liens (cumulés) peuvent être utilisés pour activer un mode. Si plus d'un lien\/plage sont attribués à un mode, chacun peut être défini <strong>ET<\/strong> ou <strong>OU<\/strong>. Un mode sera actif quand:\n<br \/>- TOUS les liens\/plages <strong>ET<\/strong> seront actifs;\nOU<br \/>- au moins un <strong>OU<\/strong> des liens\/plages seront actifs.\n<br \/><br \/>Ne pas oublier de sauvegarder les réglages avec le bouton Sauvegarder."
+        "message": "Configurer les modes en utilisant une combinaison de plages et/ou des liens vers d’autres modes. Utiliser des <strong>plages</strong> pour assigner des interrupteurs aux modes sur votre émetteur. Utiliser un <strong>lien</strong> pour activer un mode lorsqu'un autre mode est activé. <strong>Exceptions :</strong> L'ARMEMENT ne peut PAS être lié à un autre mode (amont et avale), les modes ne peuvent pas être liés à d'autres modes configurés en liens (liens chaînés). Plusieurs plages/liens (cumulés) peuvent être utilisés pour activer un mode. Si plus d'un lien/plage sont attribués à un mode, chacun peut être défini <strong>ET</strong> ou <strong>OU</strong>. Un mode sera actif quand:\n<br />- TOUS les liens/plages <strong>ET</strong> seront actifs;\nOU<br />- au moins un <strong>OU</strong> des liens/plages seront actifs.\n<br /><br />Ne pas oublier de sauvegarder les réglages avec le bouton Enregistrer."
     },
     "auxiliaryToggleUnused": {
         "message": "Masquer les modes non utilisés"
@@ -3803,8 +3839,14 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "L'AirMode permet de maintenir la stabilité de l'appareil à bas régime de gaz. Pour plus d'informations, voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide).",
+        "message": "L'AirMode permet de maintenir la stabilité de l'appareil à bas régime de gaz. Pour plus d'informations, voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki).",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_SPEEDER": {
+        "message": "Mode TrueGlide pour les speeders qui décollent fuselage vertical : actif en mode ANGLE, le nez descend progressivement jusqu'à l'angle de croisière réglé dans l'onglet Speeder. Interrupteur coupé ou failsafe : retour progressif au stationnaire."
+    },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Enregistre des points de passage en vol : un appui bref ajoute la position actuelle à la mission, un appui maintenu 1,5 s supprime le dernier point. Firmware TRUENAV seulement."
     },
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "Maintenir Altitude réglemente activement l'altitude de l'appareil à l'aide de capteurs externes combinés avec le Mode Angle (Mode Stable).",
@@ -4034,11 +4076,11 @@
         "message": "échelle (val.|%)"
     },
     "adjustmentsCenterHelp": {
-        "message": "Définit le point milieu ou la valeur de référence utilisée par la fonction d'ajustement.<br \/><br \/><strong>Ajustements par curseur :<\/strong><br \/>Pour les ajustements par curseur, réglez le centre d'ajustement sur 0. La position actuelle du curseur sera utilisée pour l'ajustement vers le haut\/bas.<br \/><br \/><strong>Ajustements par sélection :<\/strong><br \/>Réglez le centre d'ajustement sur 0, ou sur une valeur précise en microsecondes (uS) si vous voulez décaler le point de référence de l'interrupteur par rapport à 1500uS au déclenchement de l'ajustement RC.<br \/><br \/><strong>Ajustements pas à pas :<\/strong><br \/>Réglez le centre d'ajustement sur 0 pour utiliser la valeur actuelle de l'élément ajusté.<br \/><br \/><strong>Ajustements absolus :<\/strong><br \/>Pour utiliser la méthode d'ajustement absolu, vous devez régler à la fois le centre et l'échelle d'ajustement pour indiquer la valeur et la plage souhaitées. La plage se calcule ainsi : Centre ± Échelle. Par exemple, un centre d'ajustement de 50 et une échelle d'ajustement de 25 créent une plage de 25 à 75, la position centrale (interrupteur ou potentiomètre) correspondant à 50.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide) pour plus d'informations.",
+        "message": "Définit le point milieu ou la valeur de référence utilisée par la fonction d'ajustement.<br \/><br \/><strong>Ajustements par curseur :<\/strong><br \/>Pour les ajustements par curseur, réglez le centre d'ajustement sur 0. La position actuelle du curseur sera utilisée pour l'ajustement vers le haut\/bas.<br \/><br \/><strong>Ajustements par sélection :<\/strong><br \/>Réglez le centre d'ajustement sur 0, ou sur une valeur précise en microsecondes (uS) si vous voulez décaler le point de référence de l'interrupteur par rapport à 1500uS au déclenchement de l'ajustement RC.<br \/><br \/><strong>Ajustements pas à pas :<\/strong><br \/>Réglez le centre d'ajustement sur 0 pour utiliser la valeur actuelle de l'élément ajusté.<br \/><br \/><strong>Ajustements absolus :<\/strong><br \/>Pour utiliser la méthode d'ajustement absolu, vous devez régler à la fois le centre et l'échelle d'ajustement pour indiquer la valeur et la plage souhaitées. La plage se calcule ainsi : Centre ± Échelle. Par exemple, un centre d'ajustement de 50 et une échelle d'ajustement de 25 créent une plage de 25 à 75, la position centrale (interrupteur ou potentiomètre) correspondant à 50.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki) pour plus d'informations.",
         "description": "Tooltip help text for the Adjustment Center column"
     },
     "adjustmentsScaleHelp": {
-        "message": "Contrôle l'échelle ou la plage de l'ajustement ; des valeurs plus élevées augmentent la plage ou la sensibilité de l'ajustement.<br \/><br \/><strong>Ajustements par curseur :<\/strong><br \/>Pour les ajustements par curseur, l'échelle d'ajustement contrôle l'échelle\/la sensibilité de l'ajustement. Une valeur de 50 équivaut à 50 % de la course du curseur. Une valeur de 0 utilise l'échelle par défaut des curseurs.<br \/><br \/><strong>Ajustements par sélection :<\/strong><br \/>Pour les ajustements par sélection, réglez l'échelle d'ajustement sur 0 pour le comportement par défaut, ou indiquez une valeur en microsecondes (uS) pour limiter la plage. Par exemple : réglez le centre d'ajustement sur 1000 (uS) et l'échelle d'ajustement sur 500 (uS) pour utiliser un interrupteur 3 positions comme un interrupteur 2 positions.<br \/><br \/><strong>Ajustements pas à pas et absolus :<\/strong><br \/>Pour les ajustements pas à pas et absolus, l'échelle d'ajustement définit la plage au-dessus et en dessous du centre d'ajustement. Par exemple, une valeur de 25 crée une plage d'ajustement de ±25 autour de la valeur du centre d'ajustement, ou autour de la valeur actuelle si le centre d'ajustement est à 0.<br \/><strong>Note :<\/strong> pour utiliser la méthode d'ajustement absolu avec un potentiomètre, une valeur d'échelle d'ajustement doit être indiquée.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide) pour plus d'informations.",
+        "message": "Contrôle l'échelle ou la plage de l'ajustement ; des valeurs plus élevées augmentent la plage ou la sensibilité de l'ajustement.<br \/><br \/><strong>Ajustements par curseur :<\/strong><br \/>Pour les ajustements par curseur, l'échelle d'ajustement contrôle l'échelle\/la sensibilité de l'ajustement. Une valeur de 50 équivaut à 50 % de la course du curseur. Une valeur de 0 utilise l'échelle par défaut des curseurs.<br \/><br \/><strong>Ajustements par sélection :<\/strong><br \/>Pour les ajustements par sélection, réglez l'échelle d'ajustement sur 0 pour le comportement par défaut, ou indiquez une valeur en microsecondes (uS) pour limiter la plage. Par exemple : réglez le centre d'ajustement sur 1000 (uS) et l'échelle d'ajustement sur 500 (uS) pour utiliser un interrupteur 3 positions comme un interrupteur 2 positions.<br \/><br \/><strong>Ajustements pas à pas et absolus :<\/strong><br \/>Pour les ajustements pas à pas et absolus, l'échelle d'ajustement définit la plage au-dessus et en dessous du centre d'ajustement. Par exemple, une valeur de 25 crée une plage d'ajustement de ±25 autour de la valeur du centre d'ajustement, ou autour de la valeur actuelle si le centre d'ajustement est à 0.<br \/><strong>Note :<\/strong> pour utiliser la méthode d'ajustement absolu avec un potentiomètre, une valeur d'échelle d'ajustement doit être indiquée.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki) pour plus d'informations.",
         "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
@@ -4063,7 +4105,7 @@
         "message": "Aucun changement"
     },
     "adjustmentsFunction1": {
-        "message": "Ajustements des rate de la radio Commande"
+        "message": "Ajustement du RC Rate"
     },
     "adjustmentsFunction2": {
         "message": "Ajustement de l'Expo"
@@ -4099,10 +4141,10 @@
         "message": "Sélection des profils de Rate"
     },
     "adjustmentsFunction13": {
-        "message": "Pitch Rate"
+        "message": "Rate du tangage"
     },
     "adjustmentsFunction14": {
-        "message": "Roll Rate"
+        "message": "Rate du roulis"
     },
     "adjustmentsFunction15": {
         "message": "Ajustement du P Pitch"
@@ -4232,7 +4274,7 @@
         "message": "Général"
     },
     "gpsHeadHelp": {
-        "message": "Affiche diverses informations GPS. Les caps ne sont affichés que lorsqu'un magnétomètre est utilisé.",
+        "message": "Affiche diverses informations GPS. La déclinaison magnétique ne s'affiche qu'avec un magnétomètre.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -4540,7 +4582,7 @@
         "message": "Charger le plan de vol depuis le contrôleur de vol ?"
     },
     "flightPlanLoadPromptBody": {
-        "message": "Un contrôleur de vol est connecté. Voulez-vous remplacer le plan de vol actuel par celui enregistré dans le contrôleur de vol ? Choisir Non conserve votre plan actuel pour que vous puissiez l'enregistrer dans le contrôleur de vol."
+        "message": "Un contrôleur de vol est connecté. Voulez-vous remplacer le plan de vol actuel par celui enregistré dans le contrôleur de vol ? Choisir « Conserver l'actuel » garde votre plan actuel pour que vous puissiez l'enregistrer dans le contrôleur de vol."
     },
     "flightPlanKeepLocal": {
         "message": "Conserver l'actuel"
@@ -4657,7 +4699,7 @@
         "message": "Remise à zéro"
     },
     "motorsResetMaximum": {
-        "message": "Réinitialiser le temps supplémentaire maximum"
+        "message": "Remettre à zéro les valeurs maximales du graphique"
     },
     "motorsSensorGyroSelect": {
         "message": "$t(sensorStatusGyroShort.message)",
@@ -4667,7 +4709,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "Ces nombres affichent les informations de télémétrie reçues des ESC si elles sont disponibles. Ils peuvent indiquer la vitesse réelle des moteurs (R, en RPM), le taux d'erreur (E) de la liaison de télémétrie et la température (T) des ESC.",
+        "message": "Ces valeurs affichent la télémétrie reçue des ESC si elle est disponible : la vitesse réelle des moteurs (RPM:), le taux d'erreur de la liaison de télémétrie (Err:) et la température des ESC (Temp:).",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -4686,10 +4728,10 @@
         "message": "Maître"
     },
     "motorsNotice": {
-        "message": "<strong>Mode test moteurs \/ avis d'armement :<\/strong><br \/><br \/><strong class=\"message-negative\">ATTENTION : risque de blessure grave ! Retirez toutes les hélices !<\/strong><br \/><br \/><ul><li>&#x2022; Les moteurs se mettront à tourner à l'armement ou lorsque les curseurs seront relevés<\/li><li>&#x2022; Le mode test moteurs restera actif après être passé à un autre onglet<\/li><li>&#x2022; Appuyer sur n'importe quelle touche arrêtera les moteurs, mais uniquement dans l'onglet Moteurs<\/li><li>&#x2022; Débrancher le câble USB peut ne pas arrêter les moteurs !<\/li><\/ul>"
+        "message": "<strong>Mode test moteurs / avis d'armement :</strong><br /><br /><strong class=\"message-negative\">ATTENTION : risque de blessure grave ! Retirez toutes les hélices !</strong><br /><br /><ul><li>&#x2022; Les moteurs se mettront à tourner à l'armement ou lorsque les curseurs seront relevés</li><li>&#x2022; Le test des moteurs s'arrête quand on quitte l'onglet Moteurs</li><li>&#x2022; Appuyer sur n'importe quelle touche arrêtera les moteurs, mais uniquement dans l'onglet Moteurs</li><li>&#x2022; Débrancher le câble USB peut ne pas arrêter les moteurs !</li></ul>"
     },
     "motorsEnableControl": {
-        "message": "<strong>Je comprends les riques<\/strong>, les hélices sont retirées - autoriser l'armement et le contrôle des moteurs et désactiver le Runaway Takeoff Prevention."
+        "message": "<strong>Je comprends les risques</strong>, les hélices sont retirées - autoriser l'armement et le contrôle des moteurs et désactiver le Runaway Takeoff Prevention."
     },
     "motorsDialogMixerReset": {
         "message": "<strong>Problème de mode mixer détecté<\/strong><br \/><br \/>Le modèle {{mixerName}} a besoin de <strong class=\"message-positive\">{{mixerMotors}}<\/strong> resources moteurs et la configuration actuelle du firmware fournit <strong class=\"message-positive\">{{outputs}}<\/strong> sortie(s) utilisable(s) pour le mode sélectionné.<br \/><br \/>Si vous utilisez un mode de mixer personnalisé, vous devez définir un mmix personnalisé avant de changer de mode de mixer.<br \/><br \/>Veuillez vérifier votre configuration et ajouter les resources moteurs requises."
@@ -4863,7 +4905,7 @@
         "message": "Altitude - mètres"
     },
     "sensorsAltitudeHint": {
-        "message": "L'altitude est calculée en combinant les données du baromètre (si disponibles) avec les données d'altitude du GPS (si disponibles). Si un GPS est présent et connecté aux satallites, l'altitude absolue au-dessus du niveau de la mer sera affichée lorsque l'appareil est désarmé. Lorsqu'il est armé, l'altitude relative à la position lors de l'armement sera affichée."
+        "message": "L'altitude est calculée en combinant les données du baromètre (si disponibles) avec les données d'altitude du GPS (si disponibles). Si un GPS est présent et connecté aux satellites, l'altitude absolue au-dessus du niveau de la mer sera affichée lorsque l'appareil est désarmé. Lorsqu'il est armé, l'altitude relative à la position lors de l'armement sera affichée."
     },
     "sensorsSonarTitle": {
         "message": "Sonar - cm"
@@ -4926,7 +4968,34 @@
         "message": "Saisissez une commande ici"
     },
     "loggingNote": {
-        "message": "Les données sont enregistrées dans cet onglet <span class=\"message-negative\">uniquement<\/span>, quitter l'onglet <span class=\"message-negative\">arrête<\/span> l'enregistrement et l'application retourne en <strong>\"configurateur\"<\/strong>.<br \/> Peu importe la période de rafraîchissement, les données sont écrites <strong>chaque<\/strong> seconde afin de préserver les performances."
+        "message": "Les données sont enregistrées dans cet onglet <span class=\"message-negative\">uniquement</span>, quitter l'onglet <span class=\"message-negative\">arrête</span> l'enregistrement et l'application revient à son fonctionnement normal.<br /> Peu importe la période de rafraîchissement, les données sont écrites <strong>chaque</strong> seconde afin de préserver les performances."
+    },
+    "loggingColumns_MSP_RAW_IMU": {
+        "message": "9 colonnes (gyro[x, y, z], accel[x, y, z], mag[x, y, z])"
+    },
+    "loggingColumns_MSP_ATTITUDE": {
+        "message": "3 colonnes (kine[x, y, z])"
+    },
+    "loggingColumns_MSP_ALTITUDE": {
+        "message": "1 colonne (alt)"
+    },
+    "loggingColumns_MSP_RAW_GPS": {
+        "message": "7 colonnes (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)"
+    },
+    "loggingColumns_MSP_ANALOG": {
+        "message": "4 colonnes (voltage, amperage, mAhdrawn, rssi)"
+    },
+    "loggingColumns_MSP_RC": {
+        "message": "une colonne par voie active (RC0, RC1…)"
+    },
+    "loggingColumns_MSP_MOTOR": {
+        "message": "une colonne par moteur (Motor0, Motor1…)"
+    },
+    "loggingColumns_MSP_DEBUG": {
+        "message": "une colonne par valeur de debug (Debug0, Debug1…)"
+    },
+    "dataflashSaveIncompleteWarning": {
+        "message": "La taille téléchargée ne correspond pas à la taille attendue : la mémoire n'est pas effacée."
     },
     "loggingPropertiesTitle": {
         "message": "Propriétés du journal"
@@ -5192,7 +5261,7 @@
         "message": "Sélectionnez ou détectez votre carte pour voir les versions de firmware disponibles en ligne - Sélectionnez le firmware adapté à votre carte."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "TrueGlide Configurator permet de flasher des cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même fichier .hex de firmware peut être utilisé pour toutes les cartes utilisant le même MCU.<br><br>La version 4.4 du firmware a introduit <strong>Cloud Build<\/strong><br><br>Avec <strong>Cloud Build<\/strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du firmware lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)."
+        "message": "TrueGlide Configurator permet de flasher des cibles unifiées avec les configurations spécifiques de la carte en une seule étape.<br><br>Le concept de cibles unifiées signifie que le même fichier .hex de firmware peut être utilisé pour toutes les cartes utilisant le même MCU.<br><br>La version 4.4 du firmware a introduit <strong>Cloud Build<\/strong><br><br>Avec <strong>Cloud Build<\/strong> nous devons définir les options matérielles présentes sur votre build.<br><br>Pour que les différentes cartes fonctionnent avec le même firmware, un fichier de configuration spécifique est déployé à côté du firmware lorsqu'une cible unifiée est flashée.<br><br>Avec la compilation locale vous pouvez charger un fichier de configuration cible unifié ou choisir une carte avant de charger un fichier .hex firmware.<br><br>Si vous rencontrez des problèmes en utilisant le firmware, voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Sélectionnez la version du micrologiciel pour votre carte."
@@ -5313,7 +5382,7 @@
         "message": "Message:"
     },
     "firmwareFlasherWarningText": {
-        "message": "N'essayez <span class=\"message-negative\">pas<\/span> de flasher du matériel <strong>non supporté<\/strong> avec ce flasheur de firmware.<br \/><span class=\"message-negative\">Ne<\/span> <strong>débranchez<\/strong> pas la carte et n'<strong>éteignez<\/strong> pas votre ordinateur pendant le flashage.<br \/><br \/><strong>Note :<\/strong><ul><li>Le bootloader STM32 est stocké en ROM, il ne peut pas être briqué.<\/li><li>La <span class=\"message-negative\">connexion automatique<\/span> est toujours désactivée lorsque vous êtes dans le flasheur de firmware.<\/li><li>Assurez-vous d'avoir une sauvegarde ; certaines mises à jour\/rétrogradations effaceront votre configuration.<\/li><li>En cas de problème de flashage, <strong>essayez d'abord de débrancher tous les câbles de votre FC<\/strong>, de redémarrer, de mettre à jour les pilotes.<\/li><li>Pour flasher des cartes avec une prise USB directe (la plupart des cartes récentes), assurez-vous d'avoir installé les bons logiciels et pilotes (voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide))<\/li><\/ul>"
+        "message": "N'essayez <span class=\"message-negative\">pas<\/span> de flasher du matériel <strong>non supporté<\/strong> avec ce flasheur de firmware.<br \/><span class=\"message-negative\">Ne<\/span> <strong>débranchez<\/strong> pas la carte et n'<strong>éteignez<\/strong> pas votre ordinateur pendant le flashage.<br \/><br \/><strong>Note :<\/strong><ul><li>Le bootloader STM32 est stocké en ROM, il ne peut pas être briqué.<\/li><li>La <span class=\"message-negative\">connexion automatique<\/span> est toujours désactivée lorsque vous êtes dans le flasheur de firmware.<\/li><li>Assurez-vous d'avoir une sauvegarde ; certaines mises à jour\/rétrogradations effaceront votre configuration.<\/li><li>En cas de problème de flashage, <strong>essayez d'abord de débrancher tous les câbles de votre FC<\/strong>, de redémarrer, de mettre à jour les pilotes.<\/li><li>Pour flasher des cartes avec une prise USB directe (la plupart des cartes récentes), assurez-vous d'avoir installé les bons logiciels et pilotes (voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki))<\/li><\/ul>"
     },
     "firmwareFlasherWarningShort": {
         "message": "Ne flashez pas de matériel non supporté. Ne débranchez pas pendant le flashage. Le bootloader STM32 est en ROM et ne peut pas être briqué. Sauvegardez toujours votre configuration avant une mise à jour."
@@ -5325,7 +5394,7 @@
         "message": "Si vous avez perdu la communication avec votre carte, suivez ces étapes pour la rétablir :<ul><li>Coupez l'alimentation<\/li><li>Activez « Pas de séquence de redémarrage » et « Effacement complet de la puce ».<\/li><li>Pontez les broches BOOT ou maintenez le bouton BOOT.<\/li><li>Mettez sous tension (la LED d'activité ne clignotera PAS si c'est bien fait).<\/li><li>Installez tous les pilotes STM32 et Zadig si nécessaire.<\/li><li>Fermez l'application, puis relancez-la.<\/li><li>Relâchez le bouton BOOT si votre FC en a un.<\/li><li>Flashez le bon firmware (avec un débit manuel si le manuel de votre FC l'indique).<\/li><li>Coupez l'alimentation.<\/li><li>Retirez le pont BOOT.<\/li><li>Mettez sous tension (la LED d'activité devrait clignoter).<\/li><li>Connectez-vous normalement.<\/li><\/ul>"
     },
     "firmwareFlasherRecoveryShort": {
-        "message": "Si vous avez perdu la communication : coupez l'alimentation, activez Pas de séquence de redémarrage et Effacement complet de la puce, pontez les broches BOOT, puis mettez sous tension. Installez les pilotes si nécessaire."
+        "message": "Si vous avez perdu la communication : coupez l'alimentation, activez Pas de redémarrage et Effacement complet de la puce, pontez les broches BOOT, puis mettez sous tension. Installez les pilotes si nécessaire."
     },
     "firmwareFlasherReadMore": {
         "message": "En savoir plus →"
@@ -6329,7 +6398,7 @@
         "message": "Compensation de chute de tension Vbat %"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Donne un comportement des gaz et des PID constant sur toute la plage de tension utilisable de la batterie, en augmentant la sortie moteur à mesure que la tension de la batterie baisse.<br \/><br \/>Le niveau de compensation peut varier entre 0 et 100 %. Une compensation complète (100 %) est recommandée.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide) pour plus d'informations."
+        "message": "Donne un comportement des gaz et des PID constant sur toute la plage de tension utilisable de la batterie, en augmentant la sortie moteur à mesure que la tension de la batterie baisse.<br \/><br \/>Le niveau de compensation peut varier entre 0 et 100 %. Une compensation complète (100 %) est recommandée.<br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki) pour plus d'informations."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6405,7 +6474,7 @@
         "message": "Valeur du ralenti dynamique [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Le Dynamic Idle améliore le contrôle à bas régime et réduit le risque de désynchronisation des moteurs. <br \/><br \/> Il améliore l'autorité des PID, la stabilité à zéro gaz, le temps de suspension en inversé et le freinage des moteurs.<br \/><br \/>Le régime min du Dynamic Idle devrait être réglé autour de 3000 - 3500 rpm. <br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide) pour plus d'informations."
+        "message": "Le Dynamic Idle améliore le contrôle à bas régime et réduit le risque de désynchronisation des moteurs. <br \/><br \/> Il améliore l'autorité des PID, la stabilité à zéro gaz, le temps de suspension en inversé et le freinage des moteurs.<br \/><br \/>Le régime min du Dynamic Idle devrait être réglé autour de 3000 - 3500 rpm. <br \/><br \/>Voir le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki) pour plus d'informations."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Le Dynamic Idle est DÉSACTIVÉ car la télémétrie Dshot est OFF"
@@ -6420,10 +6489,10 @@
         "message": "Yaw intégré"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">ATTENTION<\/span> : si vous activez cette fonction, vous devez ajuster le PID de LACET en conséquence. Plus d'informations dans le Mémo et le Wiki TrueGlide (onglet Manuels &amp; Aide)."
+        "message": "<span class=\"message-negative\">ATTENTION<\/span> : si vous activez cette fonction, vous devez ajuster le PID de LACET en conséquence. Plus d'informations dans le Mémo et le Wiki TrueGlide (onglet Mémo &amp; Wiki)."
     },
     "pidTuningIntegratedYawHelp": {
-        "message": "Yaw intégré intègre les valeurs P, I et D, du yaw, permettant à P, I et D d'être altérés de la même manière que le pitch et le roll.<br><br>Très pe ude I est requis, car le P intégré agit comme I, et D intégré agit comme P.<br><br>REMARQUE : Le Yaw intégré nécessite l'utilisation du contrôle absolu, car I n'est pas nécessaire avec Yaw intégré."
+        "message": "Yaw intégré intègre les valeurs P, I et D, du yaw, permettant à P, I et D d'être altérés de la même manière que le pitch et le roll.<br><br>Très peu de I est requis, car le P intégré agit comme I, et D intégré agit comme P.<br><br>REMARQUE : Le Yaw intégré nécessite l'utilisation du contrôle absolu, car I n'est pas nécessaire avec Yaw intégré."
     },
     "failsafeFeaturesHelpOld": {
         "message": "La configuration du failsafe a beaucoup changé. Utilisez le firmware <strong>v1.12.0+<\/strong> pour activer le panneau de configuration avancé."
@@ -6480,7 +6549,7 @@
         "message": "Définit la durée en failsafe étape 1 après la perte du signal. Si ce délai expire sans retour du signal, le failsafe étape 2 démarre"
     },
     "failsafeThrottleLowItem": {
-        "message": "Délais avant la mise à zéro des gaz pour failsafe [secondes]"
+        "message": "Durée des gaz au minimum avant un simple désarmement [secondes]"
     },
     "failsafeThrottleLowHelp": {
         "message": "Désarme simplement l'appareil au lieu d'exécuter la procédure de failsafe choisie lorsque les gaz étaient bas pendant cette durée"
@@ -6565,7 +6634,7 @@
         "message": "Gaz en stationnaire - <span class=\"message-negative\">IMPORTANT : réglez cette valeur avec précision<\/span>"
     },
     "failsafeGpsRescueThrottleHoverHelp": {
-        "message": "Pour trouver la bonne valeur, réglez l'action de l'interrupteur Failsafe sur Étape 2, réglez la procédure de failsafe étape 2 sur Atterrissage, et ajustez la valeur des gaz utilisée pendant l'atterrissage jusqu'à ce que l'appareil tienne en stationnaire ou descende lentement. Réglez ensuite les gaz en stationnaire du GPS Rescue et la valeur de repli de la voie des gaz en étape 1 sur cette valeur."
+        "message": "Pour trouver la bonne valeur, réglez l'action de l'interrupteur Failsafe sur Étape 2, réglez la procédure de failsafe étape 2 sur Atterrit, et ajustez la valeur des gaz utilisée pendant l'atterrissage jusqu'à ce que l'appareil tienne en stationnaire ou descende lentement. Réglez ensuite les gaz en stationnaire du GPS Rescue et la valeur de repli de la voie des gaz en étape 1 sur cette valeur."
     },
     "failsafeGpsRescueItemMinDth": {
         "message": "Distance minimale à la maison (mètres)"
@@ -6616,7 +6685,7 @@
         "message": "Stage 2"
     },
     "failsafeSwitchOptionKill": {
-        "message": "Tue"
+        "message": "Coupure immédiate (Kill)"
     },
     "powerButtonSave": {
         "message": "Sauvegarder"
@@ -6709,7 +6778,7 @@
         "message": "Tension"
     },
     "powerVoltageWarning": {
-        "message": "<span class=\"message-negative\">Attention :<\/span> Valeurs limitées à 25.5A."
+        "message": "<span class=\"message-negative\">Attention :</span> Valeurs limitées à 25,5 V."
     },
     "powerVoltageValue": {
         "message": "$1 V"
@@ -8164,10 +8233,10 @@
         "message": "Précision:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Sélectionnez la précision du Timer, cela contrôle à quelle précision le temps est indiqué dans"
+        "message": "Choisir la précision du minuteur : la plus petite unité de temps affichée."
     },
     "osdTimerPrecisionOptionSecond": {
-        "message": "Deuxième",
+        "message": "Seconde",
         "description": "Selectable option for the precision of the timer in the OSD"
     },
     "osdTimerPrecisionOptionHundredth": {
@@ -8384,7 +8453,7 @@
         "message": "Avertissement inconnu (détails à ajouter dans une version ultérieure)"
     },
     "osdSectionHelpElements": {
-        "message": "Activer ou désactiver l'OSD"
+        "message": "Choisir les éléments affichés par l'OSD."
     },
     "osdSectionHelpVideoMode": {
         "message": "Réglez le mode vidéo attendu de la caméra (généralement, il peut être laissé sur AUTO, si vous avez des difficultés, réglez-le pour correspondre à la sortie de la caméra)."
@@ -8558,7 +8627,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeFrequencyHelp": {
-        "message": "Fréquence à laquelle passe le mode Pit change une fois activé.",
+        "message": "Fréquence utilisée par l'émetteur vidéo quand le mode Pit est activé.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {
@@ -8894,7 +8963,7 @@
         "message": "Calibration du firmware terminée !"
     },
     "magCalibrationGuided": {
-        "message": "Calib du client (Guidé)"
+        "message": "Calib. client (libre)"
     },
     "magCalibrationGuidedDesc": {
         "message": "Tournez librement — le configurateur calcule les décalages"
@@ -9098,13 +9167,13 @@
         "message": "Profil"
     },
     "pidTuningProfileTip": {
-        "message": "Jusqu'à 3 (2 pour certains contrôleurs) différents profils PID peuvent être stockés sur le contrôleur de vol. Les profils PID incluent les paramètres PID, d setpoint et angle \/ horizon sur cet onglet. Une fois sur le terrain, des commandes simples (voir les instructions en ligne) peuvent être utilisées pour basculer entre les profils."
+        "message": "Jusqu'à 4 profils PID peuvent être stockés sur le contrôleur de vol. Les profils PID incluent les paramètres PID, d setpoint et angle / horizon sur cet onglet. Une fois sur le terrain, des commandes simples (voir les instructions en ligne) peuvent être utilisées pour basculer entre les profils."
     },
     "pidTuningRateProfile": {
         "message": "Rateprofil"
     },
     "pidTuningRateProfileTip": {
-        "message": "Jusqu'à 3 profils de RATE peuvent être stockés sur le contrôleur de vol. Les profils de RATE incluent les paramètres pour 'RC Rate', 'Rate', 'RC Expo', 'Throttle' et 'TPA'. La commutation entre les profils de RATE est possible en vol, en configurant un commutateur à 3 positions pour la «Sélection du profil de RATE» dans l'onglet «Réglages»."
+        "message": "Jusqu'à 4 profils de RATE peuvent être stockés sur le contrôleur de vol. Les profils de RATE incluent les paramètres pour 'RC Rate', 'Rate', 'RC Expo', 'Throttle' et 'TPA'. La commutation entre les profils de RATE est possible en vol, en configurant un interrupteur pour la «Sélection du profil de RATE» dans l'onglet « Ajustements »."
     },
     "pidTuningRateSetup": {
         "message": "Rates Basic\/Acro"
@@ -9629,7 +9698,7 @@
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsWarningWrongVersionConfirmation": {
-        "message": "Le préréglage sélectionné nécessite la version $1du micrologiciel<br\/> La version actuelle est $2",
+        "message": "Le préréglage sélectionné nécessite la version $1 du micrologiciel<br/> La version actuelle est $2",
         "description": "Warning message that shows up at the top of the preset sources dialog"
     },
     "presetsNoPresetsFound": {
@@ -10555,7 +10624,7 @@
         "message": "Chargement des données solaires..."
     },
     "preflightGNSS": {
-        "message": "GNSS \/ GPS Status"
+        "message": "État GNSS / GPS"
     },
     "preflightGNSSHelp": {
         "message": "La qualité du signal par satellite GNSS est affectée par l'activité solaire. Des valeurs élevées de Kp peuvent dégrader la précision de la position GPS et réduire la fiabilité du signal de sauvetage GPS."
@@ -10573,7 +10642,7 @@
         "message": "Déclinaison magnétique"
     },
     "preflightMagInclination": {
-        "message": "Inclination magnétique"
+        "message": "Inclinaison magnétique"
     },
     "preflightGNSSPlanner": {
         "message": "Outil de planification par satellite GNSS"
@@ -10795,7 +10864,7 @@
         "message": "Mise à jour en ligne"
     },
     "tfOnlineIntro": {
-        "message": "Télécharge le dernier firmware TrueGlide publié pour votre carte. Le fichier est vérifié (somme de contrôle) avant d'être chargé ; rien n'est flashé sans votre clic sur « Flasher le firmware ». La configuration est sauvegardée automatiquement avant le flash et peut être restaurée après."
+        "message": "Télécharge le dernier firmware TrueGlide publié pour votre carte. Le fichier est vérifié (somme de contrôle) avant d'être chargé ; rien n'est flashé sans votre clic sur « Flasher le firmware ». Si la carte est branchée et que la sauvegarde avant flash est activée (Options), la configuration est sauvegardée avant le flash et peut être restaurée après."
     },
     "tfOnlineCheck": {
         "message": "Chercher la mise à jour"
