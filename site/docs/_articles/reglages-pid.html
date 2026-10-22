@@ -1,7 +1,7 @@
 <h1>Réglages de PID</h1>
 <p class="chapeau">L'onglet <b>Réglages de PID</b> (groupe « Réglage du vol ») sert à régler la façon dont le drone suit les manches : gains PID, curseurs de réglage simplifié, rates (sensibilité des manches) et filtres. Les valeurs sont écrites dans le profil actif du contrôleur de vol.</p>
 <figure>
-  <img class="t-sombre" src="../assets/img/onglets/reglages-pid.png" alt="Onglet Réglages de PID, sous-onglet Paramètres PID du profil : sélecteur Profile 1, curseurs de réglage PID en mode RPY tous à 1.00, tableau P, I, D, D Max, Feedforward pour ROLL, PITCH et YAW, cadres Angle et Horizon, réglages du contrôleur PID, des gaz et du moteur, paramètres divers, boutons Rafraîchir et Sauvegarder en bas à droite"><img class="t-clair" src="../assets/img/onglets/reglages-pid-clair.png" alt="Même onglet Réglages de PID en thème clair, sous-onglet Paramètres PID du profil avec les curseurs à 1.00 et le tableau des PID">
+  <img class="t-sombre" src="../assets/img/onglets/reglages-pid.png" alt="Onglet Réglages de PID, sous-onglet Paramètres PID du profil : sélecteur de profil, curseurs de réglage PID en mode RPY tous à 1.00, tableau P, I, D, D Max, Feedforward pour ROLL, PITCH et YAW, cadres Angle et Horizon, réglages du contrôleur PID, des gaz et du moteur, paramètres divers, boutons Rafraîchir et Sauvegarder en bas à droite"><img class="t-clair" src="../assets/img/onglets/reglages-pid-clair.png" alt="Même onglet Réglages de PID en thème clair, sous-onglet Paramètres PID du profil avec les curseurs à 1.00 et le tableau des PID">
   <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, Mode Expert activé (tous les curseurs sont visibles). Pas de vrais capteurs ni de moteurs : le simulateur n'a pas de télémétrie DShot, d'où la ligne « Le Dynamic Idle est DÉSACTIVÉ car la télémétrie Dshot est OFF ». Les valeurs affichées sont celles par défaut du firmware.</figcaption>
 </figure>
 
@@ -12,8 +12,8 @@
 
 <h2 id="profils">Profils et boutons du haut</h2>
 <ul>
-  <li><b>Profil</b> (liste « Profile 1 », « Profile 2 »…) : le profil PID actif. Visible dans les sous-onglets PID et filtres. Le firmware <b>TRUEGLIDE</b> garde 4 profils PID. Changer de profil le sélectionne tout de suite sur le contrôleur de vol et recharge ses valeurs. La liste est grisée tant que des modifications ne sont pas sauvegardées.</li>
-  <li><b>Rateprofil</b> (liste « Profile rate 1 »…) : le profil de rates actif, visible dans le sous-onglet des rates. Le firmware en garde 4. Même fonctionnement que le profil PID.</li>
+  <li><b>Profil</b> (liste « Profil 1 », « Profil 2 »…) : le profil PID actif. Visible dans les sous-onglets PID et filtres. Le firmware <b>TRUEGLIDE</b> garde 4 profils PID. Changer de profil le sélectionne tout de suite sur le contrôleur de vol et recharge ses valeurs. La liste est grisée tant que des modifications ne sont pas sauvegardées.</li>
+  <li><b>Rateprofil</b> (liste « Profil de rates 1 »…) : le profil de rates actif, visible dans le sous-onglet des rates. Le firmware en garde 4. Même fonctionnement que le profil PID. L'aide (?) rappelle qu'on peut aussi changer de profil de rates en vol avec un interrupteur réglé dans l'onglet <a href="ajustements.html">Ajustements</a>.</li>
   <li><b>Nom du profil PID</b> et <b>Nom du profil Rate</b> : un nom libre de 8 caractères au plus (par exemple « 6S LOURD » ou « CINE »). Il est enregistré avec <b>Sauvegarder</b>.</li>
   <li><b>Copier le profil</b> (sous-onglet PID) et <b>Copier le profil des rates</b> (sous-onglet rates) : ouvre la fenêtre « Copier les valeurs du Profil ». Choisissez le profil de destination : toutes ses valeurs seront écrasées par celles du profil affiché. La copie est faite dans la mémoire vive du contrôleur : cliquez ensuite sur <b>Sauvegarder</b> pour la garder.</li>
   <li><b>Réinitialiser ce profil</b> : remet les valeurs par défaut du firmware dans le profil PID actif. Le message « Valeurs par défaut chargées pour le profil PID actuel. » apparaît. Là aussi, il faut <b>Sauvegarder</b> pour que ce soit gardé après un redémarrage.</li>
@@ -44,7 +44,7 @@
 <ul>
   <li><b>Angle</b> / <b>Force</b> : la force avec laquelle le mode ANGLE ramène le drone à plat (0 à 255).</li>
   <li><b>Horizon</b> / <b>Force</b> et <b>Transition</b> : les mêmes réglages pour le mode HORIZON (0 à 255).</li>
-  <li><b>Limite de l'Angle</b> : l'inclinaison maximale en mode ANGLE, en degrés. Le firmware accepte 10 à 80.</li>
+  <li><b>Limite de l'Angle</b> : l'inclinaison maximale en mode ANGLE, en degrés, de 10 à 80 (comme le firmware).</li>
 </ul>
 
 <h2 id="controleur-pid">Réglages du Contrôleur PID</h2>

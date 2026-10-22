@@ -33,15 +33,15 @@
     <ul>
       <li><b>Stage 1</b> (par défaut) : déclenche l'étape 1, exactement comme une perte du signal. Le meilleur choix pour tester.</li>
       <li><b>Stage 2</b> : saute l'étape 1 et lance tout de suite la procédure de l'étape 2.</li>
-      <li><b>Tue</b> (« Kill ») : désarme tout de suite. Le drone tombe.</li>
+      <li><b>Coupure immédiate (Kill)</b> : désarme tout de suite. Le drone tombe.</li>
     </ul>
   </li>
 </ul>
 
 <h2 id="stage-2">Stage 2 - Paramètres</h2>
 <ul>
-  <li><b>Durée en failsafe étape 1 après la perte du signal [secondes]</b> : le délai de garde, de 1 à 20 s par pas de 0,1. Par défaut : 1,5 s. Passé ce délai sans signal, l'étape 2 démarre.</li>
-  <li><b>Délais avant la mise à zéro des gaz pour failsafe [secondes]</b> : de 0 à 30 s, par défaut 10 s. Si les gaz étaient en bas depuis au moins cette durée au moment du failsafe, le drone se désarme simplement au lieu de lancer la procédure. Utile drone posé.</li>
+  <li><b>Durée en failsafe étape 1 après la perte du signal [secondes]</b> : le délai de garde, de 0,1 à 20 s par pas de 0,1. Par défaut : 1,5 s. Passé ce délai sans signal, l'étape 2 démarre.</li>
+  <li><b>Durée des gaz au minimum avant un simple désarmement [secondes]</b> : de 0 à 30 s, par défaut 10 s. Si les gaz étaient en bas depuis au moins cette durée au moment du failsafe, le drone se désarme simplement au lieu de lancer la procédure. Utile drone posé.</li>
 </ul>
 
 <h2 id="procedure">Stage 2 - Procédure Failsafe</h2>
@@ -74,7 +74,7 @@
   <li><b>Angle de tangage maximal</b> (°) : de 10 à 70°. C'est le réglage <b>ap_max_angle</b>, partagé avec les autres fonctions de navigation (onglet <a href="securite-navigation.html">Sécurité navigation</a>). Un angle plus grand demande en général plus de gaz.</li>
   <li><b>Distance descendue (en mètres)</b> : de 5 à 500 m, par défaut 20 m.</li>
   <li><b>Vitesse de descente (mètres/seconde)</b> : de 0,25 à 5 m/s, par défaut 1,5 m/s.</li>
-  <li><b>Gaz minimum</b> (1050 à 1400), <b>Gaz maximum</b> (1400 à 2000) et <b>Gaz en stationnaire</b> (0 à 1700) : ce sont les réglages de gaz de la navigation (<b>ap_throttle_min</b>, <b>ap_throttle_max</b>, <b>ap_hover_throttle</b>), aussi utilisés par les autres fonctions de navigation. Par défaut : 1100, 1900 et 1275. Les gaz en stationnaire doivent être réglés avec précision ; l'aide (?) du logiciel donne une méthode.</li>
+  <li><b>Gaz minimum</b> (1050 à 1400), <b>Gaz maximum</b> (1400 à 2000) et <b>Gaz en stationnaire</b> (0 à 1700) : ce sont les réglages de gaz de la navigation (<b>ap_throttle_min</b>, <b>ap_throttle_max</b>, <b>ap_hover_throttle</b>), aussi utilisés par les autres fonctions de navigation. Par défaut : 1100, 1900 et 1275. Les gaz en stationnaire doivent être réglés avec précision ; l'aide (?) du logiciel donne une méthode (interrupteur Failsafe sur l'étape 2, procédure « Atterrit »).</li>
   <li><b>Distance minimale à la maison (mètres)</b> : de 5 à 30 m, par défaut 15 m. Si le sauvetage démarre plus près du point de départ, le drone s'éloigne d'abord dans sa direction actuelle jusqu'à cette distance.</li>
   <li><b>Satellites minimum</b> : de 5 à 50, par défaut 8. Même réglage que <b>gps_rescue_min_sats</b> de l'onglet Sécurité navigation.</li>
   <li><b>Autoriser l'armement sans accroche</b> : désactivé par défaut. Déconseillé : sans point de départ enregistré, le drone se désarme et tombe lors d'un vrai failsafe.</li>

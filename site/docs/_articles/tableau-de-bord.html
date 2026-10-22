@@ -40,7 +40,7 @@
   <li><b>Chercher la mise à jour</b> : lit la liste des firmwares publiés (le seul moment où cet onglet contacte Internet). Réponses possibles : « À jour : … », « Nouvelle version publiée : … », « Pas de firmware publié pour … », ou « La carte ne donne pas son nom : choisissez-la dans Flasher le Firmware, mise à jour en ligne. ».</li>
   <li><b>Mettre à jour</b> : apparaît si un firmware est publié pour cette carte et que sa révision n'est pas celle installée. Il déconnecte le drone, ouvre <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et y télécharge le fichier. Il faut ensuite cliquer sur <b>Flasher le Firmware</b>.</li>
 </ul>
-<div class="encart">La carte ne permet pas de distinguer <b>TRUENAV_LIGHT</b> de <b>TRUENAV</b> : les deux sont affichés <b>TRUENAV</b>, et <b>Mettre à jour</b> propose le fichier <b>TRUENAV</b>. Sur une carte <b>TRUENAV_LIGHT</b>, passez plutôt par <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et choisissez le modèle vous-même. Une carte Betaflight se voit proposer <b>TRUEGLIDE</b>.</div>
+<p>Le modèle (<b>TRUEGLIDE</b>, <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b>) est lu dans la réponse de la commande <code>version</code> de la <a href="cli.html">CLI</a>, à l'ouverture de l'onglet. <b>Mettre à jour</b> propose le fichier du même modèle que celui installé. Une carte Betaflight se voit proposer <b>TRUEGLIDE</b>.</p>
 
 <h2 id="raccourcis">Raccourcis</h2>
 <ul>

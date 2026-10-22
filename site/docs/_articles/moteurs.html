@@ -43,7 +43,7 @@
   <li><b>Gyro</b> / <b>Accel</b> : le capteur tracé. Pour l'accéléromètre, la première mesure sert de zéro.</li>
   <li><b>Rafraîchissement</b> : 10 à 1000 ms entre deux mesures. <b>Echelle</b> : hauteur du graphique (deg/s pour le gyroscope, g pour l'accéléromètre).</li>
   <li><b>X</b>, <b>Y</b>, <b>Z</b> : valeur actuelle de chaque axe, avec entre parenthèses la plus forte valeur vue. <b>RMS</b> : moyenne quadratique des 300 derniers points des trois axes.</li>
-  <li><b>Remise à zéro</b> : efface le graphique et les valeurs les plus fortes.</li>
+  <li><b>Remise à zéro</b> (info-bulle « Remettre à zéro les valeurs maximales du graphique ») : efface le graphique et les valeurs les plus fortes.</li>
   <li><b>Tension</b>, <b>Intensité</b>, <b>Intensité consommée</b> : mesures de la batterie (voir <a href="alimentation.html">Alimentation et batterie</a>).</li>
 </ul>
 <p>Ces choix d'affichage sont gardés par le logiciel d'une session à l'autre.</p>
@@ -51,7 +51,7 @@
 <h2 id="barres">Barres et télémétrie des moteurs</h2>
 <ul>
   <li><b>Barres 1, 2, 3…</b> : une barre par moteur. Pendant un test, elles montrent la valeur reçue du contrôleur de vol (1000 à 2000 en DShot). Hors test, elles affichent la valeur d'arrêt.</li>
-  <li><b>Télémétrie</b> (sous les barres) : seulement avec le DShot bi-directionnel ou ESC_SENSOR. « RPM » = vitesse du moteur ; « Err » = taux d'erreur de la télémétrie DShot, en rouge au-dessus de 1 % ; « Temp » = température de l'ESC quand il la donne.</li>
+  <li><b>Télémétrie</b> (sous les barres) : seulement avec le DShot bi-directionnel ou ESC_SENSOR. « RPM: » = vitesse du moteur ; « Err: » = taux d'erreur de la télémétrie DShot, en rouge au-dessus de 1 % ; « Temp: » = température de l'ESC quand il la donne. L'info-bulle de la télémétrie reprend ces trois repères.</li>
 </ul>
 
 <h2 id="test-moteurs">Tester les moteurs pas à pas</h2>
@@ -59,12 +59,12 @@
 <ol>
   <li>Retirez toutes les hélices. Branchez la batterie (un smoke stopper est conseillé pour un premier essai).</li>
   <li>Sauvegardez d'abord vos réglages. Tant qu'un réglage n'est pas sauvegardé, le test est refusé : une fenêtre l'indique et l'interrupteur se recoupe.</li>
-  <li>Activez l'interrupteur <b>Je comprends les riques, les hélices sont retirées</b> (texte affiché tel quel par le logiciel). Cela autorise l'armement et le contrôle des moteurs, et désactive la protection Runaway Takeoff Prevention. Avec un protocole DShot, le logiciel demande aussi aux ESC d'activer la télémétrie étendue.</li>
+  <li>Activez l'interrupteur <b>Je comprends les risques, les hélices sont retirées</b>. Cela autorise l'armement et le contrôle des moteurs, et désactive la protection Runaway Takeoff Prevention. Avec un protocole DShot, le logiciel demande aussi aux ESC d'activer la télémétrie étendue.</li>
   <li>Montez doucement le curseur d'un seul moteur. Vérifiez sur le schéma du cadre <b>Mixer</b> que c'est le bon moteur qui tourne, et dans le bon sens.</li>
   <li>Redescendez le curseur, puis passez au moteur suivant.</li>
   <li>Le curseur <b>Maître</b> bouge tous les moteurs ensemble. La molette de la souris, sur un curseur, change la valeur par pas de 25.</li>
   <li>Pour arrêter : bouton <b>Arrêter les moteurs</b> en bas, ou n'importe quelle touche du clavier, sauf les flèches haut et bas, Page préc., Page suiv., Début, Fin, Alt et Tab. La touche ne marche que dans l'onglet Moteurs.</li>
-  <li>Coupez le test (interrupteur ou <b>Arrêter les moteurs</b>) avant de changer d'onglet ou de débrancher.</li>
+  <li>Coupez le test (interrupteur ou <b>Arrêter les moteurs</b>) avant de débrancher. Quitter l'onglet Moteurs arrête aussi le test : l'encart rouge le rappelle (« Le test des moteurs s'arrête quand on quitte l'onglet Moteurs »).</li>
 </ol>
 <p>Le test se coupe aussi si un réglage change pendant le test. Si le drone est armé par la radio pendant le test, les curseurs se bloquent et reviennent à la valeur d'arrêt.</p>
 <p>Un moteur dans le mauvais sens : utilisez <b>Direction du moteur</b> (DShot), le logiciel de configuration des ESC, ou croisez deux fils du moteur. Un moteur à la mauvaise place : utilisez <b>Réordonner les moteurs</b>.</p>

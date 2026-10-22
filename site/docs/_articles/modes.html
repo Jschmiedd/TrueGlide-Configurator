@@ -52,6 +52,7 @@
     <tr><td>GPS RESCUE</td><td>Retour vers le point d'armement. Présent si la fonction GPS est active.</td></tr>
     <tr><td>ALTHOLD, POS HOLD</td><td>Maintien d'altitude, maintien de position.</td></tr>
     <tr><td>AUTOPILOT, WP CAPTURE</td><td>Missions GPS : seulement avec les firmwares de navigation (<b>TRUENAV</b>, <b>TRUENAV_LIGHT</b>) et le simulateur. Voir <a href="plan-de-vol.html">Plan de vol</a>.</td></tr>
+    <tr><td>WP CAPTURE</td><td>Enregistre des points de passage en vol : un appui bref ajoute la position actuelle à la mission, un appui maintenu 1,5 s supprime le dernier point (aide <b>?</b> du mode).</td></tr>
     <tr><td>FAILSAFE</td><td>Déclenche à la main l'étape 2 du failsafe.</td></tr>
     <tr><td>BEEPER, BEEPER MUTE</td><td>Fait sonner le buzzer (retrouver un drone tombé) ; coupe le buzzer.</td></tr>
     <tr><td>FLIP OVER AFTER CRASH</td><td>Inverse les moteurs pour retourner le drone sur le dos (DShot nécessaire).</td></tr>
@@ -69,6 +70,7 @@
   <li>Il ne marche qu'en mode <b>ANGLE</b> : mettez aussi ANGLE sur un interrupteur.</li>
   <li>Interrupteur actif : le nez descend progressivement jusqu'à l'angle de croisière. Interrupteur coupé ou failsafe : retour progressif au stationnaire. GPS RESCUE, ALTHOLD et POS HOLD annulent la transition.</li>
   <li>Sans interrupteur sur SPEEDER, rien ne change en vol.</li>
+  <li>L'aide <b>?</b> du mode résume ce fonctionnement.</li>
   <li>Les réglages (angle de croisière, vitesse de transition) sont dans l'onglet <a href="speeder.html">Speeder</a>.</li>
 </ul>
 <div class="encart">La logique du mode SPEEDER est vérifiée en tests et au simulateur, pas encore en vol réel. Commencez avec un petit angle de croisière, en altitude, prêt à couper l'interrupteur.</div>

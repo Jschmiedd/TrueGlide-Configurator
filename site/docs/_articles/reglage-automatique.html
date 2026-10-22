@@ -28,9 +28,9 @@
 
 <h2 id="importer">Cadre Analyse de la Blackbox</h2>
 <ul>
-  <li><b>Importer le journal de la Blackbox</b> : choisissez le fichier. L'analyse se fait dans le logiciel ; une roue tourne pendant la lecture.</li>
-  <li>Si le fichier ne contient pas de données chirp, un message d'erreur s'affiche avec le bouton <b>Essayez encore</b>.</li>
-  <li>Après l'analyse, le cadre affiche le <b>Fichier</b>, la fréquence d'échantillonnage en Hz, les <b>Axes Détectés</b> (Roll, Pitch, Yaw) et le bouton <b>Importer un autre</b>.</li>
+  <li><b>Importer le journal de la Blackbox</b> : choisissez le fichier. L'analyse se fait dans le logiciel ; une roue tourne pendant la lecture, avec l'étape en cours (par exemple « Lecture du journal 1 sur 2... »).</li>
+  <li>Si le fichier ne contient pas de données chirp, un message d'erreur s'affiche (« Aucune donnée chirp dans les journaux de ce fichier. », ou « Aucun journal trouvé dans le fichier. ») avec le bouton <b>Essayez encore</b>.</li>
+  <li>Après l'analyse, le cadre affiche le <b>Fichier</b>, la <b>Fréquence d'échantillonnage</b> en Hz, les <b>Axes Détectés</b> (Roll, Pitch, Yaw) et le bouton <b>Importer un autre</b>.</li>
 </ul>
 <p>Le logiciel prend le premier journal du fichier qui contient des données chirp exploitables. Un axe n'est retenu que si sa mesure est assez longue.</p>
 
@@ -44,8 +44,8 @@
 <p>Un tableau avec une colonne par axe affiché, en trois parties :</p>
 <ul>
   <li><b>PIDs actuels (à partir du log)</b> : P, I et D lus dans l'en-tête du journal.</li>
-  <li><b>Analyse</b> : <b>Bande passante</b> (Hz), <b>Marge de phase</b> (°), <b>Pic résonnant</b> (dB), <b>Pic de Sensibilité</b> (dB), dépassement (ligne <b>Excès</b>, en %), <b>Temps de montée</b> (ms), temps de stabilisation (ligne <b>Temps de descente</b>, en ms) et <b>Cohérence</b> (%). Une cohérence basse veut dire que la mesure est peu fiable.</li>
-  <li><b>Curseurs proposés</b> : colonne <b>Actuel</b> (valeur du journal) et une colonne <b>Proposé</b> par axe pour <b>Multiplicateur Master</b>, <b>Gain P / I</b>, <b>Gain I</b>, <b>Gain D</b>, <b>Gain d'anticipation (Feedforward)</b> et <b>Filtre D-Term</b>. L'écart en % est en vert au-delà de +5 %, en rouge en dessous de −5 %.</li>
+  <li><b>Analyse</b> : <b>Bande passante</b> (Hz), <b>Marge de phase</b> (°), <b>Pic résonnant</b> (dB), <b>Pic de Sensibilité</b> (dB), <b>Dépassement</b> (%), <b>Temps de montée</b> (ms), <b>Temps de stabilisation</b> (ms) et <b>Cohérence</b> (%). Une cohérence basse veut dire que la mesure est peu fiable.</li>
+  <li><b>Curseurs proposés</b> : colonne <b>Actuel</b> (valeur du journal) et une colonne <b>Proposé</b> par axe pour <b>Multiplicateur Master</b>, <b>Gain P / I</b>, <b>Gain I</b>, <b>Gain D</b>, <b>Gain d'anticipation (Feedforward)</b> et <b>Filtre D-Term</b>. L'écart en % est en vert au-delà de +5 %, en rouge en dessous de −5 %. Les valeurs proposées ne dépassent jamais 200 (2,00 sur les curseurs de l'onglet <a href="reglages-pid.html">Réglages de PID</a>), la limite du firmware.</li>
 </ul>
 
 <h2 id="appliquer">Appliquer les gains</h2>

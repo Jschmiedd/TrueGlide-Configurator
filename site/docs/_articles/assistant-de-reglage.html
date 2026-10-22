@@ -47,10 +47,11 @@
 <p>Le cadre <b>Détail des réglages</b> liste chaque réglage CLI, sa valeur et la raison. Selon le drone, on y trouve les curseurs <code>simplified_*</code>, le protocole moteur, <code>dshot_bidir</code>, le ralenti dynamique, <code>thrust_linear</code> (20 à 48 kHz, 0 à 24 kHz), et les protections <b>TRUEGLIDE</b> possibles avec vos ESC : limite de température des ESC (100 °C, gaz jamais sous 50 %), limite de courant (80 % du calibre total des ESC), relance d'un moteur désynchronisé ou calé, et vitesse de secours si la télémétrie d'un ESC se perd. Voir l'onglet <a href="protections.html">Protections</a>.</p>
 <p>Notes particulières selon le choix :</p>
 <ul>
-  <li><b>Hexa X</b> et <b>X8</b> : régler le mixeur dans l'onglet <a href="configuration.html">Configuration</a>, puis vérifier l'ordre et le sens des moteurs dans l'onglet <a href="moteurs.html">Moteurs</a>, <b>Hélices retirées</b>.</li>
+  <li><b>Hexa X</b> et <b>X8</b> : régler le mixeur (cadre <b>Mixer</b> de l'onglet <a href="moteurs.html">Moteurs</a>, même si la note du logiciel parle encore de l'onglet Configuration, ou commande <code>mixer</code> dans la <a href="cli.html">CLI</a>), puis vérifier l'ordre et le sens des moteurs dans l'onglet <a href="moteurs.html">Moteurs</a>, <b>Hélices retirées</b>.</li>
   <li><b>Quad X pusher</b> : le schéma de l'onglet Moteurs se lit vu de dessus ; vérifier sens et ordre hélices retirées avant de monter les hélices.</li>
   <li><b>Speeder</b> : ajoute <code>speeder_cruise_angle</code> à 20° pour les premiers essais, puis monter par pas de 10° ; mettre le mode SPEEDER sur un interrupteur et voler en mode ANGLE. Voir l'onglet <a href="speeder.html">Speeder</a>.</li>
   <li><b>Fil de télémétrie série</b> : ajoute <code>feature ESC_SENSOR</code> ; il faut aussi activer « ESC » sur le bon port dans l'onglet <a href="ports.html">Ports</a>.</li>
+  <li>Taille d'hélice au-dessus de 10" : la note « Hors de 1,2" à 10" : pas de correction selon la puissance » rappelle qu'il n'y a pas de drone de référence comparable.</li>
 </ul>
 
 <h2 id="appliquer">Appliquer le réglage</h2>
