@@ -1,0 +1,81 @@
+<h1>OSD</h1>
+<p class="chapeau">L'onglet <b>OSD</b> (groupe « Vidéo et lumières ») sert à choisir les informations incrustées dans l'image vidéo (tension, minuteurs, alertes…), à les placer sur l'écran, et à régler les alarmes et les statistiques de fin de vol.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/osd.png" alt="Onglet OSD : à gauche la liste « Elements » avec trois cases par ligne pour les profils 1, 2 et 3 ; au centre l'aperçu sur une image de vol ; à droite les cadres Profil OSD actif, Format vidéo, Unités, Timers, Alarmes, Alertes et Statistiques de vol ; en bas les boutons « Gestionnaire de polices de l'OSD » et « Sauvegarder »"><img class="t-clair" src="../assets/img/onglets/osd-clair.png" alt="Onglet OSD en thème clair">
+  <figcaption>Capture du logiciel en mode virtuel (sans carte) : le simulateur n'a pas d'OSD. Aucun élément n'est coché, l'aperçu ne montre donc que l'image de fond. Les deux alertes propres à <b>TRUEGLIDE</b> n'apparaissent qu'avec une vraie carte sous ce firmware.</figcaption>
+</figure>
+
+<h2 id="acces">Où le trouver</h2>
+<ul>
+  <li>L'onglet n'apparaît dans le menu que si la fonction <b>OSD</b> (« Affichage des infos sur l'écran (OSD) ») est activée dans l'onglet <a href="configuration.html">Configuration</a>.</li>
+  <li>« Aucune puce OSD n'a été détectée » : certaines cartes n'alimentent la puce OSD analogique (MAX7456) qu'avec la batterie. Branchez la batterie avant l'USB, <b>Hélices retirées</b>.</li>
+  <li>« Votre contrôleur de vol ne répond pas aux commandes OSD » : la carte n'a pas d'OSD utilisable avec cet onglet.</li>
+</ul>
+<p>L'aperçu n'utilise pas forcément la police installée dans la carte, et la mise en page peut différer : vérifiez toujours dans vos lunettes avant de voler.</p>
+
+<h2 id="elements">Elements</h2>
+<ul>
+  <li>Chaque ligne est un élément de l'OSD. Les cases à gauche l'affichent ou non dans chaque profil OSD (colonnes <b>1</b>, <b>2</b>, <b>3</b>, rappelées dans le titre du cadre).</li>
+  <li>Le champ <b>Recherche</b> filtre la liste. Le survol d'une ligne montre sa description et repère l'élément dans l'aperçu.</li>
+  <li>Certains éléments ont un menu de variantes (par exemple <b>Altitude</b> « AGL avec 1 décimale », <b>Niveau de la batterie</b> « Graphique restant », <b>VTX : Canal</b> « Bande:Canal:Puissance:Pit »).</li>
+  <li>Bouton <b>…</b> (<b>Options</b>) : <b>Aligner sur la position</b> ouvre une grille de 3 × 5 positions toutes faites (coins, bords, centre) pour placer l'élément d'un clic.</li>
+</ul>
+
+<h2 id="apercu">Aperçu</h2>
+<ul>
+  <li><b>Glisser les éléments pour changer la position</b> : faites glisser un élément de l'aperçu à l'endroit voulu.</li>
+  <li><b>Règles</b> : affiche des règles graduées autour de l'aperçu pour aligner les éléments.</li>
+  <li>L'aperçu montre le profil choisi dans <b>Profil OSD actif</b>.</li>
+</ul>
+
+<h2 id="profil">Profil OSD actif</h2>
+<ul>
+  <li><b>Profil OSD actif</b> : <b>Profil OSD 1</b>, <b>2</b> ou <b>3</b>. C'est le profil affiché en vol, et celui de l'aperçu. Il est enregistré avec le reste.</li>
+  <li><b>Police de caractères</b> : police utilisée par l'aperçu seulement (Par défaut, gras, grande…). Pour changer la police de la carte, voir le <a href="#polices">gestionnaire de polices</a>.</li>
+</ul>
+
+<h2 id="format-unites">Format vidéo et Unités</h2>
+<ul>
+  <li><b>Format vidéo</b> (OSD analogique MAX7456 ou OSD numérique par MSP) : <b>Auto</b>, <b>PAL</b>, <b>NTSC</b>, <b>HD</b>. Laissez <b>Auto</b> en analogique, sauf problème : choisissez alors le format de sortie de la caméra. <b>HD</b> sert aux systèmes numériques. Les choix que le firmware ne gère pas sont grisés.</li>
+  <li><b>Unités</b> : <b>Impérial</b>, <b>Metrique</b> ou <b>Britannique</b>, pour les valeurs chiffrées.</li>
+</ul>
+
+<h2 id="timers">Timers</h2>
+<p>Pour chacun des minuteurs (<b>1</b>, <b>2</b>…) :</p>
+<ul>
+  <li><b>Source</b> : ce que le minuteur compte : <b>Temps de fonctionnement</b>, <b>Temps total armé</b>, <b>Dernière heure armée</b> ou <b>Temps Activé/Armé</b>.</li>
+  <li><b>Précision</b> : affichage à la seconde, au dixième ou au centième.</li>
+  <li><b>Alarme</b> : en minutes, de 0 à 600. Au-delà, l'élément clignote. 0 = pas d'alarme.</li>
+</ul>
+
+<h2 id="alarmes">Alarmes</h2>
+<p>Seuils qui font clignoter l'élément correspondant, par exemple <b>RSSI</b>, <b>Capacité</b>, <b>Altitude</b>, <b>Minutes</b>. La liste dépend du firmware.</p>
+
+<h2 id="alertes">Alertes</h2>
+<p>Choisissez les messages qui peuvent s'afficher dans l'élément <b>Avertissements</b> (cochez aussi cet élément dans la liste de gauche). Le survol d'une alerte donne sa description.</p>
+<p>Avec le firmware <b>TRUEGLIDE</b>, la liste contient deux alertes en plus :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Alerte</th><th>Affiché</th><th>Quand</th></tr></thead>
+  <tbody>
+    <tr><td><b>Gaz limités (TrueGlide)</b></td><td><code>ESC HOT</code> ou <code>AMP LIM</code> suivi du % de gaz autorisé</td><td>la protection limite les gaz (ESC trop chaud ou courant trop fort)</td></tr>
+    <tr><td><b>Moteur relancé (TrueGlide)</b></td><td><code>M1 RESTART</code> à <code>M8 RESTART</code></td><td>pendant 3 secondes après la relance d'un moteur calé ou désynchronisé</td></tr>
+  </tbody>
+</table></div>
+<p>Elles ne s'affichent que si la protection correspondante est activée dans l'onglet <a href="protections.html">Protections</a>. Sur une carte qui garde une ancienne configuration, cochez-les à la main.</p>
+
+<h2 id="statistiques">Statistiques de vol</h2>
+<p>Choisissez les valeurs affichées sur l'écran de statistiques après le vol (tension minimale, vitesse maximale, distance, mAh consommés…). Le survol d'une ligne donne sa description.</p>
+
+<h2 id="polices">Gestionnaire de polices de l'OSD</h2>
+<p>Bouton actif seulement si une puce OSD analogique (MAX7456) est détectée.</p>
+<ol>
+  <li>Choisissez une police dans <b>Choisir des réglages de Police</b>, ou <b>Ouvrir le fichier de police</b> pour une police à vous. Les caractères s'affichent en haut de la fenêtre.</li>
+  <li>Facultatif, <b>Logo de démarrage</b> : <b>Choisir une image personnalisée…</b>. L'image doit faire 288 × 72 pixels et ne contenir que du vert, du noir et du blanc.</li>
+  <li>Cliquez sur <b>Charger le fichier de police</b> : la barre montre l'envoi caractère par caractère. Sans cette étape, le logo personnalisé n'est pas gardé.</li>
+</ol>
+
+<h2 id="sauvegarder">Sauvegarder</h2>
+<ul>
+  <li><b>Sauvegarder</b> : actif dès qu'un réglage a changé. Envoie toute la configuration OSD à la carte et l'enregistre, sans redémarrage ; le bouton affiche « Enregistré » un court instant.</li>
+  <li>Flèche à côté, <b>Actualiser</b> : relit la configuration de la carte et abandonne les changements non sauvegardés.</li>
+</ul>
