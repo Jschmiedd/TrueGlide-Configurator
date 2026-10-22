@@ -101,7 +101,7 @@
                         <SettingRow :label="$t('failsafeDelayItem')" :help="$t('failsafeDelayHelp')">
                             <UInputNumber
                                 v-model="failsafeDelay"
-                                :min="1"
+                                :min="0.1"
                                 :max="20"
                                 :step="0.1"
                                 size="xs"

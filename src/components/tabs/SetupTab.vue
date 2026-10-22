@@ -679,10 +679,13 @@ function process_html() {
         state.batMahDrawing = t("initialSetupBatteryAValue", { 1: fcStore.analogData.amperage.toFixed(2) });
         state.rssi = t("initialSetupRSSIValue", { 1: ((fcStore.analogData.rssi / 1023) * 100).toFixed(0) });
 
-        if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_46) && fcStore.config.cpuTemp) {
+        if (semver.lt(fcStore.config.apiVersion, API_VERSION_1_46)) {
+            state.cpuTemp = t("initialSetupCpuTempNotSupported");
+        } else if (fcStore.config.cpuTemp) {
             state.cpuTemp = `${fcStore.config.cpuTemp.toFixed(0)} \u2103`;
         } else {
-            state.cpuTemp = t("initialSetupCpuTempNotSupported");
+            // recent firmware, but this board (or the simulator) gives no temperature
+            state.cpuTemp = t("initialSetupCpuTempUnavailable");
         }
 
         if (semver.gte(fcStore.config.apiVersion, API_VERSION_1_47)) {

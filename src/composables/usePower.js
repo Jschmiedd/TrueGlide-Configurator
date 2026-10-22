@@ -413,6 +413,9 @@ export function usePower() {
         };
     };
 
+    // Scales in use before the calibration wrote its proposal, so "discard" can put them back
+    const scalesBeforeCalibration = { vbat: null, amperage: null };
+
     // Helper function to calibrate voltage
     const calibrateVoltage = () => {
         if (batteryConfig.voltageMeterSource !== 1) {
@@ -430,6 +433,7 @@ export function usePower() {
         }
 
         vbatnewscale.value = newScale;
+        scalesBeforeCalibration.vbat ??= voltageConfigs[0].vbatscale;
         voltageConfigs[0].vbatscale = newScale;
         FC.VOLTAGE_METER_CONFIGS[0].vbatscale = newScale;
         return true;
@@ -463,6 +467,7 @@ export function usePower() {
         }
 
         amperagenewscale.value = newScale;
+        scalesBeforeCalibration.amperage ??= { index: ampsource - 1, scale: currentConfigs[ampsource - 1].scale };
         currentConfigs[ampsource - 1].scale = newScale;
         FC.CURRENT_METER_CONFIGS[ampsource - 1].scale = newScale;
         return true;
@@ -479,6 +484,8 @@ export function usePower() {
 
     // Apply calibration
     const applyCalibration = () => {
+        scalesBeforeCalibration.vbat = null;
+        scalesBeforeCalibration.amperage = null;
         if (vbatscalechanged.value) {
             analyticsChanges["PowerVBatUpdated"] = "Calibrated";
         }
@@ -490,6 +497,18 @@ export function usePower() {
 
     // Discard calibration
     const discardCalibration = () => {
+        // calibrate() already wrote the proposed scales into the form: put back the ones in use before
+        if (scalesBeforeCalibration.vbat !== null) {
+            voltageConfigs[0].vbatscale = scalesBeforeCalibration.vbat;
+            FC.VOLTAGE_METER_CONFIGS[0].vbatscale = scalesBeforeCalibration.vbat;
+        }
+        if (scalesBeforeCalibration.amperage !== null) {
+            const { index, scale } = scalesBeforeCalibration.amperage;
+            currentConfigs[index].scale = scale;
+            FC.CURRENT_METER_CONFIGS[index].scale = scale;
+        }
+        scalesBeforeCalibration.vbat = null;
+        scalesBeforeCalibration.amperage = null;
         // Reset calibration changes
         vbatscalechanged.value = false;
         amperagescalechanged.value = false;

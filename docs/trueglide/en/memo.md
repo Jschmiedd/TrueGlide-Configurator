@@ -6,7 +6,7 @@ One-page cheat sheet. Details: [Wiki](wiki/index.md).
 
 1. **Back up** the old configuration: CLI tab, `diff all`, save the text.
 2. **Flash** the TrueGlide `.hex` (Firmware Flasher tab, Load TrueGlide firmware (.hex), Full chip erase). Pick the model:
-   `trueglide_…` (TRUEGLIDE), `truenav_…` (GPS navigation), `truenav_light_…` (512 KB boards). See [Installation](wiki/installation.md).
+   `trueglide_…` (TRUEGLIDE), `truenav_…` (GPS navigation), `truenav_light_…` (navigation without the racing features). See [Installation](wiki/installation.md).
 3. **Connect**: the **Dashboard** opens; **Back up the configuration**, then **Continue**: the guided setup goes
    through the 9 steps of *Setup* and *TrueGlide*, before *Flight tuning*.
 4. **Props off**: Motors tab, check motor order and spin direction.

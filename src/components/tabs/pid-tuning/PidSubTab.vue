@@ -642,7 +642,7 @@
                         v-model="advancedTuning.levelAngleLimit"
                         :step="1"
                         :min="10"
-                        :max="200"
+                        :max="80"
                         size="xs"
                         orientation="vertical"
                         class="w-full"

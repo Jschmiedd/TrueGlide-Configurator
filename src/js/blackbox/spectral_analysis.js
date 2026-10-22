@@ -401,17 +401,20 @@ function computeGainScales(metrics, tf, targetBandwidthHz, targetPhaseMarginDeg)
     };
 }
 
+// The firmware caps every simplified tuning slider at 200 (SIMPLIFIED_TUNING_MAX): never propose more
+const SLIDER_MAX = 200;
+
 function buildProposedSliders(currentSliders, scales) {
     const cur = currentSliders;
     const { piScale, iScale, dScale, ffScale, filterScale } = scales;
     return {
-        slider_master_multiplier: Math.round(clamp((cur.masterMultiplier ?? 1) * 100, 25, 250)),
-        slider_pi_gain: Math.round(clamp((cur.piGain ?? 1) * piScale * 100, 25, 250)),
-        slider_i_gain: Math.round(clamp((cur.iGain ?? 1) * iScale * 100, 25, 250)),
-        slider_d_gain: Math.round(clamp((cur.dGain ?? 1) * dScale * 100, 25, 250)),
-        slider_feedforward_gain: Math.round(clamp((cur.feedforwardGain ?? 1) * ffScale * 100, 25, 250)),
+        slider_master_multiplier: Math.round(clamp((cur.masterMultiplier ?? 1) * 100, 25, SLIDER_MAX)),
+        slider_pi_gain: Math.round(clamp((cur.piGain ?? 1) * piScale * 100, 25, SLIDER_MAX)),
+        slider_i_gain: Math.round(clamp((cur.iGain ?? 1) * iScale * 100, 25, SLIDER_MAX)),
+        slider_d_gain: Math.round(clamp((cur.dGain ?? 1) * dScale * 100, 25, SLIDER_MAX)),
+        slider_feedforward_gain: Math.round(clamp((cur.feedforwardGain ?? 1) * ffScale * 100, 25, SLIDER_MAX)),
         slider_dterm_filter_multiplier: Math.round(
-            clamp((cur.dtermFilterMultiplier ?? 1) * filterScale * 100, 25, 250),
+            clamp((cur.dtermFilterMultiplier ?? 1) * filterScale * 100, 25, SLIDER_MAX),
         ),
     };
 }
