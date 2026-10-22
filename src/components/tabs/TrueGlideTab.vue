@@ -90,6 +90,8 @@
                             </div>
                         </template>
                     </UiBox>
+                    <!-- extra boxes of a tab (e.g. the Speeder diagram), fed with the values being edited -->
+                    <slot name="extra" :edited="edited"></slot>
                 </div>
             </template>
         </div>

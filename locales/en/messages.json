@@ -1155,6 +1155,51 @@
     "trueglideSetting_speeder_fpv_mixHelp": {
         "message": "Rotates roll and yaw with the transition angle, like fpv_mix_degrees but progressive."
     },
+    "tgSetupViewSide": {
+        "message": "Side"
+    },
+    "tgSetupViewTop": {
+        "message": "Top"
+    },
+    "tgSetupFront": {
+        "message": "FRONT"
+    },
+    "tfSpeederDiagramTitle": {
+        "message": "What SPEEDER does"
+    },
+    "tfSpeederVertical": {
+        "message": "vertical"
+    },
+    "tfSpeederHorizontal": {
+        "message": "horizontal"
+    },
+    "tfSpeederFlightDirection": {
+        "message": "flight direction"
+    },
+    "tfSpeederHover": {
+        "message": "Hover: fuselage vertical, nose up"
+    },
+    "tfSpeederCruise": {
+        "message": "Cruise: tilted {{angle}}° forward"
+    },
+    "tfSpeederTransitionTime": {
+        "message": "Transition: {{angle}}° at {{rate}} °/s, that is {{time}} s from hover to cruise, and the same to come back."
+    },
+    "tfSpeederExplainEngage": {
+        "message": "SPEEDER switch on (Modes tab), armed and in ANGLE mode: the nose goes down progressively to the cruise angle. The pitch stick adds or removes tilt around that angle."
+    },
+    "tfSpeederExplainRelease": {
+        "message": "Switch off or failsafe: progressive return to hover, at the same speed."
+    },
+    "tfSpeederExplainImmediate": {
+        "message": "Disarm, GPS RESCUE, ALTHOLD or POS HOLD: immediate return to hover. In HORIZON or ACRO, SPEEDER does nothing."
+    },
+    "tfSpeederExplainFpvMix": {
+        "message": "Progressive FPV mix: roll and yaw turn with the tilt, so the sticks keep the same effect as seen from the camera."
+    },
+    "tfSpeederFirstFlight": {
+        "message": "First test: cruise angle at 20°, at altitude, then raise by 10° steps. The mode is not yet verified in real flight."
+    },
     "trueglideNavSafetyTitle": {
         "message": "GPS navigation safety"
     },

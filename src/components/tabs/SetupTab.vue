@@ -8,6 +8,39 @@
                 <div id="interactive_block">
                     <div id="canvas_wrapper" class="background_paper" ref="canvasWrapper">
                         <canvas id="canvas" ref="canvasEl"></canvas>
+                        <!-- TrueGlide: top view markers (motor numbers, front), they follow the model -->
+                        <template v-if="topView">
+                            <span
+                                v-for="m in markers.motors"
+                                :key="m.motor"
+                                class="tg-motor-marker"
+                                :style="{ left: `${m.x}px`, top: `${m.y}px` }"
+                                >{{ m.motor }}</span
+                            >
+                            <span
+                                v-if="markers.front"
+                                class="tg-front-marker"
+                                :style="{ left: `${markers.front.x}px`, top: `${markers.front.y}px` }"
+                            >
+                                <span aria-hidden="true">▲</span>{{ $t("tgSetupFront") }}
+                            </span>
+                        </template>
+                        <div class="tg-view-toggle">
+                            <UButton
+                                :label="$t('tgSetupViewSide')"
+                                size="xs"
+                                :color="topView ? 'neutral' : 'primary'"
+                                :variant="topView ? 'subtle' : 'solid'"
+                                @click="setTopView(false)"
+                            />
+                            <UButton
+                                :label="$t('tgSetupViewTop')"
+                                size="xs"
+                                :color="topView ? 'primary' : 'neutral'"
+                                :variant="topView ? 'solid' : 'subtle'"
+                                @click="setTopView(true)"
+                            />
+                        </div>
                         <div class="attitude_info">
                             <dl>
                                 <dt>{{ $t("initialSetupHeading") }}</dt>
@@ -300,6 +333,8 @@ import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
 import Model from "../../js/model";
+import { TOP_VIEW_TILT, motorMarkers, frontMarker } from "../../js/trueglide/model_markers";
+import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { isMspCancelled } from "@/js/msp/mspErrors";
 import { API_VERSION_1_45, API_VERSION_1_46, API_VERSION_1_47, API_VERSION_1_48 } from "../../js/data_storage";
@@ -746,7 +781,12 @@ function initModel() {
         return;
     }
     modelInstance = new Model(wrapperDom, canvasDom);
-    boundModelResize = modelInstance.resize.bind(modelInstance);
+    // the model loads asynchronously: apply the chosen view once it is there
+    modelInstance.onLoad = applyView;
+    boundModelResize = () => {
+        modelInstance.resize();
+        updateMarkers();
+    };
     window.addEventListener("resize", boundModelResize);
 }
 
@@ -758,6 +798,39 @@ function renderModel() {
     const y = (fcStore.sensorData.kinematics[2] * -1 - yaw_fix.value) * 0.017453292519943295;
     const z = fcStore.sensorData.kinematics[0] * -1 * 0.017453292519943295;
     modelInstance.rotateTo(x, y, z);
+    updateMarkers();
+}
+
+// TrueGlide: side view (Betaflight's, the default) or top view with motor numbers and the front of the craft
+const topView = ref(Boolean(getConfig("tgSetupTopView", false).tgSetupTopView));
+const markers = reactive({ motors: [], front: null });
+
+function setTopView(enabled) {
+    topView.value = enabled;
+    setConfig({ tgSetupTopView: enabled });
+    applyView();
+}
+
+function applyView() {
+    if (!modelInstance?.model) {
+        return;
+    }
+    modelInstance.setViewTilt(topView.value ? TOP_VIEW_TILT : 0);
+    updateMarkers();
+}
+
+function updateMarkers() {
+    if (!topView.value || !modelInstance?.model) {
+        return;
+    }
+    const motors = motorMarkers(modelInstance.modelFile);
+    const box = modelInstance.localBox();
+    const points = modelInstance.projectPoints([...motors.map((m) => m.position), frontMarker(box)]);
+    if (!points) {
+        return;
+    }
+    markers.motors = motors.map((m, i) => ({ motor: m.motor, ...points[i] }));
+    markers.front = points[points.length - 1];
 }
 
 function cleanup(callback) {
@@ -870,6 +943,46 @@ function openBuildOptionsDialog() {
 #canvas {
     width: 100% !important;
     height: 100% !important;
+}
+// TrueGlide: view toggle and top view markers
+.tg-view-toggle {
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    display: flex;
+    gap: 0.25rem;
+    z-index: 100;
+}
+.tg-motor-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: #121212;
+    color: #c6f700;
+    border: 2px solid #c6f700;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+.tg-front-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    color: var(--primary-500);
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    line-height: 1.1;
+    pointer-events: none;
+    span {
+        display: block;
+        font-size: 1.2rem;
+    }
 }
 .attitude_info {
     position: absolute;

@@ -123,8 +123,10 @@ const Model = function (wrapper, canvas) {
             this.scene.add(this.modelWrapper);
 
             this.render();
+            this.onLoad?.();
         }.bind(this),
     );
+    this.modelFile = model_file;
 };
 
 Model.prototype.loadGLTF = function (model_file, callback) {
@@ -305,6 +307,55 @@ Model.prototype.updateMatrices = function () {
 
 Model.prototype.performRender = function () {
     this.renderer.render(this.scene, this.camera);
+};
+
+// TrueGlide: tilt the whole model towards the user (radians, 0 = side view). rotateTo() never touches
+// modelWrapper.rotation.x, so the tilt stays while the attitude updates.
+Model.prototype.setViewTilt = function (tilt) {
+    this.modelWrapper.rotation.x = tilt;
+    this.render();
+};
+
+// TrueGlide: model bounding box in model units (before scale), or null until the model is loaded.
+// Measured once with the model level and untilted, so the attitude never enlarges it.
+Model.prototype.localBox = function () {
+    if (!this.model) {
+        return null;
+    }
+    if (!this.levelBox) {
+        const box = new THREE.Box3();
+        this.model.traverse((child) => {
+            if (child.isMesh) {
+                child.geometry.computeBoundingBox();
+                const childBox = child.geometry.boundingBox.clone();
+                // transform from the mesh up to the model only (no attitude, no view tilt)
+                const toModel = new THREE.Matrix4();
+                for (let node = child; node && node !== this.model; node = node.parent) {
+                    node.updateMatrix();
+                    toModel.premultiply(node.matrix);
+                }
+                box.union(childBox.applyMatrix4(toModel));
+            }
+        });
+        this.levelBox = { min: box.min.toArray(), max: box.max.toArray() };
+    }
+    return this.levelBox;
+};
+
+// TrueGlide: position (CSS pixels from the wrapper's top left corner) of points given in model units,
+// following the current attitude and view tilt. Returns null until the model is loaded.
+Model.prototype.projectPoints = function (points) {
+    if (!this.model) {
+        return null;
+    }
+    this.updateMatrices();
+    const { width, height } = getContentBoxSize(this.wrapper);
+    const left = this.canvas.offsetLeft;
+    const top = this.canvas.offsetTop;
+    return points.map(([x, y, z]) => {
+        const v = new THREE.Vector3(x, y, z).applyMatrix4(this.model.matrixWorld).project(this.camera);
+        return { x: left + ((v.x + 1) / 2) * width, y: top + ((1 - v.y) / 2) * height };
+    });
 };
 
 // handle canvas resize

@@ -1170,6 +1170,51 @@
     "trueglideSetting_speeder_fpv_mixHelp": {
         "message": "Tourne roulis et lacet avec l'angle de transition, comme fpv_mix_degrees mais progressivement."
     },
+    "tgSetupViewSide": {
+        "message": "Profil"
+    },
+    "tgSetupViewTop": {
+        "message": "Dessus"
+    },
+    "tgSetupFront": {
+        "message": "AVANT"
+    },
+    "tfSpeederDiagramTitle": {
+        "message": "Ce que fait le SPEEDER"
+    },
+    "tfSpeederVertical": {
+        "message": "verticale"
+    },
+    "tfSpeederHorizontal": {
+        "message": "horizontale"
+    },
+    "tfSpeederFlightDirection": {
+        "message": "sens du vol"
+    },
+    "tfSpeederHover": {
+        "message": "Stationnaire : fuselage vertical, nez en haut"
+    },
+    "tfSpeederCruise": {
+        "message": "Croisière : penché de {{angle}}° vers l'avant"
+    },
+    "tfSpeederTransitionTime": {
+        "message": "Transition : {{angle}}° à {{rate}} °/s, soit {{time}} s du stationnaire à la croisière, et autant pour revenir."
+    },
+    "tfSpeederExplainEngage": {
+        "message": "Interrupteur SPEEDER activé (onglet Modes), drone armé et en mode ANGLE : le nez descend progressivement jusqu'à l'angle de croisière. Le manche de tangage ajoute ou retire de l'inclinaison autour de cet angle."
+    },
+    "tfSpeederExplainRelease": {
+        "message": "Interrupteur coupé ou failsafe : retour progressif au stationnaire, à la même vitesse."
+    },
+    "tfSpeederExplainImmediate": {
+        "message": "Désarmement, GPS RESCUE, ALTHOLD ou POS HOLD : retour immédiat au stationnaire. En HORIZON ou en ACRO, le SPEEDER n'agit pas."
+    },
+    "tfSpeederExplainFpvMix": {
+        "message": "Mixage FPV progressif : le roulis et le lacet tournent avec l'inclinaison, pour que les manches gardent le même effet vus de la caméra."
+    },
+    "tfSpeederFirstFlight": {
+        "message": "Premier essai : angle de croisière à 20°, en altitude, puis monter par pas de 10°. Le mode n'est pas encore vérifié en vol réel."
+    },
     "trueglideNavSafetyTitle": {
         "message": "Sécurité de la navigation GPS"
     },
