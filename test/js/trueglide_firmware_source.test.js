@@ -49,6 +49,8 @@ describe("TrueGlide firmware source", () => {
         ["trueflight_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex", "STANDARD", "STM32F405", "SPEEDYBEEF405MINI"],
         ["trueglide_2026.6.2_AT32F435G_BAYCK_DOLPHIN_MINI.hex", "STANDARD", "AT32F435G", "BAYCK_DOLPHIN_MINI"],
         ["TRUEGLIDE_2026.6.2_STM32F405_FOO.HEX", "STANDARD", "STM32F405", "FOO"],
+        // board names may contain a hyphen (LUXHDAIO-G4)
+        ["trueglide_2026.6.2_STM32G474_LUXHDAIO-G4.hex", "STANDARD", "STM32G474", "LUXHDAIO-G4"],
     ])("reconnaît %s", (name, model, mcu, board) => {
         const parsed = parseTrueGlideFirmwareName(name);
         expect(parsed).toEqual({ isTrueGlide: true, model, version: "2026.6.2", mcu, board });
@@ -123,6 +125,17 @@ describe("TrueGlide mise à jour en ligne", () => {
         expect(findFirmware(index, "speedybeef405mini", "STANDARD")).toEqual(entry);
         expect(findFirmware(index, "SPEEDYBEEF405MINI", "TRUENAV")).toBeNull();
         expect(() => parseFirmwareIndex({ format: 2 })).toThrow();
+    });
+
+    it("garde une carte dont le nom contient un tiret", () => {
+        const luxEntry = {
+            ...entry,
+            mcu: "STM32G474",
+            board: "LUXHDAIO-G4",
+            file: "STANDARD/trueglide_2026.6.2_STM32G474_LUXHDAIO-G4.hex.gz",
+        };
+        const index = parseFirmwareIndex({ ...manifest, files: [luxEntry] });
+        expect(findFirmware(index, "LUXHDAIO-G4", "STANDARD")).toEqual(luxEntry);
     });
 
     it("compare la révision installée (7 caractères) à la révision publiée (9)", () => {

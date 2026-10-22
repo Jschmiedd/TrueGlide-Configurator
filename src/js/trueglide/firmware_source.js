@@ -163,9 +163,9 @@ export function parseFirmwareIndex(json) {
             f &&
             MODELS.has(f.model) &&
             typeof f.board === "string" &&
-            /^[A-Z0-9_]+$/.test(f.board) &&
+            /^[A-Z0-9_-]+$/.test(f.board) &&
             typeof f.file === "string" &&
-            /^[A-Z_]+\/[A-Za-z0-9_.]+\.hex\.gz$/.test(f.file) &&
+            /^[A-Z_]+\/[A-Za-z0-9_.-]+\.hex\.gz$/.test(f.file) &&
             Number.isInteger(f.size) &&
             f.size > 0 &&
             SHA256.test(f.sha256 ?? ""),
