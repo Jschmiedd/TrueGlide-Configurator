@@ -11,6 +11,9 @@
  *   téléchargé est contrôlé (somme SHA-256 du manifeste) avant d'être proposé au flash.
  */
 export const TRUEGLIDE_FIRMWARE_URL = "https://jschmiedd.github.io/TrueGlide-Configurator/firmware/";
+// The test build of the app (/test/) reads its own list, so firmwares can be tried before /app/ offers them
+export const TRUEGLIDE_FIRMWARE_TEST_URL = "https://jschmiedd.github.io/TrueGlide-Configurator/firmware-test/";
+const TEST_APP_PATH = "/TrueGlide-Configurator/test/";
 
 // Autre adresse (essais, serveur local) : localStorage « tf_update_url » (sans le mot « firmware », que main.js efface
 // du stockage au démarrage).
@@ -18,7 +21,8 @@ const URL_OVERRIDE_KEY = "tf_update_url";
 
 /** Adresse du dossier des firmwares, terminée par « / ». */
 export function firmwareBaseUrl() {
-    let url = TRUEGLIDE_FIRMWARE_URL;
+    const isTestApp = String(globalThis.location?.pathname ?? "").startsWith(TEST_APP_PATH);
+    let url = isTestApp ? TRUEGLIDE_FIRMWARE_TEST_URL : TRUEGLIDE_FIRMWARE_URL;
     try {
         url = globalThis.localStorage?.getItem(URL_OVERRIDE_KEY) || url;
     } catch {

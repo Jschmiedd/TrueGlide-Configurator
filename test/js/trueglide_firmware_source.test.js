@@ -3,9 +3,10 @@
 // @vitest-environment node
 import { gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
     TRUEGLIDE_FIRMWARE_URL,
+    TRUEGLIDE_FIRMWARE_TEST_URL,
     checkTrueGlideFirmwareFile,
     downloadFirmware,
     fetchFirmwareIndex,
@@ -25,6 +26,19 @@ describe("TrueGlide firmware source", () => {
         expect(TRUEGLIDE_FIRMWARE_URL).toBe("https://jschmiedd.github.io/TrueGlide-Configurator/firmware/");
         expect(firmwareBaseUrl()).toBe(TRUEGLIDE_FIRMWARE_URL);
         expect(isOnlineFirmwareSourceEnabled()).toBe(true);
+    });
+
+    describe("adresse de la liste selon la page", () => {
+        afterEach(() => vi.unstubAllGlobals());
+
+        it("la page de test lit sa propre liste, l'application normale la liste publiée", () => {
+            vi.stubGlobal("location", { pathname: "/TrueGlide-Configurator/test/index.html" });
+            expect(firmwareBaseUrl()).toBe(TRUEGLIDE_FIRMWARE_TEST_URL);
+            vi.stubGlobal("location", { pathname: "/TrueGlide-Configurator/app/" });
+            expect(firmwareBaseUrl()).toBe(TRUEGLIDE_FIRMWARE_URL);
+            vi.stubGlobal("location", { pathname: "/TrueGlide-Configurator/site-test/" });
+            expect(firmwareBaseUrl()).toBe(TRUEGLIDE_FIRMWARE_URL);
+        });
     });
 
     it.each([
