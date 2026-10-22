@@ -117,6 +117,30 @@ export function modelFromBuildOptions(buildOptions) {
     return Array.isArray(buildOptions) && buildOptions.includes("USE_FLIGHT_PLAN") ? "TRUENAV" : "STANDARD";
 }
 
+const VERSION_NAMES = Object.freeze({
+    TRUENAV_LIGHT: "TRUENAV_LIGHT",
+    TRUENAV: "TRUENAV",
+    TRUEGLIDE: "STANDARD",
+    TRUEFLIGHT: "STANDARD",
+});
+
+/**
+ * Modèle du firmware installé, d'après la réponse à la commande CLI « version » (« # TRUENAV_LIGHT / STM32F405 … »).
+ * Seule source qui distingue TRUENAV_LIGHT de TRUENAV.
+ *
+ * @param {string[]} lines réponse de la commande « version »
+ * @returns {"STANDARD"|"TRUENAV"|"TRUENAV_LIGHT"|null} null si la réponse ne nomme pas un firmware TrueGlide
+ */
+export function modelFromVersionLines(lines) {
+    for (const line of lines ?? []) {
+        const match = /^#\s*([A-Z_]+)\s*\//.exec(String(line).trim());
+        if (match && match[1] in VERSION_NAMES) {
+            return VERSION_NAMES[match[1]];
+        }
+    }
+    return null;
+}
+
 const SHA256 = /^[0-9a-f]{64}$/;
 const MODELS = new Set(TRUEGLIDE_FIRMWARE_MODELS.map((m) => m.model));
 

@@ -15,6 +15,7 @@ import {
     installedStatus,
     isOnlineFirmwareSourceEnabled,
     modelFromBuildOptions,
+    modelFromVersionLines,
     parseFirmwareIndex,
     parseTrueGlideFirmwareName,
 } from "../../src/js/trueglide/firmware_source.js";
@@ -122,6 +123,18 @@ describe("TrueGlide mise à jour en ligne", () => {
         expect(modelFromBuildOptions(["USE_GPS", "USE_FLIGHT_PLAN"])).toBe("TRUENAV");
         expect(modelFromBuildOptions(["USE_GPS"])).toBe("STANDARD");
         expect(modelFromBuildOptions(undefined)).toBe("STANDARD");
+    });
+
+    it("distingue TRUENAV_LIGHT de TRUENAV par la commande version", () => {
+        const line = (name) => [`# ${name} / STM32F405 (S405) 2026.6.2 Oct 13 2026 / 10:00:00 (0142420) MSP API: 1.48`];
+        expect(modelFromVersionLines(line("TRUENAV_LIGHT"))).toBe("TRUENAV_LIGHT");
+        expect(modelFromVersionLines(line("TRUENAV"))).toBe("TRUENAV");
+        expect(modelFromVersionLines(line("TRUEGLIDE"))).toBe("STANDARD");
+        expect(modelFromVersionLines(["", ...line("TRUEFLIGHT")])).toBe("STANDARD");
+        // plain Betaflight, or no answer: unknown, the build options decide
+        expect(modelFromVersionLines(line("Betaflight"))).toBe(null);
+        expect(modelFromVersionLines([])).toBe(null);
+        expect(modelFromVersionLines(undefined)).toBe(null);
     });
 
     it("télécharge, décompresse et vérifie le firmware", async () => {

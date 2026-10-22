@@ -3,7 +3,7 @@ import { i18n } from "../js/localization";
 import BFClipboard from "../js/Clipboard";
 import { generateFilename } from "../js/utils/generate_filename";
 import GUI from "../js/gui";
-import BuildApi from "../js/BuildApi";
+import BuildApi, { TRUEGLIDE_NO_BETAFLIGHT_SERVERS } from "../js/BuildApi";
 import CONFIGURATOR from "../js/data_storage";
 import CliAutoComplete from "../js/CliAutoComplete";
 import { gui_log } from "../js/gui_log";
@@ -781,8 +781,9 @@ export function useCli() {
         // Keeping for reference if needed
     };
 
+    // TrueGlide never contacts Betaflight's build server, so a support upload could not reach anyone: no button
     const isSupportRequestAvailable = () => {
-        return ispConnected();
+        return !TRUEGLIDE_NO_BETAFLIGHT_SERVERS && ispConnected();
     };
 
     return {

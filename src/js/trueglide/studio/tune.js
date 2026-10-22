@@ -473,8 +473,8 @@ const root = {};
         'Raise the master slider in steps of 5 while checking motor temperature.'));
     }
     if (!twRef) {
-      notes.push(tr('Hors de 3,5" à 10" : pas de correction selon la puissance (aucun drone de référence comparable).',
-        'Outside 3.5" to 10": no power-based correction (no comparable reference quad).'));
+      notes.push(tr('Hors de 1,2" à 10" : pas de correction selon la puissance (aucun drone de référence comparable).',
+        'Outside 1.2" to 10": no power-based correction (no comparable reference quad).'));
     } else if (facteur <= 0.8 || facteur >= 1.2) {
       avert.push(tr('Rapport poussée / poids très différent de la référence de cette taille : correction plafonnée à ± 20 %.',
         'Thrust-to-weight ratio very different from the reference for this size: correction capped at ± 20 %.'));

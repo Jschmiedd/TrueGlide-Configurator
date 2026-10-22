@@ -26,7 +26,7 @@ export function useAutotune() {
     async function importAndAnalyze() {
         store.analysisState = "importing";
         store.errorMessage = "";
-        store.progressMessage = "Selecting file...";
+        store.progressMessage = i18n.getMessage("autotuneProgressSelecting");
 
         const file = await pickFileOrSetError(store);
         if (!file) {
@@ -34,20 +34,20 @@ export function useAutotune() {
         }
 
         try {
-            store.progressMessage = `Reading ${file.name}...`;
+            store.progressMessage = i18n.getMessage("autotuneProgressReading", { file: file.name });
             const blob = await FileSystem.readFileAsBlob(file);
             const data = new Uint8Array(await blob.arrayBuffer());
 
             store.analysisState = "analyzing";
-            store.progressMessage = "Finding log boundaries...";
+            store.progressMessage = i18n.getMessage("autotuneProgressBoundaries");
             const logs = findLogBoundaries(data);
             if (!logs || logs.length === 0) {
-                throw new Error("No log segments found in the file.");
+                throw new Error(i18n.getMessage("autotuneErrorNoLogs"));
             }
 
             const result = tryParseLogs(data, logs, file.name, store);
             if (!result) {
-                throw new Error("No chirp data found in any log segment.");
+                throw new Error(i18n.getMessage("autotuneErrorNoChirp"));
             }
 
             store.analysisResult = result;
@@ -55,7 +55,7 @@ export function useAutotune() {
             store.progressMessage = "";
         } catch (err) {
             store.analysisState = "error";
-            store.errorMessage = err.message || "Analysis failed.";
+            store.errorMessage = err.message || i18n.getMessage("autotuneErrorAnalysis");
             store.progressMessage = "";
         }
     }
@@ -82,7 +82,7 @@ async function pickFileOrSetError(store) {
             return null;
         }
         store.analysisState = "error";
-        store.errorMessage = err?.message || "Failed to open file picker.";
+        store.errorMessage = err?.message || i18n.getMessage("autotuneErrorPicker");
         store.progressMessage = "";
         return null;
     }
@@ -91,7 +91,7 @@ async function pickFileOrSetError(store) {
 function tryParseLogs(data, logs, filename, store) {
     let lastError = null;
     for (let idx = 0; idx < logs.length; idx++) {
-        store.progressMessage = `Parsing log ${idx + 1} of ${logs.length}...`;
+        store.progressMessage = i18n.getMessage("autotuneProgressParsing", { index: idx + 1, count: logs.length });
         try {
             const parsed = analyzeLog(data, logs[idx]);
             if (parsed) {

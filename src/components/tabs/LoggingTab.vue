@@ -119,7 +119,7 @@ let pendingWrite = Promise.resolve();
 const propertyDefinitions = {
     MSP_RAW_IMU: {
         label: "MSP_RAW_IMU",
-        description: "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])",
+        description: i18n.getMessage("loggingColumns_MSP_RAW_IMU"),
         columns: () => [
             "gyroscopeX",
             "gyroscopeY",
@@ -138,7 +138,7 @@ const propertyDefinitions = {
     },
     MSP_ATTITUDE: {
         label: "MSP_ATTITUDE",
-        description: "3 columns (kine[x, y, z])",
+        description: i18n.getMessage("loggingColumns_MSP_ATTITUDE"),
         columns: () => ["kinematicsX", "kinematicsY", "kinematicsZ"],
         values: () => {
             const data = fcStore.sensorData || {};
@@ -148,7 +148,7 @@ const propertyDefinitions = {
     },
     MSP_ALTITUDE: {
         label: "MSP_ALTITUDE",
-        description: "1 column (alt)",
+        description: i18n.getMessage("loggingColumns_MSP_ALTITUDE"),
         columns: () => ["altitude"],
         values: () => {
             const data = fcStore.sensorData || {};
@@ -157,7 +157,7 @@ const propertyDefinitions = {
     },
     MSP_RAW_GPS: {
         label: "MSP_RAW_GPS",
-        description: "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)",
+        description: i18n.getMessage("loggingColumns_MSP_RAW_GPS"),
         columns: () => ["gpsFix", "gpsNumSat", "gpsLat", "gpsLon", "gpsAlt", "gpsSpeed", "gpsGroundCourse"],
         values: () => {
             const gps = fcStore.gpsData || {};
@@ -174,7 +174,7 @@ const propertyDefinitions = {
     },
     MSP_ANALOG: {
         label: "MSP_ANALOG",
-        description: "4 columns (voltage, amperage, mAhdrawn, rssi)",
+        description: i18n.getMessage("loggingColumns_MSP_ANALOG"),
         columns: () => ["voltage", "amperage", "mAhdrawn", "rssi"],
         values: () => {
             const analog = fcStore.analogData || {};
@@ -183,7 +183,7 @@ const propertyDefinitions = {
     },
     MSP_RC: {
         label: "MSP_RC",
-        description: "8 columns (RC0, RC1, RC2, RC3, RC4, RC5, RC6, RC7)",
+        description: i18n.getMessage("loggingColumns_MSP_RC"),
         columns: () => {
             const rc = fcStore.rc || {};
             const channels = rc.channels || [];
@@ -199,7 +199,7 @@ const propertyDefinitions = {
     },
     MSP_MOTOR: {
         label: "MSP_MOTOR",
-        description: "8 columns (Mot1, Mot2, Mot3, Mot4, Mot5, Mot6, Mot7, Mot8)",
+        description: i18n.getMessage("loggingColumns_MSP_MOTOR"),
         columns: () => {
             const motors = fcStore.motorData || [];
             const length = Array.isArray(motors) ? motors.length : 0;
@@ -212,7 +212,7 @@ const propertyDefinitions = {
     },
     MSP_DEBUG: {
         label: "MSP_DEBUG",
-        description: "4 columns (Debug0, Debug1, Debug2, Debug3)",
+        description: i18n.getMessage("loggingColumns_MSP_DEBUG"),
         columns: () => {
             const data = fcStore.sensorData || {};
             const debug = data.debug || [];

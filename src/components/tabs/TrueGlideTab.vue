@@ -19,7 +19,7 @@
 
             <template v-else>
                 <UiBox v-if="sections.length" type="info" class="mb-4">
-                    <p class="text-sm">{{ $t("trueglideIntro") }}</p>
+                    <p class="text-sm">{{ $t(intro) }}</p>
                 </UiBox>
                 <UiBox v-if="sections.length && !visibleSections.length" type="warning" highlight class="mb-4">
                     <p class="text-sm">{{ $t("tfTabNotInFirmware") }}</p>
@@ -135,6 +135,8 @@ const props = defineProps({
     title: { type: String, required: true },
     sections: { type: Array, default: () => [] },
     showCamera: { type: Boolean, default: false },
+    // intro text above the settings; the navigation tab shows mostly Betaflight settings, so it has its own
+    intro: { type: String, default: "trueglideIntro" },
 });
 
 const state = ref("loading");

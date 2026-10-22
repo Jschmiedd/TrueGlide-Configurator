@@ -179,6 +179,7 @@ import {
     findFirmware,
     installedStatus,
     modelFromBuildOptions,
+    modelFromVersionLines,
     rememberConnectedBoard,
     requestFirmwareUpdate,
 } from "@/js/trueglide/firmware_source";
@@ -218,6 +219,8 @@ async function loadFeatures() {
             Object.assign(values, parseGet(await send(command)));
         }
         const pinio = parsePinio(await send("get pinio_box"));
+        // the CLI "version" line names the model; build options alone cannot tell TRUENAV_LIGHT from TRUENAV
+        versionModel = modelFromVersionLines(await send("version"));
         features.value = trueglideStatus(values, pinio.boxes);
         // TrueGlide settings answered: the board runs TrueGlide (plain Betaflight has none of them)
         readInstalled();
@@ -262,12 +265,13 @@ function openMemo() {
 
 // Installed firmware, remembered for the flasher (the board no longer answers once it reboots to flash)
 const installed = ref({ board: "", model: "STANDARD", version: "", revision: "", isTrueGlide: false });
+let versionModel = null;
 function readInstalled() {
     const c = FC.CONFIG ?? {};
     installed.value = {
         ...installed.value,
         board: c.boardName ?? "",
-        model: modelFromBuildOptions(c.buildOptions),
+        model: versionModel ?? modelFromBuildOptions(c.buildOptions),
         version: c.flightControllerVersion ?? "",
         revision: c.gitRevision ?? "",
     };
@@ -278,9 +282,10 @@ const firmwareLine = computed(() => {
     return [name, i.version, i.revision && `(${i.revision})`].filter(Boolean).join(" ");
 });
 
-// TrueGlide and its two variants, as the pilot sees them (TRUENAV_LIGHT is reported as TRUENAV by the board)
+// TrueGlide and its two variants, as the pilot sees them
+const MODEL_NAMES = { TRUENAV: "tfFlasherModelTrueNav", TRUENAV_LIGHT: "tfFlasherModelTrueNavLeger" };
 function modelName(model) {
-    return i18n.getMessage(model === "TRUENAV" ? "tfFlasherModelTrueNav" : "tfFlasherModelStandard");
+    return i18n.getMessage(MODEL_NAMES[model] ?? "tfFlasherModelStandard");
 }
 
 // Online update: the published list is fetched only when the pilot asks

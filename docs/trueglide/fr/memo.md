@@ -6,7 +6,7 @@ Aide-mémoire d'une page. Détails : [Wiki](wiki/index.md).
 
 1. **Sauvegarder** l'ancienne configuration : onglet CLI, `diff all`, enregistrer le texte.
 2. **Flasher** le `.hex` TrueGlide (onglet Flasher le Firmware, Charger un firmware TrueGlide (.hex), Effacement complet de la puce). Choisir le modèle :
-   `trueglide_…` (TRUEGLIDE), `truenav_…` (navigation GPS), `truenav_light_…` (cartes à 512 Ko). Voir [Installation](wiki/installation.md).
+   `trueglide_…` (TRUEGLIDE), `truenav_…` (navigation GPS), `truenav_light_…` (navigation sans les fonctions de course). Voir [Installation](wiki/installation.md).
 3. **Connexion** : le **Tableau de bord** s'ouvre ; **Sauvegarder la configuration**, puis **Continuer** : la mise en
    route guidée passe les 9 étapes de l'*Installation du drone* et de *TrueGlide*, avant le *Réglage du vol*.
 4. **Sans hélices** : onglet Moteurs, vérifier ordre et sens de rotation.
