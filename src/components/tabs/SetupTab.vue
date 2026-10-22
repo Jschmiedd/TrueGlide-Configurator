@@ -332,7 +332,7 @@ import { useInterval } from "../../composables/useInterval";
 import { have_sensor } from "../../js/sensor_helpers";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
-import Model from "../../js/model";
+import Model, { mixerList } from "../../js/model";
 import { TOP_VIEW_TILT, motorMarkers, frontMarker } from "../../js/trueglide/model_markers";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import MSPCodes from "../../js/msp/MSPCodes";
@@ -823,7 +823,7 @@ function updateMarkers() {
     if (!topView.value || !modelInstance?.model) {
         return;
     }
-    const motors = motorMarkers(modelInstance.modelFile);
+    const motors = motorMarkers(mixerList[FC.MIXER_CONFIG.mixer - 1]?.name);
     const box = modelInstance.localBox();
     const points = modelInstance.projectPoints([...motors.map((m) => m.position), frontMarker(box)]);
     if (!points) {

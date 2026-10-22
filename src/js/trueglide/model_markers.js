@@ -19,16 +19,18 @@ const QUAD_X_MOTORS = [
     { motor: 4, position: [-2.85, 0.95, -1.61] },
 ];
 
-const MOTORS_BY_MODEL = {
-    quad_x: QUAD_X_MOTORS,
+// Keyed by mixer name, not by model file: Quad +, Quad X 1234 and Octo X8 reuse quad_x.gltf with another motor order,
+// so they get no numbers rather than wrong ones.
+const MOTORS_BY_MIXER = {
+    "Quad X": QUAD_X_MOTORS,
 };
 
 /**
- * Motor markers for a model file, or an empty list when the motor layout of that model is not known.
- * @param {string} modelFile model file name without extension (e.g. "quad_x")
+ * Motor markers for a mixer, or an empty list when its motor layout on the model is not known.
+ * @param {string} mixerName name from mixerList in model.js (e.g. "Quad X")
  */
-export function motorMarkers(modelFile) {
-    return MOTORS_BY_MODEL[modelFile] ?? [];
+export function motorMarkers(mixerName) {
+    return MOTORS_BY_MIXER[mixerName] ?? [];
 }
 
 /**
