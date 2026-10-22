@@ -152,7 +152,7 @@
   <li>Tournez le drone sur lui-même : le modèle doit tourner dans le même sens.</li>
   <li>Si un mouvement est inversé ou décalé, corrigez l'<b>Alignement de la carte</b> dans l'onglet <a href="capteurs.html">Capteurs</a>.</li>
 </ol>
-<p>Le calibrage de l'accéléromètre (drone posé à plat) se fait aussi dans l'onglet <a href="capteurs.html">Capteurs</a>, cadre <b>Accéléromètre</b>, bouton <b>Calibrer</b>. Il n'y a pas de bouton de calibrage dans l'onglet Installation.</p>
+<p>Le calibrage de l'accéléromètre (drone posé à plat) se fait dans l'onglet <a href="capteurs.html">Capteurs</a>, cadre <b>Accéléromètre</b>, bouton <b>Calibrer</b>. Il n'y a pas de bouton de calibrage dans l'onglet Installation.</p>
 
 <h2 id="info-systeme">Cadre « Info Système »</h2>
 <p>Valeurs relues environ 4 fois par seconde.</p>
@@ -161,11 +161,11 @@
   <li><b>Tension de la batterie:</b> : tension mesurée, en V.</li>
   <li><b>Mah consommés:</b> : capacité consommée depuis la mise sous tension, en mAh.</li>
   <li><b>Courant consommé:</b> : courant instantané, en A.</li>
-  <li><b>RSSI:</b> : force du signal radio. Le logiciel calcule un pourcentage (0 à 100) mais l'affiche suivi de « dBm » : lisez cette valeur comme un pourcentage.</li>
+  <li><b>RSSI:</b> : force du signal radio, en % (0 à 100).</li>
   <li><b>MCU:</b> : modèle du processeur de la carte.</li>
   <li><b>Charge CPU :</b> : charge du processeur, en %.</li>
   <li><b>Vitesse de boucle :</b> : fréquence du gyro, puis fréquence de la boucle PID, en Hz (« k » = kHz). Exemple : <code>8.0k / 4.0k</code>. Vide si la carte ne donne pas la durée de boucle.</li>
-  <li><b>Température du CPU:</b> : température du processeur, en °C. Quand la carte ne donne pas de température, le texte « Aucune prise en charge de l'API MSP avant 1.46 » s'affiche, même avec un firmware récent (c'est le cas du simulateur).</li>
+  <li><b>Température du CPU:</b> : température du processeur, en °C. Quand la carte ne donne pas de température (c'est le cas du simulateur), le texte « Non fournie par cette carte » s'affiche. Avec un firmware dont l'API MSP est antérieure à 1.46, le texte est « Aucune prise en charge de l'API MSP avant 1.46 ».</li>
 </ul>
 
 <h2 id="gps">Cadre « GPS »</h2>
