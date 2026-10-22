@@ -1,0 +1,81 @@
+<h1>Flasher le Firmware</h1>
+<p class="chapeau">L'onglet <b>Flasher le Firmware</b> (groupe « Sans carte branchée ») sert à installer un firmware <b>TRUEGLIDE</b>, <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b> sur le contrôleur de vol, à partir de la mise à jour en ligne ou d'un fichier .hex de l'ordinateur.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/flasher-le-firmware.png" alt="Onglet Flasher le Firmware en thème sombre : cadres Mise à jour en ligne, Firmware TrueGlide (aucun firmware chargé), Danger, Récupération / communication perdue et Avancé, boutons Flasher le Firmware et Charger un firmware TrueGlide (.hex) en bas à droite"><img class="t-clair" src="../assets/img/onglets/flasher-le-firmware-clair.png" alt="Onglet Flasher le Firmware en thème clair : cadres Mise à jour en ligne, Firmware TrueGlide, Danger, Récupération / communication perdue et Avancé, boutons Flasher le Firmware et Charger un firmware TrueGlide (.hex) en bas à droite">
+  <figcaption>Capture du logiciel non connecté, aucun firmware chargé : le bouton <b>Flasher le Firmware</b> est grisé. Les interrupteurs du cadre Avancé montrent les choix gardés sur l'ordinateur de la capture, pas forcément les vôtres.</figcaption>
+</figure>
+
+<div class="encart">Avant tout flash, sauvegardez la configuration de la carte (<code>diff all</code> dans l'onglet <a href="cli.html">Ligne de commande (CLI)</a>, puis <b>Enregistrer sous</b>). Ne débranchez jamais la carte pendant le flash.</div>
+
+<p>L'onglet n'a qu'un écran. Il n'y a pas de liste de cartes à choisir ni de compilation en ligne : le firmware vient soit de la <a href="#mise-a-jour-en-ligne">mise à jour en ligne</a>, soit d'un <a href="#firmware-trueglide">fichier .hex</a>.</p>
+
+<h2 id="mise-a-jour-en-ligne">Mise à jour en ligne</h2>
+<p>Ce cadre télécharge un firmware publié sur le site de TrueGlide. Le logiciel ne contacte Internet qu'au clic sur le bouton.</p>
+<ol>
+  <li>Cliquez sur <b>Chercher la mise à jour</b>. Le logiciel lit la liste des firmwares publiés et affiche « Version publiée : … (révision …, date) ».</li>
+  <li>Choisissez la <b>Carte (nom du fichier)</b> dans la liste. Si une carte a déjà été connectée sur cet ordinateur, elle est proposée d'office et la ligne « Carte vue à la dernière connexion : … » s'affiche.</li>
+  <li>Choisissez le <b>Modèle</b> : <b>TRUEGLIDE</b>, <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b> (seuls les modèles publiés apparaissent).</li>
+  <li>Cliquez sur <b>Télécharger</b>. Le message « Téléchargement et vérification… » s'affiche. Le fichier est décompressé, sa taille et sa somme de contrôle SHA-256 sont comparées à la liste publiée.</li>
+  <li>Si tout concorde : « … téléchargé et vérifié : cliquez sur « Flasher le firmware » ». Le fichier apparaît dans le cadre <b>Firmware TrueGlide</b>. Rien n'est encore écrit sur la carte.</li>
+</ol>
+<p>Messages possibles :</p>
+<ul>
+  <li><b>Pas de firmware publié pour … (…)</b> : cette carte n'existe pas dans ce modèle. Utilisez un fichier .hex local.</li>
+  <li><b>Mise à jour en ligne indisponible (…)</b> : pas d'Internet ou site injoignable. Vérifiez la connexion, ou chargez un fichier .hex.</li>
+  <li><b>Téléchargement refusé (…) : rien n'a été chargé.</b> : par exemple « fichier abîmé (somme de contrôle différente) ». Recommencez plus tard.</li>
+</ul>
+<p>Le bouton <b>Mettre à jour</b> du <a href="tableau-de-bord.html#firmware">Tableau de bord</a> mène au même endroit : il déconnecte le drone, ouvre cet onglet et télécharge le firmware tout seul. Il faut toujours cliquer sur <b>Flasher le Firmware</b> pour l'écrire.</p>
+
+<h2 id="firmware-trueglide">Firmware TrueGlide</h2>
+<p>Ce cadre montre le fichier chargé. Le bouton <b>Charger un .hex</b> (et le bouton <b>Charger un firmware TrueGlide (.hex)</b> en bas de l'écran) ouvre le choix d'un fichier <code>.hex</code> sur l'ordinateur. Cela marche sans Internet.</p>
+<ul>
+  <li><b>Fichier</b> : nom du fichier chargé, ou « Aucun firmware chargé ».</li>
+  <li><b>Taille</b> : taille du firmware en octets.</li>
+  <li><b>Modèle</b>, <b>Version</b>, <b>MCU</b>, <b>Carte (nom du fichier)</b> : lus dans le nom du fichier, seulement s'il commence par <code>trueglide_</code>, <code>truenav_</code> ou <code>truenav_light_</code>. Le nom suit la forme <code>trueglide_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex</code>.</li>
+  <li><b>Carte détectée</b> : nom de la carte connue par le logiciel (lu lors d'une connexion précédente). Absent si le logiciel ne le connaît pas.</li>
+  <li><b>État du flashage</b> : anneau de progression et texte pendant le flash, puis résultat du dernier flash.</li>
+</ul>
+<p>Deux avertissements peuvent apparaître sous le cadre. Ils ne bloquent pas le flash :</p>
+<ul>
+  <li><b>Firmware non TrueGlide ?</b> : le nom du fichier ne commence pas par un préfixe TrueGlide. Au clic sur <b>Flasher le Firmware</b>, une fenêtre demande confirmation : <b>Flasher quand même</b> ou <b>Annuler</b>. C'est le cas pour revenir à un firmware Betaflight.</li>
+  <li><b>Carte différente</b> : la carte écrite dans le nom du fichier n'est pas la carte détectée. Vérifiez que c'est le bon fichier.</li>
+</ul>
+
+<h2 id="flasher">Flasher</h2>
+<ol class="etapes">
+  <li>Débranchez la batterie. Branchez la carte en USB.</li>
+  <li>Chargez le firmware (mise à jour en ligne ou fichier .hex).</li>
+  <li>Cliquez sur <b>Flasher le Firmware</b> en bas à droite.</li>
+  <li>Si une carte est détectée sur un port, le logiciel sauvegarde d'abord sa configuration, selon le réglage <a href="#avance">Créer une sauvegarde avant de flasher une nouvelle cible</a> : il passe la carte en mode CLI, lit <code>diff all</code> et vous demande où enregistrer le fichier texte (<code>cli_backup…txt</code>). Si vous annulez l'enregistrement, le flash est arrêté (« Sauvegarde annulée, flashage interrompu »).</li>
+  <li>Le flash démarre. Attendez la fin sans débrancher (« Veuillez patienter »).</li>
+  <li>Une fois le flash réussi, le bouton <b>Restaurer la sauvegarde</b> apparaît à côté de l'état du flashage si une sauvegarde a été faite. Il renvoie la configuration sauvegardée à la carte (après confirmation). Le résultat s'affiche dans le journal.</li>
+</ol>
+<p>La flèche à droite du bouton <b>Flasher le Firmware</b> ouvre un menu :</p>
+<ul>
+  <li><b>Flasher le Firmware</b> : même action que le bouton.</li>
+  <li><b>Sortir du mode DFU</b> : fait quitter le mode DFU à une carte sans la flasher. Actif seulement quand une carte en DFU est disponible.</li>
+  <li><b>Rechercher un périphérique DFU</b> : demande au navigateur l'accès à une carte en mode DFU (affiché seulement si le navigateur le permet).</li>
+</ul>
+<p>Si le navigateur n'a pas encore l'autorisation USB quand la carte redémarre en DFU, une fenêtre « DFU USB non détecté » s'ouvre : cliquez sur son bouton pour choisir la carte dans la liste du navigateur.</p>
+
+<h2 id="danger">Danger</h2>
+<p>Cadre rouge : ne flashez que le firmware prévu pour votre carte, ne débranchez pas pendant le flash, sauvegardez toujours la configuration avant une mise à jour. Le bootloader STM32 est en ROM : il ne peut pas être effacé par un flash raté.</p>
+
+<h2 id="recuperation">Récupération / communication perdue</h2>
+<p>Si la carte ne répond plus : couper l'alimentation, activer <b>Pas de redémarrage</b> et <b>Effacement complet de la puce</b>, ponter les broches BOOT (ou tenir le bouton BOOT), puis remettre sous tension. La carte démarre alors en mode DFU. Installez les pilotes USB si nécessaire (liens sur la page <a href="bienvenue.html#materiel">Bienvenue</a>).</p>
+
+<h2 id="avance">Avancé</h2>
+<p>Le logiciel garde ces choix d'une fois sur l'autre. Le point d'interrogation à droite de chaque ligne affiche une aide.</p>
+<ul>
+  <li><b>Pas de redémarrage</b> : à activer si la carte est déjà en mode bootloader (broches BOOT pontées ou bouton BOOT tenu au branchement, mode DFU). Le logiciel n'essaie alors pas de la redémarrer.</li>
+  <li><b>Flasher une fois connecté</b> : visible seulement si <b>Pas de redémarrage</b> est activé. Le flash part tout seul dès qu'une carte est détectée. Attention : cette option saute la détection et la sauvegarde de la configuration.</li>
+  <li><b>Effacement complet de la puce</b> : efface toute la configuration enregistrée sur la carte. Conseillé pour une première installation de <b>TRUEGLIDE</b> par-dessus un autre firmware.</li>
+  <li><b>Régler la vitesse baud</b> : vitesse de la liaison série pour les cartes qui n'acceptent pas la vitesse par défaut, ou pour flasher par Bluetooth. Choix : 921600, 460800, 256000, 230400, 115200, 57600 (256000 si rien n'a été choisi). Ne pas utiliser pour un flash en USB DFU.</li>
+  <li><b>Créer une sauvegarde avant de flasher une nouvelle cible</b> : <b>Sauvegarde activée</b> (valeur de départ), <b>Demander avant la sauvegarde</b> (une fenêtre « Effacement des réglages » propose <b>Créer une sauvegarde</b> ou <b>Ignorer le risque</b>) ou <b>Sauvegarde désactivée</b>.</li>
+</ul>
+
+<h2 id="voir-aussi">Voir aussi</h2>
+<ul>
+  <li><a href="flasher.html">Installer le firmware</a> : choisir le modèle, première installation, revenir à Betaflight.</li>
+  <li><a href="mise-en-route.html">Mise en route</a> : de l'achat au premier vol.</li>
+</ul>

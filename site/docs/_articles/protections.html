@@ -1,0 +1,77 @@
+<h1>Protections</h1>
+<p class="chapeau">L'onglet <b>Protections</b> (groupe « Fonctions TrueGlide ») sert à régler deux protections propres au firmware <b>TRUEGLIDE</b> : la limitation des gaz quand un ESC chauffe ou que le courant est trop fort, et la relance d'un moteur calé. Toutes deux sont désactivées par défaut.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/protections.png" alt="Onglet Protections : encart d'information sur les réglages TrueGlide, cadre Protection anti-surchauffe / surintensité avec Température limite des ESC 0 °C, Courant batterie limite 0 A et Gaz disponibles minimum 50 %, boutons Relire et Enregistrer et redémarrer en bas"><img class="t-clair" src="../assets/img/onglets/protections-clair.png" alt="Onglet Protections : encart d'information sur les réglages TrueGlide, cadre Protection anti-surchauffe / surintensité avec Température limite des ESC 0 °C, Courant batterie limite 0 A et Gaz disponibles minimum 50 %, boutons Relire et Enregistrer et redémarrer en bas">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, avec les valeurs par défaut. Le firmware du simulateur n'a pas les réglages de santé moteurs : le cadre « Santé moteurs » n'apparaît donc pas ici. Sur une carte avec DShot ou télémétrie des ESC, il s'affiche à côté. Le bandeau du haut est le guide de <a href="mise-en-route.html">Mise en route</a>.</figcaption>
+</figure>
+
+<h2 id="fonctionnement">Fonctionnement de l'onglet</h2>
+<p>Ces réglages n'ont pas de message dédié dans le protocole de la carte : l'onglet les lit et les écrit par des commandes <code>get</code> et <code>set</code> du <a href="cli.html">CLI</a>, sans ouvrir la fenêtre du CLI.</p>
+<ul>
+  <li>L'encart du haut rappelle que tous les réglages TrueGlide sont désactivés ou neutres par défaut : sans eux, le drone vole exactement comme avec le firmware de base.</li>
+  <li>Si la carte n'a pas le firmware <b>TRUEGLIDE</b> (ou un firmware trop ancien), l'onglet affiche « Ce contrôleur de vol n'a pas le firmware TrueGlide… » : flashez <b>TRUEGLIDE</b> (voir <a href="flasher.html">Installer le firmware</a>).</li>
+  <li>Un cadre n'apparaît que si le firmware de la carte a ses réglages. Si aucun cadre de l'onglet n'existe, un message orange l'indique.</li>
+  <li><b>Relire</b> : relit les valeurs dans la carte (et annule les changements non enregistrés).</li>
+  <li><b>Enregistrer et redémarrer</b> : actif seulement si une valeur a changé. Il envoie uniquement les valeurs changées, enregistre et redémarre le contrôleur de vol ; le logiciel se reconnecte. Si une valeur est hors limites, rien n'est envoyé et le journal affiche « Valeur hors limites, rien n'a été enregistré : » suivi du nom du réglage.</li>
+</ul>
+
+<h2 id="anti-surchauffe">Protection anti-surchauffe / surintensité</h2>
+<p>Quand l'ESC le plus chaud dépasse sa limite, ou que le courant de la batterie dépasse la sienne, le firmware limite les gaz. Il ne touche jamais aux corrections PID : le drone reste stable et pilotable. La protection n'agit que drone armé ; elle repart de zéro à chaque désarmement.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Libellé</th><th>Réglage CLI</th><th>Plage</th><th>Défaut</th></tr></thead>
+  <tbody>
+    <tr><td>Température limite des ESC</td><td><code>power_guard_esc_temp</code></td><td>0 à 150 °C</td><td>0 (arrêt)</td></tr>
+    <tr><td>Courant batterie limite</td><td><code>power_guard_current</code></td><td>0 à 1000 A</td><td>0 (arrêt)</td></tr>
+    <tr><td>Gaz disponibles minimum</td><td><code>power_guard_min_throttle</code></td><td>20 à 100 %</td><td>50 %</td></tr>
+  </tbody>
+</table></div>
+<ul>
+  <li><b>Température limite des ESC</b> (°C) : la limite s'applique à l'ESC le plus chaud, lu par la télémétrie DShot étendue ou par le fil de télémétrie série (ESC_SENSOR, onglet <a href="moteurs.html">Moteurs</a>). 0 = protection de température coupée. Sans température reçue, cette protection ne limite rien.</li>
+  <li><b>Courant batterie limite</b> (A) : demande un capteur de courant réglé dans l'onglet <a href="alimentation.html">Alimentation et batterie</a>. 0 = protection de courant coupée. L'aide du logiciel conseille de partir d'environ 80 % du calibre total des ESC.</li>
+  <li><b>Gaz disponibles minimum</b> (%) : pendant la limitation, les gaz disponibles ne descendent jamais sous ce pourcentage, pour toujours pouvoir rentrer.</li>
+</ul>
+<h3>Comment la limite évolue</h3>
+<p>Valeurs lues dans le code du firmware (calcul 100 fois par seconde) :</p>
+<ul>
+  <li>Au dépassement, la limite part des gaz du moment (jamais sous le minimum), puis descend progressivement.</li>
+  <li>Température : la limite baisse de 2 % par seconde et par degré au-dessus de la limite, plus 2 % (exemple : 4 °C au-dessus, elle baisse de 10 % par seconde).</li>
+  <li>Courant : la limite baisse de 5 % par seconde pour chaque pour-cent de dépassement (exemple : 10 % au-dessus de la limite, elle baisse de 50 % par seconde).</li>
+  <li>Retour : les gaz reviennent à 25 % par seconde une fois la température redescendue d'au moins 3 °C sous la limite, ou le courant redescendu sous 90 % de la limite.</li>
+</ul>
+
+<h2 id="sante-moteurs">Santé moteurs</h2>
+<p>Ce cadre demande la vitesse des moteurs : DShot bi-directionnel (ESC Bluejay, AM32, BLHeli_32…) ou télémétrie série des ESC. Ces deux options se règlent dans l'onglet <a href="moteurs.html">Moteurs</a>. Le cadre n'existe pas si le firmware de la carte n'a aucune de ces sources de vitesse.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Libellé</th><th>Réglage CLI</th><th>Plage</th><th>Défaut</th></tr></thead>
+  <tbody>
+    <tr><td>Relance d'un moteur calé</td><td><code>motor_desync_recovery</code></td><td>OFF / ON</td><td>OFF</td></tr>
+    <tr><td>Seuil de calage</td><td><code>motor_desync_threshold</code></td><td>10 à 80 %</td><td>40 %</td></tr>
+    <tr><td>Secours de la télémétrie DShot</td><td><code>dshot_telemetry_fallback</code></td><td>OFF / ON</td><td>OFF</td></tr>
+  </tbody>
+</table></div>
+<ul>
+  <li><b>Relance d'un moteur calé</b> : un moteur désynchronisé ou bloqué ne pousse plus et chauffe. Le firmware le détecte quand il est commandé à 30 % ou plus, qu'il tourne moins vite que le <b>Seuil de calage</b> de la vitesse attendue (calculée d'après les autres moteurs, au prorata des commandes) <b>et</b> moins vite que la moitié du plus lent des autres moteurs. Cela doit durer 10 ms en DShot bi-directionnel, ou 300 ms avec la télémétrie série. Le moteur est alors mis au ralenti 50 ms, puis remis en 100 ms : l'ESC relance sa commutation au lieu de chauffer à pleine puissance. La comparaison ne se fait que si la vitesse attendue dépasse 1 500 tr/min, et avec au moins deux autres moteurs qui donnent leur vitesse.</li>
+  <li><b>Seuil de calage</b> (%) : pourcentage de la vitesse attendue en dessous duquel un moteur est jugé calé. Avec la télémétrie série, le <b>nombre de pôles moteur</b> (onglet Moteurs) doit être juste.</li>
+  <li><b>Secours de la télémétrie DShot</b> : quand un ESC ne répond plus, le firmware garde pour ce moteur une vitesse qui suit l'évolution des autres moteurs, au lieu d'une valeur figée. Elle reste entre la moitié et le double de la dernière vitesse reçue. Cela ne sert qu'au filtre RPM et au ralenti dynamique, et seulement en DShot bi-directionnel : l'OSD et la boîte noire affichent toujours la valeur reçue de l'ESC.</li>
+</ul>
+<div class="encart">La relance limite les dégâts d'un moteur calé : elle ne répare pas un moteur ou une voie d'ESC défaillante. Pour essayer ces réglages au sol, gardez les <b>hélices retirées</b>.</div>
+
+<h2 id="alertes-osd">Alertes OSD et journaux</h2>
+<p>Deux alertes TrueGlide s'ajoutent dans la liste des alertes de l'onglet <a href="osd.html">OSD</a> (élément « Avertissements » affiché). Elles n'apparaissent que si la protection correspondante est activée, et seulement drone armé.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Alerte dans l'onglet OSD</th><th>Texte à l'écran</th><th>Quand</th></tr></thead>
+  <tbody>
+    <tr><td>Gaz limités (TrueGlide)</td><td><code>ESC HOT 65%</code> ou <code>AMP LIM 80%</code></td><td>La protection limite les gaz : ESC trop chaud (ESC HOT) ou courant trop fort (AMP LIM). Le pourcentage est la limite actuelle des gaz.</td></tr>
+    <tr><td>Moteur relancé (TrueGlide)</td><td><code>M2 RESTART</code> (clignote)</td><td>Pendant 3 s après la relance d'un moteur (ici le moteur 2).</td></tr>
+  </tbody>
+</table></div>
+<p>Sur une carte qui garde une ancienne configuration, cochez ces deux alertes dans l'onglet OSD. Pour la <a href="blackbox.html">Blackbox</a>, les modes debug <code>POWER_GUARD</code> (limite des gaz, température, courant) et <code>MOTOR_HEALTH</code> (nombre de relances de chaque moteur, jusqu'à 8) enregistrent ces protections.</p>
+
+<h2 id="premier-reglage">Premier réglage conseillé</h2>
+<ol>
+  <li><b>Hélices retirées</b> : dans l'onglet <a href="moteurs.html">Moteurs</a>, vérifiez l'ordre et le sens des moteurs, et que la télémétrie (RPM, Temp) s'affiche sous les barres.</li>
+  <li>Si vos ESC donnent leur température, mettez <b>Température limite des ESC</b> à une valeur sous la limite donnée par le fabricant de l'ESC. Le guide du firmware prend 100 °C comme exemple.</li>
+  <li>Si un capteur de courant est réglé, mettez <b>Courant batterie limite</b> vers 80 % du calibre total des ESC.</li>
+  <li>Avec le DShot bi-directionnel, activez <b>Relance d'un moteur calé</b> en gardant le seuil de 40 %.</li>
+  <li>Cliquez sur <b>Enregistrer et redémarrer</b>, puis cochez les alertes « Gaz limités » et « Moteur relancé » dans l'onglet <a href="osd.html">OSD</a>.</li>
+</ol>

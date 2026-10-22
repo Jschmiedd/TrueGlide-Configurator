@@ -1,0 +1,51 @@
+<h1>Tableau de bord</h1>
+<p class="chapeau">L'onglet <b>Tableau de bord</b> (groupe « Carte branchée ») s'ouvre une fois le drone connecté. Il résume l'état du drone, les fonctions TrueGlide actives, l'avancement de la mise en route, la version du firmware, et donne des raccourcis.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/tableau-de-bord.png" alt="Onglet Tableau de bord en thème sombre : cadres Drone (batterie non mesurée, liaison radio 0 %, pas de GPS, armement bloqué avec RX_FAILSAFE et ANGLE), Fonctions TrueGlide, Mise en route 0 / 9, Firmware et Raccourcis"><img class="t-clair" src="../assets/img/onglets/tableau-de-bord-clair.png" alt="Onglet Tableau de bord en thème clair : cadres Drone, Fonctions TrueGlide, Mise en route 0 / 9, Firmware et Raccourcis">
+  <figcaption>Capture du logiciel connecté au simulateur du firmware (SITL) sur PC : pas de vrais capteurs ni de récepteur, d'où « Non mesurée », 0 %, « Pas de GPS » et l'armement bloqué (RX_FAILSAFE, ANGLE). Le simulateur ne donne pas de nom de carte : la ligne sous le titre n'affiche que la version.</figcaption>
+</figure>
+
+<p>Sous le titre, une ligne donne le nom de la carte et la version du firmware (par exemple « SPEEDYBEEF405MINI · 2026.6.2 »). Les valeurs du cadre <b>Drone</b> sont relues deux fois par seconde.</p>
+
+<h2 id="drone">Drone</h2>
+<ul>
+  <li><b>Batterie</b> : tension mesurée par la carte, en V. Affiche « Non mesurée » si la tension est de 0,5 V ou moins (pas de batterie, ou capteur de tension non réglé). Si la carte a détecté le nombre d'éléments, une ligne ajoute par exemple « 4S · 3,9 V par élément ».</li>
+  <li><b>Liaison radio</b> : niveau RSSI reçu par la carte, en %. 0 % sans récepteur ou sans signal.</li>
+  <li><b>GPS</b> : nombre de satellites, avec « satellites · position trouvée » ou « satellites · pas encore de position ». Affiche « Pas de GPS » si aucun GPS n'est actif sur la carte.</li>
+  <li><b>Armement</b> : « Prêt à armer » ou « Armement bloqué ». Quand l'armement est bloqué, la liste dessous donne chaque raison (nom court du firmware, puis explication), par exemple <b>RX_FAILSAFE</b> : aucun signal valide du récepteur, ou <b>ANGLE</b> : la carte n'est pas assez à plat. L'interrupteur d'armement lui-même n'est pas compté comme un blocage.</li>
+</ul>
+
+<h2 id="fonctions-trueglide">Fonctions TrueGlide</h2>
+<p>État lu sur la carte à l'ouverture de l'onglet. Une fonction absente du firmware n'est pas listée.</p>
+<ul>
+  <li><b>Protection anti-surchauffe</b> : « Activé » avec la limite de température (°C) et/ou de courant (A), ou « Désactivé » si les deux limites sont à 0.</li>
+  <li><b>Relance moteur (désynchronisation)</b> : « Activé » ou « Désactivé ».</li>
+  <li><b>Speeder (angle de croisière)</b> : l'angle réglé, en degrés (60° par défaut). Le mode ne s'active que par un interrupteur.</li>
+  <li><b>Sorties commandées (PINIO)</b> : sorties de la carte reliées à un interrupteur de la radio (par exemple « PINIO1 → USER1 »). Le logiciel ne sait pas ce qui est branché sur la sortie (caméra, VTX…).</li>
+</ul>
+<p>Si le message « Ce firmware n'a pas les fonctions TrueGlide (ou la lecture a échoué). » s'affiche, la carte a un firmware Betaflight ou la lecture n'a pas abouti. Le bouton <b>Ouvrir les fonctions TrueGlide</b> mène à l'onglet <a href="protections.html">Protections</a>.</p>
+
+<h2 id="mise-en-route">Mise en route</h2>
+<p>Barre de progression et compteur (par exemple « 0 / 9 ») des 9 étapes de la mise en route guidée : Installation, Ports, Configuration, Récepteur, Modes, Alimentation et batterie, Moteurs, Failsafe, Fonctions TrueGlide. Chaque nom est un lien vers l'onglet. Un rond coché marque une étape validée.</p>
+<ul>
+  <li><b>Continuer : …</b> : ouvre la première étape non validée.</li>
+  <li>« Toutes les étapes sont réglées. » quand les 9 sont validées.</li>
+  <li><b>Afficher le guide</b> : visible si le guide a été masqué ; le fait réapparaître en haut des onglets.</li>
+</ul>
+<p>L'avancement est gardé dans le navigateur, pour chaque carte. Il n'est pas écrit sur la carte. Détail des étapes : <a href="mise-en-route.html#guide">Mise en route</a>.</p>
+
+<h2 id="firmware">Firmware</h2>
+<p>Ligne du firmware installé : modèle, version et révision entre parenthèses (par exemple « TRUENAV 2026.6.2 (8bf0276) »). Une carte qui n'a pas les fonctions TrueGlide est affichée « Betaflight ».</p>
+<ul>
+  <li><b>Chercher la mise à jour</b> : lit la liste des firmwares publiés (le seul moment où cet onglet contacte Internet). Réponses possibles : « À jour : … », « Nouvelle version publiée : … », « Pas de firmware publié pour … », ou « La carte ne donne pas son nom : choisissez-la dans Flasher le Firmware, mise à jour en ligne. ».</li>
+  <li><b>Mettre à jour</b> : apparaît si un firmware est publié pour cette carte et que sa révision n'est pas celle installée. Il déconnecte le drone, ouvre <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et y télécharge le fichier. Il faut ensuite cliquer sur <b>Flasher le Firmware</b>.</li>
+</ul>
+<div class="encart">La carte ne permet pas de distinguer <b>TRUENAV_LIGHT</b> de <b>TRUENAV</b> : les deux sont affichés <b>TRUENAV</b>, et <b>Mettre à jour</b> propose le fichier <b>TRUENAV</b>. Sur une carte <b>TRUENAV_LIGHT</b>, passez plutôt par <a href="flasher-le-firmware.html#mise-a-jour-en-ligne">Flasher le Firmware</a> et choisissez le modèle vous-même. Une carte Betaflight se voit proposer <b>TRUEGLIDE</b>.</div>
+
+<h2 id="raccourcis">Raccourcis</h2>
+<ul>
+  <li><b>Assistant de réglage</b> : ouvre l'onglet <a href="assistant-de-reglage.html">Assistant de réglage</a>.</li>
+  <li><b>Sauvegarder la configuration</b> : lit <code>diff all</code> sur la carte et télécharge un fichier texte nommé <code>trueglide_&lt;carte&gt;_&lt;date-heure&gt;.txt</code>. Le message « Configuration enregistrée : … » confirme, ou « Sauvegarde impossible : … » en cas d'échec. À faire avant de changer des réglages.</li>
+  <li><b>Visualiseur Blackbox</b> : ouvre l'onglet <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</li>
+  <li><b>Mémo</b> : ouvre la page Mémo de l'onglet <a href="memo-wiki.html">Mémo &amp; Wiki</a>.</li>
+</ul>

@@ -1,0 +1,59 @@
+<h1>Ports</h1>
+<p class="chapeau">L'onglet <b>Ports</b> (groupe « Installation du drone ») sert à dire à la carte ce qui est branché sur chaque port série (UART) : récepteur, GPS, émetteur vidéo, télémétrie des ESC, nacelle… Sans ce réglage, l'appareil branché n'est pas reconnu.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/ports.png" alt="Onglet Ports en thème sombre : deux notes d'avertissement orange, puis un tableau de UART1 à UART8 avec les colonnes Identifiant, Configuration/MSP, Serial Rx, Sortie Télémétrie, Entrée Capteur et Périphériques ; seul MSP est activé sur UART1"><img class="t-clair" src="../assets/img/onglets/ports-clair.png" alt="Onglet Ports en thème clair : deux notes d'avertissement, puis un tableau de UART1 à UART8 avec les colonnes Identifiant, Configuration/MSP, Serial Rx, Sortie Télémétrie, Entrée Capteur et Périphériques ; seul MSP est activé sur UART1">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC : le simulateur présente 8 ports (UART1 à UART8) sans rien de branché. Seul MSP est actif sur UART1 ; toutes les autres fonctions sont sur « Désactivé ». Sur une vraie carte, la liste des ports dépend de la carte.</figcaption>
+</figure>
+
+<h2 id="avertissements">Les deux notes en haut</h2>
+<ul>
+  <li>Toutes les combinaisons ne sont pas valides. Si le firmware détecte une erreur, il remet les ports série à leurs valeurs par défaut.</li>
+  <li>Ne désactivez <b>pas</b> MSP sur le premier port série sans savoir exactement ce que vous faites : le logiciel pourrait ne plus pouvoir se connecter, et il faudrait reflasher la carte.</li>
+</ul>
+<p>Une troisième note peut apparaître si la table VTX n'est pas remplie : sans elle, la commande de l'émetteur vidéo ne marche pas. La table se règle dans l'onglet <a href="emetteur-video.html">Émetteur vidéo</a>.</p>
+
+<h2 id="tableau">Le tableau des ports</h2>
+<p>Une ligne par port. Le nom du port (<b>Identifiant</b>) est celui de la carte : <code>UART1</code>, <code>UART2</code>…, <code>USB VCP</code> (le port USB), <code>SOFTSERIAL1</code>… Sur un écran étroit, chaque port devient une carte avec les mêmes réglages.</p>
+<ul>
+  <li><b>Configuration/MSP</b> : interrupteur MSP (dialogue avec le logiciel, une caméra numérique, un module…) et sa vitesse, de 9600 à 1000000 bauds. Sur <code>USB VCP</code>, l'interrupteur est grisé : il ne se change pas ici.</li>
+  <li><b>Serial Rx</b> : le récepteur radio série (ExpressLRS/CRSF, SBUS, etc.) est branché sur ce port. <b>Un seul port</b> peut l'avoir : dès qu'un port l'a, l'interrupteur est grisé sur les autres.</li>
+  <li><b>Sortie Télémétrie</b> : protocole de télémétrie envoyé sur ce port (Frsky, HoTT, LTM, MAVLink, SmartPort, IBUS selon le firmware) et sa vitesse (<b>AUTO</b> ou une valeur en bauds).</li>
+  <li><b>Entrée Capteur</b> : <b>GPS</b> ou <b>ESC</b> (télémétrie série des ESC, fil de télémétrie), avec la vitesse du GPS (<b>AUTO</b> ou en bauds).</li>
+  <li><b>Périphériques</b> : un appareil commandé par la carte, avec sa vitesse (<b>AUTO</b> ou en bauds). Voir le tableau ci-dessous.</li>
+</ul>
+<p>Une fonction que le firmware ne contient pas apparaît grisée dans la liste.</p>
+
+<div class="tableau"><table>
+  <thead><tr><th>Choix dans « Périphériques »</th><th>À quoi ça sert</th></tr></thead>
+  <tbody>
+    <tr><td>Blackbox log</td><td>Enregistreur de journal de vol externe sur port série</td></tr>
+    <tr><td>VTX (TBS SmartAudio)</td><td>Commande d'un émetteur vidéo analogique en SmartAudio</td></tr>
+    <tr><td>VTX (IRC Tramp)</td><td>Commande d'un émetteur vidéo analogique en Tramp</td></tr>
+    <tr><td>VTX (MSP + Displayport)</td><td>Système vidéo numérique (DJI, Walksnail, HDZero) : commande et OSD par MSP. Ce choix active MSP sur le port.</td></tr>
+    <tr><td>Caméra (protocole RunCam)</td><td>Commande d'une caméra RunCam</td></tr>
+    <tr><td>OSD (Protocole FrSky)</td><td>OSD externe FrSky</td></tr>
+    <tr><td>Benewake LIDAR</td><td>Télémètre laser Benewake</td></tr>
+    <tr><td>Nacelle Caddx GM3</td><td>Nacelle caméra Caddx GM3 (ajout <b>TRUEGLIDE</b>, 115 200 bauds). Le pilote de la nacelle n'est pas compilé dans les firmwares pour cartes F411 ni dans le modèle <b>TRUENAV_LIGHT</b>, mais le logiciel affiche quand même ce choix.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="regles">Règles appliquées automatiquement</h2>
+<ul>
+  <li>Choisir une <b>Sortie Télémétrie</b> remet le <b>Périphérique</b> du même port sur « Désactivé », et inversement : un port ne peut pas avoir les deux.</li>
+  <li>Choisir une télémétrie ou un périphérique qui ne peut pas partager le port avec MSP coupe MSP sur ce port.</li>
+  <li>Choisir <b>VTX (MSP + Displayport)</b> active MSP sur le port.</li>
+</ul>
+
+<h2 id="enregistrer">Enregistrer</h2>
+<p>Le bouton <b>Sauvegarder et Redémarrer</b>, en bas à droite, s'active dès qu'un réglage change.</p>
+<ol>
+  <li>Réglez chaque port utilisé (par exemple : récepteur ExpressLRS sur UART2 → <b>Serial Rx</b> ; GPS sur UART3 → <b>Entrée Capteur</b> = GPS).</li>
+  <li>Cliquez sur <b>Sauvegarder et Redémarrer</b>. La carte enregistre et redémarre ; le logiciel se reconnecte.</li>
+</ol>
+<p>À l'enregistrement, le logiciel règle aussi les fonctions de la carte qui vont avec les ports :</p>
+<ul>
+  <li>récepteur série, Blackbox et capteur ESC : activés si un port les utilise, désactivés sinon ;</li>
+  <li>télémétrie et GPS : activés si un port les utilise, jamais désactivés ici.</li>
+</ul>
+<p>Une vitesse GPS laissée sur <b>AUTO</b> est envoyée à la carte comme 57600 ; une vitesse Blackbox sur <b>AUTO</b> est envoyée comme 115200.</p>
+<p>Étapes suivantes : choisir le protocole du récepteur dans l'onglet <a href="recepteur.html">Récepteur</a>, et les fonctions dans l'onglet <a href="configuration.html">Configuration</a>.</p>

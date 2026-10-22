@@ -1,0 +1,68 @@
+<h1>Notes de version</h1>
+<p class="chapeau">Version 2026.6.2 du firmware <b>TRUEGLIDE</b> et de TrueGlide Configurator. Le firmware est basé sur Betaflight 2026.6.2, le logiciel sur Betaflight App 2026.6.2. Cette page liste ce que TrueGlide ajoute et où en sont les essais.</p>
+
+<div class="encart"><b>État réel</b> : aucun vol réel n'a encore été fait avec ce firmware. Tout ce qui est décrit ici a été vérifié par des tests automatiques et sur le simulateur (SITL) seulement. Premiers essais <b>Hélices retirées</b>, puis en terrain dégagé, à basse vitesse, prêt à reprendre la main.</div>
+
+<h2 id="principe">Principe</h2>
+<p>Sans réglage TrueGlide, le firmware vole comme Betaflight 2026.6.2 : chaque ajout est désactivé par défaut et ne fait rien tant qu'on ne l'active pas. Le firmware garde volontairement le nom « Betaflight » dans certains textes techniques (en-têtes des journaux blackbox, descripteurs USB) pour rester compatible avec les outils existants.</p>
+
+<h2 id="modeles">Trois modèles de firmware</h2>
+<ul>
+  <li><b>TRUEGLIDE</b> : Betaflight 2026.6.2 + ajouts TrueGlide. Course, freestyle, cinéma.</li>
+  <li><b>TRUENAV</b> : <b>TRUEGLIDE</b> + navigation complète : missions (mode AUTOPILOT), maintien d'altitude (ALTHOLD) et de position (POSHOLD), GPS RESCUE, zone de vol (geofence), missions envoyées par MAVLink. Betaflight ne construit son moteur de missions que pour le simulateur ; <b>TRUENAV</b> le met sur les vraies cartes, y compris celles à 512 Ko.</li>
+  <li><b>TRUENAV_LIGHT</b> : <b>TRUENAV</b> sans les fonctions de course (launch control, transpondeur de course, écran de pré-armement « spec », statistiques des manches).</li>
+</ul>
+<p>Dans <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>, rien ne change en vol tant qu'aucun mode de navigation n'est placé sur un interrupteur. Sur les cartes, le GPS RESCUE garde le contrôleur habituel de Betaflight. Voir <a href="flasher.html#choisir-le-modele">Installer le firmware</a>.</p>
+
+<h2 id="ajouts-firmware">Ajouts du firmware</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Ajout</th><th>Ce que ça fait</th><th>Réglages (défaut)</th></tr></thead>
+  <tbody>
+    <tr><td>Protection anti-surchauffe / surintensité</td><td>Limite les gaz (jamais les corrections PID) si l'ESC le plus chaud dépasse une température ou si le courant batterie dépasse une limite. La limite se relâche à 25 %/s quand on repasse dessous.</td><td><code>power_guard_esc_temp</code> (0 = arrêt), <code>power_guard_current</code> (0 = arrêt), <code>power_guard_min_throttle</code> (50 %)</td></tr>
+    <tr><td>Mode SPEEDER</td><td>Transition progressive du stationnaire (fuselage vertical) au vol rapide, en mode ANGLE, par un interrupteur (mode SPEEDER, numéro 120). Interrupteur coupé ou failsafe : retour progressif au stationnaire.</td><td><code>speeder_cruise_angle</code> (60°, de 10 à 80), <code>speeder_transition_rate</code> (30 °/s), <code>speeder_fpv_mix</code> (OFF)</td></tr>
+    <tr><td>Santé moteurs (DShot bidirectionnel ou télémétrie série)</td><td>Relance un moteur désynchronisé ou calé : coupé au ralenti 50 ms, puis remis en 100 ms. Option : vitesse estimée pour le filtre RPM quand la télémétrie d'un moteur se perd.</td><td><code>motor_desync_recovery</code> (OFF), <code>motor_desync_threshold</code> (40 %), <code>dshot_telemetry_fallback</code> (OFF)</td></tr>
+    <tr><td>Alertes OSD</td><td><code>ESC HOT 65%</code> ou <code>AMP LIM 80%</code> quand la protection limite les gaz ; <code>M2 RESTART</code> (clignote 3 s) après la relance d'un moteur. Affichées seulement si la protection correspondante est active.</td><td>Onglet <a href="osd.html">OSD</a></td></tr>
+    <tr><td>Température des ESC sur la radio</td><td>Trame de température CRSF toutes les 2 s, une valeur par moteur ; EdgeTX 2.10 ou plus récent l'affiche. Présent seulement si la carte a la télémétrie CRSF et une source de température ESC.</td><td><code>crsf_tlm_esc_temp</code> (OFF)</td></tr>
+    <tr><td>Nacelle Caddx GM3</td><td>Pilote de la nacelle (port série, 115 200 bauds), sauf sur les cartes F411 et dans <b>TRUENAV_LIGHT</b>. Inactif tant qu'aucun port n'a la fonction « Gimbal ». Correction d'une erreur du pilote d'origine (lecture d'un en-tête incomplet).</td><td>Réglages <code>gimbal_*</code></td></tr>
+    <tr><td>Hexa et X8 coaxial</td><td>Santé moteurs et relance sur 8 moteurs, alertes <code>M1</code> à <code>M8 RESTART</code>.</td><td>—</td></tr>
+    <tr><td>Modes debug</td><td><code>POWER_GUARD</code> et <code>MOTOR_HEALTH</code> (nombre de relances par moteur) pour la boîte noire.</td><td>Onglet <a href="blackbox.html">Blackbox</a></td></tr>
+  </tbody>
+</table></div>
+<p>Tout le reste de Betaflight 2026.6.2 est gardé : cartes, protocoles moteur (PWM à DShot bidirectionnel), passthrough pour régler les ESC, récepteurs (ExpressLRS, Crossfire, SBUS…), vidéo analogique et numérique.</p>
+
+<h2 id="outils-firmware">Outils du dépôt du firmware</h2>
+<ul>
+  <li><b>Analyse de journaux</b> (<code>trueglide/outils/analyse_blackbox.py</code>) : rapport en français des défauts d'un fichier blackbox (télémétrie figée, désynchronisations, saturation, bruit gyro), avec mesure du nombre de pôles des moteurs.</li>
+  <li><b>TrueGlide Studio</b> (<code>trueglide/studio/index.html</code>) : réglage de départ selon le drone, analyse de configuration, missions GPS.</li>
+</ul>
+
+<h2 id="logiciel">Ajouts du logiciel (TrueGlide Configurator)</h2>
+<ul>
+  <li><a href="tableau-de-bord.html">Tableau de bord</a> à la connexion : état du drone, fonctions TrueGlide, avancement, version du firmware.</li>
+  <li><a href="mise-en-route.html#guide">Mise en route guidée</a> en 9 étapes, et menu regroupé dans l'ordre où l'on règle un drone.</li>
+  <li>Onglets du groupe Fonctions TrueGlide : <a href="protections.html">Protections</a>, <a href="speeder.html">Speeder</a>, <a href="securite-navigation.html">Sécurité navigation</a>, <a href="camera.html">Caméra</a>, <a href="telemetrie-radio.html">Télémétrie radio</a>.</li>
+  <li><a href="assistant-de-reglage.html">Assistant de réglage</a> : PID et filtres calculés selon le drone.</li>
+  <li><a href="flasher-le-firmware.html">Flasher le Firmware</a> simplifié : fichier .hex local ou mise à jour en ligne vérifiée par somme SHA-256, contrôle du nom du fichier avant le flash.</li>
+  <li><a href="memo-wiki.html">Mémo &amp; Wiki</a> en français, lisible sans Internet. Application installable, utilisable hors ligne.</li>
+</ul>
+
+<h2 id="verifications">Vérifications faites</h2>
+<ul>
+  <li>Tests unitaires Betaflight + TrueGlide : 70 suites, en mode strict.</li>
+  <li>Construction pour 42 cartes courantes (F405, F411, F722, F745, H743, AT32F435) et pour le simulateur.</li>
+  <li>Simulateur, modèles de navigation : banc de missions de Betaflight, 19 scénarios sur 19 réussis (missions, décollage, atterrissage, orbite, perte radio, zone de vol, GPS RESCUE).</li>
+  <li>Simulateur : réglages TrueGlide acceptés et sauvegardés, mode SPEEDER annoncé au logiciel, transition suivie.</li>
+  <li>Santé moteurs : logique rejouée sur les journaux de 26 vols réels d'un quad de test (journaux non publiés) ; elle intervient sur chaque calage et jamais sur les vols sains. Ce rejeu ne montre pas ce que le drone aurait fait ensuite.</li>
+</ul>
+
+<h2 id="pas-encore-verifie">Pas encore vérifié</h2>
+<ul>
+  <li>Aucun vol réel avec le firmware : ni <b>TRUEGLIDE</b>, ni <b>TRUENAV</b>, ni <b>TRUENAV_LIGHT</b>.</li>
+  <li>Mode SPEEDER : logique vérifiée en tests et en simulateur, pas le comportement en vol. Commencer avec un angle de croisière de 20°, en altitude, puis monter par pas de 10°.</li>
+  <li>Température des ESC sur la radio : vérifiée en test unitaire seulement.</li>
+  <li>Nacelle Caddx GM3 : vérifiée sur le simulateur, pas avec une vraie nacelle.</li>
+  <li>Grandes hélices (10 à 15 pouces) pour la relance moteur : tests unitaires seulement.</li>
+</ul>
+
+<h2 id="publication">Firmwares publiés</h2>
+<p>La mise à jour en ligne propose la révision 014242092 (13 octobre 2026) pour deux cartes, SPEEDYBEEF405MINI et TMOTORVELOXF7SE, chacune en <b>TRUEGLIDE</b>, <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>

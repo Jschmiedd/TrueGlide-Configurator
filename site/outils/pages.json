@@ -1,0 +1,92 @@
+{
+  "note": "Liste des pages de la documentation : mêmes groupes et même ordre que le menu du logiciel (src/components/sidebar/sidebar_items.js). Ajouter ici chaque nouvel onglet, puis relancer outils/construire.py.",
+  "groupes": [
+    {
+      "titre": "Premiers pas",
+      "pages": [
+        { "slug": "mise-en-route", "titre": "Mise en route" },
+        { "slug": "flasher", "titre": "Installer le firmware" },
+        { "slug": "notes-de-version", "titre": "Notes de version" }
+      ]
+    },
+    {
+      "titre": "Sans carte branchée",
+      "pages": [
+        { "slug": "bienvenue", "titre": "Bienvenue", "onglet": "landing", "menu": "Bienvenue", "fichier": "src/components/tabs/LandingTab.vue", "mode": "hors" },
+        { "slug": "flasher-le-firmware", "titre": "Flasher le Firmware", "onglet": "firmware_flasher", "menu": "Flasher le Firmware", "fichier": "src/components/tabs/FirmwareFlasherTab.vue", "mode": "hors" },
+        { "slug": "pre-vol", "titre": "Pré-vol", "onglet": "preflight", "menu": "Pré-vol", "fichier": "src/components/tabs/PreflightTab.vue", "mode": "hors" }
+      ]
+    },
+    {
+      "titre": "Carte branchée",
+      "pages": [
+        { "slug": "tableau-de-bord", "titre": "Tableau de bord", "onglet": "dashboard", "menu": "Tableau de bord", "fichier": "src/components/tabs/TrueGlideDashboardTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Installation du drone",
+      "pages": [
+        { "slug": "installation", "titre": "Installation", "onglet": "setup", "menu": "Installation", "fichier": "src/components/tabs/SetupTab.vue", "mode": "sitl" },
+        { "slug": "ports", "titre": "Ports", "onglet": "ports", "menu": "Ports", "fichier": "src/components/tabs/PortsTab.vue", "mode": "sitl" },
+        { "slug": "configuration", "titre": "Configuration", "onglet": "configuration", "menu": "Configuration", "fichier": "src/components/tabs/ConfigurationTab.vue", "mode": "sitl" },
+        { "slug": "recepteur", "titre": "Récepteur", "onglet": "receiver", "menu": "Récepteur", "fichier": "src/components/tabs/ReceiverTab.vue", "mode": "sitl" },
+        { "slug": "modes", "titre": "Modes", "onglet": "auxiliary", "menu": "Modes", "fichier": "src/components/tabs/AuxiliaryTab.vue", "mode": "sitl" },
+        { "slug": "alimentation", "titre": "Alimentation et batterie", "onglet": "power", "menu": "Alimentation et batterie", "fichier": "src/components/tabs/PowerTab.vue", "mode": "sitl" },
+        { "slug": "moteurs", "titre": "Moteurs", "onglet": "motors", "menu": "Moteurs", "fichier": "src/components/tabs/MotorsTab.vue", "mode": "sitl" },
+        { "slug": "servos", "titre": "Servos", "onglet": "servos", "menu": "Servos", "fichier": "src/components/tabs/ServosTab.vue", "mode": "virtuel" },
+        { "slug": "failsafe", "titre": "Failsafe", "onglet": "failsafe", "menu": "Failsafe", "fichier": "src/components/tabs/FailsafeTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Fonctions TrueGlide",
+      "pages": [
+        { "slug": "protections", "titre": "Protections", "onglet": "tf_protections", "menu": "Protections", "fichier": "src/components/tabs/TrueGlideProtectionsTab.vue", "mode": "sitl" },
+        { "slug": "speeder", "titre": "Speeder", "onglet": "tf_speeder", "menu": "Speeder", "fichier": "src/components/tabs/TrueGlideSpeederTab.vue", "mode": "sitl" },
+        { "slug": "securite-navigation", "titre": "Sécurité navigation", "onglet": "tf_navigation", "menu": "Sécurité navigation", "fichier": "src/components/tabs/TrueGlideNavigationTab.vue", "mode": "sitl" },
+        { "slug": "camera", "titre": "Caméra", "onglet": "tf_camera", "menu": "Caméra", "fichier": "src/components/tabs/TrueGlideCameraTab.vue", "mode": "sitl" },
+        { "slug": "telemetrie-radio", "titre": "Télémétrie radio", "onglet": "tf_radio", "menu": "Télémétrie radio", "fichier": "src/components/tabs/TrueGlideRadioTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Réglage du vol",
+      "pages": [
+        { "slug": "preset", "titre": "Preset", "onglet": "presets", "menu": "Preset", "fichier": "src/components/tabs/PresetsTab.vue", "mode": "sitl" },
+        { "slug": "reglages-pid", "titre": "Réglages de PID", "onglet": "pid_tuning", "menu": "Réglages de PID", "fichier": "src/components/tabs/PidTuningTab.vue", "mode": "sitl" },
+        { "slug": "assistant-de-reglage", "titre": "Assistant de réglage", "onglet": "trueglide_tune", "menu": "Assistant de réglage", "fichier": "src/components/tabs/TrueGlideTuneTab.vue", "mode": "sitl" },
+        { "slug": "reglage-automatique", "titre": "Réglage automatique", "onglet": "autotune", "menu": "Réglage automatique", "fichier": "src/components/tabs/AutotuneTab.vue", "mode": "sitl" },
+        { "slug": "ajustements", "titre": "Ajustements", "onglet": "adjustments", "menu": "Ajustements", "fichier": "src/components/tabs/AdjustmentsTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Navigation GPS",
+      "pages": [
+        { "slug": "gps", "titre": "GPS", "onglet": "gps", "menu": "GPS", "fichier": "src/components/tabs/GpsTab.vue", "mode": "sitl" },
+        { "slug": "plan-de-vol", "titre": "Plan de vol", "onglet": "flight_plan", "menu": "Plan de vol", "fichier": "src/components/tabs/FlightPlanTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Vidéo",
+      "pages": [
+        { "slug": "osd", "titre": "OSD", "onglet": "osd", "menu": "OSD", "fichier": "src/components/tabs/OsdTab.vue", "mode": "virtuel" },
+        { "slug": "emetteur-video", "titre": "Émetteur vidéo", "onglet": "vtx", "menu": "Émetteur vidéo", "fichier": "src/components/tabs/VtxTab.vue", "mode": "virtuel" },
+        { "slug": "bandeau-led", "titre": "Bandeau LED", "onglet": "led_strip", "menu": "Bandeau LED", "fichier": "src/components/tabs/LedStripTab.vue", "mode": "virtuel" }
+      ]
+    },
+    {
+      "titre": "Analyse",
+      "pages": [
+        { "slug": "capteurs", "titre": "Capteurs", "onglet": "sensors", "menu": "Capteurs", "fichier": "src/components/tabs/SensorsTab.vue", "mode": "sitl" },
+        { "slug": "blackbox", "titre": "Blackbox", "onglet": "onboard_logging", "menu": "Blackbox", "fichier": "src/components/tabs/OnboardLoggingTab.vue", "mode": "sitl" },
+        { "slug": "visualiseur-blackbox", "titre": "Visualiseur Blackbox", "onglet": "blackbox_viewer", "menu": "Visualiseur Blackbox", "fichier": "src/components/tabs/BlackboxViewerTab.vue", "mode": "sitl" },
+        { "slug": "journal-de-bord", "titre": "Journal de bord", "onglet": "logging", "menu": "Journal de bord", "fichier": "src/components/tabs/LoggingTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Outils",
+      "pages": [
+        { "slug": "memo-wiki", "titre": "Mémo & Wiki", "onglet": "help", "menu": "Mémo & Wiki", "fichier": "src/components/tabs/HelpTab.vue", "mode": "sitl" },
+        { "slug": "cli", "titre": "Ligne de commande (CLI)", "onglet": "cli", "menu": "Ligne de commande (CLI)", "fichier": "src/components/tabs/CliTab.vue", "mode": "sitl" }
+      ]
+    }
+  ]
+}

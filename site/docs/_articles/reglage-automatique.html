@@ -1,0 +1,57 @@
+<h1>Réglage automatique</h1>
+<p class="chapeau">L'onglet <b>Réglage automatique</b> (groupe « Réglage du vol ») analyse un journal de Blackbox enregistré pendant un vol de mesure « chirp » et propose de nouvelles positions pour les curseurs de réglage PID. Il ne fait pas voler le drone : l'analyse se fait dans le logiciel, après le vol.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/reglage-automatique.png" alt="Onglet Réglage automatique avant import : cadre Analyse de la Blackbox avec le texte d'explication et le bouton Importer le journal de la Blackbox"><img class="t-clair" src="../assets/img/onglets/reglage-automatique-clair.png" alt="Même onglet Réglage automatique en thème clair, avant import d'un journal">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, avant l'import d'un journal. Les cadres de résultats n'apparaissent qu'après l'analyse d'un vrai journal de mesure.</figcaption>
+</figure>
+
+<h2 id="principe">Principe</h2>
+<p>Pendant le vol de mesure, le firmware ajoute à la consigne un signal « chirp » : une oscillation dont la fréquence monte peu à peu, sur un seul axe à la fois. La Blackbox enregistre ce signal et la réponse du gyroscope. Le logiciel compare les deux et en tire la réponse en fréquence du drone, puis des curseurs proposés.</p>
+<p>Ce mode de mesure vient de Betaflight 2026.6 ; <b>TRUEGLIDE</b> le garde tel quel. Pour un premier réglage sans vol de mesure, utilisez plutôt l'<a href="assistant-de-reglage.html">Assistant de réglage</a>.</p>
+
+<h2 id="preparer">Préparer le vol de mesure</h2>
+<ol>
+  <li>Vérifiez que le mode <b>CHIRP</b> apparaît dans l'onglet <a href="modes.html">Modes</a>. Il n'existe que si le firmware a été construit avec l'option de mesure chirp (<code>USE_CHIRP</code>). S'il est absent, ce vol de mesure n'est pas possible avec ce firmware.</li>
+  <li>Mettez le mode <b>CHIRP</b> sur un interrupteur de la radio.</li>
+  <li>Dans l'onglet <a href="blackbox.html">Blackbox</a>, réglez le mode de débogage sur <code>CHIRP</code> (<code>debug_mode = CHIRP</code>) et vérifiez que l'enregistrement fonctionne.</li>
+  <li>Les réglages du signal sont dans la CLI (<code>chirp_*</code>). Valeurs par défaut du firmware : durée 20 s (<code>chirp_time_seconds</code>), fréquence de 0,2 Hz à 600 Hz (<code>chirp_frequency_start_deci_hz = 2</code>, <code>chirp_frequency_end_deci_hz = 6000</code>), amplitude 230 en roulis et en tangage et 180 en lacet. Ne les changez que si vous savez pourquoi.</li>
+</ol>
+
+<h2 id="vol">Faire le vol de mesure</h2>
+<div class="encart">Pendant la mesure, le drone est volontairement secoué sur un axe. Volez dans un lieu dégagé, loin des personnes, assez haut, et soyez prêt à couper l'interrupteur CHIRP pour reprendre la main. Commencez avec un drone qui vole déjà correctement. Le firmware arrête le chirp en failsafe et en GPS RESCUE. Aucun vol réel n'a encore été fait avec <b>TRUEGLIDE</b> : soyez d'autant plus prudent.</div>
+<ol>
+  <li>Décollez, montez à une hauteur sûre et stabilisez le drone.</li>
+  <li>Activez l'interrupteur CHIRP et gardez le drone le plus stable possible jusqu'à la fin du signal (durée réglée par <code>chirp_time_seconds</code>).</li>
+  <li>Désactivez l'interrupteur. À chaque désactivation, le firmware passe à l'axe suivant : roulis, puis tangage, puis lacet, puis de nouveau roulis.</li>
+  <li>Recommencez pour chaque axe à mesurer, puis atterrissez et récupérez le journal de la Blackbox (fichier <code>.bbl</code>, <code>.bfl</code> ou <code>.txt</code>).</li>
+</ol>
+
+<h2 id="importer">Cadre Analyse de la Blackbox</h2>
+<ul>
+  <li><b>Importer le journal de la Blackbox</b> : choisissez le fichier. L'analyse se fait dans le logiciel ; une roue tourne pendant la lecture.</li>
+  <li>Si le fichier ne contient pas de données chirp, un message d'erreur s'affiche avec le bouton <b>Essayez encore</b>.</li>
+  <li>Après l'analyse, le cadre affiche le <b>Fichier</b>, la fréquence d'échantillonnage en Hz, les <b>Axes Détectés</b> (Roll, Pitch, Yaw) et le bouton <b>Importer un autre</b>.</li>
+</ul>
+<p>Le logiciel prend le premier journal du fichier qui contient des données chirp exploitables. Un axe n'est retenu que si sa mesure est assez longue.</p>
+
+<h2 id="courbes">Cadres Réponse en fréquences et Spectrogramme (Gyro)</h2>
+<ul>
+  <li><b>Réponse en fréquences</b> : des cases à cocher <b>Roulis (Roll)</b>, <b>Tangage (Pitch)</b>, <b>Lacet (Yaw)</b> choisissent les axes affichés. Quatre graphiques sont superposés par axe : amplitude (dB) et phase (°) en fonction de la fréquence, sensibilité (dB), et réponse à un échelon (en ms). Les cases servent aussi au tableau des recommandations.</li>
+  <li><b>Spectrogramme (Gyro)</b> : pour chaque axe affiché, l'énergie du gyroscope selon le temps (s) et la fréquence (Hz).</li>
+</ul>
+
+<h2 id="recommandation">Cadre Recommandation de gain</h2>
+<p>Un tableau avec une colonne par axe affiché, en trois parties :</p>
+<ul>
+  <li><b>PIDs actuels (à partir du log)</b> : P, I et D lus dans l'en-tête du journal.</li>
+  <li><b>Analyse</b> : <b>Bande passante</b> (Hz), <b>Marge de phase</b> (°), <b>Pic résonnant</b> (dB), <b>Pic de Sensibilité</b> (dB), dépassement (ligne <b>Excès</b>, en %), <b>Temps de montée</b> (ms), temps de stabilisation (ligne <b>Temps de descente</b>, en ms) et <b>Cohérence</b> (%). Une cohérence basse veut dire que la mesure est peu fiable.</li>
+  <li><b>Curseurs proposés</b> : colonne <b>Actuel</b> (valeur du journal) et une colonne <b>Proposé</b> par axe pour <b>Multiplicateur Master</b>, <b>Gain P / I</b>, <b>Gain I</b>, <b>Gain D</b>, <b>Gain d'anticipation (Feedforward)</b> et <b>Filtre D-Term</b>. L'écart en % est en vert au-delà de +5 %, en rouge en dessous de −5 %.</li>
+</ul>
+
+<h2 id="appliquer">Appliquer les gains</h2>
+<ol>
+  <li>Le logiciel doit être connecté au contrôleur de vol ; sinon le message « Connectez-vous au contrôleur de vol pour appliquer des gains. » s'affiche.</li>
+  <li>Si plusieurs axes sont affichés, choisissez dans <b>Appliquer les gains de l'axe</b> l'axe dont les curseurs proposés seront utilisés.</li>
+  <li>Cliquez sur <b>Appliquer les gains</b>. Les curseurs proposés sont envoyés au profil PID actif, vérifiés par le firmware, puis sauvegardés. Le message « Gains appliqués et sauvegardés. » confirme.</li>
+</ol>
+<div class="encart">Les curseurs s'appliquent à tout le profil, pas seulement à l'axe choisi. Vérifiez ensuite le résultat dans l'onglet <a href="reglages-pid.html">Réglages de PID</a>, puis faites un vol court et prudent : stationnaire, atterrir, toucher les moteurs. Tout essai au sol batterie branchée se fait <b>Hélices retirées</b>.</div>

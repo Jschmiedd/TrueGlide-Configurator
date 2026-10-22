@@ -1,0 +1,91 @@
+<h1>Installation</h1>
+<p class="chapeau">L'onglet <b>Installation</b> (groupe « Installation du drone ») montre en direct l'attitude du drone sur un modèle 3D, l'état de la carte (ce qui empêche l'armement, batterie, charge du processeur), le GPS et les informations du firmware. C'est la première étape de la mise en route : on vérifie que le drone virtuel bouge comme le vrai.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/installation.png" alt="Onglet Installation en thème sombre : modèle 3D d'un quad X vu de profil avec les boutons Profil et Dessus, valeurs Lacet, Pitch et Roll à 0,0 deg, puis les cadres Info Système, GPS et Info Firmware"><img class="t-clair" src="../assets/img/onglets/installation-clair.png" alt="Onglet Installation en thème clair : modèle 3D d'un quad X vu de profil avec les boutons Profil et Dessus, valeurs Lacet, Pitch et Roll à 0,0 deg, puis les cadres Info Système, GPS et Info Firmware">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC : pas de vrais capteurs, ni batterie, ni récepteur, ni GPS. D'où la tension à 0 V, le GPS à « Faux », la carte « SITL » et le MCU « SIMULATOR ». En haut, le bandeau du guide de mise en route (étape 1 sur 9). Le mode Expert est actif, d'où les deux boutons en bas du cadre Info Firmware.</figcaption>
+</figure>
+
+<h2 id="modele-3d">Le modèle 3D</h2>
+<p>Le grand cadre du haut affiche un modèle 3D du drone. Il suit l'attitude envoyée par la carte, environ 30 fois par seconde. Le modèle dépend du type de mixeur réglé dans la carte (quad, hexa, tricoptère, avion…).</p>
+<ul>
+  <li><b>Lacet (Yaw) :</b>, <b>Pitch:</b>, <b>Roll:</b> : angles du drone, en degrés (« deg »), affichés en haut à gauche du cadre.</li>
+  <li><b>Réinitialiser l'axe Z, écart: … deg</b> : bouton en haut à droite. Il remet le lacet du modèle 3D à 0 dans l'affichage, pour que le modèle regarde droit devant. Le nombre affiché est la correction appliquée. Rien n'est envoyé à la carte : c'est seulement l'affichage.</li>
+  <li>Deux cadrans (horizon artificiel et cap) s'affichent en bas à droite seulement avec les firmwares de navigation (<b>TRUENAV</b>, <b>TRUENAV_LIGHT</b>) et le simulateur. Ils montrent les mêmes valeurs que le modèle.</li>
+</ul>
+
+<h3 id="profil-dessus">Vues « Profil » et « Dessus »</h3>
+<p>Deux boutons en bas à gauche du cadre choisissent la vue. Le choix est gardé d'une session à l'autre.</p>
+<ul>
+  <li><b>Profil</b> : la vue habituelle, le drone vu de côté.</li>
+  <li><b>Dessus</b> : le modèle est incliné pour être vu par-dessus. Des repères s'ajoutent et suivent le modèle quand il bouge :
+    <ul>
+      <li>le mot <b>AVANT</b> avec une flèche ▲, juste devant le nez du drone ;</li>
+      <li>le numéro de chaque moteur, dans un rond, au-dessus de chaque moteur.</li>
+    </ul>
+  </li>
+</ul>
+<p>Les numéros de moteurs suivent la numérotation du mixeur Quad X standard :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Moteur</th><th>Position (drone vu de dessus, nez vers l'avant)</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>arrière droit</td></tr>
+    <tr><td>2</td><td>avant droit</td></tr>
+    <tr><td>3</td><td>arrière gauche</td></tr>
+    <tr><td>4</td><td>avant gauche</td></tr>
+  </tbody>
+</table></div>
+<div class="encart">Les numéros ne sont dessinés que sur le modèle du quad X. Ce même modèle sert aussi aux mixeurs Quad +, Quad X 1234 et X8 coaxial : avec ces mixeurs, les numéros affichés ne correspondent pas forcément à vos moteurs. Pour les autres modèles (hexa, tricoptère, avion…), seul le repère <b>AVANT</b> s'affiche. Dans tous les cas, l'ordre réel des moteurs se vérifie dans l'onglet <a href="moteurs.html">Moteurs</a>, <b>hélices retirées</b>.</div>
+
+<h3 id="verifier-attitude">Vérifier que le modèle suit le drone</h3>
+<ol>
+  <li>Posez le drone à plat. Le modèle doit être à plat lui aussi.</li>
+  <li>Levez le nez du drone : le nez du modèle doit monter.</li>
+  <li>Penchez le drone vers la droite : le modèle doit pencher vers la droite.</li>
+  <li>Tournez le drone sur lui-même : le modèle doit tourner dans le même sens.</li>
+  <li>Si un mouvement est inversé ou décalé, corrigez l'<b>Alignement de la carte</b> dans l'onglet <a href="capteurs.html">Capteurs</a>.</li>
+</ol>
+<p>Le calibrage de l'accéléromètre (drone posé à plat) se fait aussi dans l'onglet <a href="capteurs.html">Capteurs</a>, cadre <b>Accéléromètre</b>, bouton <b>Calibrer</b>. Il n'y a pas de bouton de calibrage dans l'onglet Installation.</p>
+
+<h2 id="info-systeme">Cadre « Info Système »</h2>
+<p>Valeurs relues environ 4 fois par seconde.</p>
+<ul>
+  <li><b>Paramètres empêchant l'armement:</b> : la liste des raisons pour lesquelles la carte refuse d'armer (par exemple <code>RXLOSS</code> : aucun signal du récepteur ; <code>ANGLE</code> : drone pas assez à plat ; <code>MSP</code> : connexion au logiciel active). Passez la souris sur un mot pour lire son explication. Quand plus rien ne bloque, le texte <b>Armement autorisé</b> s'affiche.</li>
+  <li><b>Tension de la batterie:</b> : tension mesurée, en V.</li>
+  <li><b>Mah consommés:</b> : capacité consommée depuis la mise sous tension, en mAh.</li>
+  <li><b>Courant consommé:</b> : courant instantané, en A.</li>
+  <li><b>RSSI:</b> : force du signal radio. Le logiciel calcule un pourcentage (0 à 100) mais l'affiche suivi de « dBm » : lisez cette valeur comme un pourcentage.</li>
+  <li><b>MCU:</b> : modèle du processeur de la carte.</li>
+  <li><b>Charge CPU :</b> : charge du processeur, en %.</li>
+  <li><b>Vitesse de boucle :</b> : fréquence du gyro, puis fréquence de la boucle PID, en Hz (« k » = kHz). Exemple : <code>8.0k / 4.0k</code>. Vide si la carte ne donne pas la durée de boucle.</li>
+  <li><b>Température du CPU:</b> : température du processeur, en °C. Quand la carte ne donne pas de température, le texte « Aucune prise en charge de l'API MSP avant 1.46 » s'affiche, même avec un firmware récent (c'est le cas du simulateur).</li>
+</ul>
+
+<h2 id="gps">Cadre « GPS »</h2>
+<ul>
+  <li><b>Accroche:</b> : <b>Vrai</b> (vert) quand le GPS a une position, <b>Faux</b> (rouge) sinon.</li>
+  <li><b>Nombre de satellites :</b> : nombre de satellites utilisés.</li>
+  <li><b>Latitude:</b> et <b>Longitude:</b> : position en degrés. Un clic ouvre la position dans Google Maps (navigateur).</li>
+</ul>
+<p>Le GPS doit être déclaré dans l'onglet <a href="ports.html">Ports</a> et réglé dans l'onglet <a href="gps.html">GPS</a>.</p>
+
+<h2 id="info-firmware">Cadre « Info Firmware »</h2>
+<ul>
+  <li><b>Carte :</b> : nom de la carte (cible du firmware).</li>
+  <li><b>Firmware :</b> : identifiant et version. Le firmware <b>TRUEGLIDE</b> s'annonce volontairement « BTFL » suivi de la version, car il garde la base Betaflight 2026.6.2.</li>
+  <li><b>API MSP :</b> : version du protocole de dialogue entre la carte et le logiciel.</li>
+  <li><b>Date de compilation :</b> : date à laquelle le firmware a été compilé.</li>
+  <li><b>Type de construction :</b> : <b>Compilation locale</b> ou <b>Construction Cloud</b> (firmware construit par le serveur de Betaflight).</li>
+  <li><b>Info de compilation :</b> : liens <b>Log</b> et <b>Configuration</b> vers le serveur de construction, seulement pour une construction Cloud. Sinon : « Aucune information de construction disponible » ou « Serveur indisponible ».</li>
+  <li><b>Micrologiciel:</b> : le lien <b>Options</b> ouvre la liste des options compilées dans le firmware (par exemple <code>USE_GPS</code>). Le lien <b>Télécharger</b> n'apparaît que pour une construction Cloud.</li>
+</ul>
+
+<h3 id="boutons-expert">Boutons du mode Expert</h3>
+<p>Ces deux boutons n'apparaissent que si le mode Expert est actif (icône de clé dans la barre du haut, « Activer/désactiver le mode expert »).</p>
+<ul>
+  <li><b>Réinitialiser les paramètres</b> : remet <b>tous</b> les réglages de la carte à l'état non configuré. Une fenêtre <b>Confirmer</b> demande de choisir <b>Annuler</b> ou <b>Réinitialiser</b>.</li>
+  <li><b>Activer le Boot Loader / DFU</b> : redémarre la carte en mode de chargement de firmware, pour la flasher (voir <a href="flasher-le-firmware.html">Flasher le Firmware</a>).</li>
+</ul>
+<div class="encart">Avant <b>Réinitialiser les paramètres</b>, faites une sauvegarde : onglet <a href="cli.html">Ligne de commande (CLI)</a>, commande <code>diff all</code>, et gardez le texte. Ce n'est pas une « remise d'usine » : selon le logiciel lui-même, il peut être nécessaire de reflasher le firmware pour se reconnecter.</div>
+
+<h2 id="sonar">Cadre « Sonar »</h2>
+<p>Affiché seulement si la carte a un sonar actif. <b>Altitude</b> : distance mesurée, en cm.</p>

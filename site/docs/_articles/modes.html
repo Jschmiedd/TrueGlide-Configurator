@@ -1,0 +1,74 @@
+<h1>Modes</h1>
+<p class="chapeau">L'onglet <b>Modes</b> (groupe « Installation du drone ») sert à attribuer les interrupteurs de la radio aux modes de la carte : armement, mode ANGLE, retour GPS, mode <b>SPEEDER</b> de <b>TRUEGLIDE</b>, etc. Un mode s'active quand la voie AUX choisie est dans la plage réglée.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/modes.png" alt="Onglet Modes en thème sombre : note d'aide, interrupteur Masquer les modes non utilisés, puis une ligne par mode (ARM, ANGLE, HORIZON, MAG, ALTHOLD… jusqu'à SPEEDER) avec les boutons Ajouter un lien et Ajouter une plage, aucune plage réglée"><img class="t-clair" src="../assets/img/onglets/modes-clair.png" alt="Onglet Modes en thème clair : note d'aide, interrupteur Masquer les modes non utilisés, puis une ligne par mode (ARM, ANGLE, HORIZON… jusqu'à SPEEDER) avec les boutons Ajouter un lien et Ajouter une plage, aucune plage réglée">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC : aucun mode n'a encore de plage, et sans récepteur aucune voie AUX ne bouge. La liste des modes est celle que donne le simulateur ; sur une vraie carte, elle dépend du firmware, des capteurs et des fonctions actives.</figcaption>
+</figure>
+
+<h2 id="principe">Plages et liens</h2>
+<ul>
+  <li>Une <b>plage</b> relie un mode à une voie AUX : le mode est actif quand la valeur de la voie est entre le minimum et le maximum.</li>
+  <li>Un <b>lien</b> active un mode quand un autre mode est actif.</li>
+  <li>Exceptions : <b>ARM</b> ne peut pas être lié à un autre mode, dans un sens comme dans l'autre, et on ne peut pas lier un mode à un mode qui est lui-même un lien.</li>
+  <li>Un mode peut avoir plusieurs plages ou liens. Chacun est alors marqué <b>ET</b> ou <b>Ou</b> : le mode est actif si toutes les entrées <b>ET</b> sont actives, ou si au moins une entrée <b>Ou</b> est active.</li>
+</ul>
+
+<h2 id="liste">La liste des modes</h2>
+<p>Chaque mode a une case à gauche avec son nom, un <b>?</b> d'aide et deux boutons :</p>
+<ul>
+  <li><b>Ajouter un lien</b> (absent pour ARM) : ajoute un menu pour choisir le mode lié (<b>Aucun</b> par défaut).</li>
+  <li><b>Ajouter une plage</b> : ajoute une plage, de 1300 à 1700 au départ.</li>
+</ul>
+<p>Pour chaque plage :</p>
+<ul>
+  <li>menu de la voie : <b>AUTOMATIQUE</b> ou <b>AUX 1</b>, <b>AUX 2</b>… En <b>AUTOMATIQUE</b>, basculez l'interrupteur voulu sur la radio : le logiciel choisit la voie AUX qui a bougé (d'au moins 100 µs) ;</li>
+  <li>curseur à deux poignées, de 900 à 2100 µs, par pas de 25. Un repère montre la position actuelle de la voie ;</li>
+  <li><b>Minimum</b> et <b>Maximum</b> : valeurs de la plage, en µs ;</li>
+  <li>la croix en haut à droite supprime la plage (ou le lien).</li>
+</ul>
+<p>Couleur de la case du mode : en couleur vive quand le mode est actif, en rouge avec « (DÉSACTIVÉ) » quand l'interrupteur ARM est levé alors que l'armement est bloqué (voir <b>Paramètres empêchant l'armement</b> dans l'onglet <a href="installation.html">Installation</a>).</p>
+<p><b>Masquer les modes non utilisés</b> : n'affiche que les modes qui ont au moins une plage ou un lien. Le choix est gardé d'une session à l'autre.</p>
+
+<h2 id="procedure">Attribuer un interrupteur</h2>
+<ol>
+  <li><b>Hélices retirées</b>, radio allumée, récepteur fonctionnel (vérifié dans l'onglet <a href="recepteur.html">Récepteur</a>).</li>
+  <li>Sur la ligne du mode, cliquez <b>Ajouter une plage</b>.</li>
+  <li>Laissez la voie sur <b>AUTOMATIQUE</b> et basculez l'interrupteur voulu : la voie AUX se choisit seule. Ou choisissez-la dans le menu.</li>
+  <li>Basculez l'interrupteur dans la position qui doit activer le mode, et placez les poignées du curseur autour du repère.</li>
+  <li>Vérifiez : la case du mode change de couleur quand l'interrupteur est dans la bonne position, et seulement là.</li>
+  <li>Cliquez <b>Enregistrer</b> en bas à droite. Les modes sont enregistrés dans la carte, sans redémarrage.</li>
+</ol>
+<div class="encart">Réglez d'abord <b>ARM</b> sur un interrupteur à deux positions bien séparé des autres. Testez l'armement <b>hélices retirées</b> : les moteurs peuvent se mettre à tourner dès l'armement.</div>
+
+<h2 id="modes-courants">Modes courants</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Mode</th><th>Effet</th></tr></thead>
+  <tbody>
+    <tr><td>ARM</td><td>Arme la carte : les moteurs peuvent tourner.</td></tr>
+    <tr><td>PREARM</td><td>À l'armement, la carte attend que cet interrupteur soit aussi actif (armement en deux temps).</td></tr>
+    <tr><td>ANGLE</td><td>Mode stabilisé : les manches commandent l'inclinaison, manches au centre = drone à plat.</td></tr>
+    <tr><td>HORIZON</td><td>Comme ANGLE manches au centre, de plus en plus acro quand les manches s'en éloignent.</td></tr>
+    <tr><td>AIR MODE</td><td>Garde la stabilité gaz à zéro. Absent de la liste si AIRMODE est activé en permanence (onglet <a href="configuration.html">Configuration</a>).</td></tr>
+    <tr><td>GPS RESCUE</td><td>Retour vers le point d'armement. Présent si la fonction GPS est active.</td></tr>
+    <tr><td>ALTHOLD, POS HOLD</td><td>Maintien d'altitude, maintien de position.</td></tr>
+    <tr><td>AUTOPILOT, WP CAPTURE</td><td>Missions GPS : seulement avec les firmwares de navigation (<b>TRUENAV</b>, <b>TRUENAV_LIGHT</b>) et le simulateur. Voir <a href="plan-de-vol.html">Plan de vol</a>.</td></tr>
+    <tr><td>FAILSAFE</td><td>Déclenche à la main l'étape 2 du failsafe.</td></tr>
+    <tr><td>BEEPER, BEEPER MUTE</td><td>Fait sonner le buzzer (retrouver un drone tombé) ; coupe le buzzer.</td></tr>
+    <tr><td>FLIP OVER AFTER CRASH</td><td>Inverse les moteurs pour retourner le drone sur le dos (DShot nécessaire).</td></tr>
+    <tr><td>FPV ANGLE MIX</td><td>Utilise l'<b>Angle Caméra FPV</b> de l'onglet <a href="configuration.html">Configuration</a>.</td></tr>
+    <tr><td>BLACKBOX</td><td>Enregistrement du journal de vol.</td></tr>
+    <tr><td>OSD DISABLE</td><td>Masque l'OSD.</td></tr>
+    <tr><td>PARALYZE</td><td>Bloque le drone jusqu'à ce qu'on coupe l'alimentation.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="speeder">Le mode SPEEDER (TRUEGLIDE)</h2>
+<p>Mode ajouté par le firmware <b>TRUEGLIDE</b>, pour les drones « speeder » qui décollent fuselage vertical et volent vite fuselage presque horizontal.</p>
+<ul>
+  <li>Il apparaît dans la liste seulement si la carte a un accéléromètre.</li>
+  <li>Il ne marche qu'en mode <b>ANGLE</b> : mettez aussi ANGLE sur un interrupteur.</li>
+  <li>Interrupteur actif : le nez descend progressivement jusqu'à l'angle de croisière. Interrupteur coupé ou failsafe : retour progressif au stationnaire. GPS RESCUE, ALTHOLD et POS HOLD annulent la transition.</li>
+  <li>Sans interrupteur sur SPEEDER, rien ne change en vol.</li>
+  <li>Les réglages (angle de croisière, vitesse de transition) sont dans l'onglet <a href="speeder.html">Speeder</a>.</li>
+</ul>
+<div class="encart">La logique du mode SPEEDER est vérifiée en tests et au simulateur, pas encore en vol réel. Commencez avec un petit angle de croisière, en altitude, prêt à couper l'interrupteur.</div>

@@ -1,0 +1,96 @@
+<h1>Failsafe</h1>
+<p class="chapeau">L'onglet <b>Failsafe</b> (groupe « Installation du drone ») sert à choisir ce que fait le drone quand la liaison radio est perdue : valeurs de repli des voies, délais, puis procédure finale (tomber, atterrir ou revenir au point de départ par GPS).</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/failsafe.png" alt="Onglet Failsafe : encart orange expliquant les deux étapes, cadre Plage d'impulsions valides (885 et 2115), cadre Étape 1 - Réglages de repli des voies vide, cadre Switch Failsafe sur Stage 1, cadre Stage 2 - Paramètres avec 1.5 et 10 secondes et la procédure Tombe illustrée par un dessin Drop"><img class="t-clair" src="../assets/img/onglets/failsafe-clair.png" alt="Onglet Failsafe : encart orange expliquant les deux étapes, cadre Plage d'impulsions valides (885 et 2115), cadre Étape 1 - Réglages de repli des voies vide, cadre Switch Failsafe sur Stage 1, cadre Stage 2 - Paramètres avec 1.5 et 10 secondes et la procédure Tombe illustrée par un dessin Drop">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, avec les valeurs par défaut du firmware. Le simulateur n'a pas de récepteur radio : la liste des voies du cadre « Étape 1 - Réglages de repli des voies » est vide. Le bandeau du haut est le guide de <a href="mise-en-route.html">Mise en route</a>.</figcaption>
+</figure>
+
+<h2 id="deux-etapes">Les deux étapes du failsafe</h2>
+<ul>
+  <li><b>Étape 1</b> : elle démarre quand une voie de vol (roulis, tangage, lacet, gaz) reçoit une impulsion hors de la plage valide, quand le récepteur signale son propre failsafe, ou quand plus rien n'arrive du récepteur. Toutes les voies prennent alors leur valeur de repli. Si le signal revient pendant le délai de garde, le pilote reprend la main.</li>
+  <li><b>Étape 2</b> : si l'erreur dure plus longtemps que le délai de garde et que le drone est armé, la procédure choisie (Tombe, Atterrit ou Sauvetage GPS) démarre.</li>
+</ul>
+<p>Une voie AUX seule hors plage ne déclenche pas l'étape 1 : elle prend simplement sa valeur de repli.</p>
+
+<h2 id="plage-impulsions">Plage d'impulsions valides</h2>
+<ul>
+  <li><b>Longueur minimum</b> et <b>Longueur maximum</b> (µs) : de 750 à 2250. Une impulsion plus courte que le minimum ou plus longue que le maximum est fausse. Valeurs par défaut du firmware : 885 et 2115.</li>
+</ul>
+
+<h2 id="repli-des-voies">Étape 1 - Réglages de repli des voies</h2>
+<p>Une ligne par voie : Roll, Pitch, Yaw, Throttle (selon la langue), puis AUX 1, AUX 2… À côté d'une voie AUX, des étiquettes rappellent les modes qui l'utilisent (onglet <a href="modes.html">Modes</a>) et « RSSI » si elle porte le RSSI.</p>
+<ul>
+  <li><b>Auto</b> (4 premières voies seulement) : roulis, tangage et lacet au centre, gaz au minimum (au centre en mode 3D).</li>
+  <li><b>Maintenir</b> : garde la dernière bonne valeur reçue.</li>
+  <li><b>Définir</b> : utilise la valeur saisie à droite, de 750 à 2250 µs, par pas de 25.</li>
+</ul>
+<p>La liste est vide si le contrôleur de vol ne reçoit aucune voie (pas de récepteur configuré, voir <a href="recepteur.html">Récepteur</a>).</p>
+
+<h2 id="switch-failsafe">Switch Failsafe</h2>
+<p>On peut déclencher le failsafe avec un interrupteur de la radio : il faut d'abord lui attribuer le mode FAILSAFE dans l'onglet <a href="modes.html">Modes</a>.</p>
+<ul>
+  <li><b>Action du switch Failsafe</b> :
+    <ul>
+      <li><b>Stage 1</b> (par défaut) : déclenche l'étape 1, exactement comme une perte du signal. Le meilleur choix pour tester.</li>
+      <li><b>Stage 2</b> : saute l'étape 1 et lance tout de suite la procédure de l'étape 2.</li>
+      <li><b>Tue</b> (« Kill ») : désarme tout de suite. Le drone tombe.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="stage-2">Stage 2 - Paramètres</h2>
+<ul>
+  <li><b>Durée en failsafe étape 1 après la perte du signal [secondes]</b> : le délai de garde, de 1 à 20 s par pas de 0,1. Par défaut : 1,5 s. Passé ce délai sans signal, l'étape 2 démarre.</li>
+  <li><b>Délais avant la mise à zéro des gaz pour failsafe [secondes]</b> : de 0 à 30 s, par défaut 10 s. Si les gaz étaient en bas depuis au moins cette durée au moment du failsafe, le drone se désarme simplement au lieu de lancer la procédure. Utile drone posé.</li>
+</ul>
+
+<h2 id="procedure">Stage 2 - Procédure Failsafe</h2>
+<p>Le dessin sous la liste illustre la procédure choisie. Ce choix est le même réglage que <b>failsafe_procedure</b> dans l'onglet <a href="securite-navigation.html">Sécurité navigation</a>.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Choix affiché</th><th>Valeur CLI</th><th>Ce que fait le drone</th></tr></thead>
+  <tbody>
+    <tr><td>Tombe</td><td>DROP</td><td>Coupe les moteurs et se désarme. Choix par défaut du firmware.</td></tr>
+    <tr><td>Atterrit</td><td>AUTO-LAND</td><td>Descend avec les gaz réglés ci-dessous, puis se désarme.</td></tr>
+    <tr><td>Sauvetage GPS</td><td>GPS-RESCUE</td><td>Revient vers le point de départ et atterrit. Demande un GPS (voir <a href="gps.html">GPS</a>).</td></tr>
+  </tbody>
+</table></div>
+
+<p>Avec <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b>, pendant une mission, la perte de la radio suit d'abord le réglage <b>ap_rx_loss_policy</b> de l'onglet <a href="securite-navigation.html">Sécurité navigation</a> (continuer la mission ou atterrir sur place) ; sinon, la procédure ci-dessus s'applique.</p>
+
+<h3>Réglages de « Atterrit »</h3>
+<ul>
+  <li><b>Valeur de gaz utilisée à l'atterrissage</b> : de 0 à 2000, par défaut 1000. Réglez-la pour que le drone descende doucement.</li>
+  <li><b>Délais avant extinction des moteurs lors du failsafe [secondes]</b> : durée de l'atterrissage avant de couper les moteurs et de désarmer, de 0 à 250 s, par défaut 60 s. Si la radio revient pendant l'atterrissage, le pilote reprend la main.</li>
+</ul>
+
+<h3>Réglages de « Sauvetage GPS »</h3>
+<p>Ces réglages s'affichent quand la procédure est « Sauvetage GPS », ou quand le mode GPS RESCUE est attribué à un interrupteur dans l'onglet <a href="modes.html">Modes</a>. Les bornes ci-dessous sont celles du firmware <b>TRUEGLIDE</b> 2026.6.2.</p>
+<ul>
+  <li><b>Mode Altitude</b> : « Altitude maximum », « Altitude fixe » ou « Altitude actuelle ». Par défaut : Altitude maximum.</li>
+  <li><b>Altitude de retour (mètres)</b> : visible avec « Altitude fixe ». De 5 à 1000 m, par défaut 30 m. Même réglage que <b>gps_rescue_return_alt</b> de l'onglet <a href="securite-navigation.html">Sécurité navigation</a>.</li>
+  <li><b>Montée initiale (mètres)</b> : de 0 à 100 m, par défaut 10 m. Montée au-dessus de l'altitude actuelle au début du sauvetage, en mode Altitude actuelle ; ajoutée aussi en mode Altitude maximum.</li>
+  <li><b>Vitesse de montée (mètres/seconde)</b> : de 0,5 à 25 m/s, par défaut 7,5 m/s.</li>
+  <li><b>Vitesse sol de retour (mètres/seconde)</b> : de 0 à 30 m/s, par défaut 7,5 m/s. Même réglage que <b>gps_rescue_ground_speed</b> de l'onglet <a href="securite-navigation.html">Sécurité navigation</a>.</li>
+  <li><b>Angle de tangage maximal</b> (°) : de 10 à 70°. C'est le réglage <b>ap_max_angle</b>, partagé avec les autres fonctions de navigation (onglet <a href="securite-navigation.html">Sécurité navigation</a>). Un angle plus grand demande en général plus de gaz.</li>
+  <li><b>Distance descendue (en mètres)</b> : de 5 à 500 m, par défaut 20 m.</li>
+  <li><b>Vitesse de descente (mètres/seconde)</b> : de 0,25 à 5 m/s, par défaut 1,5 m/s.</li>
+  <li><b>Gaz minimum</b> (1050 à 1400), <b>Gaz maximum</b> (1400 à 2000) et <b>Gaz en stationnaire</b> (0 à 1700) : ce sont les réglages de gaz de la navigation (<b>ap_throttle_min</b>, <b>ap_throttle_max</b>, <b>ap_hover_throttle</b>), aussi utilisés par les autres fonctions de navigation. Par défaut : 1100, 1900 et 1275. Les gaz en stationnaire doivent être réglés avec précision ; l'aide (?) du logiciel donne une méthode.</li>
+  <li><b>Distance minimale à la maison (mètres)</b> : de 5 à 30 m, par défaut 15 m. Si le sauvetage démarre plus près du point de départ, le drone s'éloigne d'abord dans sa direction actuelle jusqu'à cette distance.</li>
+  <li><b>Satellites minimum</b> : de 5 à 50, par défaut 8. Même réglage que <b>gps_rescue_min_sats</b> de l'onglet Sécurité navigation.</li>
+  <li><b>Autoriser l'armement sans accroche</b> : désactivé par défaut. Déconseillé : sans point de départ enregistré, le drone se désarme et tombe lors d'un vrai failsafe.</li>
+  <li><b>Vérification</b> : « Off », « On » ou « Failsafe uniquement » (par défaut). Contrôles de cohérence pendant le sauvetage.</li>
+</ul>
+<p>Les champs de ce bloc sont grisés si la procédure n'est pas « Sauvetage GPS » et qu'aucun interrupteur GPS RESCUE n'est attribué.</p>
+
+<h2 id="sauvegarder">Sauvegarder et Redémarrer</h2>
+<p>Le bouton <b>Sauvegarder et Redémarrer</b> s'active dès qu'un réglage change. Il envoie les réglages, les enregistre et redémarre le contrôleur de vol.</p>
+
+<h2 id="tester">Tester le failsafe</h2>
+<div class="encart"><b>Hélices retirées</b> : pendant ce test, le drone est armé et les moteurs peuvent tourner.</div>
+<ol>
+  <li>Retirez les hélices. Branchez la batterie.</li>
+  <li>Armez le drone avec la radio, gaz un peu au-dessus du ralenti.</li>
+  <li>Éteignez la radio (ou basculez l'interrupteur FAILSAFE réglé sur « Stage 1 »).</li>
+  <li>Vérifiez qu'après le délai de garde (1,5 s par défaut), la procédure choisie démarre : avec « Tombe », les moteurs s'arrêtent.</li>
+  <li>Rallumez la radio. Désarmez avant de reprendre le drone en main.</li>
+</ol>

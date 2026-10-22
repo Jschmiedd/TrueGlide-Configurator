@@ -1,0 +1,84 @@
+<h1>Assistant de réglage</h1>
+<p class="chapeau">L'onglet <b>Assistant de réglage</b> (groupe « Réglage du vol ») calcule un réglage de départ à partir des caractéristiques de votre drone, l'applique à la carte, et peut analyser la configuration déjà présente sur la carte pour signaler les problèmes.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/assistant-de-reglage.png" alt="Onglet Assistant de réglage, page Réglage du drone : cadre Mon drone avec hélice 5 pouces, KV 1900, 6 cellules, 700 g, 14 pôles, Quad X, Freestyle, ESC BLHeli_S flashé en Bluejay ; avertissement de sécurité ; cadre Réglage proposé avec protocole DSHOT300 et tableau des PID ; cadre Détail des réglages avec les commandes et leur explication ; bouton Appliquer au drone et redémarrer"><img class="t-clair" src="../assets/img/onglets/assistant-de-reglage-clair.png" alt="Même onglet Assistant de réglage en thème clair, page Réglage du drone avec le réglage proposé">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, avec les valeurs par défaut du formulaire. Le simulateur n'est pas une vraie carte : il est signalé « carte inconnue : réglage générique, sans contrôles propres à la carte ».</figcaption>
+</figure>
+
+<h2 id="principe">D'où vient le réglage</h2>
+<p>Le réglage n'est pas inventé. Les PID de départ sont les moyennes de préréglages publiés par des régleurs reconnus pour cinq tailles d'hélice (1,2", 3,5", 5", 7" et 10"). Entre deux tailles, l'assistant interpole. Ensuite, il corrige de 20 % au plus selon la puissance de votre drone comparée à celle du drone de référence de même taille ; cette puissance est une <b>estimation</b> calculée par la même formule pour les deux drones. Au-delà de 10", les valeurs sont prolongées (« EXTRAPOLÉES ») et volontairement 15 % plus basses.</p>
+<p>Le résultat passe par les curseurs du réglage simplifié du firmware : vous pouvez l'ajuster ensuite à la souris dans l'onglet <a href="reglages-pid.html">Réglages de PID</a>. Les PID affichés sont recalculés avec la même formule que le firmware.</p>
+<div class="encart">Un réglage de départ n'est pas un réglage fini, et aucun vol réel n'a encore été fait avec <b>TRUEGLIDE</b>. Le cadre jaune de l'onglet le rappelle : « Logiciel fourni sans garantie. Vérifiez chaque réglage, testez hélices retirées, puis en vol dans un lieu dégagé. Le pilote reste seul responsable de son drone et du respect de la réglementation de son pays (en Suisse : OFAC ; en France : DGAC). » Tous les essais au sol se font <b>Hélices retirées</b>.</div>
+
+<h2 id="pages">Les deux pages</h2>
+<p>Deux boutons en haut choisissent la page : <b>Réglage du drone</b> (calcul et application d'un réglage) et <b>Analyser ma configuration</b> (lecture de la carte et écarts). Le cadre <b>Mon drone</b> est commun aux deux pages.</p>
+
+<h2 id="mon-drone">Cadre Mon drone</h2>
+<p>Le formulaire est gardé dans le logiciel d'une fois sur l'autre. Champs :</p>
+<ul>
+  <li><b>Taille d'hélice (pouces)</b> : 1,2 à 15, par pas de 0,1.</li>
+  <li><b>KV des moteurs</b> : 100 à 30 000, par pas de 10.</li>
+  <li><b>Batterie (cellules S)</b> : 1 à 14.</li>
+  <li><b>Masse en vol (g)</b> : 15 à 20 000 g, batterie comprise.</li>
+  <li><b>Pôles des moteurs = aimants</b> : 4 à 64, par pas de 2 (14 sur la plupart des moteurs ; une fiche « 12N14P » veut dire 14 aimants).</li>
+  <li><b>Calibre continu par ESC (A, une voie d'un 4-en-1, facultatif)</b> : 0 à 250 A. À 0, aucune limite de courant n'est proposée.</li>
+  <li><b>Type de châssis</b> : Quad X, Hexa X, X8 coaxial (octo), Quad X pusher (moteurs à l'envers).</li>
+  <li><b>Style de vol</b> : Freestyle, Cinématique (images fluides), Longue portée, Course, Speeder (vitesse).</li>
+  <li><b>Châssis</b> (qualité de construction) : Normal, Souple ou vibrant, Très rigide, moteurs neufs. Règle la force du filtrage.</li>
+  <li><b>Fréquence PWM des ESC</b> : 24 kHz ou 48 kHz +.</li>
+  <li><b>Firmware des ESC</b> : BLHeli_S flashé en Bluejay, BLHeli_S d'origine, AM32, BLHeli_32, KISS, BLHeli ancien / SimonK (sans DShot), ESC analogique PWM (avion, ancien).</li>
+  <li><b>Capteur de courant sur la FC</b> : à cocher si la carte mesure le courant. Si la carte n'a aucun capteur de courant réglé (onglet <a href="alimentation.html">Alimentation et batterie</a>), un message prévient que la limite de courant <b>TRUEGLIDE</b> n'agira pas.</li>
+  <li><b>Fil de télémétrie série des ESC branché</b> : à cocher seulement si le fil « TLM » de l'ESC est relié à un port série.</li>
+</ul>
+<p>Sous le formulaire, deux lignes d'information :</p>
+<ul>
+  <li>le profil où le réglage sera écrit : « Les réglages sont écrits dans le profil PID actif … (profil de rates …) ». Pour régler un autre profil, choisissez-le d'abord dans l'onglet <a href="reglages-pid.html">Réglages de PID</a> ;</li>
+  <li><b>Carte branchée</b> : le nom de la carte, son processeur, ses gyroscopes et son nombre de sorties moteur. Une carte inconnue reçoit un réglage générique, sans contrôles propres à la carte.</li>
+</ul>
+
+<h2 id="reglage-propose">Page Réglage du drone</h2>
+<p>Le cadre <b>Réglage proposé</b> se met à jour à chaque changement du formulaire :</p>
+<ul>
+  <li><b>Protocole moteur</b> (par exemple DSHOT300 ou DSHOT600) et, si la carte est connue, la <b>Boucle PID</b> en kHz. Sur les processeurs F405, F411, G474 et APM32 avec DShot bidirectionnel, l'assistant propose DSHOT300 et 4 kHz au plus, car le firmware l'impose.</li>
+  <li>Un tableau <b>Axe</b> / P / I / D / D max / FF pour Roulis, Tangage et Lacet.</li>
+  <li>Des messages : en rouge les réglages refusés par la base du firmware (le bouton d'application est alors bloqué), en orange les conseils (par exemple flasher Bluejay, taille extrapolée), en couleur d'accent les notes (câblage, ordre des moteurs…).</li>
+</ul>
+<p>La dernière note donne la marche à suivre pour le premier vol : « Premier vol : stationnaire 30 s, atterrir, toucher les moteurs. Tièdes : monter le curseur maître de 5. Chauds ou bruit aigu : baisser le filtre (curseur gyro) ou le maître. Oscillations lentes : baisser le maître de 10. »</p>
+<p>Le cadre <b>Détail des réglages</b> liste chaque réglage CLI, sa valeur et la raison. Selon le drone, on y trouve les curseurs <code>simplified_*</code>, le protocole moteur, <code>dshot_bidir</code>, le ralenti dynamique, <code>thrust_linear</code> (20 à 48 kHz, 0 à 24 kHz), et les protections <b>TRUEGLIDE</b> possibles avec vos ESC : limite de température des ESC (100 °C, gaz jamais sous 50 %), limite de courant (80 % du calibre total des ESC), relance d'un moteur désynchronisé ou calé, et vitesse de secours si la télémétrie d'un ESC se perd. Voir l'onglet <a href="protections.html">Protections</a>.</p>
+<p>Notes particulières selon le choix :</p>
+<ul>
+  <li><b>Hexa X</b> et <b>X8</b> : régler le mixeur dans l'onglet <a href="configuration.html">Configuration</a>, puis vérifier l'ordre et le sens des moteurs dans l'onglet <a href="moteurs.html">Moteurs</a>, <b>Hélices retirées</b>.</li>
+  <li><b>Quad X pusher</b> : le schéma de l'onglet Moteurs se lit vu de dessus ; vérifier sens et ordre hélices retirées avant de monter les hélices.</li>
+  <li><b>Speeder</b> : ajoute <code>speeder_cruise_angle</code> à 20° pour les premiers essais, puis monter par pas de 10° ; mettre le mode SPEEDER sur un interrupteur et voler en mode ANGLE. Voir l'onglet <a href="speeder.html">Speeder</a>.</li>
+  <li><b>Fil de télémétrie série</b> : ajoute <code>feature ESC_SENSOR</code> ; il faut aussi activer « ESC » sur le bon port dans l'onglet <a href="ports.html">Ports</a>.</li>
+</ul>
+
+<h2 id="appliquer">Appliquer le réglage</h2>
+<ol>
+  <li>Remplissez le cadre <b>Mon drone</b> et vérifiez le profil indiqué.</li>
+  <li>Lisez les messages et le détail des réglages.</li>
+  <li>Cliquez sur <b>Appliquer au drone et redémarrer</b> (en bas à droite).</li>
+  <li>Si certains réglages n'existent pas sur la carte (par exemple pas de DShot dans le simulateur), un cadre les liste : <b>Appliquer les autres et redémarrer</b> continue sans eux, <b>Annuler</b> arrête.</li>
+  <li>Les commandes sont envoyées une par une, terminées par <code>simplified_tuning apply</code> qui recalcule les PID et les filtres à partir des curseurs. Puis la configuration est sauvegardée et la carte redémarre ; le logiciel se reconnecte.</li>
+</ol>
+<p>Si la carte refuse une commande, rien n'est sauvegardé et le journal affiche « Non appliqué, la carte a refusé : » suivi de la commande. Redémarrer la carte (débrancher et rebrancher) revient à la configuration précédente.</p>
+
+<h2 id="analyser">Page Analyser ma configuration</h2>
+<p>À l'ouverture de cette page, le logiciel lit la configuration complète de la carte (commande <code>diff all</code>). Le firmware doit permettre la lecture de la CLI par MSP ; sinon un message demande d'utiliser l'onglet <a href="cli.html">Ligne de commande (CLI)</a>.</p>
+<ul>
+  <li>Un premier cadre, titré du nom de la carte et de la version du firmware, liste les contrôles : en rouge les alertes, en orange les conseils, en vert ce qui va bien. Exemples : DShot bidirectionnel désactivé, DShot600 sur un processeur limité, filtre RPM coupé, nombre de pôles inhabituel, protections <b>TRUEGLIDE</b> inactives, GPS présent mais failsafe en DROP, réglages écrits dans un autre profil que celui qui vole, configuration venant d'une autre version.</li>
+  <li><b>Écarts avec le réglage TrueGlide</b> : le tableau <b>Réglage</b> / <b>Actuel</b> / <b>Proposé</b> / raison, comparé au réglage calculé à partir du cadre <b>Mon drone</b>. Remplissez donc ce cadre avant de lire les écarts. Sans écart : « La configuration correspond déjà au réglage proposé. »</li>
+</ul>
+<p>Boutons en bas à droite :</p>
+<ul>
+  <li><b>Relire la carte</b> : relance la lecture.</li>
+  <li><b>Appliquer les écarts et redémarrer</b> : envoie seulement les réglages qui diffèrent, puis sauvegarde et redémarre. <code>simplified_tuning apply</code> n'est ajouté que si un curseur <code>simplified_*</code> change, pour ne pas écraser des PID réglés à la main quand l'écart porte seulement sur le protocole moteur par exemple.</li>
+</ul>
+
+<h2 id="apres">Après l'application</h2>
+<ol>
+  <li><b>Hélices retirées</b>, vérifiez dans l'onglet <a href="moteurs.html">Moteurs</a> l'ordre et le sens de rotation, et que le protocole fonctionne.</li>
+  <li>Premier vol dans un lieu dégagé : stationnaire de 30 s, atterrir, toucher les moteurs.</li>
+  <li>Ajustez le <b>Multiplicateur Maître</b> par pas de 5 dans l'onglet <a href="reglages-pid.html">Réglages de PID</a> selon la note du premier vol.</li>
+  <li>Pour aller plus loin, enregistrez des vols dans la <a href="blackbox.html">Blackbox</a>.</li>
+</ol>

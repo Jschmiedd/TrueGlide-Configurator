@@ -1,0 +1,103 @@
+<h1>Configuration</h1>
+<p class="chapeau">L'onglet <b>Configuration</b> (groupe « Installation du drone ») règle la fréquence de la boucle PID, le nom du drone et du pilote, l'angle de la caméra FPV, les conditions d'armement, quelques fonctions de la carte et les bips (buzzer et moteurs).</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/configuration.png" alt="Onglet Configuration en thème sombre : à gauche les cadres Configuration système, Personnalisation, Caméra, Armé, Autres fonctionnalités et Configuration des Beacon Dshot ; à droite la liste des bips du cadre Configuration du Beeper"><img class="t-clair" src="../assets/img/onglets/configuration-clair.png" alt="Onglet Configuration en thème clair : à gauche les cadres Configuration système, Personnalisation, Caméra, Armé, Autres fonctionnalités et Configuration des Beacon Dshot ; à droite la liste des bips du cadre Configuration du Beeper">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Le simulateur tourne avec un gyro à 1,00 kHz, d'où les fréquences affichées ; sur une vraie carte elles sont bien plus hautes. Le simulateur ne propose que deux fonctions (AIRMODE et INFLIGHT_ACC_CAL) ; une vraie carte en montre d'autres selon le firmware.</figcaption>
+</figure>
+
+<div class="encart">Ce qui n'est <b>pas</b> dans cet onglet : l'orientation de la carte (<b>Alignement de la carte</b>, onglet <a href="capteurs.html">Capteurs</a>) et le protocole moteur DShot (onglet <a href="moteurs.html">Moteurs</a>).</div>
+
+<h2 id="notes">Les notes en haut</h2>
+<ul>
+  <li>Si deux fonctions actives se contredisent, le firmware désactive celles qui sont en conflit.</li>
+  <li>Réglez les ports série (onglet <a href="ports.html">Ports</a>) <b>avant</b> d'activer les fonctions qui les utilisent.</li>
+</ul>
+
+<h2 id="configuration-systeme">Configuration système</h2>
+<ul>
+  <li><b>Fréquence de mise à jour du gyro</b> : fréquence de lecture du gyro, en kHz. Lecture seule. Affiche « Pas de gyro » si la carte n'a pas de gyro.</li>
+  <li><b>Fréquence de la boucle PID</b> : fréquence du calcul des corrections. Le choix va de la fréquence du gyro divisée par 1 jusqu'à divisée par 8, en kHz. La fréquence maximale utile dépend aussi des ESC.</li>
+</ul>
+<p>La note du cadre rappelle de vérifier la charge du processeur (onglet <a href="installation.html">Installation</a>, <b>Charge CPU :</b>) après un changement, et qu'un changement de fréquence peut demander de refaire le réglage des PID.</p>
+
+<h2 id="personnalisation">Personnalisation</h2>
+<ul>
+  <li><b>Nom de l'appareil</b> : nom du drone, 16 caractères au plus. Il peut apparaître dans les journaux, les noms de fichiers de sauvegarde et l'OSD (réglage CLI <code>craft_name</code>).</li>
+  <li><b>Nom du pilote</b> : 16 caractères au plus, peut apparaître dans l'OSD (réglage CLI <code>pilot_name</code>).</li>
+</ul>
+
+<h2 id="camera">Caméra</h2>
+<p>Cadre affiché seulement si l'accéléromètre est actif.</p>
+<ul>
+  <li><b>Angle Caméra FPV (degrés)</b> : inclinaison de la caméra, de 0 à 90°. Le firmware s'en sert seulement quand le mode <b>FPV ANGLE MIX</b> est actif (onglet <a href="modes.html">Modes</a>) : roulis et lacet sont alors mélangés pour que les rotations paraissent droites à l'image. Réglage CLI <code>fpv_mix_degrees</code>.</li>
+</ul>
+
+<h2 id="arme">Armé</h2>
+<p>Cadre affiché seulement si l'accéléromètre est actif.</p>
+<ul>
+  <li><b>Angle maximum pour armer [degrés]</b> : de 0 à 180°. Le drone refuse d'armer s'il est plus penché que cet angle. 180 revient à supprimer ce contrôle.</li>
+  <li><b>Calibrer le Gyro à la première activation des moteurs</b> : si activé, le gyro est calibré au premier armement après la mise sous tension.</li>
+  <li><b>Désarmer les moteurs après un délai [secondes]</b> : de 0 à 60 s. Visible seulement si la fonction <code>MOTOR_STOP</code> est active (onglet <a href="moteurs.html">Moteurs</a>).</li>
+</ul>
+
+<h2 id="autres-fonctionnalites">Autres fonctionnalités</h2>
+<p>Un interrupteur par fonction de la carte. La liste dépend des options compilées dans le firmware. Le <b>?</b> à droite donne une explication quand elle existe.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Fonction</th><th>Texte du logiciel</th></tr></thead>
+  <tbody>
+    <tr><td>AIRMODE</td><td>Airmode permanent (garde la stabilité gaz à zéro). Quand il est actif ici, le mode AIR MODE disparaît de l'onglet Modes.</td></tr>
+    <tr><td>INFLIGHT_ACC_CAL</td><td>Calibrage du niveau en vol (ajoute le mode CALIB dans l'onglet Modes)</td></tr>
+    <tr><td>SOFTSERIAL</td><td>Activer le port série logiciel</td></tr>
+    <tr><td>LED_STRIP</td><td>LED RGB multicolore (fait apparaître l'onglet <a href="bandeau-led.html">Bandeau LED</a>)</td></tr>
+    <tr><td>OSD</td><td>Affichage des infos sur l'écran (fait apparaître l'onglet <a href="osd.html">OSD</a>)</td></tr>
+    <tr><td>DISPLAY</td><td>Ecran OLED</td></tr>
+    <tr><td>TRANSPONDER</td><td>Transpondeur</td></tr>
+    <tr><td>SONAR</td><td>Sonar</td></tr>
+    <tr><td>SERVO_TILT</td><td>Servo gimbal</td></tr>
+    <tr><td>CHANNEL_FORWARDING</td><td>Faire passer les voies aux en sorties de type servo</td></tr>
+  </tbody>
+</table></div>
+<p>Le mode du récepteur, la télémétrie et le RSSI analogique se règlent dans l'onglet <a href="recepteur.html">Récepteur</a>.</p>
+
+<h2 id="beacon-dshot">Configuration des Beacon Dshot</h2>
+<p>La balise DShot fait biper les moteurs eux-mêmes (pas de buzzer nécessaire), seulement drone désarmé. Utile pour retrouver un drone tombé.</p>
+<ul>
+  <li><b>Beacon tonalité</b> : <b>Désactivé</b> ou une tonalité de 1 à 5.</li>
+  <li><b>Tout activer</b> / <b>Tout désactiver</b> : coche ou décoche les conditions ci-dessous.</li>
+  <li><b>RX_LOST</b> : bipe après perte du signal radio, jusqu'à son retour.</li>
+  <li><b>RX_SET</b> : bipe quand la voie du mode BEEPER est activée (onglet <a href="modes.html">Modes</a>).</li>
+</ul>
+<div class="encart">La balise fait passer du courant dans les moteurs. Une puissance de balise trop forte peut faire chauffer et abîmer moteurs et ESC. Après une tentative d'armement pendant que la balise sonne, la carte attend 2 secondes après le dernier bip avant d'armer.</div>
+
+<h2 id="beeper">Configuration du Beeper</h2>
+<p>Choisit quand le buzzer de la carte sonne. <b>Tout activer</b> et <b>Tout désactiver</b> agissent sur toute la liste.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Bip</th><th>Quand il sonne</th></tr></thead>
+  <tbody>
+    <tr><td>GYRO_CALIBRATED</td><td>après le calibrage du gyro</td></tr>
+    <tr><td>RX_LOST</td><td>après perte du signal radio, jusqu'à son retour</td></tr>
+    <tr><td>RX_LOST_LANDING</td><td>SOS si le drone est armé et perd le signal</td></tr>
+    <tr><td>DISARMING</td><td>au désarmement</td></tr>
+    <tr><td>ARMING</td><td>à l'armement</td></tr>
+    <tr><td>ARMING_GPS_FIX</td><td>mélodie à l'armement avec position GPS</td></tr>
+    <tr><td>BAT_CRIT_LOW</td><td>batterie très faible (répété, insistant)</td></tr>
+    <tr><td>BAT_LOW</td><td>batterie faible (répété)</td></tr>
+    <tr><td>GPS_STATUS</td><td>nombre de bips = nombre de satellites</td></tr>
+    <tr><td>RX_SET</td><td>quand la voie du mode BEEPER est activée</td></tr>
+    <tr><td>ACC_CALIBRATION</td><td>calibrage en vol de l'accéléromètre réussi</td></tr>
+    <tr><td>ACC_CALIBRATION_FAIL</td><td>calibrage en vol de l'accéléromètre raté</td></tr>
+    <tr><td>READY_BEEP</td><td>GPS verrouillé et prêt</td></tr>
+    <tr><td>DISARM_REPEAT</td><td>tant que l'interrupteur est en position désarmée</td></tr>
+    <tr><td>ARMED</td><td>drone armé mais moteurs arrêtés, jusqu'au désarmement ou à la montée des gaz</td></tr>
+    <tr><td>SYSTEM_INIT</td><td>à la mise sous tension</td></tr>
+    <tr><td>USB</td><td>carte alimentée par l'USB (à couper pour travailler au calme sur l'établi)</td></tr>
+    <tr><td>BLACKBOX_ERASE</td><td>fin de l'effacement du journal</td></tr>
+    <tr><td>CRASH_FLIP</td><td>mode crash flip actif</td></tr>
+    <tr><td>CAM_CONNECTION_OPEN</td><td>entrée dans le mode « pad 5 points » de la caméra</td></tr>
+    <tr><td>CAM_CONNECTION_CLOSE</td><td>sortie de ce mode</td></tr>
+    <tr><td>RC_SMOOTHING_INIT_FAIL</td><td>à l'armement, si le lissage RC n'a pas pu démarrer</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="enregistrer">Enregistrer</h2>
+<p>Le bouton <b>Sauvegarder et Redémarrer</b>, en bas à droite, s'active dès qu'un réglage change. Il envoie tous les réglages de l'onglet, les enregistre dans la carte puis la redémarre ; le logiciel se reconnecte.</p>

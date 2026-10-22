@@ -1,0 +1,69 @@
+<h1>Ligne de commande (CLI)</h1>
+<p class="chapeau">L'onglet <b>Ligne de commande (CLI)</b> (groupe « Outils ») sert à taper des commandes texte directement au contrôleur de vol : lire et changer n'importe quel réglage, sauvegarder toute la configuration dans un fichier ou la recharger.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/cli.png" alt="Onglet Ligne de commande : encadré d'avertissement en haut, console noire affichant « Entering CLI Mode, type 'exit' to reboot, or 'help' », champ de saisie en dessous et cinq boutons en bas"><img class="t-clair" src="../assets/img/onglets/cli-clair.png" alt="Onglet Ligne de commande en thème clair : encadré d'avertissement, console, champ de saisie et boutons du bas">
+  <figcaption>Capture du logiciel connecté au simulateur TRUEGLIDE (SITL) sur PC, juste après l'entrée dans la console. Le bouton « Soumettre les données d'assistance » n'apparaît qu'avec une connexion Internet.</figcaption>
+</figure>
+
+<div class="encart"><b>Batterie débranchée</b> : l'encadré du haut le rappelle, certaines commandes peuvent envoyer des signaux aux sorties moteurs. Travaillez en USB seul, ou <b>Hélices retirées</b> si la batterie doit rester branchée.</div>
+
+<h2 id="entrer-sortir">Entrer et sortir de la console</h2>
+<ul>
+  <li>En ouvrant l'onglet, le logiciel fait passer la carte en mode console. La carte répond <code>Entering CLI Mode, type 'exit' to reboot, or 'help'</code>, puis le logiciel prépare la saisie semi-automatique (ligne <code># Building AutoComplete Cache ... Done!</code>). Pendant cette préparation, le champ de saisie est grisé.</li>
+  <li>Quitter l'onglet ou cliquer sur <b>Déconnecter</b> envoie <b>automatiquement</b> <code>exit</code> : la carte <b>redémarre</b> et tout changement non enregistré avec <code>save</code> est <b>perdu</b>.</li>
+</ul>
+
+<h2 id="saisie">Taper une commande</h2>
+<ul>
+  <li><b>Champ de saisie</b> (« Écrivez votre commande ici. Appuyez sur Tab pour la saisie semi-automatique. ») : tapez la commande puis <b>Entrée</b> pour l'envoyer.</li>
+  <li><b>Tab</b> : ouvre la liste de propositions (commandes, noms de réglages, valeurs). Les flèches haut et bas s'y déplacent, Tab ou Entrée choisit, Échap ferme la liste.</li>
+  <li><b>Flèches haut et bas</b> (liste fermée) : rappellent les commandes déjà tapées.</li>
+  <li>Le texte de la console peut être sélectionné et copié à la souris.</li>
+</ul>
+
+<h2 id="commandes-utiles">Commandes utiles</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Commande</th><th>Effet</th></tr></thead>
+  <tbody>
+    <tr><td><code>diff all</code></td><td>Liste seulement ce qui diffère des valeurs par défaut, pour tous les profils. C'est la sauvegarde conseillée avant un flash.</td></tr>
+    <tr><td><code>dump all</code></td><td>Liste <b>tous</b> les réglages, y compris ceux restés par défaut. Plus long, utile pour une sauvegarde complète.</td></tr>
+    <tr><td><code>get &lt;nom&gt;</code></td><td>Affiche la valeur d'un réglage (une partie du nom suffit pour chercher).</td></tr>
+    <tr><td><code>set &lt;nom&gt; = &lt;valeur&gt;</code></td><td>Change un réglage en mémoire vive. Rien n'est gardé sans <code>save</code>.</td></tr>
+    <tr><td><code>save</code></td><td>Enregistre dans la carte puis la redémarre.</td></tr>
+    <tr><td><code>exit</code></td><td>Quitte la console et redémarre <b>sans enregistrer</b>.</td></tr>
+    <tr><td><code>version</code>, <code>status</code></td><td>Affichent le firmware (<b>TRUEGLIDE</b>, <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b>) et l'état de la carte.</td></tr>
+    <tr><td><code>help</code></td><td>Liste les commandes.</td></tr>
+    <tr><td><code>defaults</code></td><td>Remet <b>tous</b> les réglages d'usine et redémarre. À n'utiliser qu'après une sauvegarde.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="sauvegarder">Sauvegarder sa configuration</h2>
+<ol>
+  <li>Cliquez sur <b>Effacer l'historique</b> pour vider la console.</li>
+  <li>Tapez <code>diff all</code> (ou <code>dump all</code>) puis Entrée, et attendez la fin du texte.</li>
+  <li>Cliquez sur <b>Enregistrer sous</b> : le logiciel propose un fichier <code>.txt</code> nommé d'après la carte, le nom du drone, la date et l'heure. Vous pouvez aussi utiliser <b>Copier dans le presse-papier</b>.</li>
+</ol>
+
+<h2 id="restaurer">Recharger des commandes depuis un fichier</h2>
+<ol>
+  <li>Cliquez sur <b>Charger à partir du fichier</b> et choisissez un fichier <code>.txt</code>.</li>
+  <li>Une fenêtre montre les commandes : vous pouvez les relire et les modifier avant l'envoi.</li>
+  <li>Cliquez sur <b>Exécuter</b> : les lignes sont envoyées une à une à la carte.</li>
+  <li>Si le fichier ne finit pas par <code>save</code>, tapez <code>save</code> pour garder les changements.</li>
+</ol>
+<div class="encart">Après un changement de version du firmware, ne recollez pas un ancien <code>diff all</code> tel quel : certains réglages ont changé de nom ou de plage. Refaites la configuration de base et ne recopiez que les lignes que vous comprenez. Voir aussi <a href="flasher-le-firmware.html">Flasher le Firmware</a>.</div>
+
+<h2 id="boutons">Boutons du bas</h2>
+<ul>
+  <li><b>Enregistrer sous</b> : enregistre tout le texte de la console dans un fichier <code>.txt</code>.</li>
+  <li><b>Charger à partir du fichier</b> : envoie les commandes d'un fichier <code>.txt</code>, après relecture (voir plus haut).</li>
+  <li><b>Effacer l'historique</b> : vide la console affichée (ne touche pas à la carte).</li>
+  <li><b>Copier dans le presse-papier</b> : copie tout le texte de la console ; le bouton affiche « Copié ! » un court instant.</li>
+  <li><b>Soumettre les données d'assistance</b> (seulement avec une connexion Internet) : après confirmation et une courte description du problème, le logiciel récupère une liste de commandes auprès du serveur de construction (<code>build.betaflight.com</code>), les exécute sur la carte, envoie le résultat à ce serveur et affiche un identifiant à conserver. Ce serveur est celui du projet Betaflight.</li>
+</ul>
+
+<h2 id="voir-aussi">Voir aussi</h2>
+<ul>
+  <li><a href="memo-wiki.html">Mémo &amp; Wiki</a> : les réglages propres à <b>TRUEGLIDE</b> à taper ici (<code>set nom = valeur</code>, puis <code>save</code>).</li>
+  <li><a href="blackbox.html">Blackbox</a> : choisir un mode debug sans passer par la console.</li>
+</ul>

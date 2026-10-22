@@ -1,0 +1,67 @@
+<h1>Blackbox</h1>
+<p class="chapeau">L'onglet <b>Blackbox</b> (groupe « Analyse ») sert à régler l'enregistrement des journaux de vol (où, à quelle cadence, quel mode debug) et à récupérer ou effacer les journaux gardés dans la carte.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/blackbox.png" alt="Onglet Blackbox : cadre « Configuration de la Blackbox » avec « Stockage de la blackbox » sur « Pas d'enregistrement » et « Mode débug de la Blackbox » sur NONE, cadre « Champs de débogage inclus » avec seize interrupteurs activés, cadres « Mémoire externalisée » et « Mémoire embarquée », bouton « Sauvegarder et redémarrer »"><img class="t-clair" src="../assets/img/onglets/blackbox-clair.png" alt="Onglet Blackbox en thème clair">
+  <figcaption>Capture du logiciel connecté au simulateur TRUEGLIDE (SITL) sur PC. Le simulateur n'a ni mémoire de vol ni carte SD : le cadre « Mémoire embarquée » indique « Votre contrôleur de vol ne dispose pas de mémoire d'enregistrement. »</figcaption>
+</figure>
+
+<h2 id="configuration">Configuration de la Blackbox</h2>
+<ul>
+  <li><b>Stockage de la blackbox</b> : où le journal est écrit.
+    <ul>
+      <li><b>Pas d'enregistrement</b> : blackbox coupée ;</li>
+      <li><b>Mémoire sur la carte</b> : puce mémoire soudée sur la carte (proposé seulement si la carte en a une) ;</li>
+      <li><b>Carte SD</b> : lecteur de carte SD de la carte (seulement si elle en a un) ;</li>
+      <li><b>Port série</b> : enregistreur externe branché sur un port série (voir plus bas) ;</li>
+      <li><b>Vers un fichier</b> : seulement avec le gyro virtuel du simulateur.</li>
+    </ul>
+  </li>
+  <li><b>Fréquence d'enregistrement de la Blackbox</b> (caché sur « Pas d'enregistrement ») : part de la fréquence de la boucle PID. Les choix vont de <b>1/1</b> (chaque cycle) à <b>1/16</b> ; la fréquence obtenue est affichée entre parenthèses, calculée d'après la fréquence du gyro et le diviseur PID de la carte. Plus la fréquence est haute, plus le journal est précis et plus il remplit vite la mémoire.</li>
+  <li><b>Mode débug de la Blackbox</b> : choisit les valeurs écrites dans les 8 champs « debug » du journal. Liste triée par ordre alphabétique, avec un champ <b>Recherche</b>. <b>NONE</b> = pas de debug.</li>
+</ul>
+
+<h2 id="modes-debug">Modes debug propres à TRUEGLIDE</h2>
+<p>Le firmware ajoute deux modes à ceux de Betaflight. Le logiciel les affiche par leur nom dans la liste du <b>Mode débug de la Blackbox</b> :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Mode</th><th>Champs debug</th></tr></thead>
+  <tbody>
+    <tr><td><code>POWER_GUARD</code></td><td>[0] limite des gaz (‰) ; [1] limite due à la température (‰) ; [2] limite due au courant (‰) ; [3] température de l'ESC le plus chaud (°C) ; [4] courant batterie (A × 10)</td></tr>
+    <tr><td><code>MOTOR_HEALTH</code></td><td>[0] à [7] : nombre de relances des moteurs 1 à 8 depuis la mise sous tension</td></tr>
+  </tbody>
+</table></div>
+<p>Ces modes servent à vérifier les fonctions de l'onglet <a href="protections.html">Protections</a> (limitation des gaz, relance des moteurs). Le mode debug choisi ici sert aussi au graphique « Debug » de l'onglet <a href="capteurs.html">Capteurs</a> et à la propriété MSP_DEBUG du <a href="journal-de-bord.html">Journal de bord</a>.</p>
+
+<h2 id="champs">Champs de débogage inclus</h2>
+<p>Chaque interrupteur ajoute ou retire un groupe de données du journal : <b>PID</b>, <b>RC Commands</b>, <b>Setpoint</b>, <b>Battery</b>, <b>Magnetometer</b>, <b>Altitude</b>, <b>RSSI</b>, <b>Gyro</b>, <b>Attitude</b>, <b>Accelerometer</b>, <b>Debug Log</b>, <b>Motor</b>, <b>GPS</b>, <b>RPM</b>, <b>Gyro (Unfiltered)</b>, <b>Servo</b>. Couper ce qui ne sert pas allonge la durée d'enregistrement. Pour un réglage de filtres, gardez <b>Gyro</b>, <b>Gyro (Unfiltered)</b> et <b>Motor</b> ; pour les modes debug, gardez <b>Debug Log</b>.</p>
+
+<h2 id="memoire-externalisee">Mémoire externalisée</h2>
+<p>Pour écrire le journal sur un enregistreur externe (par exemple un OpenLager) : choisissez <b>Port série</b> ci-dessus, puis attribuez la fonction blackbox à un port dans l'onglet <a href="ports.html">Ports</a>.</p>
+
+<h2 id="memoire-embarquee">Mémoire embarquée</h2>
+<p>Ce cadre n'apparaît en détail que si la carte a une puce mémoire. Une barre montre l'<b>Espace utilisé</b> et l'<b>Espace libre</b>. Les boutons sont grisés tant que la mémoire est vide.</p>
+<ul>
+  <li><b>Effacer la mémoire interne</b> : efface tous les journaux après confirmation (<b>Oui, effacer la mémoire interne</b>). Une fenêtre « Effacement en cours » reste ouverte jusqu'à la fin.</li>
+  <li><b>Enregistrer sous...</b> : copie la mémoire dans un fichier <code>.BBL</code> sur l'ordinateur (nom proposé : <code>BLACKBOX_LOG</code>, nom du drone, date et heure). Une barre de progression s'affiche ; <b>Annuler</b> arrête la copie.</li>
+  <li><b>Enregistrer &amp; effacer</b> : copie puis efface. L'effacement n'a lieu que si tout a été copié ; sinon la mémoire est gardée et un message le signale dans le journal du logiciel. Si la carte sait passer en mode stockage de masse, ce bouton n'est proposé qu'en mode Expert.</li>
+</ul>
+<div class="encart">La copie par le câble de configuration est lente et peut corrompre les gros fichiers : le logiciel le signale lui-même. Pour un gros journal, préférez le mode stockage de masse (ci-dessous).</div>
+
+<h2 id="carte-sd">SD card Interne</h2>
+<p>Cadre visible seulement si la carte a un lecteur SD. Il donne l'état de la carte SD (<b>Carte non insérée</b>, <b>Démarrage de la carte</b>, <b>Démarrage du système de fichier</b>, <b>Carte prête</b>, ou <b>Erreur fatale</b> : redémarrer et réessayer), puis l'<b>Espace indisponible</b> et l'<b>Espace libre pour les logs</b>. L'état est relu toutes les 2 secondes.</p>
+
+<h2 id="stockage-de-masse">Mode de stockage de masse</h2>
+<p>Visible quand le stockage choisi est la mémoire de la carte ou la carte SD, et que la carte gère ce mode.</p>
+<ol>
+  <li>Cliquez sur <b>Activer le Mode de périphérique de stockage de masse</b> (grisé si la mémoire ou la carte SD n'est pas prête).</li>
+  <li>La carte redémarre et l'ordinateur la voit comme une clé USB : copiez les fichiers de journaux.</li>
+  <li>Éjectez le disque puis débranchez et rebranchez la carte pour revenir au mode normal.</li>
+</ol>
+
+<h2 id="sauvegarder">Sauvegarder et redémarrer</h2>
+<p>Le bouton <b>Sauvegarder et redémarrer</b> devient actif dès qu'un réglage du haut ou un champ de débogage a changé. Il envoie la configuration à la carte, l'enregistre et la redémarre.</p>
+
+<h2 id="voir-aussi">Voir aussi</h2>
+<ul>
+  <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a> : lire les journaux récupérés.</li>
+  <li><a href="memo-wiki.html">Mémo &amp; Wiki</a>, page « Analyse des journaux ».</li>
+</ul>

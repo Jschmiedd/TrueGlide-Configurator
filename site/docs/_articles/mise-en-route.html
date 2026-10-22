@@ -1,0 +1,74 @@
+<h1>Mise en route</h1>
+<p class="chapeau">De l'achat au premier vol : ouvrir le logiciel, brancher la carte, sauvegarder, flasher le firmware <b>TRUEGLIDE</b>, suivre la mise en route guidée en 9 étapes, puis faire un premier vol prudent.</p>
+
+<div class="encart">Le firmware n'a encore été essayé qu'en simulateur, pas en vol réel. Tous les essais moteurs se font <b>Hélices retirées</b>. Le pilote reste seul responsable de son drone et du respect de la réglementation de son pays (en Suisse : OFAC ; en France : DGAC).</div>
+
+<h2 id="materiel">Ce qu'il faut</h2>
+<ul>
+  <li>Un contrôleur de vol compatible Betaflight (STM32 F4, F7, G4, H7, AT32, APM32, RP2350). Voir les <a href="flasher.html#cartes-publiees">cartes publiées</a>.</li>
+  <li>Un câble USB qui transporte les données (pas seulement la charge).</li>
+  <li>Un ordinateur avec <b>Chrome</b> ou <b>Edge</b> : la liaison USB passe par le navigateur (Web Serial).</li>
+</ul>
+
+<h2 id="ouvrir">1. Ouvrir le logiciel</h2>
+<ol>
+  <li>Dans Chrome ou Edge, ouvrez <a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/">https://jschmiedd.github.io/TrueGlide-Configurator/app/</a>. La page <a href="bienvenue.html">Bienvenue</a> s'affiche.</li>
+  <li>Pour l'utiliser sur le terrain sans Internet : cliquez sur l'icône <b>Installer</b> dans la barre d'adresse. Le logiciel s'ouvre ensuite comme une application et fonctionne hors ligne, liaison USB comprise.</li>
+</ol>
+<p>Ont besoin d'Internet : la mise à jour en ligne du firmware, Preset, les fonds de carte (GPS, Plan de vol) et la météo de <a href="pre-vol.html">Pré-vol</a>.</p>
+
+<h2 id="brancher">2. Brancher et se connecter</h2>
+<ol>
+  <li>Batterie débranchée, branchez la carte en USB.</li>
+  <li>En haut de l'écran, ouvrez la liste des ports. La première fois, choisissez <b>--- Je ne trouve pas mon appareil USB ---</b> : le navigateur affiche la liste des appareils ; choisissez la carte et autorisez.</li>
+  <li>Cliquez sur le bouton rond <b>Connexion</b>. Il devient rouge (<b>Déconnecter</b>) une fois connecté, et le <a href="tableau-de-bord.html">Tableau de bord</a> s'ouvre.</li>
+</ol>
+<p>Si la carte n'apparaît pas sous Windows, installez le pilote USB proposé sur la page <a href="bienvenue.html#materiel">Bienvenue</a>. L'interrupteur <b>Connexion Automatique</b> connecte la carte dès qu'elle est branchée.</p>
+
+<h2 id="sauvegarder">3. Sauvegarder avant tout flash</h2>
+<p>Même sur une carte neuve, gardez une copie de sa configuration d'origine :</p>
+<ol>
+  <li>Onglet <a href="cli.html">Ligne de commande (CLI)</a> : tapez <code>diff all</code>, puis <b>Enregistrer sous</b>.</li>
+  <li><b>Effacer l'historique</b>, tapez <code>dump all</code>, puis <b>Enregistrer sous</b> dans un second fichier.</li>
+</ol>
+<p>Le <code>diff all</code> liste les réglages changés. Le <code>dump all</code> liste tous les réglages : c'est la copie complète.</p>
+
+<h2 id="flasher">4. Flasher le firmware</h2>
+<p>Choisissez le modèle (<b>TRUEGLIDE</b>, <b>TRUENAV</b> ou <b>TRUENAV_LIGHT</b>), puis flashez-le dans l'onglet <a href="flasher-le-firmware.html">Flasher le Firmware</a>, par la mise à jour en ligne ou avec un fichier .hex. Pour une première installation, activez <b>Effacement complet de la puce</b>. Procédure détaillée : <a href="flasher.html">Installer le firmware</a>.</p>
+<p>Après le flash, cliquez sur <b>Connexion</b>. Sur le <a href="tableau-de-bord.html">Tableau de bord</a>, cliquez sur <b>Sauvegarder la configuration</b> : c'est votre point de départ.</p>
+
+<h2 id="guide">5. La mise en route guidée (9 étapes)</h2>
+<p>Une fois la carte connectée, un bandeau « Mise en route · étape n sur 9 » s'affiche en haut de chacun des 9 onglets ci-dessous. Le menu de gauche montre l'avancement à côté du titre du groupe (par exemple « Installation du drone · 0/9 »). Le bouton <b>Continuer : …</b> du <a href="tableau-de-bord.html#mise-en-route">Tableau de bord</a> ouvre la première étape non faite.</p>
+<p>Les 9 étapes et ce que le guide demande :</p>
+<ol class="etapes">
+  <li><a href="installation.html">Installation</a> : vérifier que le modèle 3D suit les mouvements du drone et calibrer l'accéléromètre, drone posé à plat.</li>
+  <li><a href="ports.html">Ports</a> : indiquer sur quel UART sont branchés le récepteur, le GPS, la VTX et la télémétrie ESC. Enregistrer avec le bouton de l'onglet.</li>
+  <li><a href="configuration.html">Configuration</a> : régler l'orientation de la carte, le protocole moteur (DShot) et les fonctions utiles. Enregistrer avec le bouton de l'onglet.</li>
+  <li><a href="recepteur.html">Récepteur</a> : choisir le protocole du récepteur (CRSF pour ELRS) et vérifier que chaque voie bouge dans le bon sens.</li>
+  <li><a href="modes.html">Modes</a> : attribuer un interrupteur à l'armement, puis aux modes de vol utiles (angle, retour GPS, speeder…).</li>
+  <li><a href="alimentation.html">Alimentation et batterie</a> : régler les capteurs de tension et de courant ; comparer la tension affichée avec un voltmètre sur la batterie.</li>
+  <li><a href="moteurs.html">Moteurs</a> : <b>Hélices retirées</b>, vérifier l'ordre et le sens de rotation de chaque moteur.</li>
+  <li><a href="failsafe.html">Failsafe</a> : choisir ce que fait le drone si la liaison radio est perdue, puis tester en coupant la radio, <b>Hélices retirées</b>.</li>
+  <li>Fonctions TrueGlide (onglet <a href="protections.html">Protections</a>) : régler l'anti-surchauffe et la relance moteur. Les autres fonctions (<a href="speeder.html">Speeder</a>, <a href="securite-navigation.html">Sécurité navigation</a>, <a href="camera.html">Caméra</a>, <a href="telemetrie-radio.html">Télémétrie radio</a>) sont dans le même groupe du menu.</li>
+</ol>
+<p>Boutons du bandeau :</p>
+<ul>
+  <li><b>Étape réglée, continuer</b> (<b>Étape réglée, terminer</b> à la dernière) : marque l'étape comme faite et ouvre la suivante. Après la dernière, le Tableau de bord s'ouvre.</li>
+  <li><b>Précédente</b> : revient à l'étape d'avant.</li>
+  <li><b>Marquer non réglée</b> : enlève la coche d'une étape déjà validée.</li>
+  <li><b>Masquer le guide</b> : cache le bandeau. Le lien <b>Afficher le guide</b> du Tableau de bord le fait revenir.</li>
+</ul>
+<div class="encart">Valider une étape ne fait que la cocher dans le navigateur. Ce sont les boutons d'enregistrement de chaque onglet qui écrivent les réglages sur la carte. L'avancement est gardé par carte, sur cet ordinateur seulement.</div>
+
+<h2 id="reglage">6. Réglage du vol</h2>
+<p>Ouvrez l'<a href="assistant-de-reglage.html">Assistant de réglage</a> (aussi dans les <b>Raccourcis</b> du Tableau de bord) pour partir de PID et de filtres adaptés à votre drone. Sauvegardez la configuration avant et après.</p>
+
+<h2 id="premier-vol">7. Premier vol prudent</h2>
+<ol class="etapes">
+  <li><b>Hélices retirées</b>, batterie avec un limiteur de courant (« smoke stopper ») si possible : dans l'onglet <a href="moteurs.html">Moteurs</a>, revérifier l'ordre et le sens de rotation. Tester l'armement et le failsafe.</li>
+  <li>Activer la protection anti-surchauffe dans l'onglet <a href="protections.html">Protections</a> : par exemple 100 °C pour la température d'ESC (ESC avec télémétrie de température), et une limite de courant à 80 % du calibre total des ESC (capteur de courant nécessaire).</li>
+  <li>Onglet <a href="osd.html">OSD</a> : cocher les alertes « Gaz limités (TrueGlide) » et « Moteur relancé (TrueGlide) ».</li>
+  <li>Onglet <a href="blackbox.html">Blackbox</a> : enregistrer les premiers vols, pour pouvoir les relire dans le <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</li>
+  <li>Monter les hélices. Dans un lieu dégagé, loin des personnes : stationnaire de 30 s, atterrir, désarmer, débrancher la batterie, puis <b>toucher les moteurs</b>. Tièdes : on peut continuer. Chauds : baisser le curseur maître des PID ou renforcer le filtrage avant d'aller plus loin.</li>
+</ol>
+<p>Aucun logiciel ne garantit qu'un drone vole du premier coup : un moteur mal monté, une hélice à l'envers ou un ESC mal réglé restent possibles. Ces étapes servent à les voir sans casse.</p>

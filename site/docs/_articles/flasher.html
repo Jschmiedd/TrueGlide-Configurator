@@ -1,0 +1,74 @@
+<h1>Installer le firmware</h1>
+<p class="chapeau">Cette page explique comment installer le firmware <b>TRUEGLIDE</b> (ou un de ses dérivés <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>) sur un contrôleur de vol, le mettre à jour, et revenir à Betaflight. Le flash se fait dans l'onglet <a href="flasher-le-firmware.html">Flasher le Firmware</a>.</p>
+
+<div class="encart">Le firmware n'a encore été essayé qu'en simulateur, pas en vol réel. Premiers essais <b>hélices retirées</b>, puis en terrain dégagé, prêt à reprendre la main.</div>
+
+<h2 id="choisir-le-modele">Choisir le modèle</h2>
+<p>Un seul fichier est flashé sur la carte. On peut changer de modèle plus tard en flashant un autre fichier.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Modèle</th><th>Pour qui</th><th>Contenu</th><th>Début du nom de fichier</th></tr></thead>
+  <tbody>
+    <tr><td><b>TRUEGLIDE</b></td><td>course, freestyle, cinéma</td><td>Betaflight 2026.6.2 + ajouts TrueGlide</td><td><code>trueglide_</code></td></tr>
+    <tr><td><b>TRUENAV</b></td><td>drones qui volent aussi en GPS</td><td><b>TRUEGLIDE</b> + navigation complète : missions, maintien d'altitude et de position, retour au départ (GPS RESCUE), zone de vol, missions envoyées par MAVLink</td><td><code>truenav_</code></td></tr>
+    <tr><td><b>TRUENAV_LIGHT</b></td><td>drones de navigation, longue portée</td><td><b>TRUENAV</b> sans les fonctions de course (launch control, transpondeur de course, statistiques des manches…)</td><td><code>truenav_light_</code></td></tr>
+  </tbody>
+</table></div>
+<p>Le nom complet suit la forme <code>trueglide_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex</code> : modèle, version, processeur (MCU), carte. Le logiciel lit ce nom pour afficher le modèle et la carte avant le flash.</p>
+<p>Dans <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>, rien ne change en vol tant qu'aucun mode de navigation n'est placé sur un interrupteur.</p>
+
+<h2 id="cartes-publiees">Cartes publiées</h2>
+<p>La mise à jour en ligne propose aujourd'hui deux cartes, chacune dans les trois modèles (version 2026.6.2, révision 014242092, publiée le 13 octobre 2026) :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Carte</th><th>Processeur</th><th>Modèles</th></tr></thead>
+  <tbody>
+    <tr><td>SPEEDYBEEF405MINI</td><td>STM32F405</td><td><b>TRUEGLIDE</b>, <b>TRUENAV</b>, <b>TRUENAV_LIGHT</b></td></tr>
+    <tr><td>TMOTORVELOXF7SE</td><td>STM32F722</td><td><b>TRUEGLIDE</b>, <b>TRUENAV</b>, <b>TRUENAV_LIGHT</b></td></tr>
+  </tbody>
+</table></div>
+<p>Pour une autre carte, le fichier .hex se construit à partir du code source du firmware (dépôt Firmware-TrueGlide sur GitHub : onglet <b>Actions</b>, flux <b>TrueGlide</b>, <b>Run workflow</b> avec le nom de la carte ; ou <code>make CONFIG=NOM_DE_LA_CARTE</code> sur un PC Linux, avec <code>MODELE=TRUENAV</code> ou <code>MODELE=TRUENAV_LIGHT</code> pour les dérivés). Le nom de la carte est le même que dans Betaflight.</p>
+
+<h2 id="sauvegarder">1. Sauvegarder l'ancienne configuration</h2>
+<p>Avant tout flash, carte connectée :</p>
+<ol>
+  <li>Ouvrez l'onglet <a href="cli.html">Ligne de commande (CLI)</a>.</li>
+  <li>Tapez <code>diff all</code>, puis cliquez sur <b>Enregistrer sous</b> : ce fichier contient vos réglages modifiés.</li>
+  <li>Cliquez sur <b>Effacer l'historique</b>, tapez <code>dump all</code>, puis <b>Enregistrer sous</b> dans un second fichier : il contient tous les réglages, utile en cas de doute.</li>
+</ol>
+<p>Avec un firmware TrueGlide déjà installé, le bouton <b>Sauvegarder la configuration</b> du <a href="tableau-de-bord.html#raccourcis">Tableau de bord</a> enregistre aussi un <code>diff all</code>. Au moment du flash, le logiciel fait en plus sa propre sauvegarde (<code>diff all</code>) si l'option est active.</p>
+
+<h2 id="en-ligne">2a. Installer par la mise à jour en ligne</h2>
+<ol class="etapes">
+  <li>Déconnectez le drone (bouton <b>Déconnecter</b>), débranchez la batterie, gardez l'USB branché.</li>
+  <li>Onglet <b>Flasher le Firmware</b>, cadre <b>Mise à jour en ligne</b> : <b>Chercher la mise à jour</b>.</li>
+  <li>Choisissez la <b>Carte (nom du fichier)</b> et le <b>Modèle</b>, puis <b>Télécharger</b>. Le fichier est vérifié (taille et somme SHA-256) avant d'être chargé.</li>
+  <li>Pour une première installation, activez <b>Effacement complet de la puce</b> dans le cadre <b>Avancé</b>.</li>
+  <li>Cliquez sur <b>Flasher le Firmware</b> et attendez la fin sans débrancher.</li>
+</ol>
+<p>Carte déjà sous TrueGlide : le bouton <b>Mettre à jour</b> du <a href="tableau-de-bord.html#firmware">Tableau de bord</a> fait les étapes 1 à 3 tout seul. Il ne sait pas reconnaître <b>TRUENAV_LIGHT</b> (la carte se dit <b>TRUENAV</b>) : pour ce modèle, choisissez-le à la main dans l'onglet.</p>
+
+<h2 id="fichier-local">2b. Installer un fichier .hex de l'ordinateur</h2>
+<p>Sans Internet, ou pour une carte non publiée :</p>
+<ol class="etapes">
+  <li>Débranchez la batterie. Branchez la carte en USB.</li>
+  <li>Onglet <b>Flasher le Firmware</b> : <b>Charger un firmware TrueGlide (.hex)</b>, choisissez le fichier de votre carte.</li>
+  <li>Vérifiez dans le cadre <b>Firmware TrueGlide</b> le <b>Modèle</b> et la <b>Carte (nom du fichier)</b>. Un avertissement <b>Carte différente</b> signale un fichier prévu pour une autre carte que celle détectée.</li>
+  <li>Première installation : activez <b>Effacement complet de la puce</b>.</li>
+  <li>Cliquez sur <b>Flasher le Firmware</b>, attendez la fin, puis <b>Connexion</b>.</li>
+</ol>
+
+<h2 id="effacement">Effacement complet</h2>
+<p><b>Effacement complet de la puce</b> efface toute la configuration enregistrée sur la carte. Il est conseillé pour passer d'un autre firmware à <b>TRUEGLIDE</b>. Après le flash, il faut refaire la configuration : suivez la <a href="mise-en-route.html#guide">mise en route guidée</a>.</p>
+<p>Venant de Betaflight 4.4, 4.5 ou 2025.12, ne recollez pas l'ancien <code>diff all</code> tel quel : des réglages ont disparu ou changé de nom, et le sens du D a été inversé en 2025.12 (<code>d_roll</code> est maintenant le D de base, <code>d_max_roll</code> le maximum). Servez-vous du fichier sauvegardé comme aide-mémoire, réglage par réglage.</p>
+
+<h2 id="probleme">Si la carte ne répond plus</h2>
+<p>Coupez l'alimentation, activez <b>Pas de redémarrage</b> et <b>Effacement complet de la puce</b>, pontez les broches BOOT (ou tenez le bouton BOOT) en branchant l'USB : la carte démarre en mode DFU. Flashez ensuite normalement. Sous Windows, un pilote USB peut être nécessaire (Zadig pour le mode DFU, liens sur la page <a href="bienvenue.html#materiel">Bienvenue</a>). Détail : <a href="flasher-le-firmware.html#recuperation">Flasher le Firmware</a>.</p>
+
+<h2 id="revenir-a-betaflight">Revenir à Betaflight</h2>
+<ol>
+  <li>Sauvegardez la configuration (<code>diff all</code>), comme plus haut.</li>
+  <li>Procurez-vous le fichier .hex Betaflight de votre carte (sur le site ou dans l'application Betaflight).</li>
+  <li>Onglet <b>Flasher le Firmware</b> : <b>Charger un firmware TrueGlide (.hex)</b> accepte tout fichier <code>.hex</code>. Le cadre <b>Firmware non TrueGlide ?</b> s'affiche.</li>
+  <li>Cliquez sur <b>Flasher le Firmware</b>, puis sur <b>Flasher quand même</b> dans la fenêtre de confirmation.</li>
+</ol>
+<p>Les réglages propres à TrueGlide (<code>power_guard_*</code>, <code>speeder_*</code>, <code>motor_desync_*</code>, <code>dshot_telemetry_fallback</code>, <code>crsf_tlm_esc_temp</code>) n'existent pas dans Betaflight : retirez-les avant de recoller une sauvegarde.</p>
+<p>Avec une carte Betaflight connectée, le <a href="tableau-de-bord.html">Tableau de bord</a> affiche « Betaflight » dans le cadre <b>Firmware</b>.</p>

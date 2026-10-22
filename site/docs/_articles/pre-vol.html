@@ -1,0 +1,92 @@
+<h1>Pré-vol</h1>
+<p class="chapeau">L'onglet <b>Pré-vol</b> (groupe « Sans carte branchée ») sert à vérifier la météo, l'activité solaire et l'espace aérien du lieu de vol avant de partir. Son titre affiché est « Vérification de l'environnement avant le vol ». Il n'a pas besoin du drone, mais il a besoin d'Internet.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/pre-vol.png" alt="Onglet Pré-vol en thème sombre, avant le choix d'un lieu : seul le cadre Lieu de vol est affiché, avec le bouton Utiliser ma position, les champs Latitude et Longitude et le bouton Appliquer"><img class="t-clair" src="../assets/img/onglets/pre-vol-clair.png" alt="Onglet Pré-vol en thème clair, avant le choix d'un lieu : seul le cadre Lieu de vol est affiché, avec le bouton Utiliser ma position, les champs Latitude et Longitude et le bouton Appliquer">
+  <figcaption>Capture du logiciel non connecté, sans lieu choisi : tant qu'aucun lieu n'est donné, seul le cadre <b>Lieu de vol</b> s'affiche. Les autres cadres décrits plus bas apparaissent après le choix d'un lieu.</figcaption>
+</figure>
+
+<div class="encart">Les indications de cet onglet viennent de services en ligne et de calculs simples. Elles aident à décider, elles ne remplacent ni l'observation sur place ni les règles de votre pays. Le pilote reste seul responsable de la décision de voler.</div>
+
+<h2 id="lieu-de-vol">Lieu de vol</h2>
+<ul>
+  <li><b>Utiliser ma position</b> : demande la position au navigateur (« Détection... » pendant la recherche). Si le navigateur échoue, un message propose de trouver une position approximative par l'adresse IP, via le service tiers ipapi.co : <b>Autoriser</b> ou <b>Non merci</b>. Votre choix est gardé.</li>
+  <li><b>Latitude</b> et <b>Longitude</b> : saisie à la main en degrés décimaux (latitude de -90 à 90, longitude de -180 à 180), puis <b>Appliquer</b>. Le bouton reste inactif tant que les valeurs ne sont pas valides.</li>
+  <li><b>Enregistrer</b> : garde le lieu actuel sous un nom (20 caractères au plus). Cinq lieux au plus ; au-delà, le message « Maximum de 5 emplacements enregistrés atteint » s'affiche.</li>
+  <li>Liste <b>Emplacements enregistrés...</b> : recharge un lieu gardé. Les icônes à côté servent à renommer, supprimer, ou enregistrer un nouveau lieu.</li>
+</ul>
+<p>Sous les champs, la ligne avec l'épingle donne les coordonnées retenues et leur origine entre parenthèses (geolocation, ip ou manual).</p>
+
+<h2 id="etat-de-decollage">État de décollage</h2>
+<p>Bandeau coloré qui résume tout : <b>GO</b>, <b>PRUDENCE</b>, <b>ATTENTION</b> ou <b>NO-GO</b> (« Pas de données » si rien n'a été reçu). Il prend le plus mauvais des contrôles affichés juste dessous : <b>Vent</b>, <b>Visibilité</b>, <b>Précipitations</b>, <b>Batterie</b>, <b>Alt. densité</b> (si l'altitude du lieu est connue) et <b>Solaire</b>. Le bouton <b>Actualiser</b> recharge toutes les données.</p>
+<p>Seuils lus dans le code du logiciel :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Contrôle</th><th>Bon</th><th>Prudence</th><th>Attention</th><th>Danger</th></tr></thead>
+  <tbody>
+    <tr><td>Vent (le plus fort du vent et des rafales)</td><td>moins de 8 m/s</td><td>8 à moins de 11 m/s</td><td>11 à moins de 14 m/s</td><td>14 m/s et plus</td></tr>
+    <tr><td>Visibilité</td><td>5 km et plus</td><td>1 à 5 km</td><td>—</td><td>moins de 1 km</td></tr>
+    <tr><td>Précipitations</td><td>0 mm</td><td>moins de 1 mm</td><td>1 à moins de 5 mm</td><td>5 mm et plus</td></tr>
+    <tr><td>Batterie (température de l'air)</td><td>10 à 40 °C</td><td>—</td><td>0 à 10 °C ou 40 à 50 °C</td><td>sous 0 °C ou au-dessus de 50 °C</td></tr>
+    <tr><td>Altitude densité</td><td>moins de 3281 ft</td><td>3281 à 6561 ft</td><td>6562 à 9842 ft</td><td>9843 ft et plus</td></tr>
+    <tr><td>Solaire (indice Kp)</td><td>2 ou moins</td><td>plus de 2 à 4</td><td>plus de 4 à 5</td><td>plus de 5</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="meteo-actuelle">Météo actuelle</h2>
+<p>Ciel (icône et description), température en °C, puis :</p>
+<ul>
+  <li><b>Vitesse du vent</b> : en m/s, avec la direction (N, NNE…) et l'angle en degrés.</li>
+  <li><b>Rafales de vent</b> : en m/s.</li>
+  <li><b>Visibilité</b> : en m ou en km.</li>
+  <li><b>Précipitations</b> : en mm.</li>
+  <li><b>Point de rosée</b> : en °C et °F, avec un risque de condensation sur les lentilles (de « Aucun risque » à « Brouillard / lentilles embuées attendu »), selon l'écart entre température et point de rosée.</li>
+  <li><b>Couverture nuageuse</b> et <b>Humidité</b> : en %.</li>
+  <li><b>Ressenti</b> : température ressentie, en °C et °F.</li>
+  <li><b>Pression</b> : en hPa (pression ramenée au niveau de la mer).</li>
+  <li><b>Risque batterie</b> : conseil selon la température (par exemple « Performances réduites, gardez les batteries au chaud »).</li>
+  <li><b>Risque de brouillard</b> : de « Peu probable » à « Risque élevé », calculé avec la température, le point de rosée, l'humidité et le vent.</li>
+</ul>
+
+<h2 id="creneau-de-vol">Créneau de vol</h2>
+<ul>
+  <li><b>Lever du soleil</b>, <b>Coucher du soleil</b> : heures du jour.</li>
+  <li><b>Plage du crépuscule civil</b> : de l'aube au crépuscule ; en vert si l'heure actuelle est dans la plage, en rouge sinon.</li>
+  <li><b>Durée du jour</b> : en heures et minutes.</li>
+  <li><b>Indice UV</b> : maximum du jour, de « Faible » à « Très élevé ».</li>
+  <li><b>Plage de températures</b> : minimum et maximum du jour.</li>
+  <li><b>Actuellement</b> : « Jour » ou « Nuit ».</li>
+</ul>
+
+<h2 id="vent-en-altitude">Prévision du vent en altitude</h2>
+<p>Tableau heure par heure sur les 12 prochaines heures : <b>Heure</b>, vent à <b>10m</b>, <b>80m</b> et <b>120m</b> au-dessus du sol, <b>Rafales</b>, <b>Pluie %</b> (probabilité). Vitesses en m/s. Les couleurs suivent les seuils de vent du tableau plus haut.</p>
+
+<h2 id="previsions">Prévisions à 5 jours</h2>
+<p>Une ligne par jour : <b>Jour</b>, <b>Météo</b>, <b>Plage de températures</b>, <b>Vitesse du vent</b> et <b>Rafales de vent</b> maximales (m/s), <b>Pluie %</b>. La ligne est colorée si le vent ou la pluie du jour dépassent les seuils.</p>
+
+<h2 id="activite-solaire">Activité solaire</h2>
+<p>Indice <b>Kp</b> (0 à 9) avec une barre, et son niveau : Faible, Modéré, Élevé, Tempête. Quand les données existent, les échelles <b>Tempête géomagnétique</b> (G), <b>Radiation solaire</b> (S) et <b>Blackout radio</b> (R), et l'heure de la <b>Dernière mesure</b>. Une forte activité solaire peut dégrader la précision du GPS.</p>
+
+<h2 id="gnss">GNSS / GPS Status</h2>
+<ul>
+  <li><b>Coordonnées</b> : latitude et longitude du lieu.</li>
+  <li><b>Élévation</b> : altitude du sol en m (AMSL, au-dessus du niveau de la mer) ; « - » si elle n'a pas pu être lue.</li>
+  <li><b>Altitude densité</b> : estimée à partir de l'altitude, de la pression et de la température, en ft et en m. Plus elle est haute, moins les hélices portent.</li>
+  <li><b>Impact ionosphérique</b> : effet de l'indice Kp sur le GPS ; affiche « - » tant que le Kp n'est pas reçu.</li>
+  <li><b>Statut de sauvetage GPS</b> : « GPS Rescue fiable » si Kp ≤ 4, « Le GPS Rescue peut être peu fiable » si Kp ≤ 5, « GPS Rescue NON recommandé » au-delà.</li>
+  <li><b>Déclinaison magnétique</b> et <b>Inclination magnétique</b> : en degrés, calculées par le logiciel à partir d'un modèle du champ magnétique.</li>
+</ul>
+<p>Le lien <b>Outil de planification par satellite GNSS</b> ouvre gnssplanning.com. Pour les satellites vus réellement par le drone, connectez-le et ouvrez l'onglet <a href="gps.html">GPS</a>.</p>
+
+<h2 id="espace-aerien">Espace aérien et zones de non-vol</h2>
+<p>Rappel : vérifier les restrictions locales et les NOTAM avant de voler. Quatre liens vers des sites externes : carte de sécurité drone (dronesafetymap.com), carte SkyVector, NOTAM de la FAA (États-Unis), NOTAM d'EUROCONTROL (Europe).</p>
+<p><b>Réglages des données d'espace aérien</b> (cliquer pour ouvrir) :</p>
+<ul>
+  <li><b>Fournisseur de NOTAM</b> : <b>Désactivé</b> (valeur de départ), <b>API NOTAM FAA</b> ou <b>OpenAIP</b>. Les deux demandent une clé API personnelle, à saisir dans le champ qui apparaît.</li>
+  <li><b>Rayon de recherche</b> : 25 NM au départ, en NM ou en km.</li>
+</ul>
+<p>Avec un fournisseur choisi, le logiciel envoie vos coordonnées à ce fournisseur, et les avis trouvés s'affichent en cartes : type (NOTAM, TFR, SUA…), « Actif maintenant » ou « Expiré », dates, <b>Plancher</b> et <b>Plafond</b>, texte (<b>Afficher plus</b> pour le texte complet).</p>
+
+<h2 id="carte">Carte de position</h2>
+<p>Carte centrée sur le lieu. Boutons : <b>S</b> (vue satellite), <b>H</b> (hybride), <b>R</b> (plan), <b>+</b> et <b>–</b> (zoom), et plein écran.</p>
+
+<h2 id="sources">Sources des données</h2>
+<p>Météo et altitude du sol : Open-Meteo.com (CC BY 4.0). Activité solaire : NOAA Space Weather Prediction Center. Le bouton <b>WIKI</b> en haut à droite ouvre l'onglet <a href="memo-wiki.html">Mémo &amp; Wiki</a>.</p>
