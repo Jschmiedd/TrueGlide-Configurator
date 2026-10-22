@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Preset · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Preset (groupe « Réglage du vol ») sert à appliquer des préréglages tout faits (filtres, PID, débits, radio…) téléchargés depuis des sources en ligne, et à enregistrer ou recharger une sauvegarde complète de la configuration.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html" aria-current="page">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#conditions">Avant de commencer</a></li>
+      <li><a href="#haut">Boutons du haut</a></li>
+      <li><a href="#messages">Messages en haut de l&#x27;onglet</a></li>
+      <li><a href="#recherche">Filtres et recherche</a></li>
+      <li><a href="#cartes">Cartes de préréglage</a></li>
+      <li><a href="#details">Fenêtre de détail d&#x27;un préréglage</a></li>
+      <li><a href="#appliquer">Appliquer les préréglages choisis</a></li>
+      <li><a href="#sauvegarde">Sauvegarde de la configuration</a></li>
+      <li><a href="#sources">Sources des pré-réglages</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Preset</h1>
+<p class="chapeau">L'onglet <b>Preset</b> (groupe « Réglage du vol ») sert à appliquer des préréglages tout faits (filtres, PID, débits, radio…) téléchargés depuis des sources en ligne, et à enregistrer ou recharger une sauvegarde complète de la configuration.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/preset.webp" alt="Onglet Preset : boutons Sources des pré-réglages, Charger une sauvegarde, Enregistrer une sauvegarde ; message rouge Échec du chargement des dépôts suivants : Betaflight Official Presets ; message orange de sauvegarde avec le bouton Ne plus me le montrer ; filtres Catégories, Mots clés, Auteurs, Firmwares, Statut ; champ de recherche ; en bas, boutons Annuler et Enregistrer et redémarrer"><img class="t-clair" src="../assets/img/onglets/preset-clair.webp" alt="Onglet Preset en thème clair : mêmes boutons, mêmes messages et mêmes filtres, sans liste de préréglages">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, sans accès à la source de préréglages en ligne : le message rouge « Échec du chargement des dépôts suivants : Betaflight Official Presets » s'affiche et aucune carte de préréglage n'apparaît. Avec Internet, les préréglages s'affichent sous les filtres.</figcaption>
+</figure>
+
+<div class="encart"><b>Faire une sauvegarde avant tout.</b> Un préréglage modifie la configuration et il n'y a aucun moyen de revenir en arrière sans sauvegarde. Cliquer d'abord sur <b>Enregistrer une sauvegarde</b> (voir <a href="#sauvegarde">Sauvegarde de la configuration</a>).</div>
+
+<h2 id="conditions">Avant de commencer</h2>
+<ul>
+  <li>L'onglet applique les préréglages par le CLI. Il faut un firmware 4.5.4 ou plus récent ; le firmware <b>TRUEGLIDE</b> convient. Sinon, une fenêtre « Danger » demande de mettre à jour le firmware.</li>
+  <li>Le mode virtuel (sans carte) n'a pas de CLI : appliquer un préréglage ou faire une sauvegarde y est impossible.</li>
+  <li>Les préréglages viennent de sources en ligne : il faut un accès à Internet pour les charger.</li>
+  <li>Les préréglages de la source par défaut sont écrits pour Betaflight. Ils ne connaissent pas les réglages propres à <b>TRUEGLIDE</b> (onglets <a href="protections.html">Protections</a>, <a href="speeder.html">Speeder</a>, etc.).</li>
+</ul>
+
+<h2 id="haut">Boutons du haut</h2>
+<ul>
+  <li><b>WIKI</b> : ouvre le wiki intégré au logiciel.</li>
+  <li><b>Sources des pré-réglages...</b> : ouvre la liste des sources (voir <a href="#sources">Sources des pré-réglages</a>).</li>
+  <li><b>Charger une sauvegarde</b> : recharge un fichier de sauvegarde .txt (voir <a href="#sauvegarde">Sauvegarde de la configuration</a>).</li>
+  <li><b>Enregistrer une sauvegarde</b> : enregistre toute la configuration actuelle dans un fichier .txt.</li>
+</ul>
+
+<h2 id="messages">Messages en haut de l'onglet</h2>
+<ul>
+  <li><b>AVERTISSEMENT ! Une source de pre-réglage tierce est sélectionnée.</b> : une source non officielle est active.</li>
+  <li><b>ATTENTION ! Échec du chargement des dépôts suivants : …</b> : une source n'a pas pu être chargée (pas d'Internet, adresse fausse…).</li>
+  <li><b>Rappel de sauvegarde</b> (cadre orange) : demande de sauvegarder la configuration avant d'appliquer un préréglage. Le bouton <b>Ne plus me le montrer</b> le cache pour les prochaines fois.</li>
+  <li><b>Erreur lors du chargement des préréglages depuis Internet</b>, avec le bouton <b>Recharger</b> : aucune source n'a pu être lue.</li>
+</ul>
+
+<h2 id="recherche">Filtres et recherche</h2>
+<ul>
+  <li><b>Catégories</b>, <b>Mots clés</b>, <b>Auteurs</b>, <b>Firmwares</b>, <b>Statut</b> : listes à choix multiples. Elles ne gardent que les préréglages qui correspondent. Le filtre <b>Firmwares</b> est présélectionné avec les versions qui correspondent au firmware de la carte connectée.</li>
+  <li><b>Champ de recherche</b> : recherche libre dans les préréglages, par exemple <code>"karate race"</code> ou <code>"5'' freestyle"</code>.</li>
+</ul>
+<p>Au plus 60 préréglages s'affichent à la fois. Au-delà, le message « Limite maximale du nombre de présélections affichées atteinte » demande d'affiner les filtres. Les favoris s'affichent en premier, le plus récent d'abord.</p>
+
+<h2 id="cartes">Cartes de préréglage</h2>
+<p>Chaque préréglage est une carte avec :</p>
+<ul>
+  <li>son titre ;</li>
+  <li>son statut : <b>Officiel</b>, <b>Communauté</b> ou <b>Expérimental</b> ;</li>
+  <li>sa catégorie, ses <b>Auteurs</b>, les versions de <b>Firmware</b> prévues et ses <b>Mot-clés</b> ;</li>
+  <li>une étoile : cliquer dessus ajoute ou retire le préréglage des favoris. Un préréglage appliqué devient automatiquement favori.</li>
+</ul>
+<p>Une carte choisie (en attente d'application) a un cadre vert.</p>
+
+<h2 id="details">Fenêtre de détail d'un préréglage</h2>
+<p>Cliquer sur une carte ouvre sa fenêtre de détail :</p>
+<ul>
+  <li><b>Options</b> : liste déroulante de cases à cocher (ou de choix exclusifs) propres au préréglage. Certains préréglages demandent d'ouvrir cette liste avant de pouvoir les choisir : sinon, le message « Veuillez vérifier la liste d'options avant de choisir ce préréglage » s'affiche.</li>
+  <li><b>Description</b> du préréglage, ou ses commandes CLI.</li>
+  <li><b>Afficher CLI</b> / <b>Cacher CLI</b> : montre les commandes exactes qui seront envoyées à la carte.</li>
+  <li><b>Voir en ligne…</b> : ouvre la page du préréglage dans le navigateur.</li>
+  <li><b>Discussion…</b> : ouvre la discussion du préréglage, si elle existe.</li>
+  <li><b>Choisir</b> : ajoute le préréglage à la liste à appliquer. Si le préréglage contient un avertissement, ou s'il est prévu pour une autre version de firmware, une fenêtre « ATTENTION ! » s'ouvre avec <b>Accepter</b> et <b>Annuler</b>.</li>
+  <li><b>Fermer</b> : ferme la fenêtre sans rien choisir.</li>
+</ul>
+<p>Rien n'est encore envoyé à la carte : on peut choisir plusieurs préréglages, puis les appliquer ensemble.</p>
+
+<h2 id="appliquer">Appliquer les préréglages choisis</h2>
+<ol>
+  <li>Faire une sauvegarde avec <b>Enregistrer une sauvegarde</b>.</li>
+  <li>Choisir un ou plusieurs préréglages (bouton <b>Choisir</b> de chaque fenêtre de détail).</li>
+  <li>Cliquer sur <b>Enregistrer et redémarrer</b>, en bas à droite. La fenêtre « Application de la configuration... » montre l'avancement.</li>
+  <li>Sans erreur, la configuration est enregistrée, le contrôleur de vol redémarre et le logiciel se reconnecte.</li>
+  <li>Si une commande a été refusée, la fenêtre « ATTENTION ! La configuration a été appliquée avec des erreurs CLI » liste les commandes en erreur (en rouge). Deux choix :
+    <ul>
+      <li><b>Annuler</b> : rien n'est enregistré. Le contrôleur de vol redémarre et garde l'ancienne configuration.</li>
+      <li><b>Enregistrer malgré tout</b> : enregistre ce qui a été accepté, puis redémarre.</li>
+    </ul>
+  </li>
+  <li>Après un préréglage qui touche les moteurs ou la radio : vérifier <b>Hélices retirées</b> dans les onglets <a href="moteurs.html">Moteurs</a> et <a href="recepteur.html">Récepteur</a> avant de voler.</li>
+</ol>
+<p>Le bouton <b>Annuler</b> en bas de l'onglet vide la liste des préréglages choisis, sans rien envoyer. Les deux boutons du bas sont grisés tant qu'aucun préréglage n'est choisi.</p>
+
+<h2 id="sauvegarde">Sauvegarde de la configuration</h2>
+<h3 id="enregistrer-sauvegarde">Enregistrer une sauvegarde</h3>
+<ol>
+  <li>Cliquer sur <b>Enregistrer une sauvegarde</b>. Le logiciel lit toute la configuration de la carte (« Chargement de la configuration actuelle depuis le contrôleur de vol »).</li>
+  <li>Choisir où enregistrer le fichier .txt. Son nom commence par l'identifiant de la carte, suivi de <code>cli_backup</code>, du nom du drone s'il en a un, de la date, de l'heure et du nom de la carte.</li>
+</ol>
+<p>Le fichier commence par la commande <code>defaults nosave</code> : au rechargement, la carte repart des valeurs par défaut avant de recevoir la configuration sauvegardée.</p>
+
+<h3 id="charger-sauvegarde">Charger une sauvegarde</h3>
+<ol>
+  <li>Cliquer sur <b>Charger une sauvegarde</b> et choisir le fichier .txt.</li>
+  <li>Le fichier est appliqué tout de suite, comme un préréglage : avancement, éventuelles erreurs CLI, puis enregistrement et redémarrage.</li>
+  <li>Vérifier ensuite <b>Hélices retirées</b> l'ordre et le sens des moteurs dans l'onglet <a href="moteurs.html">Moteurs</a>.</li>
+</ol>
+<div class="encart">Ne rechargez qu'une sauvegarde faite avec la même version de firmware. Une sauvegarde d'une ancienne version (par exemple Betaflight 4.4 ou 4.5) contient des réglages qui ont disparu ou changé de sens.</div>
+
+<h2 id="sources">Sources des pré-réglages</h2>
+<p>Le bouton <b>Sources des pré-réglages...</b> ouvre une fenêtre avec un avertissement : une source tierce peut casser la configuration et même endommager le matériel. N'ajoutez que des sources de confiance.</p>
+<ul>
+  <li><b>Betaflight Official Presets</b> : source officielle (<code>https://presets.betaflight.com/firmware-presets/</code>), active par défaut. Elle ne peut être ni modifiée ni supprimée.</li>
+  <li><b>Betaflight Presets - GitHub BACKUP</b> : copie de secours sur GitHub (<code>https://github.com/betaflight/firmware-presets</code>, branche <code>backup</code>). Elle est comptée comme source tierce.</li>
+  <li><b>Ajouter une source</b> : crée une nouvelle source. Champs : <b>Name</b> (nom), <b>Url</b> (adresse) et, pour une adresse GitHub, <b>GitHub branch</b> (branche).</li>
+  <li><b>Rendre actif</b> / <b>Désactiver</b> : utilise ou non cette source. Plusieurs sources peuvent être actives ensemble.</li>
+  <li><b>Sauvegarder</b>, <b>Réinitialiser</b>, <b>Supprimer</b> : enregistre les changements d'une source, annule ces changements, ou supprime la source.</li>
+  <li><b>OK</b> : ferme la fenêtre et recharge les préréglages des sources actives.</li>
+</ul>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

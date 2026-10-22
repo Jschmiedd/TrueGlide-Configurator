@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alimentation et batterie · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Alimentation et batterie (groupe « Installation du drone ») sert à choisir les capteurs de tension et de courant, à régler les seuils d&#x27;alerte de la batterie et à étalonner les mesures pour qu&#x27;elles collent à un multimètre.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html" aria-current="page">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#profil-de-batterie">Profil de batterie</a></li>
+      <li><a href="#batterie">Batterie</a></li>
+      <li><a href="#etat-alimentation">Etat alimentation</a></li>
+      <li><a href="#tension">Tension</a></li>
+      <li><a href="#intensite">Intensité</a></li>
+      <li><a href="#etalonnage">Etalonner la tension et le courant</a></li>
+      <li><a href="#sauvegarder">Sauvegarder</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Alimentation et batterie</h1>
+<p class="chapeau">L'onglet <b>Alimentation et batterie</b> (groupe « Installation du drone ») sert à choisir les capteurs de tension et de courant, à régler les seuils d'alerte de la batterie et à étalonner les mesures pour qu'elles collent à un multimètre.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/alimentation.webp" alt="Onglet Alimentation et batterie : cadres Profil de batterie, Batterie (mesure de la tension Aucun, mesure de l'intensité Virtuel, tensions 3.3, 4.3 et 3.5 V, capacité 0), Etat alimentation à 0 et cadre Intensité du capteur Virtuel, boutons Etalonnage et Sauvegarder en bas"><img class="t-clair" src="../assets/img/onglets/alimentation-clair.webp" alt="Onglet Alimentation et batterie : cadres Profil de batterie, Batterie (mesure de la tension Aucun, mesure de l'intensité Virtuel, tensions 3.3, 4.3 et 3.5 V, capacité 0), Etat alimentation à 0 et cadre Intensité du capteur Virtuel, boutons Etalonnage et Sauvegarder en bas">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Le simulateur n'a ni batterie ni capteur de tension : toutes les mesures restent à 0 et « Connecté » affiche « Non ». Le bandeau du haut est le guide de <a href="mise-en-route.html">Mise en route</a>.</figcaption>
+</figure>
+
+<h2 id="profil-de-batterie">Profil de batterie</h2>
+<p>Ce cadre n'apparaît que si le firmware gère plusieurs profils de batterie. Le firmware <b>TRUEGLIDE</b> en a 3.</p>
+<ul>
+  <li><b>Profil de batterie</b> : le profil actif. Le changer bascule tout de suite le contrôleur de vol sur ce profil, puis l'onglet relit ses valeurs. Les tensions par élément et la capacité du cadre <b>Batterie</b> appartiennent au profil actif : on peut ainsi garder un profil LiPo et un profil Li-Ion.</li>
+  <li><b>Nom du profil</b> : un nom libre, 8 caractères au plus (par exemple « LiPo »).</li>
+</ul>
+<p>Le profil peut aussi être changé depuis la radio, avec un réglage de l'onglet <a href="ajustements.html">Ajustements</a>. Dans ce cas, l'onglet se met à jour seul et le journal affiche « Profil de batterie défini par le contrôleur de vol », sauf si vous avez des modifications non sauvegardées.</p>
+
+<h2 id="batterie">Batterie</h2>
+<ul>
+  <li><b>Mesure de la tension</b> : d'où vient la tension de la batterie. « Aucun », « ADC interne » (le capteur de la carte) ou, selon la carte, « Capteur ESC » (la tension donnée par la télémétrie des ESC).</li>
+  <li><b>Mesure de l'intensité</b> : d'où vient le courant. « Aucun », « ADC interne » (capteur de courant de la carte ou de l'ESC 4 en 1 câblé sur la carte) et, selon la carte, « Virtuel », « Capteur ESC » ou « Capteur MSP/OSD Esclave ». « Virtuel » ne mesure rien : le courant est estimé à partir des gaz, avec l'échelle et l'écart du cadre <b>Intensité</b>.</li>
+  <li><b>Tension Mini par élément</b> (V) : tension critique d'un élément. En dessous, l'OSD affiche « LAND NOW » et le buzzer sonne s'il est branché. Valeur par défaut du firmware : 3,3 V.</li>
+  <li><b>Tension Maxi par élément</b> (V) : tension d'un élément plein. Elle sert à compter le nombre d'éléments. Par défaut : 4,3 V.</li>
+  <li><b>Tension d'avertissement par élément</b> (V) : tension basse. En dessous, l'OSD affiche « LOW BATTERY ». Par défaut : 3,5 V. Le logiciel la garde entre la tension mini et la tension maxi.</li>
+  <li><b>Capacité (mAh)</b> : capacité de la batterie, de 0 à 20 000 mAh. Avec une valeur non nulle, le pourcentage de batterie restant est calculé à partir des mAh consommés. 0 = non renseignée.</li>
+</ul>
+
+<h2 id="etat-alimentation">Etat alimentation</h2>
+<p>Les mesures en direct, rafraîchies toutes les 200 ms.</p>
+<ul>
+  <li><b>Connecté</b> : « Oui » avec le nombre d'éléments détectés, ou « Non » si aucune batterie n'est vue (batterie absente, ou mesure de tension sur « Aucun »).</li>
+  <li><b>Tension</b> (V) : tension de la batterie.</li>
+  <li><b>mAh consommés</b> : capacité consommée depuis la mise sous tension.</li>
+  <li><b>Intensité</b> (A) : courant tiré sur la batterie.</li>
+  <li><b>Puissance consommée</b> (W) : tension multipliée par l'intensité, calculée par le logiciel.</li>
+  <li><b>Chute de tension</b> (V) : écart entre une batterie pleine (tension maxi par élément × nombre d'éléments) et la tension mesurée. 0 sans batterie.</li>
+</ul>
+
+<h2 id="tension">Tension</h2>
+<p>Ce cadre apparaît dès que <b>Mesure de la tension</b> n'est pas sur « Aucun ». Il montre le capteur choisi (« Batterie » pour l'ADC interne, les capteurs ESC pour « Capteur ESC ») avec sa valeur en direct.</p>
+<ul>
+  <li><b>Echelle</b> : réglage principal du capteur, de 10 à 255. C'est lui que l'étalonnage modifie.</li>
+  <li><b>Coefficient diviseur</b> et <b>Coefficient multiplicateur</b> : de 1 à 255, pour les cartes qui demandent un pont diviseur particulier. Laissez les valeurs d'origine sauf indication du fabricant.</li>
+</ul>
+<p>L'encart « Attention » rappelle que la valeur de ce cadre est limitée à 25,5 V : le contrôleur de vol l'envoie sur un seul octet. Avec une batterie qui dépasse 25,5 V, la valeur de ce cadre plafonne. La <b>Tension</b> du cadre Etat alimentation, elle, n'a pas cette limite.</p>
+
+<h2 id="intensite">Intensité</h2>
+<p>Ce cadre apparaît dès que <b>Mesure de l'intensité</b> n'est pas sur « Aucun ». Il montre le capteur choisi avec son courant en direct.</p>
+<ul>
+  <li><b>Echelle [1/10th mV/A]</b> : de -16 000 à 16 000. C'est la valeur que l'étalonnage modifie. Le fabricant de la carte ou de l'ESC donne en général une valeur de départ.</li>
+  <li><b>Ecart [mA]</b> : décalage du zéro, de -32 000 à 32 000.</li>
+</ul>
+<p>Avec « Virtuel », l'échelle et l'écart servent à estimer le courant à partir des gaz : ce n'est pas une mesure.</p>
+
+<h2 id="etalonnage">Etalonner la tension et le courant</h2>
+<p>Le bouton <b>Etalonnage</b> n'apparaît que si la tension est mesurée par « ADC interne », ou le courant par « ADC interne » ou « Virtuel ».</p>
+<div class="encart"><b>Hélices retirées</b> avant de brancher la batterie : le logiciel le rappelle dans la fenêtre d'étalonnage.</div>
+<ol>
+  <li>Choisissez les sources de mesure, puis cliquez sur <b>Sauvegarder</b>. Si les sources ont changé sans être sauvegardées, la fenêtre d'étalonnage le signale et refuse d'étalonner.</li>
+  <li>Branchez la batterie (<b>hélices retirées</b>). Sans batterie détectée, la fenêtre affiche un avertissement et le bouton <b>Calibrer</b> n'apparaît pas.</li>
+  <li>Mesurez la tension de la batterie au multimètre. Pour le courant, mesurez le courant réellement tiré avec une pince ou un multimètre.</li>
+  <li>Cliquez sur <b>Etalonnage</b>. Dans la fenêtre « Gestion de l'étalonnage », saisissez <b>Tension mesurée</b> et/ou <b>Intensité mesurée</b>. Chaque champ n'apparaît que si sa mesure dépasse 0,1 (V ou A). Une valeur à 0 est ignorée.</li>
+  <li>Cliquez sur <b>Calibrer</b>. La fenêtre de confirmation affiche la nouvelle échelle calculée.</li>
+  <li><b>Appliquer l'étalonnage</b> garde la nouvelle échelle dans le formulaire, sans l'enregistrer. Cliquez ensuite sur <b>Sauvegarder</b>, puis vérifiez la tension et le courant affichés.</li>
+</ol>
+<div class="encart">Dans la version actuelle du logiciel, <b>Annuler l'étalonnage</b> ferme la fenêtre mais laisse la nouvelle échelle dans le champ <b>Echelle</b>. Pour revenir en arrière, remettez l'ancienne valeur à la main, ou quittez l'onglet sans sauvegarder.</div>
+<p>Le calcul de la tension utilise la valeur du cadre <b>Tension</b>, limitée à 25,5 V. Au-delà, l'étalonnage par cette fenêtre n'est pas fiable : réglez l'<b>Echelle</b> à la main en comparant avec le multimètre.</p>
+
+<h2 id="sauvegarder">Sauvegarder</h2>
+<p>Le bouton <b>Sauvegarder</b> s'active dès qu'un réglage change. Il envoie la configuration de la batterie, le nom du profil et les réglages des capteurs, puis les enregistre dans la mémoire du contrôleur de vol. Il n'y a pas de redémarrage.</p>
+<p>Un capteur de courant juste est nécessaire à la protection de courant de l'onglet <a href="protections.html">Protections</a>.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

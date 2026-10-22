@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Capteurs · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Capteurs (groupe « Analyse ») sert à choisir les capteurs utilisés par la carte, à régler l&#x27;orientation de la carte et du magnétomètre, à calibrer l&#x27;accéléromètre et le magnétomètre, et à regarder les mesures en direct.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html" aria-current="page">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#materiel">Matériel Capteur</a></li>
+      <li><a href="#vue-3d">Vue 3D et instruments</a></li>
+      <li><a href="#accelerometre">Accéléromètre</a></li>
+      <li><a href="#magnetometre">Magnétomètre</a></li>
+      <li><a href="#direct">Données des capteurs en direct</a></li>
+      <li><a href="#sauvegarder">Sauvegarder et Redémarrer</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Capteurs</h1>
+<p class="chapeau">L'onglet <b>Capteurs</b> (groupe « Analyse ») sert à choisir les capteurs utilisés par la carte, à régler l'orientation de la carte et du magnétomètre, à calibrer l'accéléromètre et le magnétomètre, et à regarder les mesures en direct.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/capteurs.webp" alt="Onglet Capteurs : à gauche les cadres « Matériel Capteur » (Gyro 1, Accéléromètre, Magnétomètre, Baromètre, Télémètre, Flux optique, Alignement de la carte) et « Accéléromètre » (bouton Calibrer, corrections Roll et Pitch) ; à droite le drone en 3D avec cap, pitch, roll et trois instruments ; en bas les cadres « Magnétomètre » et « Données des capteurs en direct »"><img class="t-clair" src="../assets/img/onglets/capteurs-clair.webp" alt="Onglet Capteurs en thème clair">
+  <figcaption>Capture du logiciel connecté au simulateur TRUEGLIDE (SITL) sur PC : les capteurs sont simulés (nom « VIRTUAL »), il n'y a pas de vrai capteur. Les valeurs affichées ne sont donc pas celles d'un drone réel.</figcaption>
+</figure>
+
+<h2 id="materiel">Matériel Capteur</h2>
+<ul>
+  <li><b>Gyro 1</b>, <b>Gyro 2</b>… (firmware récent) : un interrupteur par gyroscope détecté, avec son nom de puce. Au moins un gyroscope doit rester activé : le logiciel refuse de couper le dernier. Sur un firmware ancien, un menu <b>GYRO/ACCEL</b> (Premier, Deuxième, Les deux) le remplace.</li>
+  <li><b>Accéléromètre</b>, <b>Magnétomètre</b>, <b>Baromètre</b> : interrupteurs, avec le nom de la puce détectée.</li>
+  <li><b>Télémètre</b> et <b>Flux optique</b> : interrupteur, puis choix du modèle dans un menu une fois activé (affichés seulement si le firmware en propose).</li>
+  <li><b>Alignement de la carte</b> : <b>Roulis°</b>, <b>Tangage°</b>, <b>Lacet°</b>, en degrés. À changer seulement si la carte n'est pas montée flèche vers l'avant, à plat.</li>
+  <li><b>Détecter automatiquement l'alignement de la carte</b> : assistant guidé (drone à plat, nez incliné vers le bas, côté droit incliné vers le bas, rotation d'environ 45° en lacet). Il propose un alignement à <b>Appliquer</b>. Grisé sans accéléromètre ou si l'accéléromètre n'est pas calibré.</li>
+</ul>
+
+<h2 id="vue-3d">Vue 3D et instruments</h2>
+<ul>
+  <li>Le drone en 3D suit l'attitude mesurée par la carte. En haut à gauche : <b>Cap Magnétique</b> (ou <b>Lacet (Yaw)</b> sans magnétomètre), <b>Pitch</b> et <b>Roll</b>, en degrés.</li>
+  <li><b>Réinitialiser l'axe Z, écart</b> : remet le cap de la vue 3D face à vous. Cela ne change que l'affichage, rien n'est envoyé à la carte.</li>
+  <li>Instruments en bas à droite : horizon artificiel, cap, et altimètre si un baromètre est présent.</li>
+</ul>
+
+<h2 id="accelerometre">Accéléromètre</h2>
+<ol>
+  <li>Posez le drone bien à plat et immobile.</li>
+  <li>Cliquez sur <b>Calibrer</b>. Le bouton affiche « Calibrage » pendant la mesure, puis le journal du logiciel indique la fin.</li>
+</ol>
+<ul>
+  <li>Un bandeau orange « L'accéléromètre n'a pas été calibré » s'affiche tant que la carte signale ce défaut.</li>
+  <li><b>Correction de l'accéléromètre sur le Roll</b> et <b>sur le Pitch</b> : petit décalage pour corriger une dérive en mode ANGLE, de -300 à 300.</li>
+</ul>
+
+<h2 id="magnetometre">Magnétomètre</h2>
+<p>Ce cadre n'apparaît que si la carte a un magnétomètre actif.</p>
+<ul>
+  <li><b>Alignement du magnétomètre</b> : orientation du magnétomètre (souvent dans le module GPS). <b>Personnalisé</b> fait apparaître trois angles. Le bouton <b>Détecter</b> à côté mesure l'orientation pendant que vous inclinez le drone dans tous les sens, puis propose un résultat à <b>Appliquer</b>.</li>
+  <li><b>Déclinaison magnétique</b> : écart entre le nord magnétique et le nord géographique, en degrés. Le bouton <b>Détecter</b> la calcule d'après la position du GPS s'il a un fix ; sinon, après votre accord, d'après l'adresse IP (service tiers ipapi.co).</li>
+  <li><b>Inclinaison</b> (degrés) et <b>Intensité du champ</b> (nT) : valeurs calculées pour votre position, en lecture seule.</li>
+  <li><b>Valeurs de calib.</b> : décalages X, Y, Z enregistrés dans la carte, modifiables à la main puis <b>Enregistrer les valeurs</b>. S'ils valent tous 0, un bandeau demande de calibrer.</li>
+  <li><b>Vérifier</b> : affiche les mesures en nuage de points pour contrôler une calibration existante (posez le drone à plat, nez vers un point cardinal connu).</li>
+</ul>
+
+<h3 id="calibrer-magnetometre">Calibrer le magnétomètre</h3>
+<p>Faites-le loin des objets métalliques et des câbles électriques. Le bouton <b>Calibrer</b> lance la calibration guidée ; la flèche à côté propose les autres méthodes :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Méthode</th><th>Déroulement</th></tr></thead>
+  <tbody>
+    <tr><td><b>Calib. client (guidée)</b> (bouton <b>Calibrer</b>)</td><td>60 secondes, 6 étapes affichées : à plat, sur le dos, nez en haut, nez en bas, côté gauche, côté droit, avec un tour complet en lacet à chaque fois. Puis <b>Enregistrer la calibration</b>.</td></tr>
+    <tr><td><b>Calib du client (Guidé)</b></td><td>Rotation libre dans toutes les directions ; le logiciel calcule les décalages et en donne la qualité. Puis <b>Enregistrer la calibration</b>.</td></tr>
+    <tr><td><b>Calib. complète (alignement auto)</b></td><td>8 étapes guidées, avec 20 zones à couvrir. <b>Calculer</b> donne l'alignement et les décalages ; ensuite <b>Appliquer</b> (enregistre et redémarre), <b>Copier le CLI</b> (commandes à coller dans la <a href="cli.html">CLI</a>) ou <b>Exporter le modèle</b>.</td></tr>
+    <tr><td><b>Calib Firmware (Legacy)</b></td><td>30 secondes de rotation libre ; la carte enregistre elle-même les valeurs à la fin.</td></tr>
+  </tbody>
+</table></div>
+<p>Pendant la calibration, une vue 3D montre les points mesurés, avec quatre affichages au choix (nuage de points, carte de chaleur, triple projection, densité polaire). <b>Effacer</b> repart de zéro, <b>Annuler</b> abandonne.</p>
+
+<h2 id="direct">Données des capteurs en direct</h2>
+<p>Cliquez sur <b>Afficher les données des capteurs en direct</b> pour ouvrir les graphiques ; le carré rouge du titre les arrête.</p>
+<ul>
+  <li>Interrupteurs : <b>Gyroscope</b> (deg/s), <b>Accéléromètre</b> (g), <b>Magnétomètre</b>, <b>Altitude</b> (mètres), <b>Sonar</b> (cm), <b>Debug</b>. <b>Debug</b> n'est actif que si un mode debug est choisi dans l'onglet <a href="blackbox.html">Blackbox</a> ; son nom s'affiche à côté.</li>
+  <li><b>Tout actualiser</b> : cadence de tous les graphiques, de 10 ms à 1000 ms.</li>
+  <li>Sur chaque graphique : <b>Rafraîchissement</b> et <b>Echelle</b> (pour le debug, <b>Auto</b> suit les valeurs).</li>
+</ul>
+
+<h2 id="sauvegarder">Sauvegarder et Redémarrer</h2>
+<p>Le bouton du bas devient actif dès qu'un réglage a changé (capteurs, alignements, corrections de l'accéléromètre, déclinaison). Il envoie tout à la carte, l'enregistre et la redémarre.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Réglages de PID · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Réglages de PID (groupe « Réglage du vol ») sert à régler la façon dont le drone suit les manches : gains PID, curseurs de réglage simplifié, rates (sensibilité des manches) et filtres. Les valeurs sont écrites dans le profil actif du contrôleur de vol.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html" aria-current="page">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#principe">Principe</a></li>
+      <li><a href="#profils">Profils et boutons du haut</a></li>
+      <li><a href="#curseurs">Curseurs de réglage PID</a></li>
+      <li><a href="#tableau-pid">Tableau des PID</a></li>
+      <li><a href="#angle-horizon">Angle et Horizon</a></li>
+      <li><a href="#controleur-pid">Réglages du Contrôleur PID</a></li>
+      <li><a href="#gaz-moteur">Réglages des Gaz et du Moteur</a></li>
+      <li><a href="#divers">Paramètres divers</a></li>
+      <li><a href="#rates">Sous-onglet Réglages du profil de rates</a></li>
+      <li><a href="#filtres">Sous-onglet Réglages filtres</a></li>
+      <li><a href="#sauvegarder">Sauvegarder ou annuler</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Réglages de PID</h1>
+<p class="chapeau">L'onglet <b>Réglages de PID</b> (groupe « Réglage du vol ») sert à régler la façon dont le drone suit les manches : gains PID, curseurs de réglage simplifié, rates (sensibilité des manches) et filtres. Les valeurs sont écrites dans le profil actif du contrôleur de vol.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/reglages-pid.webp" alt="Onglet Réglages de PID, sous-onglet Paramètres PID du profil : sélecteur Profile 1, curseurs de réglage PID en mode RPY tous à 1.00, tableau P, I, D, D Max, Feedforward pour ROLL, PITCH et YAW, cadres Angle et Horizon, réglages du contrôleur PID, des gaz et du moteur, paramètres divers, boutons Rafraîchir et Sauvegarder en bas à droite"><img class="t-clair" src="../assets/img/onglets/reglages-pid-clair.webp" alt="Même onglet Réglages de PID en thème clair, sous-onglet Paramètres PID du profil avec les curseurs à 1.00 et le tableau des PID">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, Mode Expert activé (tous les curseurs sont visibles). Pas de vrais capteurs ni de moteurs : le simulateur n'a pas de télémétrie DShot, d'où la ligne « Le Dynamic Idle est DÉSACTIVÉ car la télémétrie Dshot est OFF ». Les valeurs affichées sont celles par défaut du firmware.</figcaption>
+</figure>
+
+<h2 id="principe">Principe</h2>
+<p>L'onglet a trois sous-onglets : <b>Paramètres PID du profil</b>, <b>Réglages du profil de rates</b> et <b>Réglages filtres</b>. Rien n'est envoyé au drone tant que vous ne cliquez pas sur <b>Sauvegarder</b>, sauf les actions sur les profils décrites plus bas (sélection, copie, réinitialisation).</p>
+<p>Pour un premier réglage calculé à partir de votre drone (taille d'hélice, moteurs, batterie, masse), commencez par l'onglet <a href="assistant-de-reglage.html">Assistant de réglage</a>. Il règle les mêmes curseurs : vous les retrouvez ici et vous pouvez ensuite les ajuster à la souris.</p>
+<div class="encart">Après chaque changement, faites un essai court et prudent : stationnaire de quelques secondes, atterrir, toucher les moteurs. Des moteurs chauds ou un bruit aigu indiquent un réglage trop fort ou un filtrage trop faible. Pour tout essai au sol avec la batterie branchée : <b>Hélices retirées</b>.</div>
+
+<h2 id="profils">Profils et boutons du haut</h2>
+<ul>
+  <li><b>Profil</b> (liste « Profile 1 », « Profile 2 »…) : le profil PID actif. Visible dans les sous-onglets PID et filtres. Le firmware <b>TRUEGLIDE</b> garde 4 profils PID. Changer de profil le sélectionne tout de suite sur le contrôleur de vol et recharge ses valeurs. La liste est grisée tant que des modifications ne sont pas sauvegardées.</li>
+  <li><b>Rateprofil</b> (liste « Profile rate 1 »…) : le profil de rates actif, visible dans le sous-onglet des rates. Le firmware en garde 4. Même fonctionnement que le profil PID.</li>
+  <li><b>Nom du profil PID</b> et <b>Nom du profil Rate</b> : un nom libre de 8 caractères au plus (par exemple « 6S LOURD » ou « CINE »). Il est enregistré avec <b>Sauvegarder</b>.</li>
+  <li><b>Copier le profil</b> (sous-onglet PID) et <b>Copier le profil des rates</b> (sous-onglet rates) : ouvre la fenêtre « Copier les valeurs du Profil ». Choisissez le profil de destination : toutes ses valeurs seront écrasées par celles du profil affiché. La copie est faite dans la mémoire vive du contrôleur : cliquez ensuite sur <b>Sauvegarder</b> pour la garder.</li>
+  <li><b>Réinitialiser ce profil</b> : remet les valeurs par défaut du firmware dans le profil PID actif. Le message « Valeurs par défaut chargées pour le profil PID actuel. » apparaît. Là aussi, il faut <b>Sauvegarder</b> pour que ce soit gardé après un redémarrage.</li>
+  <li><b>Montrer tous les PIDs</b> / <b>Cacher les PIDs non utilisés</b> : affiche ou cache un cadre supplémentaire avec les PID de baromètre, magnétomètre et navigation GPS, seulement si le firmware en annonce.</li>
+</ul>
+
+<h2 id="curseurs">Curseurs de réglage PID</h2>
+<p>Ce cadre règle les PID par curseurs (réglage simplifié du firmware). À chaque mouvement de curseur, le contrôleur de vol recalcule les PID et le tableau se met à jour. Chaque curseur va de 0 à 2,00 par pas de 0,05 ; 1,00 correspond à la valeur par défaut.</p>
+<ul>
+  <li><b>Mode:</b> <b>OFF</b> (pas de curseurs, les PID se tapent à la main), <b>RP</b> (les curseurs règlent roulis et tangage, le lacet se tape à la main) ou <b>RPY</b> (les curseurs règlent les trois axes). Quand un axe est piloté par les curseurs, ses cases du tableau sont grisées.</li>
+  <li><b>Atténuation</b> (gains D) : l'amortissement. Plus haut, il calme les oscillations rapides et le propwash, mais fait chauffer les moteurs.</li>
+  <li><b>Suivi</b> (gains P et I) : la fermeté avec laquelle le drone suit la consigne.</li>
+  <li><b>Réponse des sticks</b> (gains FF) : la réactivité aux mouvements de manche (feedforward).</li>
+  <li><b>Atténuation dynamique</b> (D Max), <b>Dérive - Oscillations</b> (gains I), <b>Atténuation du Pitch</b> (D du tangage par rapport au roulis), <b>Suivi du Pitch</b> (P, I et FF du tangage par rapport au roulis) et <b>Multiplicateur Maître</b> (tous les PID ensemble) : ces curseurs avancés ne sont visibles qu'en Mode Expert, ou quand leur valeur n'est plus 1,00.</li>
+</ul>
+<p>Hors Mode Expert, les trois premiers curseurs sont limités entre 0,70 et 1,40, et une note le rappelle. Le Mode Expert se règle avec le bouton en forme de clé en haut de la fenêtre (ou dans les options). Si un curseur est déjà hors de cette plage (réglé par la CLI par exemple), il est grisé et une note demande de passer en Mode Expert.</p>
+<p>Si les PID chargés dépassent certains seuils (par exemple P du roulis au-dessus de 70 ou D au-dessus de 42), un cadre rouge « ATTENTION » s'affiche : ces positions peuvent provoquer une perte de contrôle ou abîmer les moteurs.</p>
+
+<h2 id="tableau-pid">Tableau des PID</h2>
+<p>Une ligne par axe (<b>ROLL</b>, <b>PITCH</b>, <b>YAW</b>), une colonne par terme :</p>
+<ul>
+  <li><b>Proportionnel</b> (P), <b>Integrale</b> (I), <b>Dérivée</b> (D) et <b>D Max</b> : de 0 à 250.</li>
+  <li><b>Feedforward</b> : de 0 à 2000.</li>
+</ul>
+<p>Les cases ne sont modifiables que si le mode des curseurs le permet (voir plus haut).</p>
+
+<h2 id="angle-horizon">Angle et Horizon</h2>
+<ul>
+  <li><b>Angle</b> / <b>Force</b> : la force avec laquelle le mode ANGLE ramène le drone à plat (0 à 255).</li>
+  <li><b>Horizon</b> / <b>Force</b> et <b>Transition</b> : les mêmes réglages pour le mode HORIZON (0 à 255).</li>
+  <li><b>Limite de l'Angle</b> : l'inclinaison maximale en mode ANGLE, en degrés. Le firmware accepte 10 à 80.</li>
+</ul>
+
+<h2 id="controleur-pid">Réglages du Contrôleur PID</h2>
+<ul>
+  <li><b>Feedforward</b> : <b>Réduction du Jittering</b>, <b>Lissage</b>, <b>Moyenne</b> (2, 3 ou 4 points), <b>Boost</b>, <b>Limite haute du Rate</b> et <b>Transition</b>. Ils adoucissent le feedforward selon la vitesse du lien radio. L'aide (point d'interrogation) donne les valeurs conseillées.</li>
+  <li><b>TPA</b> : <b>Mode TPA</b> (PD ou D), <b>Taux TPA (%)</b> (0 à 100) et <b>Point de rupture TPA (μs)</b> (750 à 2250). Le TPA baisse les gains à fort gaz.</li>
+  <li><b>I Term Relax</b> : limite l'accumulation du terme I pendant les mouvements rapides (moins de rebond en fin de flip). Réglages <b>Axes</b>, <b>Type</b> (Setpoint ou Gyro) et <b>Coupure</b>.</li>
+  <li><b>Anti Gravité</b> et son <b>Gain</b> : renforce le terme I pendant les changements rapides de gaz.</li>
+  <li><b>I Term Rotation</b> : fait tourner le terme I avec le drone pendant les rotations continues en lacet.</li>
+  <li><b>Dynamic Damping</b> : <b>Gain</b> et <b>Advance</b> du D Max.</li>
+</ul>
+
+<h2 id="gaz-moteur">Réglages des Gaz et du Moteur</h2>
+<ul>
+  <li><b>Renforcement des gaz</b> : 0 à 100.</li>
+  <li><b>Limite de sortie du moteur</b> : 1 à 100 %. Réduit la commande envoyée à chaque moteur (utile avec une batterie de plus de cellules que prévu).</li>
+  <li><b>Valeur du ralenti dynamique [* 100 RPM]</b> : 0 à 200 (par centaines de tr/min). Ce champ n'est modifiable que si la télémétrie DShot bidirectionnelle est active ; sinon la ligne affiche « Le Dynamic Idle est DÉSACTIVÉ car la télémétrie Dshot est OFF ».</li>
+  <li><b>Compensation de chute de tension Vbat %</b> : interrupteur, puis valeur de 1 à 150 %. Garde la même réponse du début à la fin de la batterie.</li>
+  <li><b>Linéarisation de la poussée %</b> : interrupteur, puis valeur de 1 à 150 %. Améliore la réponse à faible gaz.</li>
+</ul>
+
+<h2 id="divers">Paramètres divers</h2>
+<ul>
+  <li><b>Nombre de cellules - pour le changement automatique de profil</b> : <b>Désactiver</b>, <b>Changer</b>, ou 1S à 8S. Le contrôleur active alors le profil dont le nombre de cellules correspond à la batterie branchée.</li>
+  <li><b>Limite d'angle Acro Trainer</b> : 10 à 80 degrés. Le mode ACRO TRAINER doit être mis sur un interrupteur dans l'onglet <a href="modes.html">Modes</a>.</li>
+  <li><b>Yaw intégré</b> : change la façon dont le lacet est calculé. Un avertissement rappelle qu'il faut alors refaire le réglage du lacet.</li>
+</ul>
+
+<h2 id="rates">Sous-onglet Réglages du profil de rates</h2>
+<ul>
+  <li><b>Type de rates</b> : Betaflight, Raceflight, KISS, Actual ou Quick. Changer de type ouvre une fenêtre « Changer le type de rates » : les rates repartent de la courbe par défaut de ce type.</li>
+  <li><b>Rates Basic/Acro</b> : pour <b>Roll [A]</b>, <b>Pitch [E]</b> et <b>Yaw [R]</b>, les trois réglages du type choisi (par exemple <b>RC Rate</b>, <b>Rate</b> et <b>RC Expo</b>, ou <b>Sensibilité au centre</b>, <b>Rate Max</b> et <b>Expo</b> pour le type Actual), et la vitesse de rotation maximale obtenue (<b>Max Vel [deg/s]</b>).</li>
+  <li>Au-delà de 1800 °/s sur un axe, un cadre rouge prévient que des rates très élevés peuvent provoquer des désynchronisations moteur.</li>
+  <li><b>Aperçu des Rates</b> : la courbe de chaque axe. <b>Aperçu du modèle de rates</b> : un modèle 3D qui tourne comme le drone suivrait vos manches.</li>
+  <li><b>Limite Gaz</b> (OFF, ÉCHELLE ou CLIP) et <b>Limite gaz %</b> (25 à 100).</li>
+  <li><b>Centre Gaz</b>, <b>Point de vol stationnaire</b> et <b>Expo gaz</b> (0 à 1), avec l'<b>Aperçu de la courbe des Gaz</b>.</li>
+</ul>
+
+<h2 id="filtres">Sous-onglet Réglages filtres</h2>
+<ul>
+  <li><b>Multiplicateur du filtre gyro</b> et <b>Multiplicateur du filtre du terme D</b> : deux curseurs (avec interrupteur) de 0,10 à 2,00. À gauche, « Plus de filtrage » ; à droite, « Moins de filtrage ». Hors Mode Expert, la plage est limitée (0,50 à 1,50 pour le gyro, 0,80 à 1,20 pour le D). Un cadre « ATTENTION » s'affiche quand le curseur gyro est à 0,45 ou moins, ou à 1,55 ou plus, et quand le curseur D est à 0,75 ou moins, ou à 1,25 ou plus.</li>
+  <li><b>Paramètres de filtre indépendants du profil</b> : <b>Gyro passe-bas 1</b> et <b>2</b>, <b>Filtre coupe bande Gyro 1</b> et <b>2</b>, <b>Filtre Gyro RPM</b> (seulement avec la télémétrie DShot : <b>Harmoniques</b>, <b>Fréquence min [Hz]</b>, <b>Facteur Q (x100)</b>…) et <b>Filtre coupe bande dynamique</b>.</li>
+  <li><b>Réglages filtres liés au profile</b> : <b>Passe-bas D Term 1</b> et <b>2</b>, <b>Filtre coupe bande du terme D</b>, <b>Filtres passe-bas Yaw</b>.</li>
+</ul>
+<p>Pour savoir si le filtrage suffit, enregistrez un vol dans la <a href="blackbox.html">Blackbox</a> et regardez le bruit du gyro dans le <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</p>
+
+<h2 id="sauvegarder">Sauvegarder ou annuler</h2>
+<ul>
+  <li><b>Sauvegarder</b> : envoie les PID, les réglages avancés, les rates, les filtres, les curseurs et les noms de profil, puis les écrit dans la mémoire permanente du contrôleur (sans redémarrage).</li>
+  <li><b>Rafraîchir</b> : relit les valeurs du contrôleur de vol. Les modifications non sauvegardées sont perdues.</li>
+</ul>
+<p>Les deux boutons ne sont actifs que s'il y a des changements. Si le profil change depuis la radio pendant que l'onglet est ouvert (par exemple le profil de rates avec un interrupteur réglé dans l'onglet <a href="ajustements.html">Ajustements</a>), l'onglet affiche le profil reçu du contrôleur, sauf s'il reste des modifications non sauvegardées.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

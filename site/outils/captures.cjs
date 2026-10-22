@@ -64,7 +64,8 @@ async function session(browser, scheme, mode, list) {
     if (!list.length) {
         return;
     }
-    const settings = { expertMode: true, darkTheme: 2 };
+    // the Setup tab is captured in its top view (motor numbers and front), the clearest of its two views
+    const settings = { expertMode: true, darkTheme: 2, tgSetupTopView: true };
     if (mode === "sitl") {
         Object.assign(settings, {
             showManualMode: true,

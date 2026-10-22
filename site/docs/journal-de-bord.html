@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Journal de bord · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Journal de bord (groupe « Analyse ») sert à enregistrer sur l&#x27;ordinateur, dans un fichier CSV, des valeurs lues en direct sur la carte branchée en USB : capteurs, attitude, batterie, voies radio, moteurs.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html" aria-current="page">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#acces">Où le trouver</a></li>
+      <li><a href="#fonctionnement">Comment il fonctionne</a></li>
+      <li><a href="#proprietes">Propriétés du journal</a></li>
+      <li><a href="#reglages">Réglages et compteurs</a></li>
+      <li><a href="#enregistrer">Enregistrer</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Journal de bord</h1>
+<p class="chapeau">L'onglet <b>Journal de bord</b> (groupe « Analyse ») sert à enregistrer sur l'ordinateur, dans un fichier CSV, des valeurs lues en direct sur la carte branchée en USB : capteurs, attitude, batterie, voies radio, moteurs.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/journal-de-bord.webp" alt="Onglet Journal de bord : encadré d'explication, cadre « Propriétés du journal » avec huit interrupteurs MSP_RAW_IMU à MSP_DEBUG, menu « Intervalle d'échantillonnage » sur 100 ms, compteurs « Échantillons sauvés » et « Nom du journal », boutons « Choisir le log » et « Démarrage de l'enregistrement »"><img class="t-clair" src="../assets/img/onglets/journal-de-bord-clair.webp" alt="Onglet Journal de bord en thème clair">
+  <figcaption>Capture du logiciel connecté au simulateur TRUEGLIDE (SITL) sur PC, avant le choix du fichier.</figcaption>
+</figure>
+
+<h2 id="acces">Où le trouver</h2>
+<p>Cet onglet n'apparaît dans le menu qu'en <b>mode Expert</b>. Il ne remplace pas la <a href="blackbox.html">Blackbox</a> : les valeurs passent par la liaison USB, à la cadence choisie ici (10 ms au plus vite), bien plus lentement que la boucle de vol. Pour analyser un vol, utilisez la Blackbox.</p>
+
+<h2 id="fonctionnement">Comment il fonctionne</h2>
+<ul>
+  <li>L'enregistrement ne tourne que tant que l'onglet reste ouvert. Changer d'onglet <b>arrête</b> l'enregistrement et ferme le fichier.</li>
+  <li>Quelle que soit la cadence choisie, les lignes sont écrites dans le fichier une fois par seconde.</li>
+</ul>
+
+<h2 id="proprietes">Propriétés du journal</h2>
+<p>Chaque interrupteur ajoute des colonnes au fichier. Les descriptions affichées dans l'onglet sont en anglais.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Propriété</th><th>Colonnes écrites</th></tr></thead>
+  <tbody>
+    <tr><td><b>MSP_RAW_IMU</b></td><td>9 : gyroscope X, Y, Z ; accéléromètre X, Y, Z ; magnétomètre X, Y, Z</td></tr>
+    <tr><td><b>MSP_ATTITUDE</b></td><td>3 : attitude X, Y, Z (<code>kinematicsX</code> à <code>Z</code>)</td></tr>
+    <tr><td><b>MSP_ALTITUDE</b></td><td>1 : altitude</td></tr>
+    <tr><td><b>MSP_RAW_GPS</b></td><td>7 : fix, nombre de satellites, latitude et longitude (en degrés), altitude, vitesse, cap sol</td></tr>
+    <tr><td><b>MSP_ANALOG</b></td><td>4 : tension, courant, mAh consommés, RSSI</td></tr>
+    <tr><td><b>MSP_RC</b></td><td>une colonne par voie radio active (<code>RC0</code>, <code>RC1</code>…)</td></tr>
+    <tr><td><b>MSP_MOTOR</b></td><td>une colonne par sortie moteur (<code>Motor0</code> à <code>Motor7</code>)</td></tr>
+    <tr><td><b>MSP_DEBUG</b></td><td>une colonne par valeur debug (<code>Debug0</code>…) ; leur sens dépend du mode debug choisi dans l'onglet <a href="blackbox.html">Blackbox</a></td></tr>
+  </tbody>
+</table></div>
+<p>La première colonne, <code>timestamp</code>, est l'heure de l'ordinateur en millisecondes.</p>
+
+<h2 id="reglages">Réglages et compteurs</h2>
+<ul>
+  <li><b>Intervalle d'échantillonnage</b> : temps entre deux lectures, de 10 ms à 5000 ms (100 ms par défaut).</li>
+  <li><b>Échantillons sauvés</b> : nombre de lignes déjà écrites dans le fichier.</li>
+  <li><b>Nom du journal</b> : nom du fichier choisi.</li>
+</ul>
+<p>Les interrupteurs et l'intervalle sont bloqués pendant l'enregistrement.</p>
+
+<h2 id="enregistrer">Enregistrer</h2>
+<ol>
+  <li>Activez au moins une propriété.</li>
+  <li>Choisissez l'<b>Intervalle d'échantillonnage</b>.</li>
+  <li>Cliquez sur <b>Choisir le log</b> et indiquez où créer le fichier <code>.csv</code> (nom proposé : carte, nom du drone, date et heure).</li>
+  <li>Cliquez sur <b>Démarrage de l'enregistrement</b>. Le bouton devient <b>Arrêt de l'enregistrement</b>.</li>
+  <li>Cliquez sur <b>Arrêt de l'enregistrement</b> pour finir : les dernières lignes sont écrites et le fichier est fermé.</li>
+</ol>
+<p>Sans fichier choisi, sans propriété cochée ou sans carte connectée, le logiciel affiche un message d'erreur et ne démarre pas.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

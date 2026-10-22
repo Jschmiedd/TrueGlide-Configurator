@@ -39,7 +39,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .entete .large { display: flex; align-items: center; gap: 22px; padding-block: 10px; flex-wrap: wrap; }
 .entete .marque { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--texte); font-family: var(--titre); font-weight: 700; font-size: 20px; letter-spacing: 0.04em; }
 .entete .marque img { width: 38px; height: 38px; }
-.entete .marque span { color: var(--accent); }
+.entete .marque b span { color: var(--accent); }
+.entete .marque b { font-weight: 700; }
 .entete nav { display: flex; gap: 18px; margin-left: auto; flex-wrap: wrap; }
 .entete nav a { color: var(--doux); text-decoration: none; font-weight: 500; }
 .entete nav a:hover, .entete nav a[aria-current] { color: var(--texte); }

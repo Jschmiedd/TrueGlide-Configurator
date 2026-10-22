@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Servos · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Servos (groupe « Installation du drone ») sert à régler la course de chaque servo (minimum, milieu, maximum), son sens, et à lui faire suivre directement une voie de la radio.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html" aria-current="page">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#affichage">Quand l&#x27;onglet apparaît</a></li>
+      <li><a href="#tableau">Tableau des servos</a></li>
+      <li><a href="#mode-direct">Activer le mode direct</a></li>
+      <li><a href="#barres">Barres des servos</a></li>
+      <li><a href="#sauvegarder">Sauvegarder</a></li>
+      <li><a href="#reglage">Régler un servo pas à pas</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Servos</h1>
+<p class="chapeau">L'onglet <b>Servos</b> (groupe « Installation du drone ») sert à régler la course de chaque servo (minimum, milieu, maximum), son sens, et à lui faire suivre directement une voie de la radio.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/servos.webp" alt="Onglet Servos : tableau de 8 servos avec MIN 1000, MID 1500, MAX 2000, cases à cocher CH1 à CH4 et A1 à A12 toutes vides, Taux : 100% pour chaque servo, interrupteur Activer le mode direct, puis cadre Servos avec 8 barres à 1500"><img class="t-clair" src="../assets/img/onglets/servos-clair.webp" alt="Onglet Servos : tableau de 8 servos avec MIN 1000, MID 1500, MAX 2000, cases à cocher CH1 à CH4 et A1 à A12 toutes vides, Taux : 100% pour chaque servo, interrupteur Activer le mode direct, puis cadre Servos avec 8 barres à 1500">
+  <figcaption>Capture du logiciel en « Mode Virtuel » : aucune carte n'est branchée, le logiciel simule un contrôleur de vol. Les valeurs sont celles par défaut et les barres restent à 1500.</figcaption>
+</figure>
+
+<h2 id="affichage">Quand l'onglet apparaît</h2>
+<p>L'onglet n'est dans le menu que si le firmware de la carte contient la gestion des servos (option de compilation <code>USE_SERVOS</code> ou <code>USE_WING</code>). Sur un quad classique, il est souvent absent : c'est normal. Il sert surtout aux tricoptères, ailes, avions et appareils à servos.</p>
+
+<h2 id="tableau">Tableau des servos</h2>
+<p>Le cadre s'appelle « Changer la direction dans la télécommande afin de correspondre ». Il a une ligne par servo (8 au plus).</p>
+<ul>
+  <li><b>Nom</b> : Servo 1 à Servo 8.</li>
+  <li><b>MIN</b>, <b>MID</b>, <b>MAX</b> : bout de course bas, point milieu et bout de course haut du servo, en microsecondes, de 500 à 2500. Valeurs par défaut : 1000, 1500, 2000. Le logiciel ramène toute valeur hors de 500 à 2500 dans ces bornes.</li>
+  <li><b>CH1</b> à <b>CH4</b>, puis <b>A1</b>, <b>A2</b>… : une case par voie de la radio (le nombre de colonnes suit le nombre de voies actives). Cocher une case fait suivre cette voie au servo, ramenée entre son MIN et son MAX. Une seule case par servo : en cocher une autre remplace la précédente. Sans case cochée, le servo part de son MID.</li>
+  <li><b>Taux et sens</b> : de « Taux : 100% » à « Taux : -100% ». Multiplie le mouvement que le mixage donne au servo (tricoptère, aile…). Une valeur négative inverse le sens. Ce taux ne touche pas une voie suivie par une case cochée : pour inverser celle-ci, inversez la voie dans la radio, comme le dit le titre du cadre.</li>
+</ul>
+
+<h2 id="mode-direct">Activer le mode direct</h2>
+<p>Avec cet interrupteur, chaque changement du tableau est envoyé tout de suite au contrôleur de vol, pour voir le servo bouger pendant le réglage. Ces changements ne sont pas enregistrés : il faut cliquer sur <b>Sauvegarder</b> pour les garder.</p>
+
+<h2 id="barres">Barres des servos</h2>
+<p>Le cadre <b>Servos</b> montre une barre par servo (1 à 8) avec la valeur envoyée au servo, lue toutes les 50 ms. La barre est vide à 1000 et pleine à 2000. Sans carte (mode virtuel), elle reste à 1500.</p>
+
+<h2 id="sauvegarder">Sauvegarder</h2>
+<p>Le bouton <b>Sauvegarder</b> s'active dès qu'une valeur du tableau change. Il envoie la configuration des servos et l'enregistre dans la mémoire du contrôleur de vol, sans redémarrage.</p>
+
+<h2 id="reglage">Régler un servo pas à pas</h2>
+<ol>
+  <li>Activez <b>Activer le mode direct</b>.</li>
+  <li>Réglez <b>MID</b> pour que la gouverne soit au neutre.</li>
+  <li>Bougez le manche concerné. Si la gouverne part dans le mauvais sens, mettez un <b>Taux et sens</b> négatif (par exemple « Taux : -100% »). Pour un servo qui suit une voie cochée, inversez plutôt la voie dans la radio.</li>
+  <li>Réglez <b>MIN</b> et <b>MAX</b> pour que le servo ne force pas en bout de course.</li>
+  <li>Cliquez sur <b>Sauvegarder</b>.</li>
+</ol>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

@@ -43,7 +43,7 @@ def entete(prefixe, courant):
     )
     return f"""<header class="entete">
   <div class="large">
-    <a class="marque" href="{prefixe}index.html"><img src="{prefixe}assets/img/embleme.png" alt="">TRUE<span>GLIDE</span></a>
+    <a class="marque" href="{prefixe}index.html"><img src="{prefixe}assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
     <nav aria-label="Site">
 {nav}
     </nav>

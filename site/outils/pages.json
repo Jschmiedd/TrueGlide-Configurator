@@ -65,7 +65,7 @@
       ]
     },
     {
-      "titre": "Vidéo",
+      "titre": "Vidéo et lumières",
       "pages": [
         { "slug": "osd", "titre": "OSD", "onglet": "osd", "menu": "OSD", "fichier": "src/components/tabs/OsdTab.vue", "mode": "virtuel" },
         { "slug": "emetteur-video", "titre": "Émetteur vidéo", "onglet": "vtx", "menu": "Émetteur vidéo", "fichier": "src/components/tabs/VtxTab.vue", "mode": "virtuel" },

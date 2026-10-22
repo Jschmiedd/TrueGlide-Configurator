@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Moteurs · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Moteurs (groupe « Installation du drone ») sert à choisir le mixeur et le protocole des ESC, puis à tester chaque moteur un par un pour vérifier son ordre et son sens de rotation, hélices retirées.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html" aria-current="page">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#mixer">Mixer</a></li>
+      <li><a href="#esc">Fonctionnalités ESC/Moteur</a></li>
+      <li><a href="#moteurs-3d">Fonctions ESC/Moteurs 3D</a></li>
+      <li><a href="#graphique">Graphique des vibrations</a></li>
+      <li><a href="#barres">Barres et télémétrie des moteurs</a></li>
+      <li><a href="#test-moteurs">Tester les moteurs pas à pas</a></li>
+      <li><a href="#sauvegarder">Sauvegarder et Redémarrer</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Moteurs</h1>
+<p class="chapeau">L'onglet <b>Moteurs</b> (groupe « Installation du drone ») sert à choisir le mixeur et le protocole des ESC, puis à tester chaque moteur un par un pour vérifier son ordre et son sens de rotation, <b>hélices retirées</b>.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/moteurs.webp" alt="Onglet Moteurs : cadre Mixer avec QUAD X et le schéma des 4 moteurs numérotés, cadre Fonctionnalités ESC/Moteur avec le protocole PWM_OUTPUT, cadre Fonctions ESC/Moteurs 3D, graphique du gyroscope, 4 barres moteur à 1000 avec leurs curseurs et le curseur Maître, encart rouge d'avertissement du mode test moteurs"><img class="t-clair" src="../assets/img/onglets/moteurs-clair.webp" alt="Onglet Moteurs : cadre Mixer avec QUAD X et le schéma des 4 moteurs numérotés, cadre Fonctionnalités ESC/Moteur avec le protocole PWM_OUTPUT, cadre Fonctions ESC/Moteurs 3D, graphique du gyroscope, 4 barres moteur à 1000 avec leurs curseurs et le curseur Maître, encart rouge d'avertissement du mode test moteurs">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Le simulateur n'a pas de vrais ESC : son protocole est « PWM_OUTPUT », il n'y a pas de télémétrie sous les barres, et le gyroscope, la tension et l'intensité restent à 0. Sur une vraie carte, on choisit en général un protocole DShot. Le bandeau du haut est le guide de <a href="mise-en-route.html">Mise en route</a>.</figcaption>
+</figure>
+
+<div class="encart"><b>Hélices retirées</b> pour tout ce qui fait tourner un moteur dans cet onglet : test des moteurs, « Réordonner les moteurs », « Direction du moteur ». Un moteur qui démarre avec une hélice peut blesser gravement.</div>
+
+<h2 id="mixer">Mixer</h2>
+<ul>
+  <li><b>Liste du mixeur</b> (en haut du cadre) : la forme du drone (QUAD X, HEX X, OCTO X8…), classée par ordre alphabétique. Le schéma en dessous montre la place et le numéro de chaque moteur, et son sens de rotation.</li>
+  <li><b>Sens de rotation inversé</b> : dit au contrôleur de vol que tous les moteurs tournent dans le sens inverse du schéma (« props out »). Le schéma se met à jour. Cette option ne change pas le sens réel des moteurs : pour cela, utilisez <b>Direction du moteur</b>, le logiciel de configuration des ESC, ou croisez deux fils du moteur.</li>
+  <li><b>Réordonner les moteurs</b> : visible seulement pour les mixeurs prévus (Quad X, Quad +, Hex X, Octo X8, Tricopter…) et si le firmware le permet. Après « Je comprends les risques » (<b>hélices retirées</b>, batterie branchée), l'assistant fait tourner les moteurs un par un ; vous cliquez sur l'image à l'endroit du moteur qui tourne. À la fin, vous pouvez vérifier l'ordre en cliquant sur l'image, puis <b>Enregistrer</b> (la carte redémarre) ou <b>Commencer</b> pour recommencer. L'assistant ne réordonne que les moteurs déjà actifs ; un changement plus complexe passe par la commande <code>resource</code> du <a href="cli.html">CLI</a>.</li>
+  <li><b>Direction du moteur</b> : visible seulement avec un protocole DShot. Change le sens de rotation de chaque moteur par une commande DShot. Il faut cocher « Je comprends les risques » (<b>hélices retirées</b>), puis choisir <b>Individuellement</b> (sélectionner un moteur, le tester, le mettre en « Normal » ou « Inverser ») ou <b>Assistant</b> (tous les moteurs tournent, on clique sur ceux à inverser). La batterie doit être branchée. Le sens est enregistré dans l'ESC dès la sélection. Certains ESC DShot ne répondent pas à cette fenêtre.</li>
+</ul>
+<p>Les deux boutons sont grisés tant que des réglages ne sont pas sauvegardés, ou pendant un test moteur.</p>
+
+<h2 id="esc">Fonctionnalités ESC/Moteur</h2>
+<p>Les lignes affichées dépendent du protocole choisi.</p>
+<ul>
+  <li><b>Protocole ESC/moteur</b> : le protocole entre la carte et les ESC (DSHOT150, DSHOT300, DSHOT600, PROSHOT1000, protocoles analogiques…). « DISABLED » est en tête de liste. Les protocoles absents du firmware de la carte sont grisés. Avec « DISABLED », un message orange demande de choisir un protocole.</li>
+  <li><b>Vitesse du moteur PWM séparée de la vitesse PID</b> et <b>Fréquence PWM moteur</b> (200 à 32 000) : seulement avec un protocole analogique.</li>
+  <li><b>MOTOR_STOP</b> : les moteurs ne tournent pas à l'armement. L'interrupteur est grisé quand AIRMODE est activé.</li>
+  <li><b>ESC_SENSOR</b> (DShot seulement) : télémétrie des ESC KISS/BLHeli_32 par un fil séparé.</li>
+  <li><b>DShot bi-directionnel (requiert un firmware ESC compatible)</b> (DShot seulement) : les ESC renvoient la vitesse des moteurs. Nécessaire au filtrage RPM, au ralenti dynamique, et aux fonctions de santé moteurs de l'onglet <a href="protections.html">Protections</a>.</li>
+  <li><b>Pôles moteur (nombre d'aimants sur la cloche moteur)</b> (4 à 255) : visible avec le DShot bi-directionnel ou ESC_SENSOR. C'est le nombre d'aimants sur la cloche, pas le nombre de bobines. Une valeur fausse donne une vitesse fausse.</li>
+  <li><b>Ralenti moteur (%)</b> : 0 à 20 %, par pas de 0,1. Vitesse des moteurs armés gaz en bas.</li>
+  <li><b>Valeur du ralenti dynamique [* 100 RPM]</b> : visible avec le DShot bi-directionnel. Lecture seule ici : elle se règle dans l'onglet <a href="reglages-pid.html">Réglages de PID</a>.</li>
+  <li><b>Valeur mini (valeur envoyée aux ESC machine désarmée)</b> et <b>Gaz maximum (Valeur la plus élevée envoyée aux ESC machine armée)</b> : 0 à 2000, seulement avec un protocole analogique.</li>
+</ul>
+<p>Quand on active ou coupe le DShot bi-directionnel avec le filtre RPM actif, une fenêtre « Changement des valeurs de filtrage dynamique » propose de remettre les filtres coupe-bande dynamiques aux valeurs recommandées : <b>Accepter</b> les remet, <b>Annuler</b> garde les valeurs actuelles.</p>
+
+<h2 id="moteurs-3d">Fonctions ESC/Moteurs 3D</h2>
+<ul>
+  <li><b>Mode 3D (nécessite des ESC compatibles)</b> : pour les ESC qui tournent dans les deux sens.</li>
+  <li><b>bande neutre 3D niveau bas</b> (1250 à 1600), <b>bande neutre 3D niveau haut</b> (1400 à 1750) et <b>Neutre 3D</b> (1400 à 1600) : visibles seulement en mode 3D.</li>
+</ul>
+
+<h2 id="graphique">Graphique des vibrations</h2>
+<p>En haut à droite, un graphique trace le gyroscope ou l'accéléromètre. Il sert à comparer les vibrations pendant qu'un moteur tourne (<b>hélices retirées</b>).</p>
+<ul>
+  <li><b>Gyro</b> / <b>Accel</b> : le capteur tracé. Pour l'accéléromètre, la première mesure sert de zéro.</li>
+  <li><b>Rafraîchissement</b> : 10 à 1000 ms entre deux mesures. <b>Echelle</b> : hauteur du graphique (deg/s pour le gyroscope, g pour l'accéléromètre).</li>
+  <li><b>X</b>, <b>Y</b>, <b>Z</b> : valeur actuelle de chaque axe, avec entre parenthèses la plus forte valeur vue. <b>RMS</b> : moyenne quadratique des 300 derniers points des trois axes.</li>
+  <li><b>Remise à zéro</b> : efface le graphique et les valeurs les plus fortes.</li>
+  <li><b>Tension</b>, <b>Intensité</b>, <b>Intensité consommée</b> : mesures de la batterie (voir <a href="alimentation.html">Alimentation et batterie</a>).</li>
+</ul>
+<p>Ces choix d'affichage sont gardés par le logiciel d'une session à l'autre.</p>
+
+<h2 id="barres">Barres et télémétrie des moteurs</h2>
+<ul>
+  <li><b>Barres 1, 2, 3…</b> : une barre par moteur. Pendant un test, elles montrent la valeur reçue du contrôleur de vol (1000 à 2000 en DShot). Hors test, elles affichent la valeur d'arrêt.</li>
+  <li><b>Télémétrie</b> (sous les barres) : seulement avec le DShot bi-directionnel ou ESC_SENSOR. « RPM » = vitesse du moteur ; « Err » = taux d'erreur de la télémétrie DShot, en rouge au-dessus de 1 % ; « Temp » = température de l'ESC quand il la donne.</li>
+</ul>
+
+<h2 id="test-moteurs">Tester les moteurs pas à pas</h2>
+<div class="encart"><b>Hélices retirées.</b> L'encart rouge de l'onglet le rappelle : les moteurs tournent dès qu'un curseur monte. Débrancher le câble USB peut ne pas arrêter les moteurs.</div>
+<ol>
+  <li>Retirez toutes les hélices. Branchez la batterie (un smoke stopper est conseillé pour un premier essai).</li>
+  <li>Sauvegardez d'abord vos réglages. Tant qu'un réglage n'est pas sauvegardé, le test est refusé : une fenêtre l'indique et l'interrupteur se recoupe.</li>
+  <li>Activez l'interrupteur <b>Je comprends les riques, les hélices sont retirées</b> (texte affiché tel quel par le logiciel). Cela autorise l'armement et le contrôle des moteurs, et désactive la protection Runaway Takeoff Prevention. Avec un protocole DShot, le logiciel demande aussi aux ESC d'activer la télémétrie étendue.</li>
+  <li>Montez doucement le curseur d'un seul moteur. Vérifiez sur le schéma du cadre <b>Mixer</b> que c'est le bon moteur qui tourne, et dans le bon sens.</li>
+  <li>Redescendez le curseur, puis passez au moteur suivant.</li>
+  <li>Le curseur <b>Maître</b> bouge tous les moteurs ensemble. La molette de la souris, sur un curseur, change la valeur par pas de 25.</li>
+  <li>Pour arrêter : bouton <b>Arrêter les moteurs</b> en bas, ou n'importe quelle touche du clavier, sauf les flèches haut et bas, Page préc., Page suiv., Début, Fin, Alt et Tab. La touche ne marche que dans l'onglet Moteurs.</li>
+  <li>Coupez le test (interrupteur ou <b>Arrêter les moteurs</b>) avant de changer d'onglet ou de débrancher.</li>
+</ol>
+<p>Le test se coupe aussi si un réglage change pendant le test. Si le drone est armé par la radio pendant le test, les curseurs se bloquent et reviennent à la valeur d'arrêt.</p>
+<p>Un moteur dans le mauvais sens : utilisez <b>Direction du moteur</b> (DShot), le logiciel de configuration des ESC, ou croisez deux fils du moteur. Un moteur à la mauvaise place : utilisez <b>Réordonner les moteurs</b>.</p>
+
+<h2 id="sauvegarder">Sauvegarder et Redémarrer</h2>
+<p>Le bouton <b>Sauvegarder et Redémarrer</b> s'active dès qu'un réglage change. Il coupe d'abord le test et envoie l'ordre d'arrêt à tous les moteurs, puis envoie la configuration, l'enregistre et redémarre le contrôleur de vol. Le logiciel se reconnecte ensuite.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

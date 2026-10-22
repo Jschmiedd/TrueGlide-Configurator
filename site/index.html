@@ -50,7 +50,7 @@
   .chronologie li::before { content: ""; position: absolute; left: -7px; top: 10px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
   .chronologie li.a-venir::before { background: var(--fond); border: 2px solid var(--accent); }
   .chronologie time { font: 500 14px var(--mono); color: var(--tres-doux); padding-top: 2px; }
-  .chronologie b { display: block; }
+  .chronologie div > b { display: block; }
   .chronologie span { color: var(--doux); font-size: 15px; }
 
   .docs-liens { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
@@ -71,7 +71,7 @@
 <body>
 <header class="entete">
   <div class="large">
-    <a class="marque" href="index.html"><img src="assets/img/embleme.png" alt="">TRUE<span>GLIDE</span></a>
+    <a class="marque" href="index.html"><img src="assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
     <nav aria-label="Site">
       <a href="index.html" aria-current="page">Accueil</a>
       <a href="docs/index.html">Documentation</a>
