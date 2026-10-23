@@ -849,6 +849,15 @@
     "tabTfCamera": {
         "message": "Caméra"
     },
+    "tabEsc": {
+        "message": "ESC"
+    },
+    "tfEscIntro": {
+        "message": "TrueGlide ESC Configurator (logiciel séparé, licence AGPL v3) pour régler et flasher les ESC par la carte de vol. Une seule connexion USB à la fois : TrueGlide Configurator s'est déconnecté de la carte ; connectez-vous ici avec « Connecter ». Hélices retirées."
+    },
+    "tfEscBusy": {
+        "message": "Opération en cours sur les ESC, patientez avant de quitter l'onglet ESC."
+    },
     "tabTfRadio": {
         "message": "Télémétrie radio"
     },

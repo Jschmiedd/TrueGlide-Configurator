@@ -15,6 +15,7 @@ import CliTab from "../components/tabs/CliTab.vue";
 import PowerTab from "../components/tabs/PowerTab.vue";
 import SensorsTab from "../components/tabs/SensorsTab.vue";
 import FlightPlanTab from "../components/tabs/FlightPlanTab.vue";
+import TrueGlideEscTab from "../components/tabs/TrueGlideEscTab.vue";
 import LedStripTab from "../components/tabs/LedStripTab.vue";
 import FailsafeTab from "../components/tabs/FailsafeTab.vue";
 import MotorsTab from "../components/tabs/MotorsTab.vue";
@@ -53,6 +54,7 @@ export const VueTabComponents = {
     power: PowerTab,
     sensors: SensorsTab,
     flight_plan: FlightPlanTab,
+    esc: TrueGlideEscTab,
     led_strip: LedStripTab,
     failsafe: FailsafeTab,
     motors: MotorsTab,

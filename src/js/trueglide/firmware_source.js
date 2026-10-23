@@ -12,7 +12,9 @@
  */
 export const TRUEGLIDE_FIRMWARE_URL = "https://jschmiedd.github.io/TrueGlide-Configurator/firmware/";
 // The test build of the app (/test/) reads its own list, so firmwares can be tried before /app/ offers them
-export const TRUEGLIDE_FIRMWARE_TEST_URL = "https://jschmiedd.github.io/TrueGlide-Configurator/firmware-test/";
+// Liste lue par la page d'essai /test/ : la liste officielle depuis la publication du 23/10/2026 (firmware-test/ retiré).
+// Remettre une adresse d'essai ici le jour où une liste d'essai est publiée à côté de la liste officielle.
+export const TRUEGLIDE_FIRMWARE_TEST_URL = TRUEGLIDE_FIRMWARE_URL;
 const TEST_APP_PATH = "/TrueGlide-Configurator/test/";
 
 // Autre adresse (essais, serveur local) : localStorage « tf_update_url » (sans le mot « firmware », que main.js efface

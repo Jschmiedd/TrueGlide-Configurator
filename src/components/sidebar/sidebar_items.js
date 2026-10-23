@@ -32,6 +32,9 @@ export const sidebarItems = [
     },
     { key: "power", mode: "connected", i18n: "tabPower", icon: "i-lucide-battery", group: "sidebarGroupSetup" },
     { key: "motors", mode: "connected", i18n: "tabMotorTesting", icon: "i-lucide-fan", group: "sidebarGroupSetup" },
+    // TrueGlide: TrueGlide ESC Configurator in a tab (separate public software, fixed version). Shared: the
+    // Configurator disconnects from the board when it is opened, the ESC tab then connects by itself.
+    { key: "esc", mode: "shared", i18n: "tabEsc", icon: "i-lucide-cpu", group: "sidebarGroupSetup" },
     {
         key: "servos",
         mode: "connected",

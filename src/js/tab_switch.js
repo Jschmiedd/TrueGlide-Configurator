@@ -6,6 +6,7 @@ import { set as setConfig } from "./ConfigStorage.js";
 import { checkSetupAnalytics } from "./Analytics.js";
 import { mountVueTab, vueTabState } from "./vue_tab_mounter.js";
 import { sidebarItems } from "../components/sidebar/sidebar_items.js";
+import { requestEscRelease } from "./trueglide/esc_tab.js";
 
 function defaultLabel(tabKey) {
     const item = sidebarItems.find((i) => (i.tab ?? i.key) === tabKey);
@@ -29,15 +30,16 @@ function canSwitchTab(requiresConnection) {
 }
 
 function handleDisallowedTab(tabKey, tabLabel) {
-    if (tabKey !== "firmware_flasher") {
+    if (tabKey !== "firmware_flasher" && tabKey !== "esc") {
         gui_log(i18n.getMessage("tabSwitchUpgradeRequired", [tabLabel]));
         return;
     }
     if (GUI.connected_to || GUI.connecting_to) {
-        GUI.pendingTab = "firmware_flasher";
+        // TrueGlide: one USB connection at a time; the ESC tab connects by itself once the board is free
+        GUI.pendingTab = tabKey;
         import("./serial_backend.js").then(({ connectDisconnect }) => connectDisconnect());
     } else {
-        switchTab("firmware_flasher", { mode: "disconnected", label: tabLabel });
+        switchTab(tabKey, { mode: "disconnected", label: tabLabel });
     }
 }
 
@@ -50,6 +52,18 @@ export function switchTab(tabKey, options = {}) {
     // old tab, and refusing to remount would leave it blank.
     const alreadyMounted = GUI.active_tab === tabKey && vueTabState.activeTabName === tabKey;
     if (alreadyMounted || GUI.tab_switch_in_progress) {
+        return false;
+    }
+
+    // TrueGlide: leave the ESC tab only once it has released the USB port (never during an ESC flash)
+    if (GUI.active_tab === "esc" && tabKey !== "esc" && !options.escReleased) {
+        requestEscRelease().then((result) => {
+            if (result === "busy") {
+                gui_log(i18n.getMessage("tfEscBusy"));
+            } else {
+                switchTab(tabKey, { ...options, escReleased: true });
+            }
+        });
         return false;
     }
 

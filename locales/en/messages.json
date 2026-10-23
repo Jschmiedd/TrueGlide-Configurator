@@ -846,6 +846,15 @@
     "tabTfCamera": {
         "message": "Camera"
     },
+    "tabEsc": {
+        "message": "ESC"
+    },
+    "tfEscIntro": {
+        "message": "TrueGlide ESC Configurator (separate software, AGPL v3 license) to set up and flash the ESCs through the flight controller. One USB connection at a time: TrueGlide Configurator has disconnected from the board; connect here with \"Connect\". Props off."
+    },
+    "tfEscBusy": {
+        "message": "Operation in progress on the ESCs, wait before leaving the ESC tab."
+    },
     "tabTfRadio": {
         "message": "Radio telemetry"
     },

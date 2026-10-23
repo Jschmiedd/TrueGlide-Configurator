@@ -28,6 +28,7 @@ import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
 import { ispConnected } from "./utils/connection";
 import { unmountVueTab } from "./vue_tab_mounter";
+import { isEscTabHoldingPort, requestEscRelease } from "./trueglide/esc_tab.js";
 import { switchTab } from "./tab_switch";
 import { useConnectionStore } from "../stores/connection";
 import { useDialogStore } from "../stores/dialog";
@@ -487,6 +488,18 @@ export function connectDisconnect() {
         return;
     }
 
+    // TrueGlide: the ESC tab holds the USB port; ask it to release it first (refused during an ESC flash)
+    if (GUI.active_tab === "esc" && isEscTabHoldingPort()) {
+        requestEscRelease().then((result) => {
+            if (result === "busy") {
+                gui_log(i18n.getMessage("tfEscBusy"));
+            } else {
+                connectDisconnect();
+            }
+        });
+        return;
+    }
+
     // The flasher owns the port while FLASHING; hard-block connect/disconnect
     // (defence-in-depth alongside connect_lock, for flows that grab the raw port).
     // FLASHING is cleared by the flasher's exits and, as a safety net, by
@@ -566,7 +579,7 @@ function teardownConnectionUi() {
     // or switchTab silently rejects the disconnected tab.
     const pendingTab = GUI.pendingTab;
     GUI.pendingTab = null;
-    const target = pendingTab === "firmware_flasher" ? "firmware_flasher" : "landing";
+    const target = pendingTab === "firmware_flasher" || pendingTab === "esc" ? pendingTab : "landing";
 
     // Only unmount when actually leaving the current tab: a repeated teardown (disconnect
     // burst) already sits on the destination, and unmounting there blanks the content
