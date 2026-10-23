@@ -128,14 +128,17 @@
 <p>Dans <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>, rien ne change en vol tant qu'aucun mode de navigation n'est placé sur un interrupteur.</p>
 
 <h2 id="cartes-publiees">Cartes publiées</h2>
-<p>La mise à jour en ligne propose aujourd'hui deux cartes, chacune dans les trois modèles (version 2026.6.2, révision 014242092, publiée le 13 octobre 2026) :</p>
+<p>La mise à jour en ligne propose <b>TRUEGLIDE</b> pour 621 cartes (version 2026.6.2, révision 1791465a6, compilée le 22 octobre 2026). Trois cartes ont aussi <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b> en ligne :</p>
 <div class="tableau"><table>
-  <thead><tr><th>Carte</th><th>Processeur</th><th>Modèles</th></tr></thead>
+  <thead><tr><th>Carte</th><th>Processeur</th><th>Modèles en ligne</th></tr></thead>
   <tbody>
     <tr><td>SPEEDYBEEF405MINI</td><td>STM32F405</td><td><b>TRUEGLIDE</b>, <b>TRUENAV</b>, <b>TRUENAV_LIGHT</b></td></tr>
     <tr><td>TMOTORVELOXF7SE</td><td>STM32F722</td><td><b>TRUEGLIDE</b>, <b>TRUENAV</b>, <b>TRUENAV_LIGHT</b></td></tr>
+    <tr><td>SEQUREH7V2</td><td>STM32H743</td><td><b>TRUEGLIDE</b>, <b>TRUENAV</b>, <b>TRUENAV_LIGHT</b></td></tr>
+    <tr><td>618 autres cartes</td><td>F405, F411, F722, F745, G474, H7, AT32F435…</td><td><b>TRUEGLIDE</b></td></tr>
   </tbody>
 </table></div>
+<p><b>TRUENAV</b> (606 cartes) et <b>TRUENAV_LIGHT</b> (611 cartes) des autres cartes se téléchargent en fichiers .hex sur la page <a href="https://github.com/Jschmiedd/Firmware-TrueGlide/releases">Releases</a> du dépôt du firmware (versions <code>essai-1791465a6-TRUENAV</code> et <code>essai-1791465a6-TRUENAV_LIGHT</code>), puis se chargent avec <b>Charger un firmware TrueGlide (.hex)</b>. Sur quelques cartes à petite mémoire, ils ne tiennent pas : utiliser <b>TRUEGLIDE</b>. Compilé ne veut pas dire essayé : aucune de ces cartes n'a encore volé avec TrueGlide.</p>
 <p>Pour une autre carte, le fichier .hex se construit à partir du code source du firmware (dépôt Firmware-TrueGlide sur GitHub : onglet <b>Actions</b>, flux <b>TrueGlide</b>, <b>Run workflow</b> avec le nom de la carte ; ou <code>make CONFIG=NOM_DE_LA_CARTE</code> sur un PC Linux, avec <code>MODELE=TRUENAV</code> ou <code>MODELE=TRUENAV_LIGHT</code> pour les dérivés). Le nom de la carte est le même que dans Betaflight.</p>
 
 <h2 id="sauvegarder">1. Sauvegarder l'ancienne configuration</h2>

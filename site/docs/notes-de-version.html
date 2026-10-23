@@ -155,12 +155,13 @@
   <li><a href="assistant-de-reglage.html">Assistant de réglage</a> : PID et filtres calculés selon le drone.</li>
   <li><a href="flasher-le-firmware.html">Flasher le Firmware</a> simplifié : fichier .hex local ou mise à jour en ligne vérifiée par somme SHA-256, contrôle du nom du fichier avant le flash.</li>
   <li><a href="memo-wiki.html">Mémo &amp; Wiki</a> en français, lisible sans Internet. Application installable, utilisable hors ligne.</li>
+  <li>23 octobre : onglet <a href="speeder.html">Speeder</a> avec le schéma du V2V 3", onglet <a href="installation.html">Installation</a> en deux vues (Profil et Dessus, numéros des moteurs), environ 40 textes corrigés, <b>TRUENAV_LIGHT</b> reconnu sur la carte, bouton d'assistance du CLI retiré (aucune donnée envoyée aux serveurs de Betaflight).</li>
 </ul>
 
 <h2 id="verifications">Vérifications faites</h2>
 <ul>
   <li>Tests unitaires Betaflight + TrueGlide : 70 suites, en mode strict.</li>
-  <li>Construction pour 42 cartes courantes (F405, F411, F722, F745, H743, AT32F435) et pour le simulateur.</li>
+  <li>Construction pour 42 cartes courantes (F405, F411, F722, F745, H743, AT32F435) et pour le simulateur ; puis, le 22 octobre, compilation de toutes les cartes : <b>TRUEGLIDE</b> 621, <b>TRUENAV</b> 606, <b>TRUENAV_LIGHT</b> 611 (les autres ne tiennent pas en mémoire ; cartes RP2350 et simulateur exclus).</li>
   <li>Simulateur, modèles de navigation : banc de missions de Betaflight, 19 scénarios sur 19 réussis (missions, décollage, atterrissage, orbite, perte radio, zone de vol, GPS RESCUE).</li>
   <li>Simulateur : réglages TrueGlide acceptés et sauvegardés, mode SPEEDER annoncé au logiciel, transition suivie.</li>
   <li>Santé moteurs : logique rejouée sur les journaux de 26 vols réels d'un quad de test (journaux non publiés) ; elle intervient sur chaque calage et jamais sur les vols sains. Ce rejeu ne montre pas ce que le drone aurait fait ensuite.</li>
@@ -176,7 +177,7 @@
 </ul>
 
 <h2 id="publication">Firmwares publiés</h2>
-<p>La mise à jour en ligne propose la révision 014242092 (13 octobre 2026) pour deux cartes, SPEEDYBEEF405MINI et TMOTORVELOXF7SE, chacune en <b>TRUEGLIDE</b>, <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>
+<p>La mise à jour en ligne propose la révision 1791465a6 (22 octobre 2026) : <b>TRUEGLIDE</b> pour 621 cartes, et les trois modèles pour SPEEDYBEEF405MINI, TMOTORVELOXF7SE et SEQUREH7V2. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>
   </article>
 </div>
 
