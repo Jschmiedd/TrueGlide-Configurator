@@ -479,6 +479,45 @@ const root = {};
       avert.push(tr('Rapport poussée / poids très différent de la référence de cette taille : correction plafonnée à ± 20 %.',
         'Thrust-to-weight ratio very different from the reference for this size: correction capped at ± 20 %.'));
     }
+    // Données calculées par le calculateur TALKTRUE FPV XRIG (poussée max par moteur, courant au stationnaire), si le
+    // pilote choisit de régler avec elles. La correction des PID reste sur l'estimation : elle compare le drone à des
+    // drones de référence dont seule l'estimation existe, et une poussée calculée d'un seul côté fausserait la comparaison.
+    var calc = e.calcul || {}, rapportCalcule = null, gazStationnaire = null;
+    if (e.base === 'calcul') {
+      if (calc.pousseeG > 0) {
+        rapportCalcule = ch.porteurs * ch.rendement * calc.pousseeG / e.masse;
+        notes.push(tr('Données du calculateur : rapport poussée / poids ' + rapportCalcule.toFixed(1).replace('.', ',') + ' (' + ch.porteurs + ' × ' + calc.pousseeG + ' g' +
+          (ch.rendement < 1 ? ', perte coaxiale de 20 % comprise' : '') + '). La correction des PID reste sur l\'estimation : elle compare ton drone à des drones de référence ' +
+          'dont on n\'a que l\'estimation, et mélanger les deux méthodes fausserait la comparaison.',
+          'Calculator data: thrust-to-weight ratio ' + rapportCalcule.toFixed(1) + ' (' + ch.porteurs + ' × ' + calc.pousseeG + ' g' +
+          (ch.rendement < 1 ? ', 20 % coaxial loss included' : '') + '). The PID correction stays on the estimate: it compares your quad with reference quads ' +
+          'known only by estimate, and mixing both methods would distort the comparison.'));
+        if (rapportCalcule < 2) {
+          avert.push(tr('Rapport poussée / poids calculé sous 2 : le drone manque de réserve pour se rattraper, et pour les maintiens d\'altitude ou de position.',
+            'Calculated thrust-to-weight ratio below 2: the quad lacks reserve to recover, and for altitude or position hold.'));
+        }
+        // Gaz de stationnaire : poussée proportionnelle au carré de la commande moteur, ralenti moteur par défaut 5,5 % (motor_idle = 550).
+        // Estimation à vérifier dans le journal (gaz moyens en stationnaire).
+        var commande = Math.sqrt(e.masse / (ch.porteurs * ch.rendement * calc.pousseeG));
+        var ralenti = 0.055;
+        gazStationnaire = Math.round(clamp(1000 + 1000 * (commande - ralenti) / (1 - ralenti), 1100, 1700));
+        // le réglage existe dans tous les firmwares ; il ne sert que là où les maintiens existent
+        set('ap_hover_throttle', gazStationnaire, tr('Gaz de stationnaire tiré de la poussée calculée (estimation) : point de départ des maintiens d\'altitude et de position et du retour GPS ' +
+          '(TRUENAV, ou TRUEGLIDE sur les cartes à 1 Mo et plus). À vérifier dans le journal du premier vol (gaz moyens en stationnaire).',
+          'Hover throttle from the calculated thrust (estimate): starting point for altitude and position hold and GPS rescue ' +
+          '(TRUENAV, or TRUEGLIDE on 1 MB and larger boards). Check it in the first flight log (average hover throttle).'));
+      } else {
+        avert.push(tr('Réglage avec les données du calculateur demandé, mais pas de poussée calculée : estimations de Studio utilisées.',
+          'Tuning with the calculator data requested, but no calculated thrust: Studio estimates used.'));
+      }
+      if (calc.courantStationnaireA > 0 && e.courantEsc > 0) {
+        var parMoteur = calc.courantStationnaireA / ch.porteurs;
+        if (parMoteur > 0.5 * e.courantEsc) {
+          avert.push(tr('Courant au stationnaire calculé ' + calc.courantStationnaireA + ' A, soit ' + parMoteur.toFixed(1).replace('.', ',') + ' A par moteur : plus de la moitié du calibre des ESC (' + e.courantEsc + ' A). Peu de réserve, risque de chauffe.',
+            'Calculated hover current ' + calc.courantStationnaireA + ' A, i.e. ' + parMoteur.toFixed(1) + ' A per motor: more than half the ESC rating (' + e.courantEsc + ' A). Little reserve, risk of overheating.'));
+        }
+      }
+    }
     notes.push(tr('Premier vol : stationnaire 30 s, atterrir, toucher les moteurs. Tièdes : monter le curseur maître de 5. ' +
       'Chauds ou bruit aigu : baisser le filtre (curseur gyro) ou le maître. Oscillations lentes : baisser le maître de 10.',
       'First flight: hover for 30 s, land, touch the motors. Warm: raise the master slider by 5. ' +
@@ -496,7 +535,10 @@ const root = {};
         // puissance relative à la référence de même taille (estimation) : +20 % = 20 % plus puissant
         puissanceRelative: twRef ? Math.round((tw / twRef - 1) * 100) : null,
         facteur: Math.round(facteur * 100) / 100,
-        extrapole: extrapole
+        extrapole: extrapole,
+        // données du calculateur, si le pilote règle avec elles
+        rapportCalcule: rapportCalcule === null ? null : Math.round(rapportCalcule * 10) / 10,
+        gazStationnaire: gazStationnaire
       },
       sources: REFERENCES.filter(function (r) { return Math.abs(r.pouces - e.pouces) <= 3; })
         .reduce(function (a, r) { return a.concat(r.sources); }, [])
