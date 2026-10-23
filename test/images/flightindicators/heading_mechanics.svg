@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="400.667px" height="400.666px" viewBox="0 0 400.667 400.666" enable-background="new 0 0 400.667 400.666"
+	 xml:space="preserve">
+<filter  filterUnits="objectBoundingBox" id="AI_Shadow_1">
+	<feGaussianBlur  stdDeviation="5" result="blur" in="SourceAlpha"></feGaussianBlur>
+	<feOffset  dy="0" dx="0" result="offsetBlurredAlpha" in="blur"></feOffset>
+	<feMerge>
+		<feMergeNode  in="offsetBlurredAlpha"></feMergeNode>
+		<feMergeNode  in="SourceGraphic"></feMergeNode>
+	</feMerge>
+</filter>
+<g filter="url(#AI_Shadow_1)">
+	<!-- TrueGlide: quad X seen from above, front up (rear props red) -->
+	<g stroke="#C6F700" stroke-linecap="round" fill="none"><line x1="152" y1="152" x2="248" y2="248" stroke-width="10"/><line x1="248" y1="152" x2="152" y2="248" stroke-width="10"/></g>
+	<circle cx="152" cy="152" r="26" fill="none" stroke="#C6F700" stroke-width="5"/><circle cx="152" cy="152" r="8" fill="#C6F700"/>
+	<circle cx="248" cy="152" r="26" fill="none" stroke="#C6F700" stroke-width="5"/><circle cx="248" cy="152" r="8" fill="#C6F700"/>
+	<circle cx="152" cy="248" r="26" fill="none" stroke="#FF2A00" stroke-width="5"/><circle cx="152" cy="248" r="8" fill="#FF2A00"/>
+	<circle cx="248" cy="248" r="26" fill="none" stroke="#FF2A00" stroke-width="5"/><circle cx="248" cy="248" r="8" fill="#FF2A00"/>
+	<rect x="182" y="176" width="36" height="50" rx="9" fill="#1B1D20" stroke="#C6F700" stroke-width="5"/>
+	<circle cx="200" cy="186" r="5" fill="#C6F700"/>
+	<polygon fill="#C6F700" points="200,128 188,146 212,146"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FF2A00" points="200.381,332.311 194.542,344.439 206.542,344.439 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FFFFFF" points="294.272,294.239 298.743,307.01 307.272,298.481 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FFFFFF" points="105.938,294.771 94.146,298.898 102.02,306.771 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FF2A00" points="68.291,200.382 56.291,194.604 56.291,206.477 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FFFFFF" points="106.001,106.041 101.801,94.041 93.787,102.055 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FFFFFF" points="294.731,105.894 306.519,101.767 298.646,93.894 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FF2A00" points="332.311,200.285 344.44,206.125 344.441,194.125 	"/>
+</g>
+<g filter="url(#AI_Shadow_1)">
+	<polygon fill="#FF2A00" points="200.619,68.022 206.458,55.893 194.458,55.892 	"/>
+</g>
+</svg>
