@@ -2,225 +2,232 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TrueGlide</title>
-<meta name="description" content="Configurateur open source et interface graphique multiplateforme pour paramétrer le firmware TrueGlide du contrôleur de vol, compatible Betaflight.">
-<link rel="icon" href="images/logo-rond-3.png">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TRUEGLIDE · firmware et logiciel de vol</title>
+<meta name="description" content="TRUEGLIDE : firmware de contrôleur de vol basé sur Betaflight 2026.6.2, avec des protections, le mode SPEEDER et la navigation GPS, et son logiciel TrueGlide Configurator en français.">
+<link rel="icon" href="assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="assets/site.css">
 <style>
-:root {
-  --bg: #f6f7f3;
-  --surface: #ffffff;
-  --text: #1b1d1f;
-  --muted: #50555b;
-  --line: #dfe2da;
-  --accent: #4f6b00;
-  --accent-text: #ffffff;
-  --accent-soft: #eef4d9;
-  --warn-bg: #fff6e5;
-  --warn-text: #6b4300;
-  --logo-dark: none;
-  --logo-light: block;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #111214;
-    --surface: #1b1d20;
-    --text: #eceee8;
-    --muted: #a5aaa0;
-    --line: #2c2f33;
-    --accent: #c6f700;
-    --accent-text: #111214;
-    --accent-soft: #252b12;
-    --warn-bg: #2e2510;
-    --warn-text: #f3d48a;
-    --logo-dark: block;
-    --logo-light: none;
+  /* Accueil : bandeau d'ouverture sur fond graphite (les deux thèmes), puis sections de lecture */
+  .ouverture { background: #121212; color: #ececea; border-bottom: 3px solid #c6f700; }
+  .ouverture .large { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 36px; align-items: center; padding-block: 56px 48px; }
+  .ouverture .logo { width: min(560px, 100%); display: block; margin-bottom: 22px; }
+  .ouverture h1 { font-size: clamp(30px, 4.4vw, 46px); margin: 0 0 14px; color: #ffffff; }
+  .ouverture p { color: #b9bbb4; font-size: 18px; max-width: 34em; margin: 0 0 22px; }
+  .ouverture .boutons { display: flex; gap: 12px; flex-wrap: wrap; }
+  .ouverture .btn { color: #ececea; border-color: #3a3b37; }
+  .ouverture .btn.plein { background: #c6f700; border-color: #c6f700; color: #121212; }
+  .ouverture figure { margin: 0; }
+  .ouverture figure img { border-radius: 10px; border: 1px solid #2f302d; display: block; }
+  .ouverture figcaption { font-size: 13px; color: #8d8f88; margin-top: 8px; }
+  .etat { display: flex; gap: 10px 26px; flex-wrap: wrap; margin-top: 26px; font: 500 14px var(--mono); color: #c6f700; }
+  .etat span::before { content: "■ "; color: #5d6e14; }
+
+  section.bloc { padding-block: 56px 8px; }
+  section.bloc > .large > h2 { font-size: 32px; margin: 0 0 6px; }
+  .sous { color: var(--doux); margin: 0 0 26px; max-width: 46em; }
+  .fonctions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+  .fonction { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 18px 18px 14px; min-width: 0; }
+  .fonction h3 { font-size: 20px; margin: 0 0 6px; }
+  .fonction p { margin: 0 0 10px; color: var(--doux); font-size: 15px; }
+  .fonction .chiffre { font: 500 13.5px var(--mono); color: var(--accent); }
+
+  .ecrans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+  .ecrans figure { margin: 0; min-width: 0; }
+  .ecrans img { border-radius: 10px; border: 1px solid var(--bord); display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; }
+  .ecrans figcaption { margin-top: 8px; font-size: 14.5px; color: var(--doux); }
+  .ecrans figcaption b { color: var(--texte); }
+
+  .telecharger { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
+  .carte-dl { background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 20px; min-width: 0; }
+  .carte-dl h3 { margin: 0 0 4px; font-size: 22px; }
+  .carte-dl .version { font: 500 14px var(--mono); color: var(--accent); overflow-wrap: anywhere; }
+  .carte-dl ul { padding-left: 18px; margin: 10px 0 14px; color: var(--doux); }
+
+  .chronologie { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; border-left: 2px solid var(--bord); }
+  .chronologie li { position: relative; padding: 4px 0 18px 22px; display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 12px; }
+  .chronologie li::before { content: ""; position: absolute; left: -7px; top: 10px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); }
+  .chronologie li.a-venir::before { background: var(--fond); border: 2px solid var(--accent); }
+  .chronologie time { font: 500 14px var(--mono); color: var(--tres-doux); padding-top: 2px; }
+  .chronologie div > b { display: block; }
+  .chronologie span { color: var(--doux); font-size: 15px; }
+
+  .docs-liens { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .docs-liens a { display: block; background: var(--carte); border: 1px solid var(--bord); border-radius: 10px; padding: 16px 18px; text-decoration: none; color: var(--texte); }
+  .docs-liens a:hover { border-color: var(--accent); }
+  .docs-liens a span { display: block; color: var(--doux); font-size: 14.5px; margin-top: 4px; }
+
+  @media (max-width: 900px) {
+    .ouverture .large, .telecharger, .ecrans, .docs-liens { grid-template-columns: minmax(0, 1fr); }
+    .fonctions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
-}
-:root[data-theme="dark"] {
-  --bg: #111214; --surface: #1b1d20; --text: #eceee8; --muted: #a5aaa0; --line: #2c2f33;
-  --accent: #c6f700; --accent-text: #111214; --accent-soft: #252b12; --warn-bg: #2e2510; --warn-text: #f3d48a;
-  --logo-dark: block; --logo-light: none;
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.55;
-}
-a { color: var(--accent); }
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
-header.hero { padding: 56px 0 40px; border-bottom: 1px solid var(--line); }
-.logo { width: min(420px, 100%); height: auto; }
-.logo.dark { display: var(--logo-dark); }
-.logo.light { display: var(--logo-light); }
-.hero h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.2; margin: 24px 0 12px; max-width: 820px; }
-.hero p.lead { font-size: 1.1rem; color: var(--muted); max-width: 760px; margin: 0 0 24px; }
-.cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 0 0 24px; color: var(--muted); font-size: .92rem; }
-.btn { display: inline-block; background: var(--accent); color: var(--accent-text); font-weight: 700; text-decoration: none; padding: 10px 20px; border-radius: 10px; }
-.badges { display: flex; flex-wrap: wrap; gap: 8px; }
-.badge { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 12px; font-size: .9rem; }
-section { padding: 48px 0; border-bottom: 1px solid var(--line); }
-section h2 { font-size: 1.5rem; margin: 0 0 8px; }
-section p.intro { color: var(--muted); margin: 0 0 24px; max-width: 760px; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-.card h3 { margin: 0 0 6px; font-size: 1.05rem; }
-.card p { margin: 0; color: var(--muted); font-size: .95rem; }
-.card.product { border: 2px solid var(--accent); }
-.shot { margin: 0 0 32px; }
-.shot img { width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); display: block; }
-.shot figcaption { color: var(--muted); font-size: .92rem; margin-top: 8px; }
-.split { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
-.split img.phone { max-width: 320px; width: 100%; }
-@media (max-width: 760px) { .split { grid-template-columns: 1fr; } }
-.note { background: var(--warn-bg); color: var(--warn-text); border-radius: 12px; padding: 14px 16px; }
-ul.plain { margin: 0; padding-left: 20px; }
-ul.plain li { margin: 4px 0; }
-footer { padding: 32px 0 48px; color: var(--muted); font-size: .9rem; }
-.tag { display: inline-block; font-size: .78rem; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--text); margin-left: 6px; vertical-align: middle; }
+  @media (max-width: 560px) {
+    .fonctions { grid-template-columns: minmax(0, 1fr); }
+    .chronologie li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  }
 </style>
 </head>
 <body>
-
-<header class="hero">
-  <div class="wrap">
-    <img class="logo dark" src="images/logo-sombre-4.png" alt="TrueGlide, Control &amp; Fly">
-    <img class="logo light" src="images/logo-clair-4.png" alt="TrueGlide, Control &amp; Fly">
-    <h1>Réglages Optimisés pour chaque Build.</h1>
-    <p class="lead">Configurateur open source et interface graphique multiplateforme pour paramétrer le firmware TrueGlide
-      du contrôleur de vol, compatible Betaflight. Paramètres calculés, expliqués, vérifiés. Utilisable hors ligne sur
-      le terrain, mémo et wiki en français.</p>
-    <p class="cta"><a class="btn" href="app/">Ouvrir le logiciel</a>
-      <span>Chrome ou Edge, sur ordinateur ; bouton « Installer » de la barre d'adresse pour l'utiliser sans Internet.</span></p>
-    <div class="badges">
-      <span class="badge">Hors ligne sur le terrain</span>
-      <span class="badge">Mémo et wiki en français</span>
-      <span class="badge">Compatible Betaflight</span>
-      <span class="badge">Quad X · Hexa · X8</span>
-    </div>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="index.html"><img src="assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="index.html" aria-current="page">Accueil</a>
+      <a href="docs/index.html">Documentation</a>
+      <a href="#telecharger">Télécharger</a>
+      <a href="#essais">Essais</a>
+    </nav>
   </div>
 </header>
 
-<section>
-  <div class="wrap">
+<section class="ouverture">
+  <div class="large">
+    <div>
+      <img class="logo" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
+      <h1>Le pilotage de Betaflight, avec des protections et la navigation en plus.</h1>
+      <p><b>TRUEGLIDE</b> est un firmware de contrôleur de vol basé sur Betaflight 2026.6.2. Il ajoute une protection contre la surchauffe, la relance des moteurs, le mode SPEEDER et, dans <b>TRUENAV</b>, les missions GPS. Sans réglage, il vole exactement comme Betaflight. Le logiciel TrueGlide Configurator le règle en français.</p>
+      <div class="boutons">
+        <a class="btn plein" href="#telecharger">Télécharger la 2026.6.2</a>
+        <a class="btn" href="docs/index.html">Documentation</a>
+      </div>
+      <div class="etat"><span>version 2026.6.2</span><span>premier vol : pas encore fait</span><span>essais : simulateur</span></div>
+    </div>
+    <figure>
+      <img src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
+      <figcaption>Le tableau de bord du logiciel, connecté au firmware <b>TRUEGLIDE</b> qui tourne en simulateur sur PC.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="bloc">
+  <div class="large">
+    <h2>Ce que fait TRUEGLIDE</h2>
+    <p class="sous">Tout est désactivé par défaut : chaque ajout ne fait rien tant qu'on ne l'active pas. Les chiffres ci-dessous sont lus dans le code ou mesurés ; aucun n'est encore mesuré en vol réel.</p>
+    <div class="fonctions">
+      <div class="fonction">
+        <h3>Protection anti-surchauffe</h3>
+        <p>Limite les gaz si un ESC chauffe trop ou si le courant de la batterie dépasse une limite. Les corrections PID ne sont jamais limitées.</p>
+        <div class="chiffre">relâche la limite à 25 %/s (code)</div>
+      </div>
+      <div class="fonction">
+        <h3>Mode SPEEDER</h3>
+        <p>Pour les speeders qui décollent fuselage vertical : le nez descend progressivement jusqu'à l'angle de croisière, en mode ANGLE.</p>
+        <div class="chiffre">0 → 30° en 0,5 s (simulateur)</div>
+      </div>
+      <div class="fonction">
+        <h3>Santé des moteurs</h3>
+        <p>Relance un moteur désynchronisé ou calé, et garde une vitesse juste pour le filtre RPM quand la télémétrie DShot se perd.</p>
+        <div class="chiffre">désactivée par défaut</div>
+      </div>
+      <div class="fonction">
+        <h3>Navigation GPS (TRUENAV)</h3>
+        <p>Missions par points, maintien d'altitude et de position, retour à la maison, zone de vol, missions envoyées par MAVLink.</p>
+        <div class="chiffre">19 scénarios sur 19 réussis (simulateur)</div>
+      </div>
+      <div class="fonction">
+        <h3>Les cartes de Betaflight</h3>
+        <p><b>TRUEGLIDE</b> se compile pour les cartes de Betaflight. Les firmwares publiés s'installent depuis le logiciel, avec contrôle de l'empreinte.</p>
+        <div class="chiffre">621 cartes compilées · non testées en vol</div>
+      </div>
+      <div class="fonction">
+        <h3>Logiciel en français</h3>
+        <p>TrueGlide Configurator : mise en route guidée, assistant de réglage, onglets TrueGlide, et une page de documentation par onglet.</p>
+        <div class="chiffre">34 onglets documentés</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloc">
+  <div class="large">
     <h2>Le logiciel</h2>
-    <p class="intro">Tout ce qu'il faut pour préparer un drone, sans chercher dans quinze onglets.</p>
-    <div class="grid">
-      <div class="card"><h3>Tableau de bord</h3><p>À la connexion : batterie, liaison radio, GPS, et ce qui empêche
-        d'armer, raison par raison.</p></div>
-      <div class="card"><h3>Mise en route guidée</h3><p>Neuf étapes, de l'installation aux fonctions TrueGlide, avec ce
-        qu'il faut vérifier à chaque étape.</p></div>
-      <div class="card"><h3>Assistant de réglage</h3><p>PID, filtres et ralenti calculés selon le drone : hélices, moteurs,
-        batterie, masse, ESC, châssis. Chaque valeur est expliquée et vérifiée avant d'être écrite.</p></div>
-      <div class="card"><h3>Analyse de configuration</h3><p>Relit la carte et signale ce qui ne va pas avec le matériel
-        déclaré.</p></div>
-      <div class="card"><h3>Sauvegarde en un clic</h3><p>La configuration complète de la carte dans un fichier texte,
-        avant toute modification.</p></div>
-      <div class="card"><h3>Sombre ou clair</h3><p>Thème sombre, clair ou automatique ; utilisable sur ordinateur et sur
-        un écran de téléphone.</p></div>
+    <p class="sous">TrueGlide Configurator s'ouvre dans Chrome ou Edge, sans rien installer. Captures du vrai logiciel, connecté au simulateur.</p>
+    <div class="ecrans">
+      <figure>
+        <img class="t-sombre" src="assets/img/onglets/installation.webp" alt="Onglet Installation : modèle 3D du drone"><img class="t-clair" src="assets/img/onglets/installation-clair.webp" alt="Onglet Installation : modèle 3D du drone">
+        <figcaption><b>Installation</b> : le drone en 3D suit la carte, vu de profil ou de dessus.</figcaption>
+      </figure>
+      <figure>
+        <img class="t-sombre" src="assets/img/onglets/speeder.webp" alt="Onglet Speeder : réglages et schéma du speeder"><img class="t-clair" src="assets/img/onglets/speeder-clair.webp" alt="Onglet Speeder : réglages et schéma du speeder">
+        <figcaption><b>Speeder</b> : le schéma suit l'angle de croisière saisi.</figcaption>
+      </figure>
+      <figure>
+        <img class="t-sombre" src="assets/img/onglets/assistant-de-reglage.webp" alt="Onglet Assistant de réglage"><img class="t-clair" src="assets/img/onglets/assistant-de-reglage-clair.webp" alt="Onglet Assistant de réglage">
+        <figcaption><b>Assistant de réglage</b> : un réglage de départ selon le drone, chaque valeur expliquée.</figcaption>
+      </figure>
+      <figure>
+        <img class="t-sombre" src="assets/img/onglets/protections.webp" alt="Onglet Protections"><img class="t-clair" src="assets/img/onglets/protections-clair.webp" alt="Onglet Protections">
+        <figcaption><b>Protections</b> : surchauffe, courant et santé des moteurs.</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <h2>En images</h2>
-    <p class="intro">Captures du logiciel connecté au simulateur de vol.</p>
-    <figure class="shot"><img src="images/tableau-de-bord-3.png" alt="Tableau de bord : batterie, liaison radio, GPS, armement, fonctions TrueGlide, mise en route et raccourcis" loading="lazy">
-      <figcaption>Le tableau de bord, ouvert à la connexion.</figcaption></figure>
-    <figure class="shot"><img src="images/assistant-3.png" alt="Assistant de réglage : description du drone et réglage proposé" loading="lazy">
-      <figcaption>L'Assistant de réglage : on décrit le drone, il propose et explique le réglage.</figcaption></figure>
-    <div class="split">
-      <figure class="shot"><img src="images/moteurs-x8-3.png" alt="Onglet Moteurs avec un X8 et ses 8 moteurs" loading="lazy">
-        <figcaption>X8 coaxial : les 8 moteurs suivis.</figcaption></figure>
-      <figure class="shot"><img class="phone" src="images/telephone-3.png" alt="Mise en route guidée sur un écran de téléphone" loading="lazy">
-        <figcaption>La mise en route guidée sur téléphone.</figcaption></figure>
+<section class="bloc" id="telecharger">
+  <div class="large">
+    <h2>Télécharger</h2>
+    <p class="sous">Avant de flasher, sauvegarder la configuration de la carte : <code>diff all</code> et <code>dump all</code> dans l'onglet CLI.</p>
+    <div class="telecharger">
+      <div class="carte-dl">
+        <h3>Firmware TRUEGLIDE</h3>
+        <div class="version">2026.6.2 · TRUEGLIDE · TRUENAV · TRUENAV_LIGHT</div>
+        <ul>
+          <li>Installation depuis le logiciel, onglet <b>Flasher le Firmware</b> : mise à jour en ligne ou fichier <code>.hex</code>.</li>
+          <li>Publié pour l'instant pour la SpeedyBee F405 Mini et la T-Motor Velox F7 SE.</li>
+          <li>Revenir en arrière : reflasher Betaflight, puis recoller son <code>diff all</code>.</li>
+        </ul>
+        <a class="btn" href="docs/flasher.html">Installer le firmware</a>
+      </div>
+      <div class="carte-dl">
+        <h3>TrueGlide Configurator</h3>
+        <div class="version">2026.6.2 · dans le navigateur</div>
+        <ul>
+          <li>Chrome ou Edge sur ordinateur, câble USB de données.</li>
+          <li>Se connecte aussi aux cartes sous Betaflight 4.4 ou plus récent.</li>
+          <li>Code source libre (GPL-3.0) sur GitHub.</li>
+        </ul>
+        <a class="btn plein" href="https://jschmiedd.github.io/TrueGlide-Configurator/app/">Ouvrir le logiciel</a>
+      </div>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <h2>TRUEGLIDE et ses deux dérivés</h2>
-    <p class="intro">Un firmware de base et deux dérivés pour la navigation GPS. On flashe un seul fichier, au choix, et
-      on peut changer à tout moment.</p>
-    <div class="grid">
-      <div class="card product"><h3>TRUEGLIDE</h3><p>Le firmware de base, pour la course, le freestyle et le cinéma :
-        Betaflight et toutes les fonctions TrueGlide ci-dessous.</p></div>
-      <div class="card"><h3>TRUENAV <span class="tag">dérivé combiné</span></h3><p>TRUEGLIDE + navigation GPS
-        complète : missions, maintien d'altitude et de position, retour au départ, télémétrie MAVLink.</p></div>
-      <div class="card"><h3>TRUENAV_LIGHT <span class="tag">dérivé navigation</span></h3><p>TRUENAV sans les fonctions
-        de course, pour les drones de longue portée.</p></div>
+<section class="bloc" id="essais">
+  <div class="large">
+    <h2>Essais</h2>
+    <p class="sous">Chaque étape est notée avec son résultat. Aucun vol réel n'a encore été fait.</p>
+    <ol class="chronologie">
+      <li><time datetime="2026-10-11">11/10/2026</time><div><b>Mode SPEEDER au simulateur</b><span>L'inclinaison visée suit le programme : 0 → 30° en 0,5 s, maintien, retour vers 0, nez vers le bas comme le manche.</span></div></li>
+      <li><time datetime="2026-10-13">13/10/2026</time><div><b>Missions GPS au simulateur</b><span>Banc de missions de Betaflight : 19 scénarios sur 19 réussis sur <b>TRUENAV</b>.</span></div></li>
+      <li><time datetime="2026-10-14">14/10/2026</time><div><b>Mise à jour en ligne</b><span>6 firmwares publiés (2 cartes, 3 modèles), avec contrôle de l'empreinte SHA.</span></div></li>
+      <li><time datetime="2026-10-22">22/10/2026</time><div><b>Logiciel sur simulateur</b><span>Connexion, onglets TrueGlide, nouveaux onglets Speeder et Installation vérifiés en ligne.</span></div></li>
+      <li><time datetime="2026-10-22">22/10/2026</time><div><b>Toutes les cartes compilées</b><span>621 cartes en <b>TRUEGLIDE</b> ; compiler ne veut pas dire tester.</span></div></li>
+      <li><time datetime="2026-10-23">23/10/2026</time><div><b>Nouvelle version en ligne</b><span>Logiciel et site publiés ; mise à jour en ligne pour 621 cartes.</span></div></li>
+      <li class="a-venir"><time>à venir</time><div><b>Première carte</b><span>SpeedyBee F405 Mini : flash et contrôles à plat, hélices retirées.</span></div></li>
+      <li class="a-venir"><time>à venir</time><div><b>Premiers vols</b><span>Stationnaire, journaux blackbox et analyse.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="bloc">
+  <div class="large">
+    <h2>Documentation</h2>
+    <p class="sous">Une page par onglet du logiciel, dans l'ordre du menu.</p>
+    <div class="docs-liens">
+      <a href="docs/mise-en-route.html"><b>Mise en route</b><span>Du branchement au premier vol, étape par étape.</span></a>
+      <a href="docs/flasher.html"><b>Installer le firmware</b><span>Choisir le modèle, flasher, revenir en arrière.</span></a>
+      <a href="docs/protections.html"><b>Protections</b><span>Surchauffe, courant et santé des moteurs.</span></a>
+      <a href="docs/index.html"><b>Toute la documentation</b><span>Les onglets du logiciel, groupe par groupe.</span></a>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="wrap">
-    <h2>Le firmware TrueGlide</h2>
-    <p class="intro">Basé sur Betaflight 2026.6, avec des fonctions pensées pour les grands drones. <strong>Tout est
-      désactivé par défaut</strong> : sans réglage, le drone vole exactement comme avec Betaflight.</p>
-    <div class="grid">
-      <div class="card"><h3>Protection anti-surchauffe</h3><p>Limite les gaz si un ESC chauffe trop ou si le courant
-        dépasse la limite, sans jamais couper.</p></div>
-      <div class="card"><h3>Relance moteur</h3><p>Un moteur désynchronisé ou calé est relancé au lieu de chauffer à pleine
-        puissance. Jusqu'à 8 moteurs suivis.</p></div>
-      <div class="card"><h3>Mode SPEEDER</h3><p>Transition progressive du stationnaire au vol rapide, sur un
-        interrupteur.</p></div>
-      <div class="card"><h3>Navigation GPS <span class="tag">TRUENAV</span></h3><p>Missions, maintien d'altitude et de
-        position, retour au départ, télémétrie MAVLink.</p></div>
-      <div class="card"><h3>Caméra commandée</h3><p>Alimentation d'une caméra par un interrupteur de la radio, pour
-        économiser la batterie ; nacelle Caddx GM3.</p></div>
-      <div class="card"><h3>Alertes OSD</h3><p>« Gaz limités » et « moteur relancé » dans les lunettes.</p></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>Compatibilité</h2>
-    <ul class="plain">
-      <li>Contrôleurs de vol pris en charge par Betaflight (F4, F7, H7, G4, AT32).</li>
-      <li>Châssis Quad X, Quad X pusher (moteurs à l'envers), Hexa X, X8 coaxial.</li>
-      <li>ESC DShot : BLHeli_S / Bluejay, BLHeli_32, AM32 ; télémétrie DShot bidirectionnelle ou série.</li>
-      <li>Avec une carte sous Betaflight, le logiciel fonctionne comme un configurateur classique ; les fonctions
-        TrueGlide apparaissent avec le firmware TrueGlide.</li>
-    </ul>
-  </div>
-</section>
-
-<section>
-  <div class="wrap">
-    <h2>État du projet</h2>
-    <p class="note">TrueGlide est en développement. Les fonctions sont vérifiées par des tests et au simulateur ; les
-      essais en vol réel sont en cours. Disponibilité annoncée ici.</p>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <p class="note"><strong>Sécurité.</strong> Logiciel et firmware fournis sans aucune garantie. Vérifiez chaque réglage,
-      essayez d'abord hélices retirées, puis en vol dans un lieu dégagé. Le pilote reste seul responsable de son drone et
-      du respect de la réglementation de son pays (en Suisse : OFAC ; en France : DGAC).</p>
-    <p>Code source : <a href="https://github.com/Jschmiedd/TrueGlide-Configurator">logiciel</a> ·
-      <a href="https://github.com/Jschmiedd/Firmware-TrueGlide">firmware</a>.</p>
-    <p>TrueGlide · TalkTrueFPV. Logiciel libre sous licence GPL-3.0, modifié à partir de Betaflight depuis octobre 2026.
-      Betaflight et les autres marques citées appartiennent à leurs titulaires ; TrueGlide n'est ni affilié au projet
-      Betaflight ni approuvé par lui.</p>
-    <h2 style="font-size:1rem;margin:20px 0 4px">Mentions légales</h2>
-    <p>Éditeur : TalkTrueFPV, projet personnel non commercial (Suisse). Contact :
-      <a href="mailto:talktruefpv@gmail.com">talktruefpv@gmail.com</a>.<br>
-      Hébergement : GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis.</p>
-    <h2 style="font-size:1rem;margin:20px 0 4px">Confidentialité</h2>
-    <p>Cette page ne collecte aucune donnée personnelle et n'utilise pas de cookies. GitHub peut enregistrer des données
-      techniques (adresse IP) selon sa
-      <a href="https://docs.github.com/fr/site-policy/privacy-policies/github-general-privacy-statement">politique de
-      confidentialité</a>.</p>
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
   </div>
 </footer>
-
 </body>
 </html>

@@ -727,13 +727,13 @@
         "message": "Show the guide"
     },
     "tfGuideHelp_setup": {
-        "message": "Check that the 3D model follows the drone's movements and calibrate the accelerometer with the drone level."
+        "message": "Check that the 3D model follows the drone's movements. The accelerometer calibration, with the drone level, is in the Sensors tab."
     },
     "tfGuideHelp_ports": {
         "message": "Set which UART the receiver, GPS, VTX and ESC telemetry are wired to. Save with the tab's button."
     },
     "tfGuideHelp_configuration": {
-        "message": "Set the board orientation, the motor protocol (DShot) and the features you need. Save with the tab's button."
+        "message": "Choose the features and beeps you need. The board orientation is set in the Sensors tab and the motor protocol (DShot) in the Motors tab. Save with the tab's button."
     },
     "tfGuideHelp_receiver": {
         "message": "Choose the receiver protocol (CRSF for ELRS) and check that every channel moves the right way."
@@ -1062,6 +1062,9 @@
     "trueglideIntro": {
         "message": "Settings of the TrueGlide firmware. All of them are off or neutral by default: the drone flies exactly like with the unmodified base firmware until you enable them. Save reboots the flight controller."
     },
+    "trueglideIntroNavigation": {
+        "message": "GPS navigation safety: the GPS return (GPS RESCUE) and failsafe settings are Betaflight's, the mission settings belong to TRUENAV. Check every value before flying. Save reboots the flight controller."
+    },
     "trueglideUnsupported": {
         "message": "This flight controller does not run TrueGlide (or its firmware is too old for the MSP CLI). Flash TrueGlide to use these settings."
     },
@@ -1155,6 +1158,51 @@
     "trueglideSetting_speeder_fpv_mixHelp": {
         "message": "Rotates roll and yaw with the transition angle, like fpv_mix_degrees but progressive."
     },
+    "tgSetupViewSide": {
+        "message": "Side"
+    },
+    "tgSetupViewTop": {
+        "message": "Top"
+    },
+    "tgSetupFront": {
+        "message": "FRONT"
+    },
+    "tfSpeederDiagramTitle": {
+        "message": "What SPEEDER does"
+    },
+    "tfSpeederVertical": {
+        "message": "vertical"
+    },
+    "tfSpeederHorizontal": {
+        "message": "horizontal"
+    },
+    "tfSpeederFlightDirection": {
+        "message": "flight direction"
+    },
+    "tfSpeederHover": {
+        "message": "Hover: fuselage vertical, nose up"
+    },
+    "tfSpeederCruise": {
+        "message": "Cruise: tilted {{angle}}° forward"
+    },
+    "tfSpeederTransitionTime": {
+        "message": "Transition: {{angle}}° at {{rate}} °/s, that is {{time}} s from hover to cruise, and the same to come back."
+    },
+    "tfSpeederExplainEngage": {
+        "message": "SPEEDER switch on (Modes tab), armed and in ANGLE mode: the nose goes down progressively to the cruise angle. The pitch stick adds or removes tilt around that angle."
+    },
+    "tfSpeederExplainRelease": {
+        "message": "Switch off or failsafe: progressive return to hover, at the same speed."
+    },
+    "tfSpeederExplainImmediate": {
+        "message": "Disarm, GPS RESCUE, ALTHOLD or POS HOLD: immediate return to hover. In HORIZON or ACRO, SPEEDER does nothing."
+    },
+    "tfSpeederExplainFpvMix": {
+        "message": "Progressive FPV mix: roll and yaw turn with the tilt, so the sticks keep the same effect as seen from the camera."
+    },
+    "tfSpeederFirstFlight": {
+        "message": "First test: cruise angle at 20°, at altitude, then raise by 10° steps. The mode is not yet verified in real flight."
+    },
     "trueglideNavSafetyTitle": {
         "message": "GPS navigation safety"
     },
@@ -1240,6 +1288,30 @@
     "autotuneImportDescription": { "message": "Import a blackbox log recorded with debug_mode = CHIRP to analyze frequency response and compute PID recommendations." },
     "autotuneSelectingFile": { "message": "Selecting file..." },
     "autotuneAnalyzing": { "message": "Analyzing chirp data..." },
+    "autotuneProgressSelecting": {
+        "message": "Selecting file..."
+    },
+    "autotuneProgressReading": {
+        "message": "Reading {{file}}..."
+    },
+    "autotuneProgressBoundaries": {
+        "message": "Finding log boundaries..."
+    },
+    "autotuneProgressParsing": {
+        "message": "Parsing log {{index}} of {{count}}..."
+    },
+    "autotuneErrorNoLogs": {
+        "message": "No log segments found in the file."
+    },
+    "autotuneErrorNoChirp": {
+        "message": "No chirp data found in any log segment."
+    },
+    "autotuneErrorAnalysis": {
+        "message": "Analysis failed."
+    },
+    "autotuneErrorPicker": {
+        "message": "Failed to open file picker."
+    },
     "autotuneBandwidth": { "message": "Bandwidth" },
     "autotunePhaseMargin": { "message": "Phase Margin" },
     "autotuneResonantPeak": { "message": "Resonant Peak" },
@@ -1255,7 +1327,7 @@
     "autotuneNoLogs": { "message": "No valid blackbox logs found in this file." },
     "autotuneNoChirpData": { "message": "No chirp data found. Ensure the log was recorded with debug_mode = CHIRP and chirp mode was activated." },
     "autotuneSampleCount": { "message": "{{count}} samples" },
-    "autotuneSampleRate": { "message": "Sample rate: {{rate}} Hz" },
+    "autotuneSampleRate": { "message": "Sample rate" },
     "autotuneImportAnother": { "message": "Import Another" },
     "autotuneImportRetry": { "message": "Try Again" },
     "autotuneFile": { "message": "File" },
@@ -1504,7 +1576,7 @@
         "message": "Firmware not compatible with this app is <span class=\"message-negative\">not supported</span>, except for CLI mode."
     },
     "firmwareUpgradeRequired": {
-        "message": "The current version of the app may not support the firmware version on this device.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use the CLI to back up your configuration before flashing (see the TrueGlide Memo and Wiki (Documentation &amp; Support tab)). But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
+        "message": "The current version of the app may not support the firmware version on this device.<br><br>The app will try to access the CLI on the device - if it succeeds, you can see the current firmware version by sending the <code>version</code> command in the CLI.<br><br>Alternatively, you can upgrade to a newer firmware version. Use the CLI to back up your configuration before flashing (see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)). But keep in mind that backups from older versions of the firmware may not carry over correctly when restoring to a newer version. Modes, OSD, rates and ports should transfer safely, but be careful around the PID and failsafe settings."
     },
     "resetToCustomDefaultsDialog": {
         "message": "There are custom defaults for this board available. Normally, a board will not work properly unless custom defaults are applied.<br />Do you want to apply the custom defaults for this board?"
@@ -1697,13 +1769,13 @@
         "message": "Contributing"
     },
     "defaultContributingText": {
-        "message": "TrueGlide improves thanks to pilots' feedback: note the problems you encounter and your flight results. For help, see the TrueGlide Memo and Wiki (Documentation &amp; Support tab)."
+        "message": "TrueGlide improves thanks to pilots' feedback: note the problems you encounter and your flight results. For help, see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)."
     },
     "defaultFacebookText": {
-        "message": "For help with TrueGlide, see the TrueGlide Memo and Wiki (Documentation &amp; Support tab)."
+        "message": "For help with TrueGlide, see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)."
     },
     "defaultRedditText": {
-        "message": "For help with TrueGlide, see the TrueGlide Memo and Wiki (Documentation &amp; Support tab)."
+        "message": "For help with TrueGlide, see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)."
     },
     "defaultCommunityHead": {
         "message": "Community"
@@ -1727,10 +1799,10 @@
         "message": "TrueGlide documentation is available in the TrueGlide Memo and Wiki.<br /><br />"
     },
     "defaultDocumentation1": {
-        "message": "The TrueGlide Wiki explains the settings: see the Documentation &amp; Support tab."
+        "message": "The TrueGlide Wiki explains the settings: see the Memo &amp; Wiki tab."
     },
     "defaultDocumentation2": {
-        "message": "The TrueGlide Memo summarises the essentials: see the Documentation &amp; Support tab."
+        "message": "The TrueGlide Memo summarises the essentials: see the Memo &amp; Wiki tab."
     },
     "defaultSupportHead": {
         "message": "Support"
@@ -1748,16 +1820,16 @@
         "message": "<a href=\"http://www.rcgroups.com/forums/showthread.php?t=2464844&page=1\" target=\"_blank\" rel=\"noopener noreferrer\">RC Groups thread</a>"
     },
     "defaultSupport2": {
-        "message": "TrueGlide Wiki (Documentation &amp; Support tab)"
+        "message": "TrueGlide Wiki (Memo &amp; Wiki tab)"
     },
     "defaultSupport3": {
         "message": "<a href=\"https://www.youtube.com/playlist?list=PLwoDb7WF6c8nT4jjsE4VENEmwu9x8zDiE\" target=\"_blank\" rel=\"noopener noreferrer\">Joshua Bardwell videos on firmware 4.3</a>"
     },
     "defaultSupport4": {
-        "message": "TrueGlide Memo (Documentation &amp; Support tab)"
+        "message": "TrueGlide Memo (Memo &amp; Wiki tab)"
     },
     "defaultSupport5": {
-        "message": "TrueGlide Memo and Wiki (Documentation &amp; Support tab)"
+        "message": "TrueGlide Memo and Wiki (Memo &amp; Wiki tab)"
     },
     "initialSetupButtonCalibrateAccel": {
         "message": "Calibrate Accelerometer"
@@ -1895,6 +1967,9 @@
     "initialSetupCpuTempNotSupported": {
         "message": "No support from MSP API before 1.46"
     },
+    "initialSetupCpuTempUnavailable": {
+        "message": "Not provided by this board"
+    },
     "initialSetupRSSI": {
         "message": "RSSI:"
     },
@@ -1907,7 +1982,7 @@
         "description": "Message that pops up when hardware is not detected or disabled"
     },
     "initialSetupRSSIValue": {
-        "message": "$1 dBm"
+        "message": "$1 %"
     },
     "initialSetupMCU": {
         "message": "MCU:"
@@ -2378,6 +2453,9 @@
     },
     "configurationSerialRXHelp": {
         "message": "&#8226; The UART for the receiver must be set to ‘Serial Rx’ (in the <i>Ports</i> tab)<br>&#8226; Select the correct data format from the drop-down, below:"
+    },
+    "configurationSaveFailed": {
+        "message": "Failed to save the configuration."
     },
     "configurationSpiRxHelp": {
         "message": "<strong>Note:</strong> The SPI RX provider will only work if the required hardware is on board or connected to an SPI bus."
@@ -3455,7 +3533,10 @@
         "message": "Model Match ID"
     },
     "receiverHelp": {
-        "message": "&#8226;  <b><strong>Always check that your Failsafe is working properly!</strong></b> The settings are in the Failsafe tab, which requires Expert Mode.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong>Disable the hardware ADC filter</strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, see <strong>the TrueGlide Memo and Wiki (Documentation &amp; Support tab)</strong>."
+        "message": "&#8226;  <b><strong>Always check that your Failsafe is working properly!</strong></b> The settings are in the Failsafe tab.<br> &#8226; <b>Use the latest Tx firmware!</b><br> &#8226; <strong>Disable the hardware ADC filter</strong> in the Transmitter if using OpenTx or EdgeTx.<br>Basic Setup: Configure the 'Receiver' settings correctly. Choose the correct ‘Channel Map’ for your radio. Check that the Roll, Pitch and other bar graphs move correctly. Adjust the channel endpoint or range values in the transmitter to ~1000 to ~2000, and set the midpoint to 1500. For more information, see <strong>the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)</strong>."
+    },
+    "receiverConfigSaved": {
+        "message": "Configuration saved."
     },
     "receiverFailsafeActiveTitle": {
         "message": "Failsafe active"
@@ -3587,7 +3668,7 @@
         "message": "Enable controls"
     },
     "auxiliaryHelp": {
-        "message": "Configure modes here using a combination of ranges and/or links to other modes (links supported on BF 4.0 and later). Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. <strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links). Multiple ranges/links can be used to activate any mode. If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when:<br />- ALL <strong>AND</strong> ranges/links are active; OR<br />- at least one <strong>OR</strong> range/link is active.<br /><br />Remember to save your settings using the Save button."
+        "message": "Configure modes here using a combination of ranges and/or links to other modes. Use <strong>ranges</strong> to define the switches on your transmitter and corresponding mode assignments. A receiver channel that gives a reading between a range min/max will activate the mode. Use a <strong>link</strong> to activate a mode when another mode is activated. <strong>Exceptions:</strong> ARM cannot be linked to or from another mode, modes cannot be linked to other modes that are configured with a link (chained links). Multiple ranges/links can be used to activate any mode. If there is more than one range/link defined for a mode, each of them can be set to <strong>AND</strong> or <strong>OR</strong>. A mode will be activated when:<br />- ALL <strong>AND</strong> ranges/links are active; OR<br />- at least one <strong>OR</strong> range/link is active.<br /><br />Remember to save your settings using the Save button."
     },
     "auxiliaryToggleUnused": {
         "message": "Hide unused modes"
@@ -3644,8 +3725,14 @@
         "description": "Help text to ANTIGRAVITY mode"
     },
     "auxiliaryHelpMode_AIRMODE": {
-        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information, see the TrueGlide Memo and Wiki (Documentation &amp; Support tab).",
+        "message": "AirMode allows for maintaining aircraft stability at low throttle. For more information, see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab).",
         "description": "Help text to AIRMODE mode"
+    },
+    "auxiliaryHelpMode_SPEEDER": {
+        "message": "TrueGlide mode for speeders that take off with the fuselage vertical: in ANGLE mode, the nose goes down progressively to the cruise angle set in the Speeder tab. Switch off or failsafe: progressive return to hover."
+    },
+    "auxiliaryHelpMode_WPCAPTURE": {
+        "message": "Records waypoints in flight: a short press adds the current position to the mission, a press held for 1.5 s deletes the last waypoint. TRUENAV firmware only."
     },
     "auxiliaryHelpMode_ALTHOLD": {
         "message": "Altitude Hold actively regulates the aircraft's altitude using external sensors combined with Angle Mode (Stable Mode).",
@@ -3875,11 +3962,11 @@
         "message": "scale (val.|%)"
     },
     "adjustmentsCenterHelp": {
-        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />See the TrueGlide Memo and Wiki (Documentation &amp; Support tab) for more info.",
+        "message": "Sets the mid-point or reference value used by the adjustment function.<br /><br /><strong>Slider Adjustments:</strong><br />For slider adjustments, set Adjustment Center to 0. The current slider position will be utilized for the adjustment up/down.<br /><br /><strong>Selection Adjustments:</strong><br />Set Adjustment Center to 0, or to a specific microsecond (uS) value if you want to offset the switch reference point from 1500uS when initiating the RC adjustment.<br /><br /><strong>Stepped Adjustments:</strong><br />Set Adjustment Center to 0 for the current value of the item being adjusted to be utilized.<br /><br /><strong>Absolute Adjustments:</strong><br />To use the Absolute adjustment method, you must set both Adjustment Center and Scale to specify the desired value and range. The range is calculated as: Center ± Scale. For example, setting Adjustment Center to 50 and Adjustment Scale to 25 creates a range from 25 to 75, with the center position (switch or POT) mapped to 50.<br /><br />See the TrueGlide Memo and Wiki (Memo &amp; Wiki tab) for more info.",
         "description": "Tooltip help text for the Adjustment Center column"
     },
     "adjustmentsScaleHelp": {
-        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />See the TrueGlide Memo and Wiki (Documentation &amp; Support tab) for more info.",
+        "message": "Controls the scaling or range of the adjustment; higher values increase the adjustment range or sensitivity.<br /><br /><strong>Slider Adjustments:</strong><br />For Slider adjustments, Adjustment Scale controls the scaling/sensitivity of the adjustment. A value of 50 equals 50% of the slider range. Setting to 0 utilizes the default scale for sliders.<br /><br /><strong>Selection Adjustments:</strong><br />For Selection adjustments, set Adjustment Scale to 0 for default behavior, or specify a microsecond (uS) value to limit the range. For example: Set Adjustment Center to 1000 (uS) and Adjustment Scale to 500 (uS) to utilize a 3-position switch as a 2-position switch.<br /><br /><strong>Stepped and Absolute Adjustments:</strong><br />For Stepped and Absolute adjustments, Adjustment Scale defines the range above and below the Adjustment Center. For example, a value of 25 creates an adjustment range of ±25 from the Adjustment Center value, or from the current value if Adjustment Center is set to 0.<br /><strong>Note:</strong> To use the Absolute adjustment method with a potentiometer, an Adjustment Scale value must be specified.<br /><br />See the TrueGlide Memo and Wiki (Memo &amp; Wiki tab) for more info.",
         "description": "Tooltip help text for the Adjustment Scale column"
     },
     "adjustmentsSlot0": {
@@ -4073,7 +4160,7 @@
         "message": "General"
     },
     "gpsHeadHelp": {
-        "message": "Show various GPS information. Headings are only shown when a magnetometer is in use.",
+        "message": "Show various GPS information. The magnetic declination is only shown when a magnetometer is in use.",
         "description": "Help text for gpsHead"
     },
     "gpsMapHead": {
@@ -4381,7 +4468,7 @@
         "message": "Load Flight Plan from Flight Controller?"
     },
     "flightPlanLoadPromptBody": {
-        "message": "A flight controller is connected. Do you want to replace the current flight plan with the one stored on the flight controller? Choosing No keeps your current plan so you can save it to the flight controller."
+        "message": "A flight controller is connected. Do you want to replace the current flight plan with the one stored on the flight controller? Choosing “Keep current” keeps your current plan so you can save it to the flight controller."
     },
     "flightPlanKeepLocal": {
         "message": "Keep current"
@@ -4498,7 +4585,7 @@
         "message": "Reset"
     },
     "motorsResetMaximum": {
-        "message": "Reset overtime maximum"
+        "message": "Reset the maximum values of the graph"
     },
     "motorsSensorGyroSelect": {
         "message": "$t(sensorStatusGyroShort.message)",
@@ -4508,7 +4595,7 @@
         "message": "accel"
     },
     "motorsTelemetryHelp": {
-        "message": "These numbers show the telemetry info received from the ESCs if available. It can show the actual speed of motors (R, in RPM), the error rate (E) of the telemetry link and the temperature (T) of the ESCs.",
+        "message": "These values show the telemetry received from the ESCs if available: the actual motor speed (RPM:), the error rate of the telemetry link (Err:) and the ESC temperature (Temp:).",
         "description": "Help text for the telemetry values in the motors tab."
     },
     "motorsRPM": {
@@ -4527,7 +4614,7 @@
         "message": "Master"
     },
     "motorsNotice": {
-        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br /><br /><strong class=\"message-negative\">WARNING: Serious risk of injury! Remove all propellers!</strong><br /><br /><ul><li>&#x2022; Motors will spin up when armed or when sliders are raised</li><li>&#x2022; Motor test mode will remain active after moving to another Tab</li><li>&#x2022; Hitting any key will stop the motors, but only in the Motors Tab</li><li>&#x2022; Disconnecting the USB cable may not stop the motors!</li></ul>"
+        "message": "<strong>Motor Test Mode / Arming Notice:</strong><br /><br /><strong class=\"message-negative\">WARNING: Serious risk of injury! Remove all propellers!</strong><br /><br /><ul><li>&#x2022; Motors will spin up when armed or when sliders are raised</li><li>&#x2022; Motor test stops when you leave the Motors tab</li><li>&#x2022; Hitting any key will stop the motors, but only in the Motors Tab</li><li>&#x2022; Disconnecting the USB cable may not stop the motors!</li></ul>"
     },
     "motorsEnableControl": {
         "message": "<strong>I understand the risks</strong>, the propellers are removed - enable motor control and arming, and disable Runaway Takeoff Prevention."
@@ -4768,6 +4855,33 @@
     },
     "loggingNote": {
         "message": "Data will be logged in this tab <span class=\"message-negative\">only</span>. Leaving the tab will <span class=\"message-negative\">cancel</span> logging and the application will return to its normal state.<br /> You can select the global update period; data will be written to the log file every <strong>1</strong> second for performance reasons."
+    },
+    "loggingColumns_MSP_RAW_IMU": {
+        "message": "9 columns (gyro[x, y, z], accel[x, y, z], mag[x, y, z])"
+    },
+    "loggingColumns_MSP_ATTITUDE": {
+        "message": "3 columns (kine[x, y, z])"
+    },
+    "loggingColumns_MSP_ALTITUDE": {
+        "message": "1 column (alt)"
+    },
+    "loggingColumns_MSP_RAW_GPS": {
+        "message": "7 columns (Fix, NumSat, Lat, Lon, Alt, Speed, GroundCourse)"
+    },
+    "loggingColumns_MSP_ANALOG": {
+        "message": "4 columns (voltage, amperage, mAhdrawn, rssi)"
+    },
+    "loggingColumns_MSP_RC": {
+        "message": "one column per active channel (RC0, RC1…)"
+    },
+    "loggingColumns_MSP_MOTOR": {
+        "message": "one column per motor (Motor0, Motor1…)"
+    },
+    "loggingColumns_MSP_DEBUG": {
+        "message": "one column per debug value (Debug0, Debug1…)"
+    },
+    "dataflashSaveIncompleteWarning": {
+        "message": "Downloaded size did not match expected size - not erasing flash."
     },
     "loggingPropertiesTitle": {
         "message": "Log Properties"
@@ -5033,7 +5147,7 @@
         "message": "Select or detect your board to see available online firmware releases - Select the correct firmware appropriate for your board."
     },
     "firmwareFlasherOnlineSelectBoardHint": {
-        "message": "TrueGlide Configurator supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Firmware 4.4 introduced <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, see the TrueGlide Memo and Wiki (Documentation &amp; Support tab)."
+        "message": "TrueGlide Configurator supports flashing of Unified Targets with the respective board specific configurations in one step.<br><br>The concept of Unified Targets means that the same firmware .hex file can be used for all boards using the same MCU.<br><br>Firmware 4.4 introduced <strong>Cloud Build</strong><br><br>With <strong>Cloud Build</strong> we need to define hardware options present on your build.<br><br>To make the different boards work with the same firmware, a specific configuration file is deployed alongside the firmware when a Unified Target is flashed.<br><br>With Local build you can load a unified target configuration file or chose a board before loading a firmware .hex file.<br><br>If you encounter problems using the firmware, see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)."
     },
     "firmwareFlasherOnlineSelectFirmwareVersionDescription": {
         "message": "Select firmware version for your board."
@@ -5154,7 +5268,7 @@
         "message": "Message:"
     },
     "firmwareFlasherWarningText": {
-        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>unsupported</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have the correct software and drivers installed (see the TrueGlide Memo and Wiki (Documentation &amp; Support tab))</li></ul>"
+        "message": "Please do <span class=\"message-negative\">not</span> try to flash <strong>unsupported</strong> hardware with this firmware flasher.<br />Do <span class=\"message-negative\">not</span> <strong>disconnect</strong> the board or <strong>turn off</strong> your computer while flashing.<br /><br /><strong>Note:</strong><ul><li>STM32 bootloader is stored in ROM, it cannot be bricked.</li><li><span class=\"message-negative\">Auto-Connect</span> is always disabled while you are inside firmware flasher.</li><li>Make sure you have a backup; some upgrades/downgrades will wipe your configuration.</li><li>If you have problems flashing <strong>try disconnecting all cables from your FC</strong> first, try rebooting, upgrade drivers.</li><li>When flashing boards that have directly connected USB sockets (most newer boards) ensure you have the correct software and drivers installed (see the TrueGlide Memo and Wiki (Memo &amp; Wiki tab))</li></ul>"
     },
     "firmwareFlasherWarningShort": {
         "message": "Do not flash unsupported hardware. Do not disconnect during flashing. STM32 bootloader is in ROM and cannot be bricked. Always backup your configuration before upgrading."
@@ -6170,7 +6284,7 @@
         "message": "Vbat Sag Compensation %"
     },
     "pidTuningVbatSagCompensationHelp": {
-        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />See the TrueGlide Memo and Wiki (Documentation &amp; Support tab) for more info."
+        "message": "Gives consistent throttle and PID performance over the usable battery voltage range by increasing motor output as battery voltage falls.<br /><br />The amount of compensation can be varied between 0 and 100%. Full compensation (100%) is recommended.<br /><br />See the TrueGlide Memo and Wiki (Memo &amp; Wiki tab) for more info."
     },
     "pidTuningVbatSagValue": {
         "message": "%"
@@ -6246,7 +6360,7 @@
         "message": "Dynamic Idle Value [* 100 RPM]"
     },
     "pidTuningIdleMinRpmHelp": {
-        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />See the TrueGlide Memo and Wiki (Documentation &amp; Support tab) for more info."
+        "message": "Dynamic Idle improves control at low rpm and reduces risk of motor desyncs. <br /><br /> It improves PID authority, zero throttle stability, inverted hang time, and motor braking.<br /><br />The Dynamic Idle min rpm should be set to around 3000 - 3500 rpm. <br /><br />See the TrueGlide Memo and Wiki (Memo &amp; Wiki tab) for more info."
     },
     "pidTuningIdleMinRpmDisabled": {
         "message": "Dynamic Idle is DISABLED because Dshot Telemetry is OFF"
@@ -6261,7 +6375,7 @@
         "message": "Integrated Yaw"
     },
     "pidTuningIntegratedYawCaution": {
-        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info in the TrueGlide Memo and Wiki (Documentation &amp; Support tab)."
+        "message": "<span class=\"message-negative\">CAUTION</span>: if you enable this feature, you must adjust the YAW PID accordingly. More info in the TrueGlide Memo and Wiki (Memo &amp; Wiki tab)."
     },
     "pidTuningIntegratedYawHelp": {
         "message": "Integrated Yaw integrates yaw P, I and D values, allowing yaw P, I and D to be tuned a bit like you'd tune pitch and roll.<br><br>Very little I is required, because the integrated P acts like I, and integrated D acts like P.<br><br>NOTE: Integrated Yaw requires use of Absolute Control, since no I is needed with Integrated Yaw."
@@ -8005,7 +8119,7 @@
         "message": "Precision:"
     },
     "osdTimerPrecisionTooltip": {
-        "message": "Select the timer precision, this controls to what precision the time is reported in"
+        "message": "Select the timer precision: the smallest unit of time shown."
     },
     "osdTimerPrecisionOptionSecond": {
         "message": "Second",
@@ -8225,7 +8339,7 @@
         "message": "Unknown warning (details to be added in a future release)"
     },
     "osdSectionHelpElements": {
-        "message": "Enable or disable OSD elements."
+        "message": "Choose the elements shown by the OSD."
     },
     "osdSectionHelpVideoMode": {
         "message": "Set the expected video mode of the camera (typically this can be left on AUTO, if you have difficulties then set this to match the camera output)."
@@ -8399,7 +8513,7 @@
         "description": "Text of one of the fields of the VTX tab"
     },
     "vtxPitModeFrequencyHelp": {
-        "message": "Frequency at which the Pit Mode changes when enabled.",
+        "message": "Frequency used by the video transmitter when Pit Mode is enabled.",
         "description": "Help text for the pit mode field of the VTX tab"
     },
     "vtxLowPowerDisarm": {
@@ -8939,13 +9053,13 @@
         "message": "Profile"
     },
     "pidTuningProfileTip": {
-        "message": "Up to 3 (2 for some controllers) different pid profiles can be stored on the flight controller. The pid profiles include pid, d setpoint and angle/horizon settings on this tab. Once in the field, simple stick commands (see online instructions) can be used to switch between the profiles."
+        "message": "Up to 4 pid profiles can be stored on the flight controller. The pid profiles include pid, d setpoint and angle/horizon settings on this tab. Once in the field, simple stick commands (see online instructions) can be used to switch between the profiles."
     },
     "pidTuningRateProfile": {
         "message": "Rateprofile"
     },
     "pidTuningRateProfileTip": {
-        "message": "Up to 3 different rateprofiles per profile can be stored on the flight controller. The rateprofiles include the settings for 'RC Rate', 'Rate', 'RC Expo', 'Throttle', and 'TPA'. Switching between rateprofiles is possible in-flight, by setting up a 3 position switch for 'Rate Profile Selection' on the 'Adjustments' tab."
+        "message": "Up to 4 rateprofiles can be stored on the flight controller. The rateprofiles include the settings for 'RC Rate', 'Rate', 'RC Expo', 'Throttle', and 'TPA'. Switching between rateprofiles is possible in-flight, by setting up a switch for 'Rate Profile Selection' on the 'Adjustments' tab."
     },
     "pidTuningRateSetup": {
         "message": "Basic/Acro Rates"
@@ -10648,7 +10762,7 @@
         "message": "Online update"
     },
     "tfOnlineIntro": {
-        "message": "Downloads the latest published TrueGlide firmware for your board. The file is checked (checksum) before it is loaded; nothing is flashed until you click \"Flash Firmware\". The configuration is backed up automatically before flashing and can be restored afterwards."
+        "message": "Downloads the latest published TrueGlide firmware for your board. The file is checked (checksum) before it is loaded; nothing is flashed until you click \"Flash Firmware\". If the board is connected and backup before flashing is enabled (Options), the configuration is backed up before flashing and can be restored afterwards."
     },
     "tfOnlineCheck": {
         "message": "Check for update"
