@@ -1110,6 +1110,30 @@
     "trueglideSetting_power_guard_min_throttleHelp": {
         "message": "While limiting, the available throttle never goes below this percentage, so the drone can always be flown home."
     },
+    "trueglideBatteryTitle": {
+        "message": "Low battery"
+    },
+    "trueglideBatteryHelp": {
+        "message": "The motors are never cut in flight because of a low battery: the pilot decides, warned by the OSD and the beeper. In addition, disabled by default (0): take-off refused below a cell voltage, and return home (GPS RESCUE) when the voltage stays low in flight."
+    },
+    "trueglideSetting_battery_arm_min_cell_voltage": {
+        "message": "Minimum voltage to take off (per cell)"
+    },
+    "trueglideSetting_battery_arm_min_cell_voltageHelp": {
+        "message": "Below this cell voltage, at rest before take-off, arming is refused (LOW_BATTERY). 0 = off. Example: 3.70 V. Without a measured battery (unknown cell count), nothing is blocked."
+    },
+    "trueglideSetting_battery_rth_cell_voltage": {
+        "message": "Return home below (per cell)"
+    },
+    "trueglideSetting_battery_rth_cell_voltageHelp": {
+        "message": "In flight, if the cell voltage stays below this value for the whole delay, the quad returns home with GPS RESCUE (only if it is available: home point, GPS, heading; otherwise the OSD shows BAT RTH N\/A). The pilot takes over by moving the roll or pitch stick past 30 %, until the next disarm. 0 = off. Example: 3.50 V."
+    },
+    "trueglideSetting_battery_rth_delay": {
+        "message": "Delay before the return"
+    },
+    "trueglideSetting_battery_rth_delayHelp": {
+        "message": "Time the voltage must stay below the threshold. A short sag on a punch restarts the count. 10 s by default."
+    },
     "trueglideMotorsTitle": {
         "message": "Motor health"
     },
@@ -2150,6 +2174,9 @@
     "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
         "message": "Autopilot mode switch is active",
         "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOW_BATTERY": {
+        "message": "Battery too low to take off (TrueGlide setting \"Minimum voltage to take off\")."
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",

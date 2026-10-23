@@ -50,7 +50,7 @@ const ARMING_FLAGS_BASE = [
     "MOTOR_PROTOCOL",
 ];
 
-export function armingFlagNames(apiVersion) {
+export function armingFlagNames(apiVersion, count) {
     const names = [...ARMING_FLAGS_BASE];
     const api = semver.valid(semver.coerce(apiVersion));
     if (!api) {
@@ -65,13 +65,17 @@ export function armingFlagNames(apiVersion) {
     if (semver.gte(api, "1.48.0")) {
         names.push("AUTOPILOT");
     }
+    // TrueGlide firmware: one more reason before ARM_SWITCH (battery_arm_min_cell_voltage)
+    if (count !== undefined && count - 1 > names.length) {
+        names.push("LOW_BATTERY");
+    }
     return names;
 }
 
 // Reasons that currently prevent arming. ARM_SWITCH (last bit: the arm switch is on) is left out, as in the
 // Setup tab: it is the pilot's own switch, not a fault. Unknown bits keep their number.
 export function armingBlockers(apiVersion, count, bitmask) {
-    const names = armingFlagNames(apiVersion);
+    const names = armingFlagNames(apiVersion, count);
     const blockers = [];
     for (let i = 0; i < count; i++) {
         if (!(bitmask & (1 << i)) || i === count - 1) {

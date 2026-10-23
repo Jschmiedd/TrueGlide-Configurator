@@ -431,6 +431,11 @@ const prepareDisarmFlags = function () {
         addArrayElementsAfter(elements, "POSHOLD", ["AUTOPILOT"]);
     }
 
+    // TrueGlide firmware: one more reason before ARM_SWITCH (battery_arm_min_cell_voltage)
+    if (cfg.armingDisableCount - 1 > elements.length) {
+        elements.push("LOW_BATTERY");
+    }
+
     // Build arming flags state instead of manipulating DOM
     const flags = Array.from({ length: cfg.armingDisableCount }, (_, i) => {
         const isLastBit = i === cfg.armingDisableCount - 1;

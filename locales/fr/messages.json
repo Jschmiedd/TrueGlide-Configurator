@@ -1125,6 +1125,30 @@
     "trueglideSetting_power_guard_min_throttleHelp": {
         "message": "Pendant la limitation, les gaz disponibles ne descendent jamais sous ce pourcentage : le drone reste toujours pilotable pour rentrer."
     },
+    "trueglideBatteryTitle": {
+        "message": "Batterie basse"
+    },
+    "trueglideBatteryHelp": {
+        "message": "Les moteurs ne sont jamais coupés en vol pour une batterie basse : le pilote décide, prévenu par l'OSD et les bips. En plus, et désactivé par défaut (0) : décollage refusé sous une tension par élément, et retour au point de départ (GPS RESCUE) quand la tension reste basse en vol."
+    },
+    "trueglideSetting_battery_arm_min_cell_voltage": {
+        "message": "Tension minimale pour décoller (par élément)"
+    },
+    "trueglideSetting_battery_arm_min_cell_voltageHelp": {
+        "message": "Sous cette tension par élément, au repos avant le décollage, l'armement est refusé (motif LOW_BATTERY). 0 = désactivé. Exemple : 3,70 V. Sans batterie mesurée (nombre d'éléments inconnu), rien n'est bloqué."
+    },
+    "trueglideSetting_battery_rth_cell_voltage": {
+        "message": "Retour au départ sous (par élément)"
+    },
+    "trueglideSetting_battery_rth_cell_voltageHelp": {
+        "message": "En vol, si la tension par élément reste sous cette valeur pendant tout le délai, le drone rentre au point de départ avec le GPS RESCUE (seulement s'il est disponible : point de départ, GPS, cap ; sinon l'OSD affiche BAT RTH N\/A). Le pilote reprend la main en bougeant le manche de roulis ou de tangage au-delà de 30 %, jusqu'au prochain désarmement. 0 = désactivé. Exemple : 3,50 V."
+    },
+    "trueglideSetting_battery_rth_delay": {
+        "message": "Délai avant le retour"
+    },
+    "trueglideSetting_battery_rth_delayHelp": {
+        "message": "Durée pendant laquelle la tension doit rester sous le seuil. Une chute brève pendant un coup de gaz remet le compte à zéro. 10 s par défaut."
+    },
     "trueglideMotorsTitle": {
         "message": "Santé moteurs"
     },
@@ -2264,6 +2288,9 @@
     "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
         "message": "L'interrupteur du mode pilote automatique est actif",
         "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOW_BATTERY": {
+        "message": "Batterie trop basse pour décoller (réglage TrueGlide « Tension minimale pour décoller »)."
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "Un des autres drapeaux désarmés est actif lors de l'armement",

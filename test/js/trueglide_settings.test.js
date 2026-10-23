@@ -5,6 +5,8 @@ import {
     ALL_SETTINGS,
     changeCommands,
     parseGet,
+    toDisplay,
+    toRaw,
     validate,
 } from "../../src/js/trueglide/settings";
 
@@ -69,6 +71,17 @@ describe("TrueGlide navigation safety", () => {
         ]);
         expect(changeCommands({ ap_rx_loss_policy: "DISABLE" }, { ap_rx_loss_policy: "FLY_AWAY" }).errors).toEqual([
             "ap_rx_loss_policy",
+        ]);
+    });
+
+    it("shows the battery thresholds in volts per cell, sent to the firmware in 0.01 V", () => {
+        const s = ALL_SETTINGS.find((x) => x.name === "battery_rth_cell_voltage");
+        expect(toDisplay(s, "350")).toBe(3.5);
+        expect(toRaw(s, 3.7)).toBe("370");
+        expect(validate(s, "0")).toBe(true); // off
+        expect(validate(s, "451")).toBe(false);
+        expect(changeCommands({ battery_arm_min_cell_voltage: "0" }, { battery_arm_min_cell_voltage: 3.7 }).commands).toEqual([
+            "set battery_arm_min_cell_voltage = 370",
         ]);
     });
 });

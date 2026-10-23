@@ -15,6 +15,17 @@ export const SECTIONS = [
         ],
     },
     {
+        // Batterie : décollage refusé batterie basse, retour au départ batterie basse (0 = arrêt). Firmware en 0,01 V par élément.
+        key: "battery",
+        title: "trueglideBatteryTitle",
+        help: "trueglideBatteryHelp",
+        settings: [
+            { name: "battery_arm_min_cell_voltage", type: "number", min: 0, max: 450, scale: 100, unit: "V" },
+            { name: "battery_rth_cell_voltage", type: "number", min: 0, max: 450, scale: 100, unit: "V" },
+            { name: "battery_rth_delay", type: "number", min: 1, max: 60, unit: "s" },
+        ],
+    },
+    {
         key: "motors",
         title: "trueglideMotorsTitle",
         help: "trueglideMotorsHelp",
@@ -93,6 +104,8 @@ export function parseGet(lines) {
 // Commands that read every TrueGlide setting at once (CLI "get" matches by name prefix).
 export const GET_COMMANDS = [
     "get power_guard",
+    "get battery_arm",
+    "get battery_rth",
     "get motor_desync",
     "get dshot_telemetry_fallback",
     "get speeder",

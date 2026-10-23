@@ -32,6 +32,13 @@ describe("TrueGlide dashboard helpers", () => {
         expect(armingBlockers("1.48.0", count, 0)).toEqual([]);
     });
 
+    it("names the TrueGlide low-battery reason (one more bit before ARM_SWITCH)", () => {
+        const count = 31; // TrueGlide: 29 flags + LOW_BATTERY + ARM_SWITCH
+        expect(armingFlagNames("1.48.0", count)[29]).toBe("LOW_BATTERY");
+        expect(armingBlockers("1.48.0", count, (1 << 29) | (1 << 30))).toEqual(["LOW_BATTERY"]);
+        expect(armingFlagNames("1.48.0", 30)).not.toContain("LOW_BATTERY"); // plain Betaflight
+    });
+
     it("never shows a voltage that was not measured", () => {
         expect(batteryInfo(0, 0)).toEqual({ measured: false });
         expect(batteryInfo(24.6, 6)).toEqual({ measured: true, voltage: 24.6, cells: 6, perCell: 4.1 });
