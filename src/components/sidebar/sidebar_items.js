@@ -98,6 +98,15 @@ export const sidebarItems = [
         icon: "i-lucide-wand-sparkles",
         group: "sidebarGroupTuning",
     },
+    // TrueGlide: TrueGlide Studio in a tab (page published with the site). Shared: without a board it prepares a quad;
+    // with a board it can read the board's diff all. It never writes to the board.
+    {
+        key: "studio",
+        mode: "shared",
+        i18n: "tabStudio",
+        icon: "i-lucide-drafting-compass",
+        group: "sidebarGroupTuning",
+    },
     {
         key: "autotune",
         mode: "shared",

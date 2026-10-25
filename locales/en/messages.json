@@ -855,6 +855,27 @@
     "tfEscBusy": {
         "message": "Operation in progress on the ESCs, wait before leaving the ESC tab."
     },
+    "tabStudio": {
+        "message": "Studio"
+    },
+    "tfStudioIntro": {
+        "message": "TrueGlide Studio: prepare a quad without plugging it in (starting tune, ports, pin check, drone file). With the board connected, \"Read the board configuration\" gives its diff all to Studio. Nothing is written to the board from here: then paste the commands in the CLI tab. Internet required."
+    },
+    "tfStudioReadBoard": {
+        "message": "Read the board configuration"
+    },
+    "tfStudioReading": {
+        "message": "Reading…"
+    },
+    "tfStudioReadDone": {
+        "message": "Board configuration given to Studio ($1 lines)."
+    },
+    "tfStudioReadEmpty": {
+        "message": "the board returned no configuration."
+    },
+    "tfStudioReadFailed": {
+        "message": "Cannot read:"
+    },
     "tabTfRadio": {
         "message": "Radio telemetry"
     },
