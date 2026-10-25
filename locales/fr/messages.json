@@ -879,6 +879,39 @@
     "tfStudioReadFailed": {
         "message": "Lecture impossible :"
     },
+    "tfOfflineBoardPort": {
+        "message": "Carte hors ligne : $1"
+    },
+    "tfOfflineTitle": {
+        "message": "Régler hors ligne"
+    },
+    "tfOfflineHarvestHelp": {
+        "message": "Récolter la carte : le logiciel ouvre chaque onglet tout seul et garde tout ce que la carte affiche (une carte vierge aussi). Rien n'est écrit dans la carte. Ensuite, carte débranchée, choisir « Carte hors ligne » dans la liste des ports : les mêmes onglets s'ouvrent, avec la configuration récoltée."
+    },
+    "tfOfflineHarvest": {
+        "message": "Récolter cette carte"
+    },
+    "tfOfflineHarvesting": {
+        "message": "Récolte : $1 / $2 ($3)…"
+    },
+    "tfOfflineHarvested": {
+        "message": "Carte récoltée : $1. Elle est gardée dans ce navigateur."
+    },
+    "tfOfflineHarvestWait": {
+        "message": "Le logiciel ouvre chaque onglet tout seul : ne pas débrancher la carte."
+    },
+    "tfOfflineHarvestFailed": {
+        "message": "Récolte impossible :"
+    },
+    "tfOfflineDownload": {
+        "message": "Enregistrer le fichier carte"
+    },
+    "tfOfflineConnected": {
+        "message": "Carte hors ligne : $1, récoltée le $2. Rien n'est envoyé à une carte."
+    },
+    "tfOfflineWrites": {
+        "message": "Changements préparés hors ligne : $1."
+    },
     "tabTfRadio": {
         "message": "Télémétrie radio"
     },

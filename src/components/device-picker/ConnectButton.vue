@@ -134,6 +134,8 @@ import { set as setConfig } from "../../js/ConfigStorage";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 import GUI from "../../js/gui";
+import { loadBoard } from "../../js/trueglide/offline/store.js";
+import { OFFLINE_PATH } from "../../js/protocols/OfflineBoardSerial.js";
 
 function selectAndConnect(path) {
     DeviceHandler.devicePicker.selectedDevice = path;
@@ -174,6 +176,16 @@ export default defineComponent({
         const isConnected = computed(() => connectionStore.connectionValid);
         const connecting = computed(() => Boolean(connectionStore.connectingTo));
         const isVirtualMode = computed(() => connectionStore.virtualMode);
+        // TrueGlide: offline board (harvested from a real board), refreshed when a harvest is saved or removed
+        const offlineVersion = ref(0);
+        globalThis.addEventListener?.("trueglide-offline-changed", () => offlineVersion.value++);
+        const offlineBoard = computed(() => {
+            offlineVersion.value; // dependency
+            return loadBoard();
+        });
+        const offlineLabel = computed(() =>
+            i18n.getMessage("tfOfflineBoardPort", [offlineBoard.value?.carte?.nom || "?"]),
+        );
         const connectedTo = computed(() => connectionStore.connectedTo);
 
         const disconnectLabel = computed(() => {
@@ -254,6 +266,13 @@ export default defineComponent({
                     });
                 }
             }
+            if (offlineBoard.value) {
+                devices.push({
+                    label: offlineLabel.value,
+                    icon: "i-lucide-hard-drive",
+                    onSelect: () => selectAndConnect(OFFLINE_PATH),
+                });
+            }
             if (expertMode && DeviceHandler.showVirtualMode) {
                 devices.push({
                     label: i18n.getMessage("portsSelectVirtual"),
@@ -309,6 +328,9 @@ export default defineComponent({
 
         const portLabel = computed(() => {
             // Once connected, show the port actually in use (the selection may have been reset)
+            if (isConnected.value && connectedTo.value === OFFLINE_PATH) {
+                return offlineLabel.value;
+            }
             if (isConnected.value && connectedTo.value && !isVirtualMode.value) {
                 const all = [...serialPorts.value, ...usbPorts.value, ...bluetoothPorts.value];
                 return all.find((d) => d.path === connectedTo.value)?.displayName ?? connectedTo.value;
@@ -318,6 +340,9 @@ export default defineComponent({
             }
             if (selectedDevice.value === "manual") {
                 return i18n.getMessage("portsSelectManual");
+            }
+            if (selectedDevice.value === OFFLINE_PATH) {
+                return offlineLabel.value;
             }
             return selectedDisplayName.value ?? i18n.getMessage("tgPortChoose");
         });

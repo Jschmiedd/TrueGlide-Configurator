@@ -9,6 +9,7 @@
             <p class="text-sm mb-4">{{ boardLine }}</p>
 
             <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                <TrueGlideOfflineBox />
                 <UiBox :title="$t('tfDashDrone')">
                     <div class="grid grid-cols-2 gap-4">
                         <div class="flex flex-col">
@@ -165,6 +166,7 @@
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
+import TrueGlideOfflineBox from "@/components/trueglide/TrueGlideOfflineBox.vue";
 import FC from "@/js/fc";
 import { i18n } from "@/js/localization";
 import { have_sensor } from "@/js/sensor_helpers";

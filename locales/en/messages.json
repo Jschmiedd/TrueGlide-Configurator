@@ -876,6 +876,39 @@
     "tfStudioReadFailed": {
         "message": "Cannot read:"
     },
+    "tfOfflineBoardPort": {
+        "message": "Offline board: $1"
+    },
+    "tfOfflineTitle": {
+        "message": "Set up offline"
+    },
+    "tfOfflineHarvestHelp": {
+        "message": "Harvest the board: the software opens every tab by itself and keeps everything the board shows (a blank board too). Nothing is written to the board. Then, with the board unplugged, pick \"Offline board\" in the port list: the same tabs open, with the harvested configuration."
+    },
+    "tfOfflineHarvest": {
+        "message": "Harvest this board"
+    },
+    "tfOfflineHarvesting": {
+        "message": "Harvest: $1 / $2 ($3)…"
+    },
+    "tfOfflineHarvested": {
+        "message": "Board harvested: $1. It is kept in this browser."
+    },
+    "tfOfflineHarvestWait": {
+        "message": "The software opens each tab by itself: do not unplug the board."
+    },
+    "tfOfflineHarvestFailed": {
+        "message": "Cannot harvest:"
+    },
+    "tfOfflineDownload": {
+        "message": "Save the board file"
+    },
+    "tfOfflineConnected": {
+        "message": "Offline board: $1, harvested on $2. Nothing is sent to a board."
+    },
+    "tfOfflineWrites": {
+        "message": "Changes prepared offline: $1."
+    },
     "tabTfRadio": {
         "message": "Radio telemetry"
     },

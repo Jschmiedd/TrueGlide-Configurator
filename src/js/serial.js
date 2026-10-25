@@ -2,6 +2,8 @@ import WebSerial from "./protocols/WebSerial.js";
 import WebBluetooth from "./protocols/WebBluetooth.js";
 import Websocket from "./protocols/WebSocket.js";
 import VirtualSerial from "./protocols/VirtualSerial.js";
+import OfflineBoardSerial, { OFFLINE_PATH } from "./protocols/OfflineBoardSerial.js";
+import { Recorder } from "./trueglide/offline/board.js";
 import { isAndroid, isTauri, isTauriIOS } from "./utils/checkCompatibility.js";
 import CapacitorSerial from "./protocols/CapacitorSerial.js";
 import CapacitorBle from "./protocols/CapacitorBle.js";
@@ -69,6 +71,10 @@ class Serial extends EventTarget {
 
         // Always add virtual protocol
         this._protocols.push({ name: "virtual", instance: new VirtualSerial() });
+        // TrueGlide: offline board, answering with what was harvested from a real board
+        this._protocols.push({ name: "offline", instance: new OfflineBoardSerial() });
+        // TrueGlide: what the connected board answers, kept for a harvest (src/js/trueglide/offline/harvest.js)
+        this.recorder = null;
 
         // Forward events from all protocols to the Serial class
         this._setupEventForwarding();
@@ -98,6 +104,9 @@ class Serial extends EventTarget {
                     // Drop lifecycle events arriving from a non-active transport.
                     if (lifecycleEvents.has(eventType) && instance !== this._protocol) {
                         return;
+                    }
+                    if (eventType === "receive" && this.recorder) {
+                        this.recorder.received(new Uint8Array(event.detail));
                     }
 
                     this.dispatchEvent(
@@ -153,6 +162,9 @@ class Serial extends EventTarget {
         // Default to serial for typical serial device identifiers.
         if (isFn || s === "virtual") {
             return this._instance("virtual");
+        }
+        if (s === OFFLINE_PATH) {
+            return this._instance("offline");
         }
         // WebSocket endpoints (ws://, wss://) use the HTTP upgrade handshake. Thus they need the
         // WebSocket protocol, and not raw TCP. Tauri has two different slots: "websocket" and the
@@ -212,6 +224,9 @@ class Serial extends EventTarget {
         let result = false;
         try {
             this._protocol = this.selectProtocol(path);
+            // TrueGlide: record every real board (never the virtual or offline one) for a harvest
+            this.recorder =
+                path === OFFLINE_PATH || path === "virtual" || typeof path === "function" ? null : new Recorder();
             result = await this._protocol.connect(path, options);
         } catch (error) {
             console.error(
@@ -250,6 +265,7 @@ class Serial extends EventTarget {
         try {
             // Guard the method too: virtual mode has no send(), and that is a
             // normal path, not an error to log.
+            this.recorder?.sent(new Uint8Array(data));
             result = (await this._protocol?.send?.(data)) ?? { bytesSent: 0 };
         } catch (error) {
             result = { bytesSent: 0 };

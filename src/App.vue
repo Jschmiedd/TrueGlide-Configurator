@@ -36,6 +36,7 @@
                         <ConnectButton v-if="!isCompactBreakpoint" class="tf-topbar__connect" menu-side="bottom" round />
                     </div>
                     <SetupGuideBar />
+                    <TrueGlideOfflineBar />
                     <div id="content" @scroll.passive="onContentScroll">
                         <component
                             :is="activeTabComponent"
@@ -74,6 +75,7 @@ import ConnectButton from "./components/device-picker/ConnectButton.vue";
 import GlobalDialogs from "./components/dialogs/GlobalDialogs.vue";
 import Sidebar from "./components/sidebar/Sidebar.vue";
 import SetupGuideBar from "./components/trueglide/SetupGuideBar.vue";
+import TrueGlideOfflineBar from "./components/trueglide/TrueGlideOfflineBar.vue";
 import FCModule from "./js/fc.js";
 import MSPModule from "./js/msp.js";
 import PortUsageModule from "./js/port_usage.js";
