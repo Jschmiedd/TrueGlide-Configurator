@@ -6,6 +6,7 @@
 // Format du fichier carte : « trueglide-carte » (propre à TrueGlide).
 
 import { FrameReader, encodeCli, encodeResponse, fromHex, hex } from "./frames.js";
+import { applyCliSet, applyWrite } from "./writes.js";
 
 export const FORMAT = "trueglide-carte";
 export const VERSION = 1;
@@ -72,9 +73,12 @@ export const LIVE_CODE_NAMES = [
     "MSP_MAG_CALIBRATION",
     "MSP_SET_PASSTHROUGH",
     "MSP_DATAFLASH_ERASE",
-    "MSP_SET_RESET_CURR_PID",
     "MSP2_SEND_DSHOT_COMMAND",
 ];
+
+// Changement, copie ou remise à zéro d'un profil : la récolte ne connaît que le profil actif, la carte hors ligne ne
+// peut pas montrer les autres. Refusées hors ligne (le logiciel affiche l'erreur habituelle).
+export const OFFLINE_REFUSED_NAMES = ["MSP_SELECT_SETTING", "MSP_COPY_PROFILE", "MSP_SET_RESET_CURR_PID"];
 
 // Commandes du CLI qui ne changent pas la configuration : rendues depuis la récolte.
 const CLI_READ =
@@ -112,8 +116,19 @@ export class OfflineBoard {
     msp(m) {
         const k = key(m.code, m.payload);
         const { writes, live, eepromWrite, reboot } = this.codes;
+        if (this.codes.refused?.has(m.code)) {
+            return { reply: encodeResponse(m.version, m.code, new Uint8Array(0), true) };
+        }
+        // écriture d'une fonction que la carte récoltée n'a pas (lecture refusée à la récolte) : refusée aussi
+        if (writes.has(m.code) && !live.has(m.code) && this.readRefused(m.code)) {
+            return { reply: encodeResponse(m.version, m.code, new Uint8Array(0), true) };
+        }
         if (writes.has(m.code) && !live.has(m.code)) {
             this.rec.writes.push({ code: m.code, payload: hex(m.payload) });
+            // la lecture correspondante rend la nouvelle valeur ; sinon, elle est notée (affichage pas à jour)
+            if (this.codes.names && !applyWrite(this.rec, this.codes.names, m.code, m.payload)) {
+                this.rec.notReread = [...new Set([...(this.rec.notReread ?? []), m.code])];
+            }
             return { reply: encodeResponse(m.version, m.code) };
         }
         if (live.has(m.code)) {
@@ -133,6 +148,12 @@ export class OfflineBoard {
         return { reply: encodeResponse(m.version, m.code, new Uint8Array(0), true) };
     }
 
+    readRefused(code) {
+        const name = Object.keys(this.codes.names ?? {}).find((k) => this.codes.names[k] === code);
+        const read = this.codes.names?.[name?.replace("_COMMON_SET_", "_COMMON_").replace("_SET_", "_")];
+        return read !== undefined && `${read}:` in this.rec.unsupported;
+    }
+
     cli(command) {
         const c = command.trim();
         if (c in this.rec.cli) {
@@ -141,10 +162,11 @@ export class OfflineBoard {
         if (!c || CLI_READ.test(c)) {
             return [`# ${c}`, "# (carte hors ligne : pas de réponse récoltée pour cette commande)"];
         }
-        if (/^(save|exit|defaults|bl|dfu|reboot|flash_erase)\b/i.test(c)) {
+        if (/^(save|exit|defaults|bl|dfu|reboot|flash_erase)\b|^(profile|rateprofile|battery_profile)\s+\d/i.test(c)) {
             return [`# ${c} : impossible hors ligne`];
         }
         this.rec.writes.push({ cli: c });
+        applyCliSet(this.rec, c);
         return [`# ${c}`];
     }
 }
@@ -152,6 +174,7 @@ export class OfflineBoard {
 export function writeCodes(MSPCodes) {
     const writes = new Set();
     const live = new Set();
+    const refused = new Set(OFFLINE_REFUSED_NAMES.map((n) => MSPCodes[n]).filter((c) => c !== undefined));
     for (const [name, code] of Object.entries(MSPCodes)) {
         if (/^MSP2?_(COMMON_)?SET_|^MSP2?_SET_|^MSP_COPY_PROFILE$|^MSP_SELECT_SETTING$|^MSP_EEPROM_WRITE$/.test(name)) {
             writes.add(code);
@@ -161,5 +184,12 @@ export function writeCodes(MSPCodes) {
             writes.add(code);
         }
     }
-    return { writes, live, eepromWrite: MSPCodes.MSP_EEPROM_WRITE, reboot: MSPCodes.MSP_SET_REBOOT };
+    return {
+        writes,
+        live,
+        eepromWrite: MSPCodes.MSP_EEPROM_WRITE,
+        reboot: MSPCodes.MSP_SET_REBOOT,
+        names: MSPCodes,
+        refused,
+    };
 }

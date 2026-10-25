@@ -12,6 +12,7 @@ import { sidebarItems } from "../../../components/sidebar/sidebar_items.js";
 import { send } from "../../../composables/useMspCliSession.js";
 import { saveBoard } from "./store.js";
 import { harvestTabs } from "./harvest_tabs.js";
+import { boardIdentity } from "./identity.js";
 import { boardChanged, offlineState } from "./harvest_state.js";
 
 function wait(ms) {
@@ -42,16 +43,6 @@ async function settle({ quietMs = 1200, minMs = 1500, maxMs = 10000 } = {}) {
     }
 }
 
-export function boardIdentity(config = FC.CONFIG) {
-    return {
-        nom: config.boardName || config.targetName || "",
-        cible: config.targetName || "",
-        fabricant: config.manufacturerId || "",
-        uid: Array.isArray(config.uid) ? config.uid.map((n) => (n >>> 0).toString(16).padStart(8, "0")).join("") : "",
-        firmware: `${config.flightControllerIdentifier || ""} ${config.flightControllerVersion || ""}`.trim(),
-    };
-}
-
 // Récolte de la carte branchée ; l'avancement est dans offlineState. Rend la récolte (déjà gardée dans ce navigateur).
 export async function harvest() {
     if (offlineState.running) {
@@ -75,7 +66,7 @@ export async function harvest() {
         await send("dump all", { timeoutMs: 30000 });
         const recording = structuredClone(serial.recorder.data);
         recording.date = new Date().toISOString();
-        recording.carte = boardIdentity();
+        recording.carte = boardIdentity(FC.CONFIG);
         recording.writes = [];
         saveBoard(recording);
         offlineState.done = recording.carte.nom || "?";

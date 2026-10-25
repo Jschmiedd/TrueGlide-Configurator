@@ -900,6 +900,42 @@
     "tfOfflineHarvestWait": {
         "message": "Le logiciel ouvre chaque onglet tout seul : ne pas débrancher la carte."
     },
+    "tfOfflinePending": {
+        "message": "$1 changement(s) préparé(s) hors ligne pour cette carte, pas encore envoyé(s)."
+    },
+    "tfOfflineOtherBoard": {
+        "message": "$1 changement(s) préparé(s) hors ligne pour une autre carte ($2) : ils ne partent que vers la carte récoltée."
+    },
+    "tfOfflineOtherFirmware": {
+        "message": "$1 changement(s) préparé(s) avec un autre firmware sur cette carte ($2) : refaire la récolte avant d'envoyer."
+    },
+    "tfOfflineSend": {
+        "message": "Envoyer les changements préparés"
+    },
+    "tfOfflineSendConfirm": {
+        "message": "Envoyer $1 changement(s) préparé(s) hors ligne à la carte, puis enregistrer ?\n\nHélices retirées. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
+    },
+    "tfOfflineSending": {
+        "message": "Envoi des changements préparés : ne pas débrancher la carte."
+    },
+    "tfOfflineSent": {
+        "message": "$1 changement(s) envoyé(s) et enregistré(s). La carte redémarre."
+    },
+    "tfOfflineSendRefused": {
+        "message": "Changement refusé par la carte ($1 : $2). Rien n'a été enregistré : la carte redémarre sans sauvegarder."
+    },
+    "tfOfflineSendFailed": {
+        "message": "Envoi impossible :"
+    },
+    "tfOfflineOpenFile": {
+        "message": "Ouvrir un fichier carte…"
+    },
+    "tfOfflineOpenFailed": {
+        "message": "Fichier carte non ouvert :"
+    },
+    "tfOfflineNotReread": {
+        "message": "$1 type(s) de changement ne se relisent pas hors ligne (l'onglet montre l'ancienne valeur) ; ils seront quand même envoyés."
+    },
     "tfOfflineHarvestFailed": {
         "message": "Récolte impossible :"
     },

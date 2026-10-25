@@ -7,8 +7,28 @@
     <UiBox :title="$t('tfOfflineTitle')">
         <p v-if="offline" class="text-sm">{{ msg("tfOfflineConnected", [board?.carte?.nom || "?", date]) }}</p>
         <p v-else class="text-sm">{{ $t("tfOfflineHarvestHelp") }}</p>
+        <template v-if="!offline && writes">
+            <p v-if="check.ok" class="text-sm mt-2 font-semibold">{{ msg("tfOfflinePending", [writes]) }}</p>
+            <p v-else class="text-sm mt-2">
+                {{
+                    msg(check.reason === "carte" ? "tfOfflineOtherBoard" : "tfOfflineOtherFirmware", [
+                        writes,
+                        board?.carte?.nom || "?",
+                    ])
+                }}
+            </p>
+        </template>
         <div class="flex flex-wrap gap-2 mt-3">
-            <UButton v-if="!offline" :disabled="state.running" size="sm" @click="start">
+            <UButton
+                v-if="!offline && writes && check.ok"
+                :disabled="state.sending || state.running"
+                size="sm"
+                color="warning"
+                @click="sendNow"
+            >
+                {{ $t("tfOfflineSend") }}
+            </UButton>
+            <UButton v-if="!offline" :disabled="state.running || state.sending" size="sm" @click="start">
                 {{ $t("tfOfflineHarvest") }}
             </UButton>
             <UButton v-if="board" color="neutral" variant="soft" size="sm" @click="download">
@@ -26,6 +46,8 @@ import { useConnectionStore } from "@/stores/connection";
 import { OFFLINE_PATH } from "@/js/protocols/OfflineBoardSerial.js";
 import { loadBoard } from "@/js/trueglide/offline/store.js";
 import { offlineState as state } from "@/js/trueglide/offline/harvest_state.js";
+import { boardIdentity, sameBoard } from "@/js/trueglide/offline/identity.js";
+import FC from "@/js/fc";
 
 // textes avec $1, $2… ; Vue échappe déjà le texte affiché : pas de second échappement (dates « 25/10/2026 »)
 const msg = (key, args = []) =>
@@ -39,11 +61,33 @@ const board = computed(() => {
     state.version; // dependency
     return loadBoard();
 });
+const writes = computed(() => board.value?.writes?.length ?? 0);
+const check = computed(() => (board.value ? sameBoard(board.value.carte, boardIdentity(FC.CONFIG)) : { ok: false }));
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
 
 async function start() {
     const { harvest } = await import("@/js/trueglide/offline/harvest.js");
     await harvest();
+}
+
+async function sendNow() {
+    if (!globalThis.confirm(msg("tfOfflineSendConfirm", [writes.value]))) {
+        return;
+    }
+    state.sending = true;
+    state.sent = "";
+    const { sendPrepared } = await import("@/js/trueglide/offline/send.js");
+    const r = await sendPrepared();
+    state.sending = false;
+    state.sentOk = r.ok;
+    if (r.ok) {
+        state.sent = msg("tfOfflineSent", [r.count]);
+    } else if (r.reason === "refus") {
+        state.sent = msg("tfOfflineSendRefused", [r.write?.cli ?? r.write?.code, r.reply]);
+    } else {
+        state.sent = `${msg("tfOfflineSendFailed")} ${r.reply ?? r.reason}`;
+    }
+    state.version++;
 }
 
 function download() {

@@ -897,6 +897,42 @@
     "tfOfflineHarvestWait": {
         "message": "The software opens each tab by itself: do not unplug the board."
     },
+    "tfOfflinePending": {
+        "message": "$1 change(s) prepared offline for this board, not sent yet."
+    },
+    "tfOfflineOtherBoard": {
+        "message": "$1 change(s) prepared offline for another board ($2): they are only sent to the harvested board."
+    },
+    "tfOfflineOtherFirmware": {
+        "message": "$1 change(s) prepared with another firmware on this board ($2): harvest again before sending."
+    },
+    "tfOfflineSend": {
+        "message": "Send the prepared changes"
+    },
+    "tfOfflineSendConfirm": {
+        "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
+    },
+    "tfOfflineSending": {
+        "message": "Sending the prepared changes: do not unplug the board."
+    },
+    "tfOfflineSent": {
+        "message": "$1 change(s) sent and saved. The board reboots."
+    },
+    "tfOfflineSendRefused": {
+        "message": "Change refused by the board ($1: $2). Nothing was saved: the board reboots without saving."
+    },
+    "tfOfflineSendFailed": {
+        "message": "Cannot send:"
+    },
+    "tfOfflineOpenFile": {
+        "message": "Open a board file…"
+    },
+    "tfOfflineOpenFailed": {
+        "message": "Board file not opened:"
+    },
+    "tfOfflineNotReread": {
+        "message": "$1 kind(s) of change cannot be read back offline (the tab shows the old value); they will still be sent."
+    },
     "tfOfflineHarvestFailed": {
         "message": "Cannot harvest:"
     },

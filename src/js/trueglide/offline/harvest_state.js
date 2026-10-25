@@ -11,6 +11,9 @@ export const offlineState = reactive({
     tab: "", // clé i18n de l'onglet en cours
     done: "", // nom de la carte récoltée (message affiché jusqu'à fermeture)
     error: "",
+    sending: false, // envoi des changements préparés en cours
+    sent: "", // résultat de l'envoi (affiché jusqu'à fermeture)
+    sentOk: false,
     version: 0, // change à chaque récolte ou écriture gardée : relire la carte hors ligne
 });
 

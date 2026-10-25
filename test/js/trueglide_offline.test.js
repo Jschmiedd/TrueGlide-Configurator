@@ -6,6 +6,7 @@ import MSPCodes from "../../src/js/msp/MSPCodes.js";
 import { FrameReader, encodeCli, encodeResponse, hex } from "../../src/js/trueglide/offline/frames.js";
 import { OfflineBoard, Recorder, emptyRecording, key, writeCodes } from "../../src/js/trueglide/offline/board.js";
 import { parseBoardFile } from "../../src/js/trueglide/offline/store.js";
+import { applyCliSet, applyWrite } from "../../src/js/trueglide/offline/writes.js";
 import { harvestTabs } from "../../src/js/trueglide/offline/harvest_tabs.js";
 
 const u8 = (b) => new Uint8Array(b);
@@ -102,6 +103,11 @@ describe("TrueGlide offline: harvest and offline board", () => {
         expect(ask(MSP.encode_message_v1(MSPCodes.MSP_EEPROM_WRITE, [])).events).toEqual(["save"]);
         expect(ask(MSP.encode_message_v1(MSPCodes.MSP_SET_REBOOT, [0])).events).toEqual(["reboot"]);
         expect(ask(MSP.encode_message_cli("defaults")).out[0].lines[0]).toMatch(/impossible hors ligne/);
+        expect(ask(MSP.encode_message_cli("profile 2")).out[0].lines[0]).toMatch(/impossible hors ligne/);
+        // fonction absente de la carte récoltée (lecture refusée) : écriture refusée aussi, jamais gardée
+        expect(ask(MSP.encode_message_v1(MSPCodes.MSP_SET_GPS_CONFIG, [1, 0, 1, 1])).out[0].error).toBe(true);
+        // changement de profil : refusé hors ligne
+        expect(ask(MSP.encode_message_v1(MSPCodes.MSP_SELECT_SETTING, [1])).out[0].error).toBe(true);
         expect(board.rec.writes).toEqual([
             { code: MSPCodes.MSP_SET_PID, payload: "32501e" },
             { cli: "set motor_poles = 12" },
@@ -127,5 +133,77 @@ describe("TrueGlide offline: harvest and offline board", () => {
             "dashboard",
             "ports",
         ]);
+    });
+});
+
+describe("TrueGlide offline: writes read back like the firmware", () => {
+    const rec = () => ({
+        msp: {
+            [key(MSPCodes.MSP_PID, "")]: "2d501e2f5422",
+            [key(MSPCodes.MSP_BLACKBOX_CONFIG, "")]: "0100010408000200000000",
+            [key(MSPCodes.MSP_SENSOR_ALIGNMENT, "")]: "0000000101000000000000",
+            [key(MSPCodes.MSP_MOTOR_CONFIG, "")]: "0000d007e803040e0000",
+            [key(MSPCodes.MSP_FEATURE_CONFIG, "")]: "00000000",
+            [key(MSPCodes.MSP_RC_DEADBAND, "")]: "00000000",
+            [key(MSPCodes.MSP_MODE_RANGES, "")]: "00000000" + "00000000",
+            [key(MSPCodes.MSP_MODE_RANGES_EXTRA, "")]: "02" + "000000" + "000000",
+            [key(MSPCodes.MSP_RXFAIL_CONFIG, "")]: "00dc05" + "00dc05",
+            [key(MSPCodes.MSP2_GET_TEXT, "02")]: "0200",
+            [key(MSPCodes.MSP_NAME, "")]: "",
+        },
+        unsupported: {},
+        cli: { "get power_guard": ["power_guard_esc_temp = 0", "Allowed range: 0 - 150", ""] },
+        writes: [],
+    });
+    const w = (r, code, bytes) => applyWrite(r, MSPCodes, code, Uint8Array.from(bytes));
+
+    it("same layout: the read gives back what was written, longer reads keep their extra fields", () => {
+        const r = rec();
+        expect(w(r, MSPCodes.MSP_SET_RC_DEADBAND, [5, 0, 0, 0])).toBe(true);
+        expect(r.msp[key(MSPCodes.MSP_RC_DEADBAND, "")]).toBe("05000000");
+        expect(w(r, MSPCodes.MSP_SET_PID, [50, 80, 30, 47, 84, 34, 0, 0, 0, 0, 0, 0])).toBe(true);
+        expect(r.msp[key(MSPCodes.MSP_PID, "")]).toBe("32501e2f5422");
+        expect(w(r, MSPCodes.MSP_SET_BLACKBOX_CONFIG, [2, 1, 4, 8, 0, 2, 0, 0, 0, 0])).toBe(true);
+        expect(r.msp[key(MSPCodes.MSP_BLACKBOX_CONFIG, "")]).toBe("0102010408000200000000");
+    });
+
+    it("fields the firmware ignores or computes stay as they were", () => {
+        const r = rec();
+        // alignement du gyroscope (octets 0-1) ignoré ; masque des gyroscopes et boussole repris
+        w(r, MSPCodes.MSP_SET_SENSOR_ALIGNMENT, [3, 3, 2, 1, 0, 0, 0, 0, 0, 0]);
+        expect(r.msp[key(MSPCodes.MSP_SENSOR_ALIGNMENT, "")]).toBe("0000020101000000000000");
+        // minthrottle ignoré, nombre de moteurs en lecture seule ; pôles et télémétrie repris
+        w(r, MSPCodes.MSP_SET_MOTOR_CONFIG, [0x26, 0x04, 0xd0, 0x07, 0xe8, 0x03, 12, 1]);
+        expect(r.msp[key(MSPCodes.MSP_MOTOR_CONFIG, "")]).toBe("0000d007e803040c0100");
+        // ESC_SENSOR (bit 27) : se voit aussi dans la lecture des moteurs
+        w(r, MSPCodes.MSP_SET_FEATURE_CONFIG, [0, 0, 0, 0x08]);
+        expect(r.msp[key(MSPCodes.MSP_MOTOR_CONFIG, "")].slice(-2)).toBe("01");
+    });
+
+    it("indexed writes (modes, failsafe channels) and names", () => {
+        const r = rec();
+        w(r, MSPCodes.MSP_SET_MODE_RANGE, [1, 0, 1, 10, 20, 1, 0]);
+        expect(r.msp[key(MSPCodes.MSP_MODE_RANGES, "")]).toBe("00000000" + "00010a14");
+        expect(r.msp[key(MSPCodes.MSP_MODE_RANGES_EXTRA, "")]).toBe("02000000000100");
+        // repli d'une voie : arrondi au pas de 25 du firmware (1510 -> 1500)
+        w(r, MSPCodes.MSP_SET_RXFAIL_CONFIG, [1, 2, 0xe6, 0x05]);
+        expect(r.msp[key(MSPCodes.MSP_RXFAIL_CONFIG, "")]).toBe("00dc05" + "02dc05");
+        w(r, MSPCodes.MSP2_SET_TEXT, [2, 3, 65, 66, 67]);
+        expect(r.msp[key(MSPCodes.MSP2_GET_TEXT, "02")]).toBe("0203414243");
+        expect(r.msp[key(MSPCodes.MSP_NAME, "")]).toBe("414243");
+        expect(w(r, MSPCodes.MSP_SET_VTX_CONFIG, [1, 2])).toBe(false); // jamais récoltée : signalée
+    });
+
+    it("CLI set: same lines as the firmware, « Default value » only when changed", () => {
+        const r = rec();
+        applyCliSet(r, "set power_guard_esc_temp = 95");
+        expect(r.cli["get power_guard"]).toEqual([
+            "power_guard_esc_temp = 95",
+            "Allowed range: 0 - 150",
+            "Default value: 0",
+            "",
+        ]);
+        applyCliSet(r, "set power_guard_esc_temp = 0");
+        expect(r.cli["get power_guard"]).toEqual(["power_guard_esc_temp = 0", "Allowed range: 0 - 150", ""]);
     });
 });

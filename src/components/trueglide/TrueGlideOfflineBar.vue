@@ -12,13 +12,21 @@
     <div v-else-if="offline" class="tf-offline-bar tf-offline-bar--offline">
         <strong>{{ msg("tfOfflineConnected", [board?.carte?.nom || "?", date]) }}</strong>
         <span>{{ msg("tfOfflineWrites", [writes]) }}</span>
+        <span v-if="notReread">{{ msg("tfOfflineNotReread", [notReread]) }}</span>
+    </div>
+    <div v-else-if="state.sending" class="tf-offline-bar tf-offline-bar--busy">
+        <strong>{{ $t("tfOfflineSending") }}</strong>
+    </div>
+    <div v-else-if="state.sent" class="tf-offline-bar" :class="{ 'tf-offline-bar--busy': !state.sentOk }">
+        <span>{{ state.sent }}</span>
+        <UButton size="xs" color="neutral" variant="soft" @click="state.sent = ''">{{ $t("close") }}</UButton>
     </div>
     <div v-else-if="state.done || state.error" class="tf-offline-bar">
         <span v-if="state.done">{{ msg("tfOfflineHarvested", [state.done]) }}</span>
         <span v-else>{{ $t("tfOfflineHarvestFailed") }} {{ state.error }}</span>
         <UButton size="xs" color="neutral" variant="soft" @click="close">{{ $t("close") }}</UButton>
     </div>
-    <div v-if="state.running" class="tf-offline-shield"></div>
+    <div v-if="state.running || state.sending" class="tf-offline-shield"></div>
 </template>
 
 <script setup>
@@ -43,6 +51,7 @@ const board = computed(() => {
 });
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
 const writes = computed(() => board.value?.writes?.length ?? 0);
+const notReread = computed(() => board.value?.notReread?.length ?? 0);
 
 function close() {
     state.done = "";

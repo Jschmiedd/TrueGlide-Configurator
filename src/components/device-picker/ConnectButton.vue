@@ -134,7 +134,7 @@ import { set as setConfig } from "../../js/ConfigStorage";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 import GUI from "../../js/gui";
-import { loadBoard } from "../../js/trueglide/offline/store.js";
+import { loadBoard, parseBoardFile, saveBoard } from "../../js/trueglide/offline/store.js";
 import { OFFLINE_PATH } from "../../js/protocols/OfflineBoardSerial.js";
 
 function selectAndConnect(path) {
@@ -183,6 +183,25 @@ export default defineComponent({
             offlineVersion.value; // dependency
             return loadBoard();
         });
+        function openBoardFile() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".json,application/json";
+            input.onchange = async () => {
+                const file = input.files?.[0];
+                if (!file) {
+                    return;
+                }
+                try {
+                    saveBoard(parseBoardFile(await file.text()));
+                    globalThis.dispatchEvent?.(new Event("trueglide-offline-changed"));
+                    selectAndConnect(OFFLINE_PATH);
+                } catch (e) {
+                    globalThis.alert?.(`${i18n.getMessage("tfOfflineOpenFailed")} ${e.message}`);
+                }
+            };
+            input.click();
+        }
         const offlineLabel = computed(() =>
             i18n.getMessage("tfOfflineBoardPort", [offlineBoard.value?.carte?.nom || "?"]),
         );
@@ -266,6 +285,12 @@ export default defineComponent({
                     });
                 }
             }
+            // TrueGlide: a board file saved earlier (or given by someone) becomes the offline board
+            devices.push({
+                label: i18n.getMessage("tfOfflineOpenFile"),
+                icon: "i-lucide-folder-open",
+                onSelect: openBoardFile,
+            });
             if (offlineBoard.value) {
                 devices.push({
                     label: offlineLabel.value,

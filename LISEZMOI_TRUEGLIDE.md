@@ -42,3 +42,22 @@ serveur : `localStorage.tf_update_url = "http://…/firmware/"` (le serveur doit
 
 Licence : le logiciel est sous GPL-3.0 ; une version publique doit aussi donner accès à son code source (par exemple
 en rendant public ce dépôt ou en publiant le code source à côté).
+
+## Régler une carte hors ligne (version d'essai)
+
+1. Carte branchée (même vierge) : tableau de bord, « Récolter cette carte ». Le logiciel ouvre chaque onglet tout seul et
+   garde tout ce que la carte lui répond (rien n'est écrit dans la carte). Le Plan de vol n'est pas ouvert (il peut
+   demander la position du navigateur à un service tiers).
+2. Carte débranchée : dans la liste des ports, « Carte hors ligne : NOM ». Les mêmes onglets s'ouvrent, avec le même
+   visuel ; les réglages se font et s'enregistrent comme d'habitude, mais restent dans le navigateur. Un bandeau
+   rappelle qu'on est hors ligne et compte les changements préparés.
+3. Carte rebranchée : tableau de bord, « Envoyer les changements préparés ». Seulement vers la carte récoltée (même
+   numéro unique) et le même firmware ; après confirmation, les écritures partent dans l'ordre ; à la première refusée,
+   rien n'est enregistré (la carte redémarre sans sauvegarder), sinon `save`.
+
+« Enregistrer le fichier carte » / « Ouvrir un fichier carte… » (liste des ports) : format `trueglide-carte` v1.
+Hors ligne, le changement, la copie ou la remise à zéro d'un profil sont refusés (la récolte ne connaît que le profil
+actif), de même que les commandes immédiates (moteurs, étalonnage, passerelle ESC). Code : `src/js/trueglide/offline/`,
+`src/js/protocols/OfflineBoardSerial.js`. Vérifié au SITL : cinq changements faits hors ligne (zone morte, nom, failsafe,
+ralenti, protection TrueGlide), relus hors ligne, envoyés au firmware, puis récoltés à nouveau : réponses identiques
+octet pour octet à celles prévues par la carte hors ligne. Pas encore essayé sur une vraie carte.
