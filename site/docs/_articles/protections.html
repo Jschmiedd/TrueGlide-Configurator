@@ -56,6 +56,25 @@
 </ul>
 <div class="encart">La relance limite les dégâts d'un moteur calé : elle ne répare pas un moteur ou une voie d'ESC défaillante. Pour essayer ces réglages au sol, gardez les <b>hélices retirées</b>.</div>
 
+<h2 id="batterie-basse">Batterie basse (version d'essai)</h2>
+<div class="encart"><b>Pas encore dans le logiciel ni les firmwares publiés.</b> Ce cadre existe pour l'instant sur la page d'essai du logiciel, avec un firmware compilé pour la prochaine version. Il a passé 7 tests du firmware, mais il n'a jamais été essayé en vol : le simulateur n'a pas de batterie.</div>
+<p>Les moteurs ne sont <b>jamais coupés en vol</b> à cause d'une batterie basse : c'est le pilote qui décide, prévenu par l'OSD et les bips. En plus, et désactivé par défaut (0), le cadre <b>Batterie basse</b> propose :</p>
+<div class="tableau"><table>
+  <thead><tr><th>Libellé</th><th>Réglage CLI</th><th>Plage</th><th>Défaut</th></tr></thead>
+  <tbody>
+    <tr><td>Tension minimale pour décoller (par élément)</td><td><code>battery_arm_min_cell_voltage</code></td><td>0 à 4,50 V</td><td>0 (arrêt)</td></tr>
+    <tr><td>Retour au départ sous (par élément)</td><td><code>battery_rth_cell_voltage</code></td><td>0 à 4,50 V</td><td>0 (arrêt)</td></tr>
+    <tr><td>Délai avant le retour</td><td><code>battery_rth_delay</code></td><td>1 à 60 s</td><td>10 s</td></tr>
+  </tbody>
+</table></div>
+<p>Dans le CLI, les deux tensions s'écrivent en centièmes de volt : 3,70 V s'écrit <code>370</code>.</p>
+<ul>
+  <li><b>Tension minimale pour décoller</b> : au sol, sous cette tension par élément, l'armement est refusé. Le motif <code>LOW_BATTERY</code> s'affiche dans le <a href="tableau-de-bord.html">Tableau de bord</a>. Sans batterie mesurée, rien n'est bloqué.</li>
+  <li><b>Retour au départ</b> : en vol, si la tension par élément reste sous le seuil pendant tout le délai, le drone rentre au point de départ avec le GPS RESCUE. Une chute brève pendant un coup de gaz remet le compte à zéro. L'OSD affiche <code>BAT RTH</code>.</li>
+  <li>Le retour demande que le GPS RESCUE soit possible (GPS, point de départ, cap). Sinon, rien ne se passe et l'OSD affiche <code>BAT RTH N/A</code>.</li>
+  <li>Le pilote reprend la main en bougeant le manche de roulis ou de tangage de plus de 30 %. Le retour ne se relance pas avant le prochain désarmement.</li>
+</ul>
+
 <h2 id="alertes-osd">Alertes OSD et journaux</h2>
 <p>Deux alertes TrueGlide s'ajoutent dans la liste des alertes de l'onglet <a href="osd.html">OSD</a> (élément « Avertissements » affiché). Elles n'apparaissent que si la protection correspondante est activée, et seulement drone armé.</p>
 <div class="tableau"><table>

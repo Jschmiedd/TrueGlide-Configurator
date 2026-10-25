@@ -99,6 +99,7 @@
     <ul>
       <li><a href="#mixer">Mixer</a></li>
       <li><a href="#esc">Fonctionnalités ESC/Moteur</a></li>
+      <li><a href="#regler-les-esc">Régler ou flasher les ESC</a></li>
       <li><a href="#moteurs-3d">Fonctions ESC/Moteurs 3D</a></li>
       <li><a href="#graphique">Graphique des vibrations</a></li>
       <li><a href="#barres">Barres et télémétrie des moteurs</a></li>
@@ -140,6 +141,14 @@
   <li><b>Valeur mini (valeur envoyée aux ESC machine désarmée)</b> et <b>Gaz maximum (Valeur la plus élevée envoyée aux ESC machine armée)</b> : 0 à 2000, seulement avec un protocole analogique.</li>
 </ul>
 <p>Quand on active ou coupe le DShot bi-directionnel avec le filtre RPM actif, une fenêtre « Changement des valeurs de filtrage dynamique » propose de remettre les filtres coupe-bande dynamiques aux valeurs recommandées : <b>Accepter</b> les remet, <b>Annuler</b> garde les valeurs actuelles.</p>
+
+<h2 id="regler-les-esc">Régler ou flasher les ESC</h2>
+<p>Cet onglet règle le protocole entre la carte et les ESC, mais pas les ESC eux-mêmes (sens de rotation, firmware Bluejay, BLHeli_S ou AM32…). Pour cela, utilisez <a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">TRUEGLIDE ESC CONFIGURATOR</a>. C'est un logiciel séparé et libre (licence AGPL v3), dérivé d'ESC Configurator, qui passe par la carte de vol. Il n'a pas encore été essayé sur un ESC réel.</p>
+<ul>
+  <li>Une seule connexion USB à la fois : déconnectez TrueGlide Configurator avant de vous connecter dans l'ESC Configurator.</li>
+  <li><b>Hélices retirées</b>, batterie branchée.</li>
+  <li>Version d'essai du logiciel : un onglet <b>ESC</b> ouvre l'ESC Configurator dans TrueGlide Configurator et gère la déconnexion. Il n'est pas encore dans le logiciel publié.</li>
+</ul>
 
 <h2 id="moteurs-3d">Fonctions ESC/Moteurs 3D</h2>
 <ul>
