@@ -147,7 +147,9 @@
     <p class="petit">Un seul fichier garde tout : ce formulaire, les ports et la configuration de la carte (<code>diff all</code>).
       Pour le créer avec la carte : dans le Configurator, onglet CLI, taper <code>diff all</code>, « Enregistrer » le texte, puis
       l'ouvrir ici. Un fichier du calculateur TALKTRUE FPV XRIG (format <code>talktrue-trueglide-studio</code>) remplit le formulaire. Ensuite tout se prépare sans la carte ; on colle les commandes dans l'onglet CLI une fois le drone branché.</p>
+    <p class="petit usb-seul" hidden>Carte branchée en USB (Chrome ou Edge sur ordinateur, TrueGlide Configurator déconnecté) : « Lire la carte en USB » remplit tout d'un coup. Studio lit seulement ; la carte redémarre ensuite sans rien enregistrer.</p>
     <div class="boutons">
+      <button class="action usb-seul" id="lire-usb" hidden>Lire la carte en USB</button>
       <button class="second" id="ouvrir-drone">Ouvrir un fichier drone, du calculateur ou un diff all</button>
       <button class="second" id="enregistrer-drone">Enregistrer le fichier drone</button>
       <input id="fichier-drone" type="file" accept=".json,.txt,text/plain,application/json" hidden>
@@ -274,6 +276,7 @@
 <script src="js/analyse.js"></script>
 <script src="js/nav.js"></script>
 <script src="js/ports.js"></script>
+<script src="js/usb.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
 (function () {
@@ -341,7 +344,43 @@
     var id = 'cli' + Math.random().toString(36).slice(2);
     return '<pre class="cli" id="' + id + '">' + echap(texte) + '</pre><div class="boutons">' +
       '<button class="action" data-copier="' + id + '">Copier</button>' +
-      '<button class="second" data-telecharger="' + id + '" data-nom="' + nomFichier + '">Enregistrer en .txt</button></div>';
+      '<button class="second" data-telecharger="' + id + '" data-nom="' + nomFichier + '">Enregistrer en .txt</button>' +
+      (USB ? '<button class="second" data-envoyer="' + id + '">Envoyer à la carte (USB)</button>' : '') +
+      '</div><div id="' + id + '-usb"></div>';
+  }
+  // Carte en USB : seulement dans Chrome / Edge, et pas quand Studio est affiché dans TrueGlide Configurator (qui tient
+  // déjà le port ; son onglet Studio lit la carte lui-même).
+  var USB = TFUsb.disponible(navigator, window);
+  document.querySelectorAll('.usb-seul').forEach(function (el) { el.hidden = !USB; });
+  function messageUsb(err) {
+    var m = String(err && err.message || err);
+    if (err && err.name === 'NotFoundError') return 'Aucun port choisi.';
+    if (err && (err.name === 'NetworkError' || err.name === 'InvalidStateError')) return 'Port occupé : déconnecter TrueGlide Configurator (ou un autre logiciel), puis réessayer.';
+    return m;
+  }
+  $('lire-usb').addEventListener('click', function () {
+    var b = this; b.disabled = true; b.textContent = 'Lecture en cours…';
+    TFUsb.lireConfiguration(navigator.serial).then(function (texte) {
+      appliquer(TFPorts.ouvrir(texte), 'Configuration lue en USB');
+      $('info-drone').insertAdjacentHTML('beforeend', messages(['La carte a redémarré : rien n\'a été enregistré.'], 'note'));
+    }, function (err) {
+      $('info-drone').innerHTML = messages(['Lecture USB impossible : ' + messageUsb(err)], 'alerte');
+    }).then(function () { b.disabled = false; b.textContent = 'Lire la carte en USB'; });
+  });
+  // Envoi des commandes d'un bloc : seulement après confirmation ; à la première erreur, rien n'est enregistré.
+  function envoyerBloc(id, bouton) {
+    var texte = $(id).textContent, n = TFUsb.aEnvoyer(texte).length, sortie = $(id + '-usb');
+    if (!n) { sortie.innerHTML = messages(['Aucune commande à envoyer.'], 'conseil'); return; }
+    if (!confirm('Envoyer ' + n + ' commande(s) à la carte, puis enregistrer (save) ?\n\nHélices retirées. Relire les commandes avant. ' +
+      'À la première erreur, rien n\'est enregistré. La carte redémarre à la fin.')) return;
+    bouton.disabled = true; bouton.textContent = 'Envoi en cours…';
+    TFUsb.envoyerCommandes(navigator.serial, texte).then(function (r) {
+      sortie.innerHTML = r.erreur ?
+        messages(['Arrêt à la commande « ' + r.erreur.ligne + ' » : ' + r.erreur.reponse + '. Rien n\'a été enregistré (la carte a redémarré sans sauvegarder).'], 'alerte') :
+        messages([r.envoyees + ' commande(s) acceptée(s) et enregistrées (save). La carte redémarre. Relire la carte pour vérifier.'], 'ok');
+    }, function (err) {
+      sortie.innerHTML = messages(['Envoi impossible : ' + messageUsb(err) + ' Rien n\'a été enregistré.'], 'alerte');
+    }).then(function () { bouton.disabled = false; bouton.textContent = 'Envoyer à la carte (USB)'; });
   }
   document.addEventListener('click', function (ev) {
     var c = ev.target.dataset && ev.target.dataset.copier;
@@ -350,6 +389,8 @@
       (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { ev.target.textContent = 'Copié'; },
         function () { var r = document.createRange(); r.selectNodeContents($(c)); var s = getSelection(); s.removeAllRanges(); s.addRange(r); ev.target.textContent = 'Sélectionné : Ctrl+C'; });
     }
+    var u = ev.target.dataset && ev.target.dataset.envoyer;
+    if (u) envoyerBloc(u, ev.target);
     var d = ev.target.dataset && ev.target.dataset.telecharger;
     if (d) {
       var a = document.createElement('a');
