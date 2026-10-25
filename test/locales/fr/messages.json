@@ -858,6 +858,27 @@
     "tfEscBusy": {
         "message": "Opération en cours sur les ESC, patientez avant de quitter l'onglet ESC."
     },
+    "tabStudio": {
+        "message": "Studio"
+    },
+    "tfStudioIntro": {
+        "message": "TrueGlide Studio : préparer un drone sans le brancher (réglage de départ, ports, contrôle des broches, fichier drone). Carte branchée, « Lire la configuration de la carte » donne son diff all à Studio. Rien n'est écrit dans la carte d'ici : coller ensuite les commandes dans l'onglet CLI. Internet nécessaire."
+    },
+    "tfStudioReadBoard": {
+        "message": "Lire la configuration de la carte"
+    },
+    "tfStudioReading": {
+        "message": "Lecture en cours…"
+    },
+    "tfStudioReadDone": {
+        "message": "Configuration de la carte donnée à Studio ($1 lignes)."
+    },
+    "tfStudioReadEmpty": {
+        "message": "la carte n'a renvoyé aucune configuration."
+    },
+    "tfStudioReadFailed": {
+        "message": "Lecture impossible :"
+    },
     "tabTfRadio": {
         "message": "Télémétrie radio"
     },

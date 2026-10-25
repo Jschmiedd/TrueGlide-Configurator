@@ -66,6 +66,14 @@
     .fonctions { grid-template-columns: minmax(0, 1fr); }
     .chronologie li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
   }
+  .schema-eco { --or: #ffd700; --bleu: #3fa7f5; --neon: #cfe83f; --texte: #e8edf2; background: #06080b; color: #e8edf2;
+    border-radius: 16px; padding: 18px 16px 4px; margin: 6px 0 26px; }
+  .schema-eco .triangle { max-width: 900px; margin: 0 auto 14px; }
+  .schema-eco .triangle svg { width: 100%; height: auto; display: block; }
+  .schema-eco .parcours-mobile { display: none; list-style: none; padding: 0; margin: 0 0 14px; }
+  .schema-eco .parcours-mobile li { margin: 0 0 12px; line-height: 1.45; }
+  .schema-eco .parcours-mobile li b { color: var(--c); display: block; font-size: 1.05rem; }
+  @media (max-width: 820px) { .schema-eco .triangle { display: none; } .schema-eco .parcours-mobile { display: block; } }
 </style>
 </head>
 <body>
@@ -228,6 +236,94 @@
   <div class="large">
     <h2>L'écosystème TrueGlide</h2>
     <p class="sous">Des produits séparés, qui travaillent ensemble. La sécurité est le maître mot de chacun.</p>
+    <!-- Schéma repris tel quel du site TALKTRUE FPV XRIG (fpv-calculateur-v4, docs/site/index.html), pour un dessin
+         identique sur les deux sites. Le mettre à jour en même temps que celui d'XRIG. -->
+    <div class="schema-eco">
+    <div class="triangle">
+      <svg viewBox="0 0 1300 820" role="img" aria-label="Parcours : 1 XRIG Configurateur, avec à gauche la stack XPro (FC + ESC, XPro ESC Configurator, en construction) et à droite les châssis TALKTRUE ; 2 soufflerie ; gamme TrueFoam (3 TrueFoam intégré, TrueFoam sur PC : GUI v2412, GUI Multi-Core, Engine) ; gamme XPro (XPro) ; gamme TrueGlide (TrueGlide, TrueGlide ESC Configurator)">
+  <defs>
+    <marker id="fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#9aa7b4"/></marker>
+    <marker id="flo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#ffd700"/></marker>
+    <marker id="flc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3fa7f5"/></marker>
+    <marker id="flb2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#e8edf2"/></marker>
+    <marker id="flv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#c084fc"/></marker>
+  </defs>
+  <path d="M560 140 L150 395" fill="none" stroke="#ffd700" stroke-width="2.5" marker-end="url(#flo)"/>
+  <path d="M600 140 L330 395" fill="none" stroke="#9aa7b4" stroke-width="2.5" marker-end="url(#fl)"/>
+  <path d="M360 400 L625 145" fill="none" stroke="#9aa7b4" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#fl)"/>
+  <path d="M528 82 L332 82" fill="none" stroke="#c084fc" stroke-width="2.5" marker-end="url(#flv)"/>
+  <path d="M968 66 L774 66" fill="none" stroke="#e8edf2" stroke-width="2.5" marker-end="url(#flb2)"/>
+  <path d="M774 104 L968 104" fill="none" stroke="#e8edf2" stroke-width="2.5" marker-end="url(#flb2)"/>
+  <path d="M690 140 L752 395" fill="none" stroke="#3fa7f5" stroke-width="2.5" marker-end="url(#flc)"/>
+  <path d="M790 395 L720 140" fill="none" stroke="#9aa7b4" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#fl)"/>
+  <path d="M764 136 L975 395" fill="none" stroke="#ffd700" stroke-width="2.5" marker-end="url(#flo)"/>
+  <path d="M1015 395 L772 130" fill="none" stroke="#9aa7b4" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#fl)"/>
+  <g fill="none" stroke-width="1.8" stroke-dasharray="2 5">
+    <path d="M120 552 L120 670 L987 670 L987 556" stroke="#ffd700" marker-end="url(#flo)"/>
+    <path d="M120 615 L757 615 L757 556" stroke="#3fa7f5" marker-end="url(#flc)"/>
+    <path d="M345 552 L345 615" stroke="#3fa7f5"/>
+  </g>
+  <g fill="#3fa7f5"><circle cx="120" cy="615" r="3"/><circle cx="345" cy="615" r="3"/></g>
+  <g font-family="Inter, sans-serif" font-size="14" text-anchor="middle">
+    <text x="335" y="250" transform="rotate(-31.9 335 250)" fill="#ffd700">calcul dans le configurateur</text>
+    <text x="448" y="262" transform="rotate(-43.4 448 262)" fill="#e8edf2">étude + modèle 3D</text>
+    <text x="542" y="271" transform="rotate(-43.9 542 271)" fill="#3fa7f5" font-size="13">traînée S·Cx + perte de poussée</text>
+    <text x="430" y="72" fill="#c084fc" font-size="13">réglages de la stack (prévu)</text>
+    <text x="871" y="56" fill="#e8edf2" font-size="13">châssis de référence (STL)</text>
+    <text x="876" y="124" fill="#e8edf2" font-size="13">plans DXF et STL générés</text>
+    <text x="688" y="286" transform="rotate(76.3 688 286)" fill="#3fa7f5" font-size="13">configuration / étude S·Cx</text>
+    <text x="770" y="252" transform="rotate(74.6 770 252)" fill="#cfe83f" font-size="13">mesures en vol</text>
+    <text x="850" y="284" transform="rotate(50.8 850 284)" fill="#ffd700" font-size="13">fichier réglage de départ</text>
+    <text x="895" y="205" transform="rotate(48.3 895 205)" fill="#cfe83f" font-size="13">mesures en vol</text>
+    <text x="560" y="640" fill="#3fa7f5">fichier XPro : poussée, vitesse (soufflerie), traînée S·Cx (CFD ou soufflerie)</text>
+    <text x="560" y="694" fill="#ffd700">fichier TrueGlide : poussée, courant au stationnaire (soufflerie)</text>
+  </g>
+  <g font-family="Rajdhani, Inter, sans-serif" text-anchor="middle">
+    <rect x="530" y="30" width="240" height="105" rx="16" fill="#111820" stroke="#ffd700" stroke-width="2"/>
+    <text x="650" y="72" font-size="26" font-weight="700" fill="#ffd700">XRIG Configurateur</text>
+    <text x="650" y="102" font-size="17" fill="#e8edf2">Configurer · Étudier</text>
+    <text x="650" y="123" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">en ligne, gratuit</text>
+    <rect x="20" y="400" width="200" height="150" rx="16" fill="#111820" stroke="#ffd700" stroke-width="2"/><text x="120.0" y="438" font-size="22" font-weight="700" fill="#ffd700">Soufflerie</text><text x="120.0" y="468" font-size="16" fill="#e8edf2">calcul rapide</text><text x="120.0" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">poussée, traînée, vitesse</text><text x="120.0" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">autonomie, instantané</text>
+    <rect x="235" y="365" width="408" height="235" rx="18" fill="none" stroke="#3fa7f5" stroke-width="1.5" stroke-dasharray="6 6" opacity=".8"/>
+    <text x="630" y="586" text-anchor="end" font-size="14" font-weight="700" fill="#3fa7f5" letter-spacing="1.5">GAMME TRUEFOAM · CFD</text>
+    <rect x="248" y="400" width="195" height="150" rx="16" fill="#111820" stroke="#3fa7f5" stroke-width="2"/><text x="345.5" y="438" font-size="22" font-weight="700" fill="#3fa7f5">TrueFoam</text><text x="345.5" y="468" font-size="16" fill="#e8edf2">Calcul de l'air (CFD)</text><text x="345.5" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">intégré (PRO)</text><text x="345.5" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">sur notre serveur</text>
+    <rect x="452" y="400" width="180" height="150" rx="16" fill="#111820" stroke="#3fa7f5" stroke-width="2"/><text x="542.0" y="438" font-size="20" font-weight="700" fill="#3fa7f5">TrueFoam PC</text><text x="542.0" y="468" font-size="16" fill="#e8edf2">GUI v2412 · Multi-Core</text><text x="542.0" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">Engine (bientôt)</text><text x="542.0" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">logiciels à installer</text>
+    <rect x="655" y="365" width="210" height="235" rx="18" fill="none" stroke="#c084fc" stroke-width="1.5" stroke-dasharray="6 6" opacity=".8"/>
+    <text x="668" y="586" text-anchor="start" font-size="14" font-weight="700" fill="#c084fc" letter-spacing="1.5">GAMME XPRO · PRIVÉE</text>
+    <rect x="70" y="30" width="262" height="105" rx="16" fill="#111820" stroke="#c084fc" stroke-width="2" stroke-dasharray="8 6"/>
+    <rect x="131" y="19" width="140" height="22" rx="11" fill="#c084fc"/>
+    <text x="201" y="35" font-size="13" font-weight="700" fill="#06080b" letter-spacing="1.2">EN CONSTRUCTION</text>
+    <text x="201" y="70" font-size="24" font-weight="700" fill="#c084fc">Stack XPro</text>
+    <text x="201" y="96" font-size="15" fill="#e8edf2">FC + ESC · XPro ESC Configurator</text>
+    <text x="201" y="118" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">gamme XPro, privée · en construction</text>
+    <rect x="970" y="30" width="262" height="105" rx="16" fill="#111820" stroke="#e8edf2" stroke-width="2"/>
+    <text x="1101" y="66" font-size="24" font-weight="700" fill="#e8edf2">Châssis TALKTRUE</text>
+    <text x="1101" y="94" font-size="16" fill="#e8edf2">prototypes et référence</text>
+    <text x="1101" y="118" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">TOWA, Dixi, Dizzi, Fonzzi…</text>
+    <rect x="668" y="400" width="185" height="150" rx="16" fill="#111820" stroke="#cfe83f" stroke-width="2"/><text x="760.5" y="438" font-size="22" font-weight="700" fill="#cfe83f">XPro</text><text x="760.5" y="468" font-size="16" fill="#e8edf2">Analyser · Optimiser</text><text x="760.5" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">après chaque vol</text><text x="760.5" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">suivi du drone</text>
+    <rect x="878" y="365" width="410" height="235" rx="18" fill="none" stroke="#cfe83f" stroke-width="1.5" stroke-dasharray="6 6" opacity=".7"/>
+    <text x="1276" y="586" text-anchor="end" font-size="15" font-weight="700" fill="#cfe83f" letter-spacing="2">GAMME TRUEGLIDE · PUBLIQUE</text>
+    <rect x="892" y="400" width="190" height="150" rx="16" fill="#111820" stroke="#cfe83f" stroke-width="2"/><text x="987.0" y="438" font-size="22" font-weight="700" fill="#cfe83f">TrueGlide</text><text x="987.0" y="468" font-size="16" fill="#e8edf2">Firmware · Studio</text><text x="987.0" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">réglage de départ</text><text x="987.0" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">pour tous les drones</text>
+    <rect x="1094" y="400" width="180" height="150" rx="16" fill="#111820" stroke="#cfe83f" stroke-width="2"/><text x="1184.0" y="438" font-size="20" font-weight="700" fill="#cfe83f">TrueGlide ESC</text><text x="1184.0" y="468" font-size="16" fill="#e8edf2">Configurator</text><text x="1184.0" y="497" font-size="14" fill="#e8edf2" font-family="Inter, sans-serif">réglages des ESC</text><text x="1184.0" y="520" font-size="14" fill="#9aa7b4" font-family="Inter, sans-serif">public</text>
+  </g>
+  <g><circle cx="530" cy="30" r="15" fill="#ffd700"/><text x="530" y="36" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="19" font-weight="700" fill="#06080b">1</text><circle cx="20" cy="400" r="15" fill="#ffd700"/><text x="20" y="406" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="19" font-weight="700" fill="#06080b">2</text><circle cx="248" cy="400" r="15" fill="#3fa7f5"/><text x="248" y="406" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="19" font-weight="700" fill="#06080b">3</text><circle cx="892" cy="400" r="15" fill="#cfe83f"/><text x="892" y="406" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="19" font-weight="700" fill="#06080b">4</text><circle cx="668" cy="400" r="15" fill="#cfe83f"/><text x="668" y="406" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="19" font-weight="700" fill="#06080b">5</text></g>
+  <text x="650" y="726" text-anchor="middle" font-family="Rajdhani, Inter, sans-serif" font-size="15" font-weight="700" fill="#9aa7b4" letter-spacing="1.5">POINTILLÉS FINS : CE QUE CONTIENT CHAQUE FICHIER (ÉCRIT PAR LE CONFIGURATEUR)</text>
+  <text x="650" y="764" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" fill="#e8edf2"><tspan fill="#ffd700" font-weight="700">1</tspan> Configurer → <tspan fill="#ffd700" font-weight="700">2</tspan> Soufflerie → <tspan fill="#3fa7f5" font-weight="700">3</tspan> CFD TrueFoam (facultatif) → <tspan fill="#cfe83f" font-weight="700">4</tspan> Réglage de départ → <tspan fill="#cfe83f" font-weight="700">5</tspan> Vol et optimisation → retour en <tspan fill="#ffd700" font-weight="700">1</tspan></text>
+  <text x="650" y="804" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="#9aa7b4">Trait plein : envoyé · tirets : revient · violet « EN CONSTRUCTION » : pas encore disponible · chaque donnée inconnue reste vide, jamais devinée.</text>
+</svg>
+    </div>
+    <ol class="parcours-mobile">
+      <li style="--c:var(--or)"><b>1 · XRIG Configurateur</b> configurer et étudier votre drone, en ligne et gratuit.</li>
+      <li style="--c:var(--texte)"><b>Châssis TALKTRUE</b> (TOWA, Dixi, Dizzi, Fonzzi…) : les prototypes servent de châssis de référence (STL), et le configurateur génère les plans DXF et STL.</li>
+      <li style="--c:#c084fc"><b>Stack XPro · gamme XPro (privée) · en construction</b> stack complète (FC + ESC) et son logiciel XPro ESC Configurator ; réglages de la stack préparés par le configurateur : prévu.</li>
+      <li style="--c:var(--or)"><b>2 · Soufflerie et calcul rapide</b> (dans le configurateur) : poussée, traînée estimée, vitesse, autonomie, instantanés.</li>
+      <li style="--c:var(--bleu)"><b>3 · TrueFoam · gamme TrueFoam</b> calcul complet de l'air (CFD), intégré au configurateur (PRO) sur notre serveur : la traînée S·Cx et la perte de poussée reviennent dans le calcul. Sur PC : TrueFoam GUI v2412, GUI Multi-Core et Engine (bientôt).</li>
+      <li style="--c:var(--neon)"><b>4 · TrueGlide</b> (firmware et Studio) reçoit le fichier « réglage de départ » : poussée et courant au stationnaire.</li>
+      <li style="--c:var(--neon)"><b>5 · TrueGlide XPro</b> reçoit le fichier « configuration / étude » : poussée, vitesse et traînée S·Cx ; il analyse et optimise après chaque vol.</li>
+      <li style="--c:var(--neon)"><b>TrueGlide ESC Configurator · gamme TrueGlide (publique)</b> les réglages des ESC.</li>
+      <li style="--c:var(--texte)"><b>Retour en 1</b> : les mesures faites en vol par TrueGlide et XPro reviennent dans votre configuration du Garage.</li>
+    </ol>
+    </div>
     <div class="fonctions">
       <div class="fonction">
         <h3>Firmware TRUEGLIDE</h3>

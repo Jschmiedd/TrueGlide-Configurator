@@ -90,11 +90,11 @@
   <div class="carte">
     <h2>Mon drone</h2>
     <div class="grille">
-      <label>Taille d'hélice (pouces)<input id="pouces" type="number" min="1.2" max="15" step="0.1" value="7"></label>
-      <label>KV des moteurs<input id="kv" type="number" min="100" max="30000" step="10" value="1300"></label>
-      <label>Batterie (cellules S)<input id="cellules" type="number" min="1" max="14" step="1" value="6"></label>
-      <label>Masse en vol (g)<input id="masse" type="number" min="15" max="20000" step="1" value="1000"></label>
-      <label title="Fiche moteur « 12N14P » : 12 bobines (N), 14 aimants (P). Ou compter les aimants collés dans la cloche. Une erreur fausse le filtre RPM et le ralenti dynamique ; l'analyse des journaux le mesure.">Pôles des moteurs = nombre d'aimants (« 12N14P » : 14)<input id="poles" type="number" min="4" max="64" step="2" value="14"></label>
+      <label>Taille d'hélice (pouces)<input id="pouces" type="number" min="1.2" max="15" step="0.1" placeholder="ex. 5"></label>
+      <label>KV des moteurs<input id="kv" type="number" min="100" max="30000" step="10" placeholder="ex. 1950"></label>
+      <label>Batterie (cellules S)<input id="cellules" type="number" min="1" max="14" step="1" placeholder="ex. 6"></label>
+      <label>Masse en vol (g)<input id="masse" type="number" min="15" max="20000" step="1" placeholder="ex. 650"></label>
+      <label title="Fiche moteur « 12N14P » : 12 bobines (N), 14 aimants (P). Ou compter les aimants collés dans la cloche. Une erreur fausse le filtre RPM et le ralenti dynamique ; l'analyse des journaux le mesure.">Pôles des moteurs = nombre d'aimants (« 12N14P » : 14)<input id="poles" type="number" min="4" max="64" step="2" placeholder="ex. 14"></label>
       <label>Type de châssis
         <select id="chassis">
           <option value="quadx">Quad X</option>
@@ -139,7 +139,8 @@
       <label>Vitesse de transition (°/s)<input id="spVitesse" type="number" min="5" max="180" value="30"></label>
       <label class="case"><input id="spMix" type="checkbox"> Roulis / lacet tournés avec la transition</label>
     </div>
-    <div class="boutons"><button class="action" id="calculer">Calculer le réglage</button></div>
+    <div class="boutons"><button class="action" id="calculer">Calculer le réglage</button><button class="second" id="vider" type="button">Nouveau drone (vider le formulaire)</button></div>
+    <p class="petit">Studio garde le dernier drone saisi dans ce navigateur (rien n'est envoyé sur Internet).</p>
   </div>
   <div class="carte">
     <h2>Fichier drone</h2>
@@ -324,7 +325,7 @@
 
   function drone() {
     return {
-      pouces: nombre('pouces'), kv: nombre('kv'), cellules: nombre('cellules'), masse: nombre('masse'), poles: nombre('poles') || 14,
+      pouces: nombre('pouces'), kv: nombre('kv'), cellules: nombre('cellules'), masse: nombre('masse'), poles: nombre('poles'),
       chassis: $('chassis').value, style: $('style').value, qualite: $('qualite').value, pwmEsc: Number($('pwmEsc').value),
       esc: $('esc').value, carte: (carteChoisie() || {}).c || null, serieBranchee: $('serieBranchee').checked,
       capteurCourant: $('capteurCourant').checked, courantEsc: nombre('courantEsc') || 0,
@@ -359,9 +360,17 @@
 
   // ---- réglage ----
   var dernier = null;
+  // champs sans valeur par défaut : le réglage n'est jamais calculé sur un chiffre deviné
+  var OBLIGATOIRES = [['pouces', 'taille d\'hélice'], ['kv', 'KV des moteurs'], ['cellules', 'batterie (cellules)'], ['masse', 'masse en vol'], ['poles', 'pôles des moteurs']];
+  $('vider').addEventListener('click', function () {
+    try { localStorage.removeItem('tf-drone'); } catch (e) { }
+    location.reload();
+  });
   $('calculer').addEventListener('click', function () {
     memoriser();
     var e = drone(), out = $('resultat');
+    var manque = OBLIGATOIRES.filter(function (c) { return nombre(c[0]) === null; }).map(function (c) { return c[1]; });
+    if (manque.length) { out.innerHTML = '<div class="carte">' + messages(['À remplir avant de calculer : ' + manque.join(', ') + '.'], 'alerte') + '</div>'; return; }
     try { dernier = TFTune.recommander(e); } catch (err) { out.innerHTML = '<div class="carte">' + messages([err.message], 'alerte') + '</div>'; return; }
     var r = dernier, p = r.pids, ph = r.physique;
     var erreurs = TFTune.verifier(r.reglages, TF_SETTINGS);
@@ -487,6 +496,12 @@
     lecteur.onload = function () {
       var o;
       try { o = TFPorts.ouvrir(lecteur.result); } catch (err) { $('info-drone').innerHTML = messages([err.message], 'alerte'); return; }
+      appliquer(o, f.name + ' ouvert');
+    };
+    lecteur.readAsText(f);
+  });
+  // Remplit le formulaire avec un fichier drone, un fichier du calculateur ou un diff all (TFPorts.ouvrir)
+  function appliquer(o, origine) {
       Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });
       if (o.carte) $('carte').value = o.carte;
       if (o.configuration) $('diff').value = o.configuration;
@@ -494,13 +509,27 @@
       memoriser();
       majCarteEsc(); majSpeeder(); dessinerPorts();
       var k = carteChoisie();
-      $('info-drone').innerHTML = messages([f.name + ' ouvert : carte ' + (k ? k.nom : (o.carte || 'non trouvée')) +
+      $('info-drone').innerHTML = messages([origine + ' : carte ' + (k ? k.nom : (o.carte || 'non trouvée')) +
         (o.configuration ? ', configuration de ' + o.configuration.split(/\r?\n/).length + ' lignes (onglet « Analyser ma configuration »)' : '') + '.'], k ? 'ok' : 'conseil') +
         (k ? '' : messages(['Carte non reconnue : la choisir dans la liste « Carte de vol (FC) ».'], 'conseil')) +
         (o.messages || []).map(function (m) { return messages([m.texte], m.niveau); }).join('');
-    };
-    lecteur.readAsText(f);
-  });
+  }
+
+  // Studio dans l'onglet Studio de TrueGlide Configurator : le logiciel lit le « diff all » de la carte branchée et
+  // l'envoie ici ({ source: 'trueglide-configurator', command: 'configuration', texte }). Seulement depuis la page qui
+  // contient Studio ; le texte remplit le formulaire comme un diff all ouvert à la main, rien n'est envoyé à la carte.
+  if (window.parent !== window) {
+    window.addEventListener('message', function (ev) {
+      var d = ev.data;
+      if (ev.source !== window.parent || !d || d.source !== 'trueglide-configurator' || d.command !== 'configuration' || typeof d.texte !== 'string') return;
+      var o;
+      try { o = TFPorts.ouvrir(d.texte); } catch (err) { $('info-drone').innerHTML = messages([err.message], 'alerte'); return; }
+      appliquer(o, 'Configuration lue sur la carte branchée');
+      document.querySelector('nav.onglets button[data-page="reglage"]').click();
+      $('info-drone').scrollIntoView({ block: 'center' });
+    });
+    window.parent.postMessage({ source: 'trueglide-studio', event: 'ready' }, '*');
+  }
 
   // ---- navigation ----
   var points = [], carte = null, couche = null;
