@@ -28,6 +28,11 @@
   header .titre { display: flex; align-items: center; gap: 14px; }
   header .nom { flex: 1; min-width: 0; }
   header .logo { width: 64px; height: 64px; flex: none; }
+  .connexion { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+  .connexion button { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-texte); padding: 8px 16px; border-radius: 8px; cursor: pointer; font: inherit; font-weight: 600; }
+  .connexion button.connecte { background: var(--carte); color: var(--alerte); border-color: var(--alerte); }
+  .connexion span { font-size: 12px; color: var(--doux); }
+  .connexion span.connecte { color: var(--ok); font-weight: 600; }
   button.theme { flex: none; border: 1px solid var(--bord); background: var(--carte); color: var(--texte); padding: 7px 12px; border-radius: 8px; cursor: pointer; font: inherit; font-size: 13px; }
   @media (max-width: 600px) {
     header .titre { flex-wrap: wrap; align-items: flex-start; } header .logo { width: 52px; height: 52px; }
@@ -73,6 +78,10 @@
   <img class="logo" src="logo_talktruefpv_128.png" alt="Talk True FPV">
   <div class="nom"><h1>TrueGlide Studio</h1>
   <p>par Talk True FPV · Réglage de départ selon ton drone, analyse de configuration et missions GPS pour le firmware TrueGlide (base Betaflight 2026.6.2).</p></div>
+  <div class="connexion usb-seul" hidden>
+    <button id="connecter" type="button">Connecter</button>
+    <span id="etat-usb">Carte non connectée (USB)</span>
+  </div>
   <button class="theme" id="theme" type="button" title="Changer l'apparence">Apparence : auto</button>
   </div>
 </header>
@@ -147,9 +156,9 @@
     <p class="petit">Un seul fichier garde tout : ce formulaire, les ports et la configuration de la carte (<code>diff all</code>).
       Pour le créer avec la carte : dans le Configurator, onglet CLI, taper <code>diff all</code>, « Enregistrer » le texte, puis
       l'ouvrir ici. Un fichier du calculateur TALKTRUE FPV XRIG (format <code>talktrue-trueglide-studio</code>) remplit le formulaire. Ensuite tout se prépare sans la carte ; on colle les commandes dans l'onglet CLI une fois le drone branché.</p>
-    <p class="petit usb-seul" hidden>Carte branchée en USB (Chrome ou Edge sur ordinateur, TrueGlide Configurator déconnecté) : « Lire la carte en USB » remplit tout d'un coup. Studio lit seulement ; la carte redémarre ensuite sans rien enregistrer.</p>
+    <p class="petit usb-seul" hidden>Carte branchée en USB (Chrome ou Edge sur ordinateur, TrueGlide Configurator déconnecté) : « Connecter » en haut lit la carte et remplit tout. Tant qu'elle est connectée, le décollage est impossible. « Déconnecter » la redémarre sans rien enregistrer.</p>
     <div class="boutons">
-      <button class="action usb-seul" id="lire-usb" hidden>Lire la carte en USB</button>
+      <button class="action usb-seul" id="lire-usb" hidden>Lire la carte</button>
       <button class="second" id="ouvrir-drone">Ouvrir un fichier drone, du calculateur ou un diff all</button>
       <button class="second" id="enregistrer-drone">Enregistrer le fichier drone</button>
       <input id="fichier-drone" type="file" accept=".json,.txt,text/plain,application/json" hidden>
@@ -358,14 +367,48 @@
     if (err && (err.name === 'NetworkError' || err.name === 'InvalidStateError')) return 'Port occupé : déconnecter TrueGlide Configurator (ou un autre logiciel), puis réessayer.';
     return m;
   }
+  // Connexion à la carte (comme le bouton Connecter du Configurator) : le port reste ouvert, en mode CLI.
+  var connexion = null, nomCarte = '';
+  function majConnexion(texte) {
+    var ok = !!(connexion && connexion.ouverte());
+    $('connecter').textContent = ok ? 'Déconnecter' : 'Connecter';
+    $('connecter').classList.toggle('connecte', ok);
+    $('etat-usb').classList.toggle('connecte', ok);
+    $('etat-usb').textContent = texte || (ok ? 'Connectée' + (nomCarte ? ' : ' + nomCarte : '') + ' · décollage impossible' : 'Carte non connectée (USB)');
+  }
+  function surFerme() { connexion = null; majConnexion(); }
+  async function lireCarte() {
+    var b = $('lire-usb'); b.disabled = true; $('connecter').disabled = true;
+    majConnexion('Lecture de la carte…');
+    try {
+      var texte = await TFUsb.lire(connexion), o = TFPorts.ouvrir(texte);
+      nomCarte = o.carte;
+      appliquer(o, 'Configuration lue sur la carte connectée');
+    } catch (err) {
+      $('info-drone').innerHTML = messages(['Lecture impossible : ' + messageUsb(err)], 'alerte');
+    }
+    b.disabled = false; $('connecter').disabled = false; majConnexion();
+  }
+  $('connecter').addEventListener('click', async function () {
+    if (connexion && connexion.ouverte()) {
+      var c = connexion; majConnexion('Déconnexion…');
+      await c.fin('exit');            // redémarre sans rien enregistrer
+      connexion = null; majConnexion('Déconnectée : la carte redémarre, rien n\'a été enregistré.');
+      return;
+    }
+    $('connecter').disabled = true; majConnexion('Connexion…');
+    try {
+      connexion = await TFUsb.session(navigator.serial, null, surFerme);
+    } catch (err) {
+      connexion = null; $('connecter').disabled = false;
+      majConnexion('Non connectée : ' + messageUsb(err));
+      return;
+    }
+    $('connecter').disabled = false;
+    await lireCarte();
+  });
   $('lire-usb').addEventListener('click', function () {
-    var b = this; b.disabled = true; b.textContent = 'Lecture en cours…';
-    TFUsb.lireConfiguration(navigator.serial).then(function (texte) {
-      appliquer(TFPorts.ouvrir(texte), 'Configuration lue en USB');
-      $('info-drone').insertAdjacentHTML('beforeend', messages(['La carte a redémarré : rien n\'a été enregistré.'], 'note'));
-    }, function (err) {
-      $('info-drone').innerHTML = messages(['Lecture USB impossible : ' + messageUsb(err)], 'alerte');
-    }).then(function () { b.disabled = false; b.textContent = 'Lire la carte en USB'; });
+    if (connexion && connexion.ouverte()) lireCarte(); else $('connecter').click();
   });
   // Envoi des commandes d'un bloc : seulement après confirmation ; à la première erreur, rien n'est enregistré.
   function envoyerBloc(id, bouton) {
@@ -374,10 +417,12 @@
     if (!confirm('Envoyer ' + n + ' commande(s) à la carte, puis enregistrer (save) ?\n\nHélices retirées. Relire les commandes avant. ' +
       'À la première erreur, rien n\'est enregistré. La carte redémarre à la fin.')) return;
     bouton.disabled = true; bouton.textContent = 'Envoi en cours…';
-    TFUsb.envoyerCommandes(navigator.serial, texte).then(function (r) {
+    var envoi = connexion && connexion.ouverte() ? TFUsb.envoyerAvec(connexion, texte) : TFUsb.envoyerCommandes(navigator.serial, texte);
+    envoi.then(function (r) {
+      connexion = null; majConnexion(r.erreur ? 'Déconnectée : la carte redémarre sans rien enregistrer.' : 'Déconnectée : la carte redémarre avec les réglages enregistrés. Reconnecter pour vérifier.');
       sortie.innerHTML = r.erreur ?
         messages(['Arrêt à la commande « ' + r.erreur.ligne + ' » : ' + r.erreur.reponse + '. Rien n\'a été enregistré (la carte a redémarré sans sauvegarder).'], 'alerte') :
-        messages([r.envoyees + ' commande(s) acceptée(s) et enregistrées (save). La carte redémarre. Relire la carte pour vérifier.'], 'ok');
+        messages([r.envoyees + ' commande(s) acceptée(s) et enregistrées (save). La carte redémarre : « Connecter » pour relire et vérifier.'], 'ok');
     }, function (err) {
       sortie.innerHTML = messages(['Envoi impossible : ' + messageUsb(err) + ' Rien n\'a été enregistré.'], 'alerte');
     }).then(function () { bouton.disabled = false; bouton.textContent = 'Envoyer à la carte (USB)'; });

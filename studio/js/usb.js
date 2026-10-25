@@ -46,8 +46,9 @@
 
   function attendre(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-  // Ouvre le port et le CLI. Rend { commande(texte, délai) -> lignes, fin(texte), fermer() }.
-  async function session(serial, port) {
+  // Ouvre le port et le CLI. Rend { commande(texte, délai) -> lignes, fin(texte), fermer(), ouverte() } ;
+  // surFerme() est appelé quand le port se ferme (carte redémarrée, câble débranché, déconnexion).
+  async function session(serial, port, surFerme) {
     port = port || await serial.requestPort();
     await port.open({ baudRate: 115200 });
     var lecteur = port.readable.getReader(), ecrivain = port.writable.getWriter();
@@ -62,6 +63,7 @@
         }
       } catch (e) { /* port fermé */ }
       ferme = true;
+      if (surFerme) { try { surFerme(); } catch (e) { } }
     })();
     async function envoyer(t) { await ecrivain.write(new TextEncoder().encode(t)); }
     async function reponse(limite) {
@@ -73,6 +75,7 @@
         if (Date.now() - t0 > limite) throw new Error('La carte ne répond pas (pas d\'invite du CLI).');
       }
     }
+    var occupe = Promise.resolve();
     async function fermer() {
       try { await lecteur.cancel(); } catch (e) { }
       try { ecrivain.releaseLock(); } catch (e) { }
@@ -85,12 +88,18 @@
       await reponse(DELAI_ENTREE_MS);
     } catch (e) { await fermer(); throw e; }
     return {
-      commande: async function (texte, limite) {
-        tampon = '';
-        await envoyer(texte + '\r\n');
-        await reponse(limite || DELAI_COMMANDE_MS);
-        return lignesReponse(tampon, texte);
+      // une commande à la fois (deux clics rapides ne se mélangent pas)
+      commande: function (texte, limite) {
+        var suite = occupe.then(async function () {
+          tampon = '';
+          await envoyer(texte + '\r\n');
+          await reponse(limite || DELAI_COMMANDE_MS);
+          return lignesReponse(tampon, texte);
+        });
+        occupe = suite.catch(function () { });
+        return suite;
       },
+      ouverte: function () { return !ferme; },
       // « exit » ou « save » : la carte redémarre, le port se ferme
       fin: async function (texte) {
         try { await envoyer(texte + '\r\n'); await attendre(600); } catch (e) { }
@@ -100,22 +109,31 @@
     };
   }
 
-  // Lit la configuration (diff all) ; la carte redémarre ensuite sans rien enregistrer.
-  async function lireConfiguration(serial, port) {
-    var s = await session(serial, port), texte;
-    try {
-      texte = (await s.commande('diff all', DELAI_DIFF_MS)).join('\n');
-    } catch (e) { await s.fin('exit'); throw e; }
-    await s.fin('exit');
+  // Configuration (diff all) d'une session ouverte ; la session reste ouverte.
+  async function lire(s) {
+    var texte = (await s.commande('diff all', DELAI_DIFF_MS)).join('\n');
     if (!utilisable(texte)) throw new Error('La carte n\'a renvoyé aucune configuration.');
     return texte;
   }
 
-  // Envoie les commandes ; à la première erreur, rien n'est enregistré. Rend { envoyees, erreur: { ligne, reponse } | null }.
+  // Lit la configuration (diff all) ; la carte redémarre ensuite sans rien enregistrer.
+  async function lireConfiguration(serial, port) {
+    var s = await session(serial, port), texte;
+    try { texte = await lire(s); } catch (e) { await s.fin('exit'); throw e; }
+    await s.fin('exit');
+    return texte;
+  }
+
+  // Envoie les commandes ; à la première erreur, rien n'est enregistré (exit), sinon save. Dans les deux cas la carte
+  // redémarre et la session se ferme. Rend { envoyees, total, erreur: { ligne, reponse } | null }.
   async function envoyerCommandes(serial, texte, port) {
     var lignes = aEnvoyer(texte);
     if (!lignes.length) throw new Error('Aucune commande à envoyer.');
-    var s = await session(serial, port), envoyees = 0;
+    return envoyerAvec(await session(serial, port), texte);
+  }
+  async function envoyerAvec(s, texte) {
+    var lignes = aEnvoyer(texte), envoyees = 0;
+    if (!lignes.length) throw new Error('Aucune commande à envoyer.');
     try {
       for (var i = 0; i < lignes.length; i++) {
         var rep = await s.commande(lignes[i]);
@@ -130,6 +148,7 @@
 
   var API = { nettoyer: nettoyer, lignesReponse: lignesReponse, utilisable: utilisable, invite: invite, erreur: erreur,
     aEnvoyer: aEnvoyer, lireConfiguration: lireConfiguration, envoyerCommandes: envoyerCommandes,
+    session: session, lire: lire, envoyerAvec: envoyerAvec,
     disponible: function (nav, win) { return !!(nav && nav.serial) && (!win || win.parent === win); } };
   if (typeof module !== 'undefined') module.exports = API; else root.TFUsb = API;
 })(this);
