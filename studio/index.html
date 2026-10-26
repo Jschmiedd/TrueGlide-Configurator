@@ -129,6 +129,10 @@
         <select id="pwmEsc"><option value="24">24 kHz (défaut)</option><option value="48">48 kHz ou plus</option></select></label>
       <label>Calibre ESC en continu (A, facultatif)<input id="courantEsc" type="number" min="0" max="300" step="1" placeholder="ex. 45"></label>
       <label>Carte de vol (FC)<input id="carte" list="liste-cartes" placeholder="ex. SPEEDYBEEF405MINI" autocomplete="off"></label>
+      <label title="Lu sur la carte quand Studio la lit. TrueGlide : la carte est (ou sera) en TrueGlide. Betaflight : la carte reste en Betaflight ; Studio ne propose alors que des réglages de Betaflight.">Firmware de la carte<select id="firmware">
+        <option value="trueglide">TrueGlide</option>
+        <option value="betaflight">Betaflight (la carte reste en Betaflight)</option>
+      </select></label>
       <label>Firmware des ESC<select id="esc"></select></label>
       <label class="case" id="bloc-serie"><input id="serieBranchee" type="checkbox"> Fil de télémétrie série des ESC branché</label>
       <label class="case"><input id="capteurCourant" type="checkbox"> Capteur de courant sur la FC</label>
@@ -280,6 +284,7 @@
   })();
 </script>
 <script src="js/settings_db.js"></script>
+<script src="js/settings_db_betaflight.js"></script>
 <script src="js/cartes.js"></script>
 <script src="js/tune.js"></script>
 <script src="js/analyse.js"></script>
@@ -325,7 +330,7 @@
   $('carte').addEventListener('input', majCarteEsc);
   $('esc').addEventListener('change', majCarteEsc);
 
-  var CHAMPS = ['pouces', 'kv', 'cellules', 'masse', 'poles', 'chassis', 'style', 'qualite', 'pwmEsc', 'courantEsc', 'carte', 'esc', 'serieBranchee', 'capteurCourant', 'spAngle', 'spVitesse', 'spMix', 'base', 'pousseeCalc', 'courantCalc'];
+  var CHAMPS = ['pouces', 'kv', 'cellules', 'masse', 'poles', 'chassis', 'style', 'qualite', 'pwmEsc', 'courantEsc', 'carte', 'esc', 'serieBranchee', 'capteurCourant', 'spAngle', 'spVitesse', 'spMix', 'base', 'pousseeCalc', 'courantCalc', 'firmware'];
   try {
     var memo = JSON.parse(localStorage.getItem('tf-drone') || '{}');
     CHAMPS.forEach(function (k) { if (k in memo) { if ($(k).type === 'checkbox') $(k).checked = memo[k]; else $(k).value = memo[k]; } });
@@ -347,6 +352,17 @@
   }
   function majSpeeder() { $('bloc-speeder').hidden = $('style').value !== 'speeder'; }
   $('style').addEventListener('change', majSpeeder); majSpeeder();
+
+  // réglages du firmware de la carte : TrueGlide (défaut) ou Betaflight
+  function betaflight() { return $('firmware').value === 'betaflight'; }
+  function baseReglages() { return betaflight() ? TF_SETTINGS_BETAFLIGHT : TF_SETTINGS; }
+  // réglage proposé, réduit aux réglages que le firmware de la carte connaît
+  function recommandation(e) {
+    var p = TFTune.pourFirmware(TFTune.recommander(e), baseReglages());
+    if (p.absents.length) p.rec.avertissements = p.rec.avertissements.concat(['Carte en Betaflight : ' + p.absents.join(', ') +
+      ' n\'existe' + (p.absents.length > 1 ? 'nt' : '') + ' que dans TrueGlide, pas proposé' + (p.absents.length > 1 ? 's' : '') + ' (fonctions TrueGlide : protection anti-surchauffe, relance moteur, Speeder).']);
+    return p.rec;
+  }
 
   function messages(liste, classe) { return liste.map(function (t) { return '<div class="msg ' + classe + '">' + echap(t) + '</div>'; }).join(''); }
   function blocCli(texte, nomFichier) {
@@ -467,10 +483,10 @@
     var e = drone(), out = $('resultat');
     var manque = OBLIGATOIRES.filter(function (c) { return nombre(c[0]) === null; }).map(function (c) { return c[1]; });
     if (manque.length) { out.innerHTML = '<div class="carte">' + messages(['À remplir avant de calculer : ' + manque.join(', ') + '.'], 'alerte') + '</div>'; return; }
-    try { dernier = TFTune.recommander(e); } catch (err) { out.innerHTML = '<div class="carte">' + messages([err.message], 'alerte') + '</div>'; return; }
+    try { dernier = recommandation(e); } catch (err) { out.innerHTML = '<div class="carte">' + messages([err.message], 'alerte') + '</div>'; return; }
     var r = dernier, p = r.pids, ph = r.physique;
-    var erreurs = TFTune.verifier(r.reglages, TF_SETTINGS);
-    var h = '<div class="carte"><h2>Réglage proposé</h2>';
+    var erreurs = TFTune.verifier(r.reglages, baseReglages());
+    var h = '<div class="carte"><h2>Réglage proposé' + (betaflight() ? ' (carte en Betaflight)' : '') + '</h2>';
     h += '<div class="chiffres">' +
       '<div><span class="petit">Protocole moteur</span><b>' + r.protocole.protocole + '</b></div>' +
       (r.protocole.boucle ? '<div><span class="petit">Boucle PID</span><b>' + (r.protocole.boucle / 1000).toFixed(1).replace('.0', '') + ' kHz</b></div>' : '') +
@@ -497,10 +513,15 @@
     var brut = $('diff').value, cfg = TFAnalyse.lire(brut), e = drone(), out = $('resultat-analyse');
     if (!Object.keys(cfg.set).length && !cfg.version) { out.innerHTML = '<div class="carte">' + messages(['Aucune ligne « set » ni en-tête de version trouvée : coller la sortie complète de « diff all ».'], 'alerte') + '</div>'; return; }
     // conversion d'une version plus ancienne : les contrôles portent sur la configuration convertie
-    var mig = TFAnalyse.migrer(brut, TF_SETTINGS);
+    // carte restée en Betaflight : pas de conversion pour TrueGlide, contrôles sur les réglages de Betaflight
+    var mig = betaflight() ? { traduits: [], retires: [], invalides: [] } : TFAnalyse.migrer(brut, TF_SETTINGS);
     var conversion = '';
+    if (!betaflight() && cfg.firmware === 'betaflight') conversion = '<div class="carte">' + messages(['Configuration de Betaflight : ' +
+      'si la carte reste en Betaflight, choisir « Betaflight » dans « Firmware de la carte » (onglet « Réglage du drone »).'], 'note') + '</div>';
+    if (betaflight() && cfg.firmware === 'trueglide') conversion = '<div class="carte">' + messages(['Configuration de TrueGlide, ' +
+      'alors que « Firmware de la carte » est sur Betaflight : vérifier ce choix (onglet « Réglage du drone »).'], 'alerte') + '</div>';
     if (mig.traduits.length || mig.retires.length || mig.invalides.length || mig.inversionD) {
-      conversion = '<div class="carte"><h2>Conversion pour TrueGlide</h2>' +
+      conversion += '<div class="carte"><h2>Conversion pour TrueGlide</h2>' +
         (mig.version ? '<p class="petit">Configuration de Betaflight ' + echap(mig.version) + ' convertie pour TrueGlide (base Betaflight 2026.6.2). ' +
           'Après le flash, coller ces commandes à la place de l\'ancien diff.</p>' :
           '<p class="petit">Version inconnue (pas de ligne « # Betaflight / … ») : les réglages D sont gardés tels quels. Coller la sortie complète de « diff all » pour une conversion sûre.</p>') +
@@ -512,13 +533,13 @@
         '<h2 style="margin-top:14px">Configuration convertie</h2>' + blocCli(['# Converti par TrueGlide Studio depuis Betaflight ' + (mig.version || '?')].concat(mig.lignes, ['save']).join('\n'), 'trueglide_conversion.txt') + '</div>';
       cfg = TFAnalyse.lire((cfg.version ? '# Betaflight / ' + (cfg.mcu || '?') + ' (' + (cfg.carte || '?') + ') ' + cfg.version + '\n' : '') + mig.lignes.join('\n'));
     }
-    var ctrl = TFAnalyse.controler(cfg, TF_SETTINGS, e, TF_CARTES);
+    var ctrl = TFAnalyse.controler(cfg, baseReglages(), e, TF_CARTES, $('firmware').value);
     var h = '<div class="carte"><h2>Carte ' + echap(cfg.carte || '?') + ' · version ' + echap(cfg.version || '?') + '</h2>';
     h += ctrl.map(function (c) { return '<div class="msg ' + c.niveau + '">' + echap(c.texte) + '</div>'; }).join('') + '</div>' + conversion;
     var rec;
-    try { rec = TFTune.recommander(e); } catch (err) { out.innerHTML = h; return; }
-    var ec = TFAnalyse.ecarts(cfg, TF_SETTINGS, rec.reglages);
-    h += '<div class="carte"><h2>Écarts avec le réglage TrueGlide (' + ec.length + ')</h2>';
+    try { rec = recommandation(e); } catch (err) { out.innerHTML = h; return; }
+    var ec = TFAnalyse.ecarts(cfg, baseReglages(), rec.reglages);
+    h += '<div class="carte"><h2>Écarts avec le réglage de Studio (' + ec.length + ')</h2>';
     if (ec.length) {
       h += '<div class="tableau"><table><thead><tr><th>Réglage</th><th>Actuel</th><th>Proposé</th><th>Pourquoi</th></tr></thead><tbody>' +
         ec.map(function (x) { return '<tr><td><code>' + x.nom + '</code></td><td class="num">' + echap(x.actuel) + '</td><td class="num">' + echap(x.propose) + '</td><td>' + echap(x.pourquoi) + '</td></tr>'; }).join('') + '</tbody></table></div>';
@@ -600,6 +621,9 @@
   // relecture : true quand on relit la carte déjà décrite dans le formulaire (même nom de carte, configuration déjà
   // lue). Alors seule la configuration lue change : le drone et les ports préparés hors ligne sont gardés.
   function appliquer(o, origine, relecture) {
+      // carte lue (USB ou logiciel) : son firmware est celui de la carte
+      var lu = relecture && o.configuration ? TFAnalyse.lire(o.configuration).firmware : null;
+      if (lu) $('firmware').value = lu;
       var memeCarte = relecture && o.carte && $('diff').value && o.carte.toUpperCase() === String($('carte').value).toUpperCase();
       if (!memeCarte) {
         Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });

@@ -12,7 +12,8 @@
   function lire(texte) {
     // profil / profilRate : profils actifs. Un « diff all » liste chaque profil puis resélectionne l'actif
     // (dernière ligne « profile N » / « rateprofile N »).
-    var r = { version: null, carte: null, mcu: null, features: { on: [], off: [] }, set: {}, aux: [], profil: 0, profilsPid: {},
+    // firmware : « betaflight » ou « trueglide » (TrueGlide et ses dérivés), d'après l'en-tête ; null sans en-tête
+    var r = { version: null, firmware: null, carte: null, mcu: null, features: { on: [], off: [] }, set: {}, aux: [], profil: 0, profilsPid: {},
       profilRate: 0, profilsRate: {} };
     var profil = null, groupe = null;
     String(texte || '').split(/\r?\n/).forEach(function (ligne) {
@@ -20,6 +21,7 @@
       var m;
       if ((m = l.match(/^#\s*(Betaflight|TrueGlide|TrueFlight|TrueNav(?:[ _]Light)?)\s*\/\s*(\S+)\s*\(([^)]*)\)\s*(\S+)/i))) {
         r.mcu = m[2]; r.carte = m[3]; r.version = m[4];
+        r.firmware = /^betaflight$/i.test(m[1]) ? 'betaflight' : 'trueglide';
         return;
       }
       if ((m = l.match(/^board_name\s+(\S+)/))) { r.carte = m[1]; return; }
@@ -61,14 +63,17 @@
   // et 4 kHz avec le DShot bidirectionnel (tune.js, MCU_LIMITE_BIDIR).
   var MCU_LIMITE = ['STM32F405', 'STM32F411', 'STM32G474', 'APM32F405', 'APM32F407', 'APM32F425', 'APM32F427'];
 
-  function controler(cfg, db, drone, cartes) {
+  // firmware : celui de la carte, « trueglide » (défaut) ou « betaflight » ; une carte restée en Betaflight n'a pas les
+  // fonctions TrueGlide : aucun conseil ne les propose.
+  function controler(cfg, db, drone, cartes, firmware) {
     var out = [];
+    var tg = firmware !== 'betaflight';
     function a(niveau, texte) { out.push({ niveau: niveau, texte: texte }); }
     var proto = valeur(cfg, 'motor_pwm_protocol', db);
     var bidir = valeur(cfg, 'dshot_bidir', db);
     var carte = cartes && cfg.carte ? cartes[String(cfg.carte).toUpperCase()] : null;
     var mcu = (carte && carte.mcu) || cfg.mcu || null;
-    if (cfg.carte && cartes && !carte) {
+    if (tg && cfg.carte && cartes && !carte) {
       a('conseil', tr('Carte ' + cfg.carte + ' inconnue de TrueGlide 2026.6 : vérifier qu\'un firmware existe pour elle.',
         'Board ' + cfg.carte + ' unknown to TrueGlide 2026.6: check that a firmware exists for it.'));
     }
@@ -79,7 +84,7 @@
         'PID loop to 4 kHz (this processor is not fast enough for both). This is not a fault; set DShot300.'));
     }
 
-    if (cfg.version) {
+    if (tg && cfg.version) {
       var maj = String(cfg.version).split('.').slice(0, 2).join('.');
       if (maj !== '2026.6') {
         a('conseil', tr('Configuration issue de la version ' + cfg.version + ' : après le flash de TrueGlide (base 2026.6.2), ' +
@@ -93,10 +98,12 @@
         'Motor protocol ' + proto + ': DSHOT300 or DSHOT600 is recommended with AM32 / BLHeli_32 / BLHeli_S.'));
     }
     if (bidir !== 'ON') {
-      a('conseil', tr('dshot_bidir est désactivé : avec un ESC AM32, BLHeli_32 ou Bluejay, l\'activer donne le filtre RPM, ' +
+      a('conseil', tg ? tr('dshot_bidir est désactivé : avec un ESC AM32, BLHeli_32 ou Bluejay, l\'activer donne le filtre RPM, ' +
         'le ralenti dynamique et la température ESC pour la protection TrueGlide.',
         'dshot_bidir is disabled: with an AM32, BLHeli_32 or Bluejay ESC, enabling it gives the RPM filter, ' +
-        'dynamic idle and ESC temperature for TrueGlide protection.'));
+        'dynamic idle and ESC temperature for TrueGlide protection.') :
+        tr('dshot_bidir est désactivé : avec un ESC AM32, BLHeli_32 ou Bluejay, l\'activer donne le filtre RPM et le ralenti dynamique.',
+          'dshot_bidir is disabled: with an AM32, BLHeli_32 or Bluejay ESC, enabling it gives the RPM filter and dynamic idle.'));
     } else {
       a('ok', tr('Télémétrie DShot bidirectionnelle active.', 'Bidirectional DShot telemetry active.'));
       var harm = valeur(cfg, 'rpm_filter_harmonics', db);
@@ -113,15 +120,15 @@
       a('conseil', tr('motor_poles = ' + poles + ' : vérifier sur la fiche du moteur (12N14 = 14 pôles). Une erreur fausse le filtre RPM.',
         'motor_poles = ' + poles + ': check the motor spec sheet (12N14 = 14 poles). A wrong value throws off the RPM filter.'));
     }
-    if (valeur(cfg, 'power_guard_current', db) === '0' && valeur(cfg, 'power_guard_esc_temp', db) === '0') {
+    if (tg && valeur(cfg, 'power_guard_current', db) === '0' && valeur(cfg, 'power_guard_esc_temp', db) === '0') {
       a('conseil', tr('Protection anti-surchauffe TrueGlide inactive (power_guard_*) : la régler limite les risques de brûler moteurs et ESC.',
         'TrueGlide overheat protection inactive (power_guard_*): setting it reduces the risk of burning motors and ESCs.'));
     }
-    if (bidir === 'ON' && valeur(cfg, 'motor_desync_recovery', db) !== 'ON') {
+    if (tg && bidir === 'ON' && valeur(cfg, 'motor_desync_recovery', db) !== 'ON') {
       a('conseil', tr('motor_desync_recovery est inactif : TrueGlide peut relancer un moteur désynchronisé ou calé au lieu de le laisser chauffer.',
         'motor_desync_recovery is inactive: TrueGlide can restart a desynced or stalled motor instead of letting it heat up.'));
     }
-    if (bidir === 'ON' && valeur(cfg, 'dshot_telemetry_fallback', db) !== 'ON') {
+    if (tg && bidir === 'ON' && valeur(cfg, 'dshot_telemetry_fallback', db) !== 'ON') {
       a('conseil', tr('dshot_telemetry_fallback est inactif : en cas de trames DShot perdues, la vitesse du moteur reste figée pour le filtre RPM.',
         'dshot_telemetry_fallback is inactive: when DShot frames are lost, the motor RPM stays frozen for the RPM filter.'));
     }
@@ -149,8 +156,8 @@
       }
     });
     var mode = valeur(cfg, 'simplified_pids_mode', db);
-    if (mode === 'OFF') a('conseil', tr('PID réglés à la main (simplified_pids_mode = OFF) : le réglage TrueGlide repasse en curseurs.',
-      'PIDs tuned by hand (simplified_pids_mode = OFF): the TrueGlide tune switches back to sliders.'));
+    if (mode === 'OFF') a('conseil', tr('PID réglés à la main (simplified_pids_mode = OFF) : le réglage de Studio repasse en curseurs.',
+      'PIDs tuned by hand (simplified_pids_mode = OFF): the Studio tune switches back to sliders.'));
     return out;
   }
 

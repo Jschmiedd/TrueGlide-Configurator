@@ -335,7 +335,7 @@ async function analyser() {
         const texte = (await readDumpAll()).join("\n");
         const cfg = TFAnalyse.lire(texte);
         analyse.cfg = cfg;
-        analyse.controles = TFAnalyse.controler(cfg, TF_SETTINGS, entree(), TF_CARTES);
+        analyse.controles = TFAnalyse.controler(cfg, TF_SETTINGS, entree(), TF_CARTES, cfg.firmware);
         analyse.ecarts = rec.value ? TFAnalyse.ecarts(cfg, TF_SETTINGS, rec.value.reglages) : [];
         analyse.etat = "ok";
     } catch (e) {
@@ -424,7 +424,7 @@ onMounted(() => {
 // Changement de langue : les contrôles déjà lus sont recalculés dans la nouvelle langue.
 watch(langue, () => {
     if (analyse.etat === "ok" && analyse.cfg) {
-        analyse.controles = TFAnalyse.controler(analyse.cfg, TF_SETTINGS, entree(), TF_CARTES);
+        analyse.controles = TFAnalyse.controler(analyse.cfg, TF_SETTINGS, entree(), TF_CARTES, analyse.cfg.firmware);
         analyse.ecarts = rec.value ? TFAnalyse.ecarts(analyse.cfg, TF_SETTINGS, rec.value.reglages) : [];
     }
 });

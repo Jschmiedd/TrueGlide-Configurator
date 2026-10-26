@@ -109,6 +109,6 @@ const root = {};
   var API = { MAX_WAYPOINTS: MAX_WAYPOINTS, TYPES: TYPES, MOTIFS: MOTIFS, NOMS_TYPES: NOMS_TYPES, distance: distance,
     genererMission: genererMission, genererReglages: genererReglages, versCli: versCli,
     langue: function (l) { LANGUE = (l === 'en') ? 'en' : 'fr'; } };
-  if (typeof module !== 'undefined') module.exports = API; else root.TFNav = API;
+  if (false) module.exports = API; else root.TFNav = API;
 })(root);
 export default root.TFNav;

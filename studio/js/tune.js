@@ -568,9 +568,24 @@
     return erreurs;
   }
 
+  // Réglage pour le firmware de la carte : seulement les réglages qu'il connaît (base extraite de ses sources). Une carte
+  // restée en Betaflight n'a pas les fonctions TrueGlide (protection anti-surchauffe, relance moteur, Speeder…) : elles
+  // sont retirées et listées, jamais envoyées. Rend { rec (copie), absents: [noms] }.
+  function pourFirmware(rec, db) {
+    var absents = [];
+    var reglages = rec.reglages.filter(function (r) {
+      if (db[r.nom]) return true;
+      absents.push(r.nom); return false;
+    });
+    var copie = {};
+    Object.keys(rec).forEach(function (k) { copie[k] = rec[k]; });
+    copie.reglages = reglages;
+    return { rec: copie, absents: absents };
+  }
+
   var API = {
     REFERENCES: REFERENCES, STYLES: STYLES, ESC: ESC, CHASSIS: CHASSIS, rapportPoussee: rapportPoussee, MCU_LIMITE_BIDIR: MCU_LIMITE_BIDIR, frequenceGyro: frequenceGyro,
-    choisirProtocole: choisirProtocole, recommander: recommander, versCli: versCli, verifier: verifier,
+    choisirProtocole: choisirProtocole, recommander: recommander, versCli: versCli, verifier: verifier, pourFirmware: pourFirmware,
     pidsDepuisCurseurs: pidsDepuisCurseurs, pousseeEstimee: pousseeEstimee, interpoler: interpoler,
     langue: function (l) { LANGUE = (l === 'en') ? 'en' : 'fr'; }
   };
