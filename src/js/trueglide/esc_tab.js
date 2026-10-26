@@ -4,9 +4,9 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator, v2 : commit 1011b23 ;
-// v1 : 4edf3cb, toujours en ligne). v2 avertit que la coupure tension basse AM32 coupe les moteurs en vol.
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v2/";
+// Version figée de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator, v4 ; v1 à v3 restent en
+// ligne). v4 : la coupure tension basse des ESC est toujours désactivée (jamais de moteurs coupés en vol).
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v4/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
