@@ -175,7 +175,8 @@ async function startProcess() {
     loadUiScale();
 
     // Kick off initial tab — sidebar handles subsequent clicks reactively.
-    switchTab("landing", { mode: "disconnected" });
+    // TrueGlide: a link ending in #studio (the former TrueGlide Studio page, the website) opens the Studio tab.
+    switchTab(globalThis.location?.hash === "#studio" ? "studio" : "landing", { mode: "disconnected" });
 
     const compactHeaderLayoutMediaQuery = window.matchMedia(
         "(max-width: 575px), (max-width: 950px) and (max-height: 500px) and (orientation: landscape)",

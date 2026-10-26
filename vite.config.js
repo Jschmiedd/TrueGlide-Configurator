@@ -187,6 +187,8 @@ export default defineConfig({
                 { src: normalizePath(path.resolve(__dirname, "locales")), dest: "." },
                 { src: normalizePath(path.resolve(__dirname, "resources")), dest: "." },
                 { src: normalizePath(path.resolve(__dirname, "src/images")), dest: "." },
+                // TrueGlide: TrueGlide Studio page (copied by scripts/sync-trueglide-studio.mjs), shown by the Studio tab
+                { src: normalizePath(path.resolve(__dirname, "studio")), dest: "." },
             ],
         }).filter((plugin) => plugin.name === "vite-plugin-static-copy:build"),
         VitePWA({

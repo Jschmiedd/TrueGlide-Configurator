@@ -11,10 +11,7 @@ import { fromHex } from "./frames.js";
 import { boardIdentity, sameBoard } from "./identity.js";
 import { loadBoard, saveBoard } from "./store.js";
 import { boardChanged } from "./harvest_state.js";
-
-export function cliRefused(lines) {
-    return (lines ?? []).find((l) => /^###ERROR/.test(l) || /Invalid|out of range|Unknown command/i.test(l)) ?? null;
-}
+import { cliRefused } from "../studio_tab.js";
 
 // Rend { ok } ou { ok: false, reason, index, write, reply }.
 export async function sendPrepared({ onProgress } = {}) {

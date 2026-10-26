@@ -1,5 +1,7 @@
-// TrueGlide : copie les calculs de TrueGlide Studio (dépôt du firmware, trueglide/studio/js) dans l'application,
-// convertis en modules ES. Un seul code de calcul : on ne modifie pas les copies, on relance ce script.
+// TrueGlide : copie TrueGlide Studio (dépôt du firmware, trueglide/studio) dans l'application.
+//  - les calculs (js/) convertis en modules ES, pour l'assistant de réglage : src/js/trueglide/studio/ ;
+//  - la page entière, affichée par l'onglet Studio et livrée avec le logiciel : studio/ (copiée dans dist/studio).
+// Un seul code : on ne modifie pas les copies, on relance ce script.
 // Usage : node scripts/sync-trueglide-studio.mjs [chemin/vers/firmware/trueglide/studio/js]
 import fs from "node:fs";
 import path from "node:path";
@@ -19,3 +21,18 @@ for (const [file, name] of Object.entries(MODULES)) {
     fs.writeFileSync(path.join(dest, file), out);
     console.log(`${file} -> ${dest}/${file}`);
 }
+
+// Page entière de Studio (index.html, js/, logos, exemples), telle quelle
+const page = path.dirname(path.resolve(source));
+const pageDest = "studio";
+fs.rmSync(pageDest, { recursive: true, force: true });
+for (const item of ["index.html", "js", "exemples", "logo_talktruefpv_128.png", "logo_talktruefpv_512.png"]) {
+    fs.cpSync(path.join(page, item), path.join(pageDest, item), { recursive: true });
+}
+fs.writeFileSync(
+    path.join(pageDest, "LISEZMOI.txt"),
+    "Copie de TrueGlide Studio (dépôt du firmware TrueGlide, trueglide/studio), générée par\n" +
+        "scripts/sync-trueglide-studio.mjs : ne pas modifier ici, modifier Studio dans le dépôt du firmware.\n",
+);
+console.log(`${page} -> ${pageDest}/`);
+

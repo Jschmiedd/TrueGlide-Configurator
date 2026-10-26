@@ -1,0 +1,24 @@
+{
+  "format": "talktrue-trueglide-studio",
+  "version": 1,
+  "source": "TALKTRUE FPV XRIG",
+  "date": "2026-10-23T12:00:00Z",
+  "nom": "Exemple 5 pouces",
+  "drone": {
+    "helice_pouces": 5.1,
+    "kv": 1950,
+    "cellules": 6,
+    "masse_g": 650,
+    "poles": 14,
+    "disposition": "quadx",
+    "esc_firmware": "bluejay",
+    "esc_calibre_a_par_voie": 45,
+    "esc_pwm_khz": 48,
+    "carte": "SPEEDYBEEF405MINI",
+    "capteur_courant": true,
+    "telemetrie_serie_esc": null
+  },
+  "valeurs_supposees": ["poles"],
+  "valeurs_saisies": ["disposition", "carte"],
+  "etude": { "poussee_max_g_par_moteur": 1450, "courant_stationnaire_a": 12.5 }
+}
