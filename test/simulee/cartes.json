@@ -1,8 +1,14 @@
 {
-  "SPEEDYBEEF405MINI": {
+  "SPEEDYBEEF405MINI/BTFL_2026.6.2": {
     "nom": "SPEEDYBEEF405MINI",
     "firmware": "BTFL 2026.6.2",
     "api": "1.48.0",
-    "dossier": "simulee/SPEEDYBEEF405MINI/"
+    "dossier": "simulee/SPEEDYBEEF405MINI/BTFL_2026.6.2/"
+  },
+  "SPEEDYBEEF405MINI/BTFL_2025.12.2": {
+    "nom": "SPEEDYBEEF405MINI",
+    "firmware": "BTFL 2025.12.2",
+    "api": "1.47.0",
+    "dossier": "simulee/SPEEDYBEEF405MINI/BTFL_2025.12.2/"
   }
 }
