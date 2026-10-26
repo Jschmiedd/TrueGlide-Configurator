@@ -383,7 +383,7 @@
     try {
       var texte = await TFUsb.lire(connexion), o = TFPorts.ouvrir(texte);
       nomCarte = o.carte;
-      appliquer(o, 'Configuration lue sur la carte connectée');
+      appliquer(o, 'Configuration lue sur la carte connectée', true);
     } catch (err) {
       $('info-drone').innerHTML = messages(['Lecture impossible : ' + messageUsb(err)], 'alerte');
     }
@@ -587,18 +587,23 @@
     lecteur.readAsText(f);
   });
   // Remplit le formulaire avec un fichier drone, un fichier du calculateur ou un diff all (TFPorts.ouvrir)
-  function appliquer(o, origine) {
-      Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });
-      if (o.carte) $('carte').value = o.carte;
+  // relecture : true quand on relit la carte déjà décrite dans le formulaire (même nom de carte, configuration déjà
+  // lue). Alors seule la configuration lue change : le drone et les ports préparés hors ligne sont gardés.
+  function appliquer(o, origine, relecture) {
+      var memeCarte = relecture && o.carte && $('diff').value && o.carte.toUpperCase() === String($('carte').value).toUpperCase();
+      if (!memeCarte) {
+        Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });
+        if (o.carte) $('carte').value = o.carte;
+      }
       if (o.configuration) $('diff').value = o.configuration;
-      if (o.configuration || Object.keys(o.ports || {}).length) { choixPorts = o.ports || {}; memoriserPorts(); }
+      if (Object.keys(o.ports || {}).length || (o.configuration && !memeCarte)) { choixPorts = o.ports || {}; memoriserPorts(); }
       memoriser();
       majCarteEsc(); majSpeeder(); dessinerPorts();
       var k = carteChoisie();
       $('info-drone').innerHTML = messages([origine + ' : carte ' + (k ? k.nom : (o.carte || 'non trouvée')) +
         (o.configuration ? ', configuration de ' + o.configuration.split(/\r?\n/).length + ' lignes (onglet « Analyser ma configuration »)' : '') + '.'], k ? 'ok' : 'conseil') +
         (k ? '' : messages(['Carte non reconnue : la choisir dans la liste « Carte de vol (FC) ».'], 'conseil')) +
-        (o.messages || []).map(function (m) { return messages([m.texte], m.niveau); }).join('');
+        (memeCarte ? messages(['Même carte : le drone et les ports préparés sont gardés.'], 'note') : (o.messages || []).map(function (m) { return messages([m.texte], m.niveau); }).join(''));
   }
 
   // Studio dans l'onglet Studio de TrueGlide Configurator : le logiciel lit le « diff all » de la carte branchée et
