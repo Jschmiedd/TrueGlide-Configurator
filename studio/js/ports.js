@@ -289,9 +289,16 @@
     }
     var carte = (t.match(/^\s*board_name\s+(\S+)/m) || [])[1] || (t.match(/^#\s*\S+\s*\/\s*\S+\s*\((\S+)\)/m) || [])[1] || '';
     var poles = (t.match(/^\s*set\s+motor_poles\s*=\s*(\d+)/m) || [])[1];
-    var drone = {};
+    var drone = {}, messages = [];
     if (poles) drone.poles = poles;
-    return { carte: carte.toUpperCase(), drone: drone, ports: {}, configuration: t, messages: [] };
+    else if (/^\s*(board_name\s|#\s*version|# Betaflight)/mi.test(t)) {
+      // un diff all n'écrit que ce qui change : sans ligne motor_poles, la carte garde la valeur d'usine du firmware
+      // (src/main/pg/motor.c : motorPoleCount = 14)
+      drone.poles = '14';
+      messages.push({ niveau: 'conseil', texte: tr('Pôles des moteurs : 14, la valeur d\'usine du firmware (la carte ne la change pas). À corriger si vos moteurs en ont un autre nombre (« 12N14P » : 14).',
+        'Motor poles: 14, the firmware default (the board does not change it). Correct it if your motors have another count ("12N14P": 14).') });
+    }
+    return { carte: carte.toUpperCase(), drone: drone, ports: {}, configuration: t, messages: messages };
   }
 
   var API = { COMPOSANTS: COMPOSANTS, BAUDS_DEFAUT: BAUDS_DEFAUT, FORMAT_CALCULATEUR: FORMAT_CALCULATEUR, composant: composant, depuisMasque: depuisMasque, lireSerial: lireSerial,
