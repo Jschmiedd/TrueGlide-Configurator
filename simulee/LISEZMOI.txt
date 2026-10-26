@@ -1,0 +1,3 @@
+Cartes simulées : firmware TrueGlide exact d'une carte, compilé pour le navigateur (dépôt du firmware,
+trueglide/essai_navigateur/vraie_carte.py). Copiées par scripts/sync-trueglide-simulee.mjs : ne pas modifier ici.
+Licence : GPL-3.0, comme le firmware ; sources dans le dépôt du firmware TrueGlide.

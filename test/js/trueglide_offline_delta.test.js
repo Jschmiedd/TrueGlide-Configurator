@@ -96,6 +96,20 @@ describe("carte simulée : commandes à envoyer (dump all)", () => {
         expect(dumpDelta(REAL, sim2)).toEqual(["set craft_name = KARRMEN2", "profile 1"]);
     });
 
+    it("n'envoie jamais les étalonnages ni les compteurs de vol de la carte simulée", () => {
+        const real = changer(
+            REAL,
+            "set craft_name = KarRmen",
+            "set craft_name = KarRmen\nset acc_calibration = 12,-3,40,1\nset stats_total_flights = 57",
+        );
+        const sim = changer(
+            REAL,
+            "set craft_name = KarRmen",
+            "set craft_name = KarRmen\nset acc_calibration = 0,0,0,0\nset stats_total_flights = 0",
+        );
+        expect(dumpDelta(real, sim)).toEqual([]);
+    });
+
     it("lignes d'un dump : sans commentaires ni invite", () => {
         expect(dumpLines("# a\r\nset x = 1\r\n\r\n# ")).toEqual(["set x = 1"]);
     });

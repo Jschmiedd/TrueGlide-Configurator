@@ -963,6 +963,15 @@
     "tfOfflineWrites": {
         "message": "Changements préparés hors ligne : $1."
     },
+    "tfOfflineSimulated": {
+        "message": "Carte simulée : le firmware TrueGlide exact de cette carte tourne dans le navigateur. Les changements comptent quand ils sont enregistrés (« Enregistrer et redémarrer »). Mesures en direct (capteurs, batterie, charge du processeur) : celles de la simulation, pas du drone."
+    },
+    "tfOfflinePreparing": {
+        "message": "Préparation de la carte simulée : la configuration récoltée est chargée dans le firmware de la carte (quelques secondes)…"
+    },
+    "tfOfflineSimulatedUnavailable": {
+        "message": "Carte simulée non utilisée ($1) : la carte hors ligne rejoue la récolte."
+    },
     "tabTfRadio": {
         "message": "Télémétrie radio"
     },

@@ -14,6 +14,7 @@ export const offlineState = reactive({
     sending: false, // envoi des changements préparés en cours
     sent: "", // résultat de l'envoi (affiché jusqu'à fermeture)
     sentOk: false,
+    preparing: false, // préparation de la carte simulée (configuration récoltée chargée dans son firmware)
     version: 0, // change à chaque récolte ou écriture gardée : relire la carte hors ligne
 });
 

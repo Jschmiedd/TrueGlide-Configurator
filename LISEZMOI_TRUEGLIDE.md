@@ -61,3 +61,25 @@ actif), de même que les commandes immédiates (moteurs, étalonnage, passerelle
 `src/js/protocols/OfflineBoardSerial.js`. Vérifié au SITL : cinq changements faits hors ligne (zone morte, nom, failsafe,
 ralenti, protection TrueGlide), relus hors ligne, envoyés au firmware, puis récoltés à nouveau : réponses identiques
 octet pour octet à celles prévues par la carte hors ligne. Pas encore essayé sur une vraie carte.
+
+### Carte simulée : le vrai firmware dans le navigateur (essai, SPEEDYBEE F405 MINI)
+
+Pour les cartes de `simulee/cartes.json`, la carte hors ligne n'est plus une récolte rejouée : c'est le firmware
+TrueGlide exact de la carte (compilé pour le navigateur dans le dépôt du firmware,
+`trueglide/essai_navigateur/vraie_carte.py`, copié par `node scripts/sync-trueglide-simulee.mjs <dossier wasm>`) qui
+tourne dans un Web Worker. Seulement si la carte récoltée a le même nom, le même firmware et la même version d'API.
+
+- Préparation (une fois par récolte, environ 15 s) : la carte simulée reçoit le `diff all` récolté et enregistre ; son
+  `dump all` doit être celui de la vraie carte, sinon elle n'est pas utilisée (raison affichée dans le bandeau) et la
+  récolte est rejouée comme avant.
+- Tous les onglets marchent comme carte branchée, profils compris. Refusés : étalonnages des capteurs ; sans effet :
+  moteurs, passerelle ESC, commandes DShot.
+- Changements : comptés à chaque enregistrement ; ce sont les lignes du `dump all` de la carte simulée qui diffèrent
+  du départ (`src/js/trueglide/offline/delta.js`), précédées de leur profil. Jamais envoyés : identifiant de la puce,
+  étalonnages, compteurs de vol.
+- Envoi : comme avant, commandes du CLI une par une, arrêt sans sauvegarde à la première refusée.
+
+Vérifié le 26/10/2026 : vraie carte = firmware F405 Mini sur l'ordinateur avec la configuration KarRmen ; récolte,
+préparation en 16 s, nom, ralenti et profil PID changés hors ligne, 2 changements envoyés et relus sur la vraie carte,
+aucune erreur ; 30 onglets ouverts sur la carte simulée sans erreur.
+

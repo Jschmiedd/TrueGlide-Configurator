@@ -9,9 +9,16 @@
         <strong>{{ msg("tfOfflineHarvesting", [state.step, state.total, $t(state.tab || "tabDashboard")]) }}</strong>
         <span>{{ $t("tfOfflineHarvestWait") }}</span>
     </div>
+    <div v-else-if="state.preparing" class="tf-offline-bar tf-offline-bar--busy">
+        <strong>{{ $t("tfOfflinePreparing") }}</strong>
+    </div>
     <div v-else-if="offline" class="tf-offline-bar tf-offline-bar--offline">
         <strong>{{ msg("tfOfflineConnected", [board?.carte?.nom || "?", date]) }}</strong>
         <span>{{ msg("tfOfflineWrites", [writes]) }}</span>
+        <span v-if="simulated">{{ $t("tfOfflineSimulated") }}</span>
+        <span v-else-if="board?.simulee?.erreur">{{
+            msg("tfOfflineSimulatedUnavailable", [board.simulee.erreur])
+        }}</span>
         <span v-if="notReread">{{ msg("tfOfflineNotReread", [notReread]) }}</span>
     </div>
     <div v-else-if="state.sending" class="tf-offline-bar tf-offline-bar--busy">
@@ -26,7 +33,7 @@
         <span v-else>{{ $t("tfOfflineHarvestFailed") }} {{ state.error }}</span>
         <UButton size="xs" color="neutral" variant="soft" @click="close">{{ $t("close") }}</UButton>
     </div>
-    <div v-if="state.running || state.sending" class="tf-offline-shield"></div>
+    <div v-if="state.running || state.sending || state.preparing" class="tf-offline-shield"></div>
 </template>
 
 <script setup>
@@ -50,7 +57,11 @@ const board = computed(() => {
     return loadBoard();
 });
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
-const writes = computed(() => board.value?.writes?.length ?? 0);
+// carte simulée : commandes tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
+const simulated = computed(() => Boolean(board.value?.simulee?.eeprom));
+const writes = computed(
+    () => (simulated.value ? board.value.simulee.commandes?.length : board.value?.writes?.length) ?? 0,
+);
 const notReread = computed(() => board.value?.notReread?.length ?? 0);
 
 function close() {

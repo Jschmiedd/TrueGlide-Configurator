@@ -189,13 +189,15 @@ export default defineConfig({
                 { src: normalizePath(path.resolve(__dirname, "src/images")), dest: "." },
                 // TrueGlide: TrueGlide Studio page (copied by scripts/sync-trueglide-studio.mjs), shown by the Studio tab
                 { src: normalizePath(path.resolve(__dirname, "studio")), dest: "." },
+                // TrueGlide: simulated boards, the board's exact firmware for the browser (scripts/sync-trueglide-simulee.mjs)
+                { src: normalizePath(path.resolve(__dirname, "simulee")), dest: "." },
             ],
         }).filter((plugin) => plugin.name === "vite-plugin-static-copy:build"),
         VitePWA({
             registerType: "prompt",
             workbox: {
                 // TrueGlide: fonts and the OSD preview background too, so the installed app works fully offline
-                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf,jpg,woff,woff2,txt}"],
+                globPatterns: ["**/*.{js,css,html,ico,png,svg,json,mcm,gltf,jpg,woff,woff2,txt,wasm}"],
                 // 8MB (the main bundle carries the built-in docs and icons)
                 maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,
             },

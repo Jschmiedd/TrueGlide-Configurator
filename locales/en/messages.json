@@ -960,6 +960,15 @@
     "tfOfflineWrites": {
         "message": "Changes prepared offline: $1."
     },
+    "tfOfflineSimulated": {
+        "message": "Simulated board: this board's exact TrueGlide firmware runs in the browser. Changes count once saved (\"Save and reboot\"). Live data (sensors, battery, CPU load) comes from the simulation, not the drone."
+    },
+    "tfOfflinePreparing": {
+        "message": "Preparing the simulated board: loading the harvested configuration into the board's firmware (a few seconds)…"
+    },
+    "tfOfflineSimulatedUnavailable": {
+        "message": "Simulated board not used ($1): the offline board replays the harvest."
+    },
     "tabTfRadio": {
         "message": "Radio telemetry"
     },

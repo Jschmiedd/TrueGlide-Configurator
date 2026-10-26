@@ -33,3 +33,5 @@ test-results-junit/
 
 # TrueGlide Studio: copied from the firmware repository by scripts/sync-trueglide-studio.mjs
 studio/
+# TrueGlide : cartes simulées, copiées depuis le dépôt du firmware par scripts/sync-trueglide-simulee.mjs
+simulee/

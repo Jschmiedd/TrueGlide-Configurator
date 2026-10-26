@@ -4,8 +4,10 @@
 // carte simulée réglée hors ligne se lit en comparant leurs « dump all » : chaque ligne de la carte simulée qui n'est
 // pas dans la vraie carte est une commande à envoyer, dans l'ordre du dump, précédée du profil où elle s'applique.
 
-// lignes jamais envoyées : identité de la puce et de la carte, commandes d'enchaînement
-const IGNOREES = /^(mcu_id|signature|board_name|manufacturer_id|batch|defaults|save|dump|diff|version)\b/;
+// lignes jamais envoyées : identité de la puce et de la carte, commandes d'enchaînement, et ce que seule la vraie
+// carte peut mesurer (étalonnages des capteurs, compteurs de vol) : la carte simulée ne doit jamais l'écraser
+const IGNOREES =
+    /^(mcu_id|signature|board_name|manufacturer_id|batch|defaults|save|dump|diff|version)\b|^set (acc_calibration|mag_calibration|gyro_calibration\w*|stats_\w+) =/;
 // sélection d'un profil (le dump les écrit avant les réglages de ce profil)
 const PROFIL = /^(profile|rateprofile|battery_profile|osd_profile)\s+\d+$/;
 

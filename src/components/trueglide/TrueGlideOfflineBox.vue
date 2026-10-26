@@ -61,7 +61,8 @@ const board = computed(() => {
     state.version; // dependency
     return loadBoard();
 });
-const writes = computed(() => board.value?.writes?.length ?? 0);
+// carte simulée : commandes tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
+const writes = computed(() => board.value?.simulee?.commandes?.length || (board.value?.writes?.length ?? 0));
 const check = computed(() => (board.value ? sameBoard(board.value.carte, boardIdentity(FC.CONFIG)) : { ok: false }));
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
 

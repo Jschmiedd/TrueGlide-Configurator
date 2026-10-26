@@ -16,14 +16,17 @@ import { cliRefused } from "../studio_tab.js";
 // Rend { ok } ou { ok: false, reason, index, write, reply }.
 export async function sendPrepared({ onProgress } = {}) {
     const rec = loadBoard();
-    if (!rec?.writes?.length) {
+    // carte simulée : commandes du CLI tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
+    const writes = rec?.simulee?.commandes?.length
+        ? rec.simulee.commandes.map((cli) => ({ cli }))
+        : (rec?.writes ?? []);
+    if (!writes.length) {
         return { ok: false, reason: "vide" };
     }
     const check = sameBoard(rec.carte, boardIdentity(FC.CONFIG));
     if (!check.ok) {
         return { ok: false, reason: check.reason };
     }
-    const writes = rec.writes;
     for (let i = 0; i < writes.length; i++) {
         onProgress?.({ step: i + 1, total: writes.length });
         const w = writes[i];
@@ -51,6 +54,11 @@ export async function sendPrepared({ onProgress } = {}) {
     }
     rec.writes = [];
     rec.notReread = [];
+    if (rec.simulee?.commandes?.length) {
+        // la vraie carte est maintenant comme la carte simulée : nouveau départ
+        rec.simulee.base = rec.simulee.baseApres ?? rec.simulee.base;
+        rec.simulee.commandes = [];
+    }
     rec.envoye = new Date().toISOString();
     saveBoard(rec);
     boardChanged();
