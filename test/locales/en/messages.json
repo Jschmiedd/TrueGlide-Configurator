@@ -859,7 +859,7 @@
         "message": "Studio"
     },
     "tfStudioIntro": {
-        "message": "TrueGlide Studio: prepare a quad without plugging it in (starting tune, ports, pin check, drone file). With the board connected, \"Read the board configuration\" gives its diff all to Studio. Nothing is written to the board from here: then paste the commands in the CLI tab. Internet required."
+        "message": "TrueGlide Studio: prepare a quad, even with the board unplugged (starting tune, ports, pin check, drone file). With the board connected: \"Read the board configuration\" gives its diff all to Studio, and each Studio command block has a \"Send to the board\" button (confirmation, nothing saved at the first refused command)."
     },
     "tfStudioReadBoard": {
         "message": "Read the board configuration"
@@ -875,6 +875,21 @@
     },
     "tfStudioReadFailed": {
         "message": "Cannot read:"
+    },
+    "tfStudioSendDone": {
+        "message": "$1 command(s) accepted by the board. Saving (save), then the board reboots: reopen Studio and read the board to check."
+    },
+    "tfStudioSendRefused": {
+        "message": "Stopped at command \"$1\": $2. Nothing was saved (the board reboots without saving)."
+    },
+    "tfStudioSendCancelled": {
+        "message": "Sending cancelled: nothing was sent."
+    },
+    "tfStudioSendConfirm": {
+        "message": "Send $1 Studio command(s) to the board, then save?\n\nProps off. Read the commands first. At the first refused command nothing is saved. The board reboots at the end."
+    },
+    "tfStudioSendNoBoard": {
+        "message": "No board connected: nothing is sent. With the offline board, set up with the software tabs, or plug the board back in."
     },
     "tfOfflineBoardPort": {
         "message": "Offline board: $1"

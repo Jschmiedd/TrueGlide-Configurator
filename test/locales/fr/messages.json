@@ -862,7 +862,7 @@
         "message": "Studio"
     },
     "tfStudioIntro": {
-        "message": "TrueGlide Studio : préparer un drone sans le brancher (réglage de départ, ports, contrôle des broches, fichier drone). Carte branchée, « Lire la configuration de la carte » donne son diff all à Studio. Rien n'est écrit dans la carte d'ici : coller ensuite les commandes dans l'onglet CLI. Internet nécessaire."
+        "message": "TrueGlide Studio : préparer un drone, même carte débranchée (réglage de départ, ports, contrôle des broches, fichier drone). Carte branchée : « Lire la configuration de la carte » donne son diff all à Studio, et chaque bloc de commandes de Studio a un bouton « Envoyer à la carte » (confirmation, rien d'enregistré à la première commande refusée)."
     },
     "tfStudioReadBoard": {
         "message": "Lire la configuration de la carte"
@@ -878,6 +878,21 @@
     },
     "tfStudioReadFailed": {
         "message": "Lecture impossible :"
+    },
+    "tfStudioSendDone": {
+        "message": "$1 commande(s) acceptée(s) par la carte. Enregistrement (save), puis la carte redémarre : rouvrir Studio et relire la carte pour vérifier."
+    },
+    "tfStudioSendRefused": {
+        "message": "Arrêt à la commande « $1 » : $2. Rien n'a été enregistré (la carte redémarre sans sauvegarder)."
+    },
+    "tfStudioSendCancelled": {
+        "message": "Envoi annulé : rien n'a été envoyé."
+    },
+    "tfStudioSendConfirm": {
+        "message": "Envoyer $1 commande(s) de Studio à la carte, puis enregistrer ?\n\nHélices retirées. Relire les commandes avant. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
+    },
+    "tfStudioSendNoBoard": {
+        "message": "Pas de carte branchée : rien n'est envoyé. Avec la carte hors ligne, régler avec les onglets du logiciel, ou rebrancher la carte."
     },
     "tfOfflineBoardPort": {
         "message": "Carte hors ligne : $1"

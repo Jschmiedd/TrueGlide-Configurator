@@ -355,11 +355,15 @@
       '<button class="action" data-copier="' + id + '">Copier</button>' +
       '<button class="second" data-telecharger="' + id + '" data-nom="' + nomFichier + '">Enregistrer en .txt</button>' +
       (USB ? '<button class="second" data-envoyer="' + id + '">Envoyer à la carte (USB)</button>' : '') +
+      (DANS_LOGICIEL ? '<button class="second envoi-logiciel" data-envoyer-logiciel="' + id + '"' + (etatLogiciel.connecte && !etatLogiciel.horsLigne ? '' : ' hidden') + '>Envoyer à la carte</button>' : '') +
       '</div><div id="' + id + '-usb"></div>';
   }
   // Carte en USB : seulement dans Chrome / Edge, et pas quand Studio est affiché dans TrueGlide Configurator (qui tient
   // déjà le port ; son onglet Studio lit la carte lui-même).
   var USB = TFUsb.disponible(navigator, window);
+  // Studio affiché dans l'onglet Studio de TrueGlide Configurator : c'est le logiciel qui tient la carte et envoie
+  var DANS_LOGICIEL = window.parent !== window;
+  var etatLogiciel = { connecte: false, horsLigne: false };
   document.querySelectorAll('.usb-seul').forEach(function (el) { el.hidden = !USB; });
   function messageUsb(err) {
     var m = String(err && err.message || err);
@@ -436,6 +440,12 @@
     }
     var u = ev.target.dataset && ev.target.dataset.envoyer;
     if (u) envoyerBloc(u, ev.target);
+    var l = ev.target.dataset && ev.target.dataset.envoyerLogiciel;
+    if (l) {
+      ev.target.disabled = true;
+      $(l + '-usb').innerHTML = messages(['Envoi demandé au logiciel…'], 'note');
+      window.parent.postMessage({ source: 'trueglide-studio', command: 'envoyer', id: l, texte: $(l).textContent }, location.origin);
+    }
     var d = ev.target.dataset && ev.target.dataset.telecharger;
     if (d) {
       var a = document.createElement('a');
@@ -612,10 +622,23 @@
   if (window.parent !== window) {
     window.addEventListener('message', function (ev) {
       var d = ev.data;
-      if (ev.source !== window.parent || !d || d.source !== 'trueglide-configurator' || d.command !== 'configuration' || typeof d.texte !== 'string') return;
+      if (ev.source !== window.parent || !d || d.source !== 'trueglide-configurator') return;
+      if (d.command === 'etat') {
+        // carte branchée dans le logiciel : boutons « Envoyer à la carte » ; jamais vers la carte hors ligne
+        etatLogiciel = { connecte: !!d.connecte, horsLigne: !!d.horsLigne };
+        document.querySelectorAll('.envoi-logiciel').forEach(function (b) { b.hidden = !(etatLogiciel.connecte && !etatLogiciel.horsLigne); });
+        return;
+      }
+      if (d.command === 'resultat') {
+        var sortie = $(d.id + '-usb'), bouton = document.querySelector('[data-envoyer-logiciel="' + d.id + '"]');
+        if (sortie) sortie.innerHTML = messages([String(d.message)], d.ok ? 'ok' : 'alerte');
+        if (bouton) bouton.disabled = false;
+        return;
+      }
+      if (d.command !== 'configuration' || typeof d.texte !== 'string') return;
       var o;
       try { o = TFPorts.ouvrir(d.texte); } catch (err) { $('info-drone').innerHTML = messages([err.message], 'alerte'); return; }
-      appliquer(o, 'Configuration lue sur la carte branchée');
+      appliquer(o, 'Configuration lue sur la carte branchée', true);
       document.querySelector('nav.onglets button[data-page="reglage"]').click();
       $('info-drone').scrollIntoView({ block: 'center' });
     });
