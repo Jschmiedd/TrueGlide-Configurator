@@ -1,9 +1,9 @@
 // TrueGlide Configurator - Copyright (C) 2026 TalkTrueFPV. Derived from Betaflight App.
 // Free software under the GPL-3.0 license, WITHOUT ANY WARRANTY; see the LICENSE file.
 // TrueGlide : carte hors ligne sur le vrai firmware. Pour les cartes listées dans simulee/cartes.json (copiées par
-// scripts/sync-trueglide-simulee.mjs), le firmware TrueGlide exact de la carte tourne dans un Web Worker de la page.
+// scripts/sync-trueglide-simulee.mjs), le firmware exact de la carte (TrueGlide ou Betaflight) tourne dans un Web Worker de la page.
 //  - préparation : la carte simulée démarre vierge, reçoit le « diff all » récolté sur la vraie carte, enregistre ;
-//    son « dump all » doit alors être celui de la vraie carte, sinon la carte simulée n'est pas utilisée ;
+//    (avec d'abord l'état des fonctions « feature » du « dump all » récolté) ; son « dump all » doit alors être celui de la vraie carte, sinon la carte simulée n'est pas utilisée ;
 //  - réglage hors ligne : le logiciel parle à la carte simulée comme à une carte branchée ;
 //  - envoi : les commandes sont l'écart entre le « dump all » de départ et celui de la carte simulée réglée.
 
@@ -11,7 +11,7 @@ import { dumpDelta, dumpLines } from "./delta.js";
 
 let manifeste = null;
 
-// Cartes simulées livrées avec le logiciel : { NOM: { nom, firmware, api, dossier } }
+// Cartes simulées livrées avec le logiciel : { "NOM/FIRMWARE": { nom, firmware, api, dossier } }
 export async function cartesSimulees(base = globalThis.location?.href) {
     if (!manifeste) {
         try {
@@ -25,9 +25,13 @@ export async function cartesSimulees(base = globalThis.location?.href) {
 }
 
 // Carte simulée pour cette carte récoltée : même carte, même firmware, même version d'API ; sinon null.
+// Une même carte peut avoir plusieurs cartes simulées (une par firmware : TrueGlide, Betaflight…).
 export function simulationPour(carte, cartes) {
-    const s = cartes?.[carte?.nom];
-    return s && s.firmware === carte.firmware && s.api === carte.api ? s : null;
+    return (
+        Object.values(cartes ?? {}).find(
+            (s) => s.nom === carte?.nom && s.firmware === carte.firmware && s.api === carte.api,
+        ) ?? null
+    );
 }
 
 // identifiant unique (24 chiffres hexadécimaux, comme identity.js) -> [3 nombres], ou null
@@ -161,7 +165,10 @@ export async function preparer(rec, simulation, base = globalThis.location?.href
     try {
         await carte.demarrer(null, uid);
         await carte.entrerCli();
-        for (const ligne of dumpLines(diff.join("\n"))) {
+        // état des fonctions (feature) de la vraie carte d'abord : une carte neuve en met certaines en marche
+        // d'elle-même au premier démarrage (LED_STRIP…), le « diff all » ne les coupe pas
+        const fonctions = dumpLines(dumpVraie.join("\n")).filter((l) => /^feature\s/.test(l));
+        for (const ligne of [...fonctions, ...dumpLines(diff.join("\n"))]) {
             if (/^(batch|defaults|save|exit|diff|dump|version)\b/.test(ligne)) {
                 continue;
             }

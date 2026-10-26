@@ -65,11 +65,13 @@ octet pour octet à celles prévues par la carte hors ligne. Pas encore essayé 
 ### Carte simulée : le vrai firmware dans le navigateur (essai, SPEEDYBEE F405 MINI)
 
 Pour les cartes de `simulee/cartes.json`, la carte hors ligne n'est plus une récolte rejouée : c'est le firmware
-TrueGlide exact de la carte (compilé pour le navigateur dans le dépôt du firmware,
-`trueglide/essai_navigateur/vraie_carte.py`, copié par `node scripts/sync-trueglide-simulee.mjs <dossier wasm>`) qui
+exact de la carte, TrueGlide ou Betaflight (compilé pour le navigateur dans le dépôt du firmware TrueGlide :
+`trueglide/essai_navigateur/vraie_carte.py`, et `trueglide/betaflight/` pour Betaflight ; copié dans
+`simulee/<CARTE>/<FIRMWARE>/` par `node scripts/sync-trueglide-simulee.mjs <dossier wasm>`) qui
 tourne dans un Web Worker. Seulement si la carte récoltée a le même nom, le même firmware et la même version d'API.
 
-- Préparation (une fois par récolte, environ 15 s) : la carte simulée reçoit le `diff all` récolté et enregistre ; son
+- Préparation (une fois par récolte, environ 15 s) : la carte simulée reçoit l'état des fonctions (`feature`) du
+  `dump all` récolté, puis le `diff all` récolté, et enregistre ; son
   `dump all` doit être celui de la vraie carte, sinon elle n'est pas utilisée (raison affichée dans le bandeau) et la
   récolte est rejouée comme avant.
 - Tous les onglets marchent comme carte branchée, profils compris. Refusés : étalonnages des capteurs ; sans effet :
@@ -81,5 +83,7 @@ tourne dans un Web Worker. Seulement si la carte récoltée a le même nom, le m
 
 Vérifié le 26/10/2026 : vraie carte = firmware F405 Mini sur l'ordinateur avec la configuration KarRmen ; récolte,
 préparation en 16 s, nom, ralenti et profil PID changés hors ligne, 2 changements envoyés et relus sur la vraie carte,
-aucune erreur ; 30 onglets ouverts sur la carte simulée sans erreur.
+aucune erreur ; 30 onglets ouverts sur la carte simulée sans erreur. Même parcours le 26/10/2026 avec Betaflight
+2025.12.2 (firmware de la vraie carte KarRmen, mêmes options de construction) : préparation en 16 s, 2 changements
+envoyés et relus, aucune erreur ; carte simulée identique à la vraie (`dump all` : 992 réglages sur 992).
 

@@ -23,6 +23,7 @@ import CryptoES from "crypto-es";
 import BuildApi from "./BuildApi";
 
 import { serial } from "./serial.js";
+import { OFFLINE_PATH } from "./protocols/OfflineBoardSerial.js";
 import { isTauriIOS } from "./utils/checkCompatibility.js";
 import { getConnectionState, State as ConnPhase } from "./connection_state.js";
 import { EventBus } from "../components/eventBus";
@@ -431,7 +432,10 @@ function beginConnect(selectedDevice) {
     // Manual/TCP targets (e.g. an ELRS Wi-Fi module) have a longer handshake — a slow AP plus
     // the iOS Local Network permission prompt on the first connection — so give them a wider
     // window than the enumerated-serial default before the safety net calls the attempt failed.
-    const connectAttemptTimeout = selectedDevice === "manual" ? 20000 : 10000;
+    // TrueGlide: the offline board prepares its simulated board (the board's exact firmware) on the first
+    // connection after a harvest, which takes longer than a port opening.
+    const connectAttemptTimeout =
+        selectedDevice === OFFLINE_PATH ? 180000 : selectedDevice === "manual" ? 20000 : 10000;
     GUI.timeout_add(
         "connectAttempt",
         function () {

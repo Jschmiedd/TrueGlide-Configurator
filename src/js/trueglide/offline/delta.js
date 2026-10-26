@@ -66,6 +66,16 @@ export function dumpDelta(realDump, simDump) {
         }
         commands.push(line);
     }
+    // fonctions (feature) coupées : le « dump all » liste toutes les fonctions coupées (« feature -X ») puis les
+    // fonctions en marche (« feature X ») ; une fonction en marche sur la vraie carte et plus sur la carte simulée
+    // n'apparaît donc pas ci-dessus
+    const simSet = new Set(simLines);
+    for (const line of realLines) {
+        const m = /^feature\s+([A-Z0-9_]+)$/.exec(line);
+        if (m && !simSet.has(line)) {
+            commands.push(`feature -${m[1]}`);
+        }
+    }
     // profils actifs à la fin : ceux de la carte simulée (rétablis, ou changés hors ligne)
     const realFinal = finalSelection(realLines);
     for (const [kind, sel] of Object.entries(finalSelection(simLines))) {

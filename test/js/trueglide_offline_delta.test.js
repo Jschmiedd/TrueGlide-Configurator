@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { dumpDelta, dumpLines } from "../../src/js/trueglide/offline/delta.js";
+import { simulationPour } from "../../src/js/trueglide/offline/simulation.js";
 
 const REAL = `# dump all
 # version
@@ -85,6 +86,13 @@ describe("carte simulée : commandes à envoyer (dump all)", () => {
         ]);
     });
 
+    it("fonction coupée hors ligne : « feature -X » est envoyée", () => {
+        // le « dump all » liste toutes les fonctions coupées, puis celles en marche : OSD coupé fait disparaître
+        // « feature OSD » sans ajouter de ligne
+        const sim = changer(REAL, "feature OSD\n", "");
+        expect(dumpDelta(REAL, sim)).toEqual(["feature -OSD"]);
+    });
+
     it("profil actif changé hors ligne : la sélection finale est envoyée", () => {
         const sim = changer(
             REAL,
@@ -112,5 +120,28 @@ describe("carte simulée : commandes à envoyer (dump all)", () => {
 
     it("lignes d'un dump : sans commentaires ni invite", () => {
         expect(dumpLines("# a\r\nset x = 1\r\n\r\n# ")).toEqual(["set x = 1"]);
+    });
+});
+
+describe("carte simulée : choix selon le firmware de la carte récoltée", () => {
+    const CARTES = {
+        "SPEEDYBEEF405MINI/BTFL_2026.6.2": { nom: "SPEEDYBEEF405MINI", firmware: "BTFL 2026.6.2", api: "1.48.0" },
+        "SPEEDYBEEF405MINI/BTFL_2025.12.2": { nom: "SPEEDYBEEF405MINI", firmware: "BTFL 2025.12.2", api: "1.47.0" },
+    };
+
+    it("même carte, même firmware, même API : la bonne carte simulée", () => {
+        const carte = { nom: "SPEEDYBEEF405MINI", firmware: "BTFL 2025.12.2", api: "1.47.0" };
+        expect(simulationPour(carte, CARTES)).toBe(CARTES["SPEEDYBEEF405MINI/BTFL_2025.12.2"]);
+    });
+
+    it("firmware ou API différents : pas de carte simulée", () => {
+        expect(simulationPour({ nom: "SPEEDYBEEF405MINI", firmware: "BTFL 2025.12.1", api: "1.47.0" }, CARTES)).toBe(
+            null,
+        );
+        expect(simulationPour({ nom: "SPEEDYBEEF405MINI", firmware: "BTFL 2025.12.2", api: "1.46.0" }, CARTES)).toBe(
+            null,
+        );
+        expect(simulationPour({ nom: "MATEKH743", firmware: "BTFL 2025.12.2", api: "1.47.0" }, CARTES)).toBe(null);
+        expect(simulationPour(null, CARTES)).toBe(null);
     });
 });

@@ -1,6 +1,6 @@
-// TrueGlide : copie les cartes simulées (firmware TrueGlide exact d'une carte, compilé pour le navigateur par
-// trueglide/essai_navigateur/vraie_carte.py dans le dépôt du firmware) dans le logiciel : simulee/<CARTE>/.
-// Chaque carte est démarrée une fois ici pour lire son identité (nom, firmware, version d'API), écrite dans
+// TrueGlide : copie les cartes simulées (firmware exact d'une carte, TrueGlide ou Betaflight, compilé pour le
+// navigateur par vraie_carte.py dans le dépôt du firmware) dans le logiciel : simulee/<CARTE>/<FIRMWARE>/.
+// Chaque carte est démarrée une fois ici pour lire son identité (nom, firmware, version d'API), ajoutée à
 // simulee/cartes.json : le logiciel n'utilise une carte simulée que pour une carte récoltée avec le même firmware.
 // Un seul code : on ne modifie pas les copies, on relance ce script.
 // Usage : node scripts/sync-trueglide-simulee.mjs ../firmware-trueglide/obj/vraie_carte/SPEEDYBEEF405MINI/wasm [...]
@@ -87,31 +87,41 @@ const sources = process.argv.slice(2);
 if (!sources.length) {
     throw new Error("indiquer au moins un dossier de carte simulée (…/obj/vraie_carte/<CARTE>/wasm)");
 }
-const manifeste = {};
+const fichierManifeste = path.join(dest, "cartes.json");
+const manifeste = fs.existsSync(fichierManifeste) ? JSON.parse(fs.readFileSync(fichierManifeste, "utf8")) : {};
 for (const dossier of sources) {
     const id = await identite(dossier);
     if (!/^[A-Z0-9_]+$/.test(id.nom)) {
         throw new Error(`${dossier} : nom de carte inattendu « ${id.nom} »`);
     }
-    const cible = path.join(dest, id.nom);
+    const cle = `${id.nom}/${id.firmware.replace(/[^A-Za-z0-9.]+/g, "_")}`;
+    const cible = path.join(dest, cle);
     fs.rmSync(cible, { recursive: true, force: true });
     fs.mkdirSync(cible, { recursive: true });
     for (const f of FICHIERS) {
         fs.copyFileSync(path.join(dossier, f), path.join(cible, f));
     }
-    const worker = path.resolve(dossier, "../../../../trueglide/essai_navigateur", WORKER);
-    fs.copyFileSync(
-        fs.existsSync(path.join(dossier, WORKER)) ? path.join(dossier, WORKER) : worker,
-        path.join(cible, WORKER),
-    );
-    manifeste[id.nom] = { ...id, dossier: `${dest}/${id.nom}/` };
+    // Web Worker : à côté de la carte, sinon dans le dossier trueglide du dépôt du firmware
+    const worker = [
+        path.join(dossier, WORKER),
+        path.resolve(dossier, "../../../../trueglide/essai_navigateur", WORKER),
+        path.resolve(dossier, "../../../../trueglide", WORKER),
+    ].find((f) => fs.existsSync(f));
+    fs.copyFileSync(worker, path.join(cible, WORKER));
+    manifeste[cle] = { ...id, dossier: `${dest}/${cle}/` };
     console.log(`${dossier} -> ${cible}/ (${id.firmware}, API ${id.api})`);
 }
-fs.writeFileSync(path.join(dest, "cartes.json"), `${JSON.stringify(manifeste, null, 2)}\n`);
+// cartes dont le dossier n'existe plus : retirées
+for (const [cle, s] of Object.entries(manifeste)) {
+    if (!fs.existsSync(path.join(s.dossier, "carte.wasm"))) {
+        delete manifeste[cle];
+    }
+}
+fs.writeFileSync(fichierManifeste, `${JSON.stringify(manifeste, null, 2)}\n`);
 fs.writeFileSync(
     path.join(dest, "LISEZMOI.txt"),
-    "Cartes simulées : firmware TrueGlide exact d'une carte, compilé pour le navigateur (dépôt du firmware,\n" +
-        "trueglide/essai_navigateur/vraie_carte.py). Copiées par scripts/sync-trueglide-simulee.mjs : ne pas modifier ici.\n" +
-        "Licence : GPL-3.0, comme le firmware ; sources dans le dépôt du firmware TrueGlide.\n",
+    "Cartes simulées : firmware exact d'une carte (TrueGlide ou Betaflight), compilé pour le navigateur par\n" +
+        "vraie_carte.py (dépôt du firmware TrueGlide). Copiées par scripts/sync-trueglide-simulee.mjs : ne pas modifier\n" +
+        "ici. Licence : GPL-3.0, comme les firmwares ; sources dans le dépôt du firmware TrueGlide.\n",
 );
 process.exit(0);
