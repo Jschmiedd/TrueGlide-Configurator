@@ -31,11 +31,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderDGainDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningDGainSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningDGainSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderDGainDisplay }}</span>
                     <USlider
                         v-model="sliderDGain"
                         :min="0"
@@ -52,11 +49,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderPIGainDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningPIGainSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningPIGainSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderPIGainDisplay }}</span>
                     <USlider
                         v-model="sliderPIGain"
                         :min="0"
@@ -73,11 +67,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': sliderFFGainDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningResponseSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningResponseSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderFFGainDisplay }}</span>
                     <USlider
                         v-model="sliderFeedforwardGain"
                         :min="0"
@@ -99,11 +90,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': dMaxSliderDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningDMaxGainSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningDMaxGainSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderDMaxGainDisplay }}</span>
                     <USlider
                         v-model="sliderDMaxGain"
                         :min="0"
@@ -121,11 +109,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': iGainSliderDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningIGainSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningIGainSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderIGainDisplay }}</span>
                     <USlider
                         v-model="sliderIGain"
                         :min="0"
@@ -144,10 +129,10 @@
                     :class="{ 'opacity-50 pointer-events-none': rpRatioSliderDisabled }"
                 >
                     <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        class="w-28 sm:w-36 text-right text-xs shrink-0"
                         v-html="$t('pidTuningRollPitchRatioSlider')"
                     ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderRPRatioDisplay }}</span>
                     <USlider
                         v-model="sliderRollPitchRatio"
                         :min="0"
@@ -166,10 +151,10 @@
                     :class="{ 'opacity-50 pointer-events-none': pitchPISliderDisabled }"
                 >
                     <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
+                        class="w-28 sm:w-36 text-right text-xs shrink-0"
                         v-html="$t('pidTuningPitchPIGainSlider')"
                     ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderPitchPIDisplay }}</span>
                     <USlider
                         v-model="sliderPitchPIGain"
                         :min="0"
@@ -187,11 +172,8 @@
                     class="flex items-center gap-2 sm:gap-3 py-1"
                     :class="{ 'opacity-50 pointer-events-none': masterSliderDisabled }"
                 >
-                    <div
-                        class="min-w-28 sm:min-w-32 text-right text-xs shrink-0"
-                        v-html="$t('pidTuningMasterSlider')"
-                    ></div>
-                    <span class="min-w-10 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
+                    <div class="w-28 sm:w-36 text-right text-xs shrink-0" v-html="$t('pidTuningMasterSlider')"></div>
+                    <span class="w-10 shrink-0 text-center text-sm font-semibold">{{ sliderMasterDisplay }}</span>
                     <USlider
                         v-model="sliderMasterMultiplier"
                         :min="0"
