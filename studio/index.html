@@ -194,7 +194,7 @@
       (récepteur, Bluetooth) peut déjà occuper un port.</p>
     <div class="grille">
       <label>Firmware<select id="modele">
-        <option value="STANDARD">TRUEGLIDE</option><option value="TRUENAV">TRUENAV</option><option value="TRUENAV_LIGHT">TRUENAV_LIGHT</option>
+        <option value="STANDARD">TRUEGLIDE</option><option value="TRUENAV">TRUENAV</option><option value="TRUENAV_LIGHT">TRUENAV_LIGHT</option><option value="BETAFLIGHT">Betaflight</option>
       </select></label>
     </div>
     <p class="petit" id="info-ports"></p>
@@ -624,6 +624,9 @@
       // carte lue (USB ou logiciel) : son firmware est celui de la carte
       var lu = relecture && o.configuration ? TFAnalyse.lire(o.configuration).firmware : null;
       if (lu) $('firmware').value = lu;
+      // onglet Ports : même firmware (Betaflight), ou TRUEGLIDE si la carte n'est plus en Betaflight
+      if (lu === 'betaflight') $('modele').value = 'BETAFLIGHT';
+      else if (lu && $('modele').value === 'BETAFLIGHT') $('modele').value = 'STANDARD';
       var memeCarte = relecture && o.carte && $('diff').value && o.carte.toUpperCase() === String($('carte').value).toUpperCase();
       if (!memeCarte) {
         Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });
