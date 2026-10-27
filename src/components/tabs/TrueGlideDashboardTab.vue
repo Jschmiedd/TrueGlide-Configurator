@@ -224,9 +224,10 @@ async function loadFeatures() {
         // the CLI "version" line names the model; build options alone cannot tell TRUENAV_LIGHT from TRUENAV
         versionModel = modelFromVersionLines(await send("version"));
         features.value = trueglideStatus(values, pinio.boxes);
-        // TrueGlide settings answered: the board runs TrueGlide (plain Betaflight has none of them)
+        // the board runs TrueGlide when its CLI "version" line names a TrueGlide model, or when it answers a setting only
+        // TrueGlide has (Betaflight also answers gps_rescue_* and failsafe_procedure)
         readInstalled();
-        installed.value.isTrueGlide = Object.keys(values).length > 0;
+        installed.value.isTrueGlide = versionModel !== null || "power_guard_current" in values;
         rememberConnectedBoard(installed.value);
     } catch (error) {
         console.error("TrueGlide dashboard:", error);
