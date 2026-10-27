@@ -134,7 +134,8 @@
     return etat;
   }
 
-  // choix : { UART1: 'vtx_hd', ... } ; initial : etatInitial(...) ; e : { modele: 'STANDARD' | 'TRUENAV' | 'TRUENAV_LIGHT' }
+  // choix : { UART1: 'vtx_hd', ... } ; initial : etatInitial(...) ;
+  // e : { modele: 'STANDARD' | 'TRUENAV' | 'TRUENAV_LIGHT' | 'BETAFLIGHT' (carte restée en Betaflight) }
   function generer(carte, choix, initial, e) {
     e = e || {};
     var modele = e.modele || 'STANDARD';
@@ -192,7 +193,10 @@
     }
     if (ports_('gps').length > 1) alertes.push(tr('Un seul GPS est géré : le mettre sur un seul port.', 'Only one GPS is supported: put it on a single port.'));
     if (ports_('gps').length) {
-      if (modele === 'STANDARD' && carte.gps === false)
+      if (modele === 'BETAFLIGHT')
+        notes.push(tr('Carte en Betaflight : le GPS n\'y marche que si son firmware a été construit avec le GPS (option de construction).',
+          'Board on Betaflight: GPS only works if its firmware was built with GPS (build option).'));
+      else if (modele === 'STANDARD' && carte.gps === false)
         alertes.push(tr('Le firmware TRUEGLIDE de cette carte (' + carte.mcu + ') n\'a pas le GPS (mémoire trop petite) : prendre TRUENAV ou TRUENAV_LIGHT.',
           'The TRUEGLIDE firmware for this board (' + carte.mcu + ') has no GPS (memory too small): use TRUENAV or TRUENAV_LIGHT.'));
       if (nouveaux.gps) suite.push('feature GPS', 'set gps_provider = UBLOX');
@@ -215,7 +219,10 @@
         'ESC serial telemetry: connect the ESC TLM wire to the port RX. It gives temperature and, if the board has no sensor, current (set current_meter = ESC).'));
     }
     if (ports_('gimbal').length) {
-      if (/F411/.test(carte.mcu || '') || modele === 'TRUENAV_LIGHT')
+      if (modele === 'BETAFLIGHT')
+        alertes.push(tr('Carte en Betaflight : la nacelle Caddx GM3 n\'y marche que si son firmware a été construit avec la nacelle (option de construction) ; sinon la commande est refusée et rien n\'est enregistré.',
+          'Board on Betaflight: the Caddx GM3 gimbal only works if its firmware was built with the gimbal (build option); otherwise the command is refused and nothing is saved.'));
+      else if (/F411/.test(carte.mcu || '') || modele === 'TRUENAV_LIGHT')
         alertes.push(tr('La nacelle Caddx GM3 n\'est pas dans le firmware ' + (modele === 'TRUENAV_LIGHT' ? 'TRUENAV_LIGHT' : 'des cartes F411') + ' (place en mémoire).',
           'The Caddx GM3 gimbal is not in the ' + (modele === 'TRUENAV_LIGHT' ? 'TRUENAV_LIGHT' : 'F411') + ' firmware (memory space).'));
       notes.push(tr('Nacelle Caddx GM3 : 115 200 bauds ; réglages gimbal_* pour les gains et limites.', 'Caddx GM3 gimbal: 115200 baud; gimbal_* settings for gains and limits.'));
