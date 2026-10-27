@@ -101,11 +101,11 @@ for (const dossier of sources) {
     for (const f of FICHIERS) {
         fs.copyFileSync(path.join(dossier, f), path.join(cible, f));
     }
-    // Web Worker : à côté de la carte, sinon dans le dossier trueglide du dépôt du firmware
+    // Web Worker : celui du dépôt du firmware (trueglide/), sinon la copie à côté de la carte
     const worker = [
-        path.join(dossier, WORKER),
         path.resolve(dossier, "../../../../trueglide/essai_navigateur", WORKER),
         path.resolve(dossier, "../../../../trueglide", WORKER),
+        path.join(dossier, WORKER),
     ].find((f) => fs.existsSync(f));
     fs.copyFileSync(worker, path.join(cible, WORKER));
     manifeste[cle] = { ...id, dossier: `${dest}/${cle}/` };

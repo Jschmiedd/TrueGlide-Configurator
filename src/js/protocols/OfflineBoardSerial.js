@@ -95,6 +95,8 @@ class OfflineBoardSerial extends EventTarget {
             this.dispatchEvent(new CustomEvent("receive", { detail: e.detail }));
         });
         this.carte.addEventListener("redemarrage", (e) => this.redemarrage(e.detail, simulation, uid));
+        this.simulation = simulation;
+        this.uid = uid;
         await this.carte.demarrer(depuisBase64(recording.simulee.eeprom), uid);
         this.reader = new FrameReader("request");
         this.annoncer();
@@ -103,15 +105,35 @@ class OfflineBoardSerial extends EventTarget {
     // la carte simulée a enregistré et redémarre : sa mémoire est gardée, le port se ferme (comme une vraie carte),
     // puis les commandes à envoyer sont recalculées
     async redemarrage(eeprom, simulation, uid) {
+        this.carte?.arreter();
+        this.carte = null;
+        setTimeout(() => this.disconnect(), 50);
+        await this.memoireEnregistree(eeprom, simulation, uid);
+    }
+
+    // enregistrement sans redémarrage (bouton « Sauvegarder » d'un onglet : MSP_EEPROM_WRITE) : la carte reste
+    // connectée ; sa mémoire est relue un peu après, quand le firmware a fini d'écrire
+    enregistrementSansRedemarrage() {
+        const carte = this.carte;
+        setTimeout(async () => {
+            if (this.carte !== carte || !carte) {
+                return;
+            }
+            const eeprom = await carte.lireMemoire();
+            if (eeprom && this.carte === carte) {
+                await this.memoireEnregistree(eeprom, this.simulation, this.uid);
+            }
+        }, 1000);
+    }
+
+    // mémoire des réglages de la carte simulée gardée, et commandes à envoyer recalculées
+    async memoireEnregistree(eeprom, simulation, uid) {
         const rec = loadBoard();
         if (!rec?.simulee) {
             return;
         }
         rec.simulee.eeprom = versBase64(eeprom);
         saveBoard(rec);
-        this.carte?.arreter();
-        this.carte = null;
-        setTimeout(() => this.disconnect(), 50);
         try {
             const { commandes, dump } = await commandesPreparees(rec.simulee, simulation, uid);
             const now = loadBoard();
@@ -173,6 +195,9 @@ class OfflineBoardSerial extends EventTarget {
     envoyerSimulee(octets) {
         this.bytesSent += octets.byteLength;
         const messages = this.reader.feed(octets);
+        if (messages.some((m) => m.type === "msp" && m.code === MSPCodes.MSP_EEPROM_WRITE)) {
+            this.enregistrementSansRedemarrage();
+        }
         const gardees = messages.filter((m) => m.type === "msp" && (REFUSEES.has(m.code) || SANS_EFFET.has(m.code)));
         if (!gardees.length) {
             this.carte.envoyer(octets);

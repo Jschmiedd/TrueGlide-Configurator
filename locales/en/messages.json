@@ -1534,6 +1534,9 @@
     "tabLedStrip": {
         "message": "LED Strip"
     },
+    "tfPidBothMethods": {
+        "message": "Numbers and sliders work together: typing a number stops the sliders for that axis (the typed number is kept); moving a slider turns them back on and recalculates the numbers."
+    },
     "tabCLI": {
         "message": "CLI"
     },

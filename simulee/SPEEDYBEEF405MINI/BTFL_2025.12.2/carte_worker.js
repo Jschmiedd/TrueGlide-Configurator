@@ -1,7 +1,8 @@
 // TrueGlide : la carte simulée (carte.js + carte.wasm) tourne dans ce Web Worker, hors du fil de la page.
 // Messages de la page : { type: 'demarrer', eeprom, uid } (eeprom : Uint8Array ou null ; uid : identifiant unique de
-// la puce, 3 nombres, ou null) ; { type: 'entree', octets }.
-// Messages vers la page : { type: 'prete' } ; { type: 'sortie', port, octets } ; { type: 'redemarrage', eeprom }.
+// la puce, 3 nombres, ou null) ; { type: 'entree', octets } ; { type: 'lire' } (mémoire des réglages enregistrée).
+// Messages vers la page : { type: 'prete' } ; { type: 'sortie', port, octets } ; { type: 'redemarrage', eeprom } ;
+// { type: 'memoire', eeprom } (réponse à « lire » ; eeprom null si rien n'est encore enregistré).
 /* global TrueGlideCarte */
 importScripts('carte.js');
 
@@ -54,6 +55,10 @@ self.addEventListener('message', async (e) => {
             },
         });
         self.postMessage({ type: 'prete' });
+    } else if (m.type === 'lire' && carte) {
+        // enregistrement sans redémarrage (MSP_EEPROM_WRITE) : la page relit la mémoire des réglages
+        const eeprom = carte.FS.analyzePath('/eeprom.bin').exists ? carte.FS.readFile('/eeprom.bin') : null;
+        self.postMessage({ type: 'memoire', eeprom }, eeprom ? [eeprom.buffer] : []);
     } else if (m.type === 'entree' && carte) {
         const p = carte._malloc(m.octets.length);
         carte.HEAPU8.set(m.octets, p);

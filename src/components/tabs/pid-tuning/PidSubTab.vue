@@ -24,6 +24,7 @@
                     </div>
                     <HelpIcon :text="$t('pidTuningPidSlidersHelp')" />
                 </div>
+                <p class="text-xs text-dimmed mb-2">{{ $t("tfPidBothMethods") }}</p>
 
                 <!-- Basic Sliders -->
                 <div
@@ -110,7 +111,7 @@
                         :step="0.05"
                         :disabled="dMaxSliderDisabled"
                         class="flex-1"
-                        @update:model-value="onSliderChange()"
+                        @update:model-value="onSliderChange('avance')"
                     />
                     <HelpIcon :text="$t('pidTuningDMaxGainSliderHelp')" />
                 </div>
@@ -132,7 +133,7 @@
                         :step="0.05"
                         :disabled="iGainSliderDisabled"
                         class="flex-1"
-                        @update:model-value="onSliderChange()"
+                        @update:model-value="onSliderChange('avance')"
                     />
                     <HelpIcon :text="$t('pidTuningIGainSliderHelp')" />
                 </div>
@@ -154,7 +155,7 @@
                         :step="0.05"
                         :disabled="rpRatioSliderDisabled"
                         class="flex-1"
-                        @update:model-value="onSliderChange()"
+                        @update:model-value="onSliderChange('avance')"
                     />
                     <HelpIcon :text="$t('pidTuningRollPitchRatioSliderHelp')" />
                 </div>
@@ -176,7 +177,7 @@
                         :step="0.05"
                         :disabled="pitchPISliderDisabled"
                         class="flex-1"
-                        @update:model-value="onSliderChange()"
+                        @update:model-value="onSliderChange('avance')"
                     />
                     <HelpIcon :text="$t('pidTuningPitchPIGainSliderHelp')" />
                 </div>
@@ -198,7 +199,7 @@
                         :step="0.05"
                         :disabled="masterSliderDisabled"
                         class="flex-1"
-                        @update:model-value="onSliderChange()"
+                        @update:model-value="onSliderChange('avance')"
                     />
                     <HelpIcon :text="$t('pidTuningMasterSliderHelp')" />
                 </div>
@@ -257,7 +258,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -267,7 +268,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -277,7 +278,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -287,7 +288,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -297,7 +298,7 @@
                         :step="1"
                         :min="0"
                         :max="2000"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         :format-options="{ useGrouping: false }"
@@ -311,7 +312,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -321,7 +322,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -331,7 +332,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -341,7 +342,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -351,7 +352,7 @@
                         :step="1"
                         :min="0"
                         :max="2000"
-                        :disabled="rollPitchDisabled"
+                        @update:model-value="saisieDirecte('rp')"
                         size="xs"
                         orientation="vertical"
                         :format-options="{ useGrouping: false }"
@@ -365,7 +366,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="yawDisabled"
+                        @update:model-value="saisieDirecte('yaw')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -375,7 +376,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="yawDisabled"
+                        @update:model-value="saisieDirecte('yaw')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -385,7 +386,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="yawDisabled"
+                        @update:model-value="saisieDirecte('yaw')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -395,7 +396,7 @@
                         :step="1"
                         :min="0"
                         :max="250"
-                        :disabled="yawDisabled"
+                        @update:model-value="saisieDirecte('yaw')"
                         size="xs"
                         orientation="vertical"
                         class="w-full"
@@ -405,7 +406,7 @@
                         :step="1"
                         :min="0"
                         :max="2000"
-                        :disabled="yawDisabled"
+                        @update:model-value="saisieDirecte('yaw')"
                         size="xs"
                         orientation="vertical"
                         :format-options="{ useGrouping: false }"
@@ -1436,11 +1437,20 @@ const integratedYawEnabled = computed({
     set: (val) => (FC.ADVANCED_TUNING.useIntegratedYaw = val ? 1 : 0),
 });
 
-// PID table input disabled states — matches original updatePidSlidersDisplay()
-// Roll & Pitch disabled when slider mode is RP (1) or RPY (2)
-const rollPitchDisabled = computed(() => sliderPidsMode.value > 0);
-// Yaw disabled only in RPY mode (2)
-const yawDisabled = computed(() => sliderPidsMode.value === 2);
+// TrueGlide: PID numbers and sliders both usable, without changing the slider mode by hand. Typing a number of an
+// axis driven by the sliders (roll/pitch in RP or RPY, yaw in RPY) takes that axis off the sliders (RPY -> RP for yaw,
+// otherwise OFF), so the firmware keeps the typed value; moving a slider puts the sliders back (the mode in use
+// before) and recalculates the numbers from them.
+let modeAvantSaisie = null;
+function saisieDirecte(axe) {
+    const pilote = axe === "yaw" ? sliderPidsMode.value === 2 : sliderPidsMode.value > 0;
+    if (!pilote) {
+        return;
+    }
+    modeAvantSaisie = modeAvantSaisie ?? sliderPidsMode.value;
+    sliderPidsMode.value = axe === "yaw" ? 1 : 0;
+    FC.TUNING_SLIDERS.slider_pids_mode = sliderPidsMode.value;
+}
 
 // Sliders (values are 0.0-2.0)
 const sliderPidsMode = ref(2);
@@ -1502,24 +1512,24 @@ const sliderMasterDisplay = computed(() => sliderMasterMultiplier.value.toFixed(
 // Slider disabled states — matches original updateExpertModePidSlidersDisplay()
 // Disable when mode is OFF, or when slider is outside non-expert range and not in expert mode
 const sliderDGainDisabled = computed(() => {
-    return !sliderPidsMode.value || (dGainOutsideRange.value && !props.expertMode);
+    return dGainOutsideRange.value && !props.expertMode;
 });
 
 const sliderPIGainDisabled = computed(() => {
-    return !sliderPidsMode.value || (piGainOutsideRange.value && !props.expertMode);
+    return piGainOutsideRange.value && !props.expertMode;
 });
 
 const sliderFFGainDisabled = computed(() => {
-    return !sliderPidsMode.value || (ffGainOutsideRange.value && !props.expertMode);
+    return ffGainOutsideRange.value && !props.expertMode;
 });
 
 // Advanced slider disabled states — disabled when mode is OFF, or not in expert mode
-// Matches original: disabled = !sliderPidsMode || (changed && !expertMode)
-const dMaxSliderDisabled = computed(() => !sliderPidsMode.value || (dMaxGainChanged.value && !props.expertMode));
-const iGainSliderDisabled = computed(() => !sliderPidsMode.value || (iGainChanged.value && !props.expertMode));
-const rpRatioSliderDisabled = computed(() => !sliderPidsMode.value || (rpRatioChanged.value && !props.expertMode));
-const pitchPISliderDisabled = computed(() => !sliderPidsMode.value || (pitchPIChanged.value && !props.expertMode));
-const masterSliderDisabled = computed(() => !sliderPidsMode.value || (masterChanged.value && !props.expertMode));
+// TrueGlide: usable in every mode (moving one turns the sliders back on); otherwise as the original
+const dMaxSliderDisabled = computed(() => dMaxGainChanged.value && !props.expertMode);
+const iGainSliderDisabled = computed(() => iGainChanged.value && !props.expertMode);
+const rpRatioSliderDisabled = computed(() => rpRatioChanged.value && !props.expertMode);
+const pitchPISliderDisabled = computed(() => pitchPIChanged.value && !props.expertMode);
+const masterSliderDisabled = computed(() => masterChanged.value && !props.expertMode);
 
 // Advanced sliders visibility — show in expert mode OR when changed from default (matches original)
 const showAdvancedSliders = computed(() => {
@@ -1630,6 +1640,12 @@ function collectSliderValues() {
 // Slider change handler — accepts optional slider key for non-expert clamping
 async function onSliderChange(activeSliderKey) {
     isUserInteracting.value = true;
+
+    // TrueGlide: a slider moved while the sliders are off (numbers typed, or mode OFF) turns them back on
+    if (activeSliderKey && (modeAvantSaisie !== null || sliderPidsMode.value === 0)) {
+        sliderPidsMode.value = modeAvantSaisie ?? 2;
+    }
+    modeAvantSaisie = null;
 
     // Clamp the slider the user is actually dragging to the non-expert range.
     // We only clamp the active slider — other sliders may legitimately be

@@ -76,6 +76,8 @@ export class CarteSimulee extends EventTarget {
                 this.dispatchEvent(new CustomEvent("sortie", { detail: m.octets }));
             } else if (m.type === "redemarrage") {
                 this.dispatchEvent(new CustomEvent("redemarrage", { detail: m.eeprom }));
+            } else if (m.type === "memoire") {
+                this.dispatchEvent(new CustomEvent("memoire", { detail: m.eeprom }));
             }
         };
         const prete = new Promise((resolve) => {
@@ -126,6 +128,15 @@ export class CarteSimulee extends EventTarget {
             await attendre(20);
         }
         await attendre(200);
+    }
+
+    // Mémoire des réglages enregistrée (après un enregistrement sans redémarrage), ou null
+    lireMemoire() {
+        const lue = new Promise((resolve) =>
+            this.addEventListener("memoire", (e) => resolve(e.detail), { once: true }),
+        );
+        this.worker?.postMessage({ type: "lire" });
+        return lue;
     }
 
     // « save » : la carte enregistre et redémarre ; rend sa mémoire des réglages

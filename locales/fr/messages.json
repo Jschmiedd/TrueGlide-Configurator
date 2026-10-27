@@ -1648,6 +1648,9 @@
     "tabLedStrip": {
         "message": "Bandeau LED"
     },
+    "tfPidBothMethods": {
+        "message": "Les chiffres et les curseurs marchent ensemble : taper un chiffre arrête les curseurs pour cet axe (le chiffre tapé est gardé) ; bouger un curseur les remet en marche et recalcule les chiffres."
+    },
     "tabCLI": {
         "message": "Ligne de commande (CLI)"
     },
