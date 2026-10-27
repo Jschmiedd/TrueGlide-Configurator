@@ -921,6 +921,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 change(s) prepared with another firmware on this board ($2): harvest again before sending."
     },
+    "tfOfflineHarvestDiscard": {
+        "message": "$1 change(s) prepared offline are not sent yet. A new harvest replaces the offline board: they will be lost.\n\nTo keep them: \"Cancel\", then \"Send the prepared changes\".\n\nHarvest anyway?"
+    },
     "tfOfflineSend": {
         "message": "Send the prepared changes"
     },

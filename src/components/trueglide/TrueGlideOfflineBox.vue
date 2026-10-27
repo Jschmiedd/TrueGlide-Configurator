@@ -67,6 +67,10 @@ const check = computed(() => (board.value ? sameBoard(board.value.carte, boardId
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
 
 async function start() {
+    // une nouvelle récolte remplace la carte hors ligne : les changements préparés pas encore envoyés seraient perdus
+    if (writes.value && !globalThis.confirm(msg("tfOfflineHarvestDiscard", [writes.value]))) {
+        return;
+    }
     const { harvest } = await import("@/js/trueglide/offline/harvest.js");
     await harvest();
 }
