@@ -924,6 +924,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 changement(s) préparé(s) avec un autre firmware sur cette carte ($2) : refaire la récolte avant d'envoyer."
     },
+    "tfOfflineHarvestDiscard": {
+        "message": "$1 changement(s) préparé(s) hors ligne ne sont pas encore envoyés. Une nouvelle récolte remplace la carte hors ligne : ils seront perdus.\n\nPour les garder : « Annuler », puis « Envoyer les changements préparés ».\n\nRécolter quand même ?"
+    },
     "tfOfflineSend": {
         "message": "Envoyer les changements préparés"
     },
