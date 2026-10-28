@@ -7027,7 +7027,7 @@
         "message": "$1 W"
     },
     "powerBatteryVoltageDrop": {
-        "message": "Voltage Drop"
+        "message": "Gap to full battery"
     },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"

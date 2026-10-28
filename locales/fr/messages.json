@@ -7141,7 +7141,7 @@
         "message": "$1 W"
     },
     "powerBatteryVoltageDrop": {
-        "message": "Chute de tension"
+        "message": "Écart avec la batterie pleine"
     },
     "powerBatteryCapacity": {
         "message": "Capacité (mAh)"

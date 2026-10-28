@@ -199,7 +199,7 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <span v-html="$t('powerBatteryVoltageDrop')"></span>
-                            <span>{{ $t("powerVoltageValue", { 1: voltageDrop.toFixed(2) }) }}</span>
+                            <span>{{ voltageDrop >= 0 ? $t("powerVoltageValue", { 1: voltageDrop.toFixed(2) }) : "—" }}</span>
                         </div>
                     </UiBox>
 
