@@ -108,6 +108,7 @@ export const GET_COMMANDS = [
     "get battery_rth",
     "get motor_desync",
     "get dshot_telemetry_fallback",
+    "get dshot_edt",
     "get speeder",
     "get crsf_tlm_esc",
     "get mav_mission",

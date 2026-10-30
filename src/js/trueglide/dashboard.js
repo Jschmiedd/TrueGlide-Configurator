@@ -119,7 +119,13 @@ export function trueglideStatus(values, pinioBoxes) {
         if (amps > 0) {
             parts.push(`${amps} A`);
         }
-        out.push({ key: "power_guard", on: parts.length > 0, detail: parts.join(" · ") });
+        const entry = { key: "power_guard", on: parts.length > 0, detail: parts.join(" · ") };
+        // the ESC temperature comes from extended DShot telemetry, asked for at arming only with dshot_edt ON:
+        // without it the firmware reads 0 °C (unknown) and the temperature limit never acts
+        if (temp > 0 && values.dshot_edt === "OFF") {
+            entry.warn = "tfDashWarnNoEdt";
+        }
+        out.push(entry);
     }
     if (has("motor_desync_recovery")) {
         out.push({ key: "motor_health", on: values.motor_desync_recovery === "ON", detail: "" });

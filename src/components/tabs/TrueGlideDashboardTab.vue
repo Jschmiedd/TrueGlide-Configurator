@@ -56,17 +56,16 @@
 
                 <UiBox :title="$t('tfDashFeatures')">
                     <p v-if="!features.length" class="text-sm">{{ $t("tfDashFeaturesNone") }}</p>
-                    <div
-                        v-for="f in features"
-                        :key="f.key"
-                        class="flex justify-between items-center py-2 border-b border-default last:border-0"
-                    >
-                        <span>{{ $t(`tfDashFeature_${f.key}`) }}</span>
-                        <UBadge
-                            :color="f.on === true ? 'primary' : 'neutral'"
-                            :variant="f.on === true ? 'soft' : 'subtle'"
-                            :label="featureLabel(f)"
-                        />
+                    <div v-for="f in features" :key="f.key" class="py-2 border-b border-default last:border-0">
+                        <div class="flex justify-between items-center">
+                            <span>{{ $t(`tfDashFeature_${f.key}`) }}</span>
+                            <UBadge
+                                :color="f.on === true ? 'primary' : 'neutral'"
+                                :variant="f.on === true ? 'soft' : 'subtle'"
+                                :label="featureLabel(f)"
+                            />
+                        </div>
+                        <p v-if="f.warn" class="text-sm text-warning mt-1">{{ $t(f.warn) }}</p>
                     </div>
                     <div class="mt-3">
                         <UButton

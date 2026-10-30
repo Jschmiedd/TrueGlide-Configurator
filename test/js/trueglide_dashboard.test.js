@@ -66,6 +66,13 @@ describe("TrueGlide dashboard helpers", () => {
         expect(trueglideStatus({ power_guard_esc_temp: "0", power_guard_current: "0" }, [])).toEqual([
             { key: "power_guard", on: false, detail: "" },
         ]);
+        // temperature limit without extended DShot telemetry: still on, but flagged
+        expect(trueglideStatus({ power_guard_esc_temp: "40", power_guard_current: "0", dshot_edt: "OFF" }, [])).toEqual([
+            { key: "power_guard", on: true, detail: "40 °C", warn: "tfDashWarnNoEdt" },
+        ]);
+        expect(trueglideStatus({ power_guard_esc_temp: "40", power_guard_current: "0", dshot_edt: "ON" }, [])).toEqual([
+            { key: "power_guard", on: true, detail: "40 °C" },
+        ]);
         // a PINIO tied to arming (SpeedyBee Bluetooth) is not shown as switched
         expect(trueglideStatus({}, [0, 255, 255, 255])).toEqual([{ key: "pinio", on: false, detail: "" }]);
     });

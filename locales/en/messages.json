@@ -669,6 +669,9 @@
     "tfDashFeature_pinio": {
         "message": "Switched outputs (PINIO)"
     },
+    "tfDashWarnNoEdt": {
+        "message": "The temperature limit does not act: dshot_edt is OFF, the board gets no ESC temperature (0 °C). Type set dshot_edt = ON in the CLI."
+    },
     "tfDashOn": {
         "message": "On"
     },
