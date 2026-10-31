@@ -88,7 +88,8 @@ import STM32 from "../../js/protocols/webstm32";
 import FC from "../../js/fc";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import OnlineFirmwarePanel from "./firmware-flasher/OnlineFirmwarePanel.vue";
-import { checkTrueGlideFirmwareFile } from "../../js/trueglide/firmware_source.js";
+import { boardConfirmationNeeded, checkTrueGlideFirmwareFile } from "../../js/trueglide/firmware_source.js";
+import CONFIGURATOR from "../../js/data_storage";
 
 export default defineComponent({
     name: "FirmwareFlasherTab",
@@ -323,13 +324,15 @@ export default defineComponent({
 
         // Nom de carte connu localement (lu par MSP lors d'une connexion / d'un flash série), sinon vide.
         const getLocalBoardName = () => FC.CONFIG?.boardName || "";
+        // carte lue en ce moment par MSP ; sinon (déconnectée, mode DFU) le nom gardé peut être celui d'une autre carte
+        const isBoardLive = () => CONFIGURATOR.connectionValid === true;
 
         const refreshTrueGlideCheck = () => {
             if (!state.filename) {
                 state.tfFirmwareCheck = null;
                 return null;
             }
-            state.tfFirmwareCheck = checkTrueGlideFirmwareFile(state.filename, getLocalBoardName());
+            state.tfFirmwareCheck = checkTrueGlideFirmwareFile(state.filename, isBoardLive() ? getLocalBoardName() : "");
             return state.tfFirmwareCheck;
         };
 
@@ -381,11 +384,18 @@ export default defineComponent({
                     return false;
                 }
             }
-            // TrueGlide: a file for another board than the one connected needs an explicit yes too (not only a banner)
-            if (check.boardMismatch && !state.tfBoardMismatchConfirmed) {
+            // TrueGlide: a file for another board than the one connected needs an explicit yes too (not only a banner);
+            // a local file with no board read right now (disconnected, DFU) too: nothing can be checked
+            const need = boardConfirmationNeeded(check, { isLocal: state.localFirmwareLoaded, live: isBoardLive() });
+            if (need && !state.tfBoardMismatchConfirmed) {
                 const confirmed = await dialog.showYesNo(
                     $t("tfFlasherBoardMismatchTitle"),
-                    $t("tfFlasherBoardMismatchWarning", { fileBoard: check.board, connectedBoard: check.connectedBoard }),
+                    need === "mismatch"
+                        ? $t("tfFlasherBoardMismatchWarning", { fileBoard: check.board, connectedBoard: check.connectedBoard })
+                        : $t("tfFlasherBoardUnknownWarning", {
+                            fileBoard: check.board || "?",
+                            lastBoard: getLocalBoardName() || "?",
+                        }),
                     {
                         yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),
                         noText: $t("cancel"),

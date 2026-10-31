@@ -114,6 +114,27 @@ export function checkTrueGlideFirmwareFile(filename, connectedBoardName) {
 }
 
 /**
+ * Confirmation demandée avant de flasher (recontrôle Fable N8).
+ *  - « mismatch » : carte lue en ce moment (connexion MSP) différente de celle du fichier ;
+ *  - « unknown » : fichier local et carte pas lue en ce moment (déconnectée, ou en mode DFU où aucune carte ne
+ *    répond) : le nom gardé d'une connexion précédente peut être celui d'une autre carte, rien n'est vérifiable ;
+ *  - null : rien à demander (fichier en ligne choisi pour la carte, ou même carte).
+ *
+ * @param {ReturnType<typeof checkTrueGlideFirmwareFile>} check fait avec la carte lue en ce moment, ou sans carte
+ * @param {{isLocal: boolean, live: boolean}} options
+ * @returns {"mismatch"|"unknown"|null}
+ */
+export function boardConfirmationNeeded(check, { isLocal, live }) {
+    if (live && check?.boardMismatch) {
+        return "mismatch";
+    }
+    if (isLocal && !live) {
+        return "unknown";
+    }
+    return null;
+}
+
+/**
  * Modèle du firmware installé, d'après les options de compilation lues sur la carte (MSP).
  * TRUENAV et TRUENAV_LIGHT ne se distinguent pas ainsi : les deux donnent « TRUENAV ».
  *

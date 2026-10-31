@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
     TRUEGLIDE_FIRMWARE_URL,
     TRUEGLIDE_FIRMWARE_TEST_URL,
+    boardConfirmationNeeded,
     checkTrueGlideFirmwareFile,
     downloadFirmware,
     fetchFirmwareIndex,
@@ -90,6 +91,17 @@ describe("TrueGlide firmware source", () => {
         expect(check.isTrueGlide).toBe(false);
         expect(check.board).toBe("MATEKF405");
         expect(check.boardMismatch).toBe(true);
+    });
+
+    it("demande confirmation pour un fichier local quand la carte n'est pas lue (mode DFU) (recontrôle Fable N8)", () => {
+        const name = "trueglide_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex";
+        // carte lue : même carte, rien ; autre carte, « mismatch »
+        expect(boardConfirmationNeeded(checkTrueGlideFirmwareFile(name, "SPEEDYBEEF405MINI"), { isLocal: true, live: true })).toBe(null);
+        expect(boardConfirmationNeeded(checkTrueGlideFirmwareFile(name, "MATEKF405"), { isLocal: true, live: true })).toBe("mismatch");
+        // DFU : aucune carte lue ; le nom gardé d'une connexion précédente n'est pas utilisé
+        expect(boardConfirmationNeeded(checkTrueGlideFirmwareFile(name, ""), { isLocal: true, live: false })).toBe("unknown");
+        // fichier en ligne : choisi pour la carte dans la liste, rien à demander
+        expect(boardConfirmationNeeded(checkTrueGlideFirmwareFile(name, ""), { isLocal: false, live: false })).toBe(null);
     });
 
     it("ne compare pas la carte quand le nom ne contient pas de carte", () => {
