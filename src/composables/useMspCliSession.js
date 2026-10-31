@@ -144,6 +144,14 @@ export async function saveAndReconnect() {
     return { ok: saveError === null, error: saveError };
 }
 
+// TrueGlide: a "set" sent over the MSP CLI is applied in RAM at once. When a later command of the same batch is refused,
+// the earlier ones must not stay there (the next "Save" of any tab would store them): restart the flight controller
+// without saving, so the board keeps exactly its stored configuration.
+export async function discardAndReconnect() {
+    const { reinitializeConnection } = await import("../js/serial_backend.js");
+    reinitializeConnection();
+}
+
 export function useMspCliSession() {
     const isBatchRunning = ref(false);
     let cancelRequested = false;

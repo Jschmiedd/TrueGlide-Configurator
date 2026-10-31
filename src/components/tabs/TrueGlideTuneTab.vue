@@ -207,7 +207,7 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
-import { send, readDumpAll, saveAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import { send, readDumpAll, saveAndReconnect, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
 import TFTune from "@/js/trueglide/studio/tune.js";
 import TFAnalyse from "@/js/trueglide/studio/analyse.js";
 import TF_SETTINGS from "@/js/trueglide/studio/settings_db.js";
@@ -394,11 +394,17 @@ async function appliquer(commandes, sansManquants = false) {
     } catch (e) {
         gui_log(`${i18n.getMessage("tftuneApplyError")} ${e.message}`);
         occupe.value = false;
+        // rien n'est enregistré : les réglages déjà envoyés sont effacés par un redémarrage sans sauvegarde
+        await discardAndReconnect();
+        return;
+    }
+    occupe.value = false;
+    const enregistre = await saveAndReconnect();
+    if (!enregistre.ok) {
+        gui_log(`${i18n.getMessage("tftuneApplyError")} ${String(enregistre.error?.message ?? enregistre.error)}`);
         return;
     }
     gui_log(i18n.getMessage("tftuneApplied"));
-    occupe.value = false;
-    await saveAndReconnect();
 }
 
 // Capteur de courant réglé sur la carte (onglet Alimentation) : 0 = aucun. Sans lui, power_guard_current n'agit pas.
@@ -407,7 +413,8 @@ async function lireCapteurCourant() {
     try {
         await MSP.promise(MSPCodes.MSP_BATTERY_CONFIG);
         courantCarte.value = FC.BATTERY_CONFIG?.currentMeterSource ?? null;
-        if (!("capteurCourant" in memo) && courantCarte.value !== null) {
+        // la carte branchée fait foi : la valeur mémorisée d'une autre carte ne doit pas rester
+        if (courantCarte.value !== null) {
             d.capteurCourant = courantCarte.value !== 0;
         }
     } catch {

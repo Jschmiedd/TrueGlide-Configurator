@@ -669,8 +669,14 @@
     "tfDashFeature_pinio": {
         "message": "Switched outputs (PINIO)"
     },
-    "tfDashWarnNoEdt": {
-        "message": "The temperature limit does not act: dshot_edt is OFF, the board gets no ESC temperature (0 °C). Type set dshot_edt = ON in the CLI."
+    "tfDashWarnNoEscTemp": {
+        "message": "The temperature limit does not act: the board gets no ESC temperature (0 °C). It needs the DShot protocol with dshot_bidir = ON and dshot_edt = ON (or a serial ESC sensor, ESC_SENSOR)."
+    },
+    "tfDashWarnNoCurrent": {
+        "message": "The current limit does not act: no current sensor is set (Power & Battery tab, current meter)."
+    },
+    "tfDashWarnNoMotorSpeed": {
+        "message": "Motor restart does not act: the board gets no motor speed. It needs the DShot protocol with dshot_bidir = ON (or a serial ESC sensor, ESC_SENSOR)."
     },
     "tfDashOn": {
         "message": "On"

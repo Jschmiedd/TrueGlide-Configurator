@@ -109,6 +109,9 @@ export const GET_COMMANDS = [
     "get motor_desync",
     "get dshot_telemetry_fallback",
     "get dshot_edt",
+    "get dshot_bidir",
+    "get motor_pwm_protocol",
+    "get current_meter",
     "get speeder",
     "get crsf_tlm_esc",
     "get mav_mission",
@@ -130,6 +133,9 @@ export function toRaw(setting, shown) {
     if (setting.type !== "number") {
         return String(shown);
     }
+    if (shown === null || shown === undefined || String(shown).trim() === "") {
+        return "";
+    }
     const v = Number(shown);
     return String(setting.scale ? Math.round(v * setting.scale) : v);
 }
@@ -140,6 +146,10 @@ export function validate(setting, value) {
     }
     if (setting.type === "choice") {
         return setting.values.includes(value);
+    }
+    // an emptied field is refused, never sent as 0 (Number("") and Number(null) are 0)
+    if (value === null || value === undefined || String(value).trim() === "") {
+        return false;
     }
     const v = Number(value);
     return Number.isInteger(v) && v >= setting.min && v <= setting.max;

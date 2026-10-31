@@ -39,6 +39,14 @@ describe("TrueGlide settings", () => {
         expect(errors).toEqual(["speeder_cruise_angle"]);
     });
 
+    it("refuses an emptied number field instead of sending 0", () => {
+        for (const empty of [null, undefined, ""]) {
+            const { commands, errors } = changeCommands({ power_guard_current: "60" }, { power_guard_current: empty });
+            expect(commands).toEqual([]);
+            expect(errors).toEqual(["power_guard_current"]);
+        }
+    });
+
     it("ignores settings the firmware does not have (TrueGlide STANDARD has no mission settings)", () => {
         expect(changeCommands({}, { mav_mission_home_item: "ON" }).commands).toEqual([]);
     });

@@ -61,20 +61,42 @@ describe("TrueGlide dashboard helpers", () => {
             { key: "power_guard", on: true, detail: "100 °C" },
             { key: "motor_health", on: true, detail: "" },
             { key: "speeder", on: null, detail: "60°" },
-            { key: "pinio", on: true, detail: "PINIO2 → USER1" },
+            { key: "pinio", on: true, detail: "PINIO1 → VTX PIT MODE · PINIO2 → USER1" },
         ]);
         expect(trueglideStatus({ power_guard_esc_temp: "0", power_guard_current: "0" }, [])).toEqual([
             { key: "power_guard", on: false, detail: "" },
         ]);
         // temperature limit without extended DShot telemetry: still on, but flagged
-        expect(trueglideStatus({ power_guard_esc_temp: "40", power_guard_current: "0", dshot_edt: "OFF" }, [])).toEqual([
-            { key: "power_guard", on: true, detail: "40 °C", warn: "tfDashWarnNoEdt" },
-        ]);
-        expect(trueglideStatus({ power_guard_esc_temp: "40", power_guard_current: "0", dshot_edt: "ON" }, [])).toEqual([
-            { key: "power_guard", on: true, detail: "40 °C" },
-        ]);
-        // a PINIO tied to arming (SpeedyBee Bluetooth) is not shown as switched
-        expect(trueglideStatus({}, [0, 255, 255, 255])).toEqual([{ key: "pinio", on: false, detail: "" }]);
+        const dshot = { dshot_bidir: "ON", motor_pwm_protocol: "DSHOT300", current_meter: "ADC" };
+        const pg = (more) => trueglideStatus({ power_guard_esc_temp: "40", power_guard_current: "0", ...dshot, ...more }, [])[0];
+        expect(pg({ dshot_edt: "OFF" })).toEqual({ key: "power_guard", on: true, detail: "40 °C", warn: ["tfDashWarnNoEscTemp"] });
+        expect(pg({ dshot_edt: "ON" })).toEqual({ key: "power_guard", on: true, detail: "40 °C" });
+        expect(pg({ dshot_edt: "FORCE" })).toEqual({ key: "power_guard", on: true, detail: "40 °C" });
+        // dshot_edt ON but no bidirectional DShot, or not DShot at all: no temperature either
+        expect(pg({ dshot_edt: "ON", dshot_bidir: "OFF" }).warn).toEqual(["tfDashWarnNoEscTemp"]);
+        expect(pg({ dshot_edt: "ON", motor_pwm_protocol: "ONESHOT125" }).warn).toEqual(["tfDashWarnNoEscTemp"]);
+        // serial ESC telemetry gives the temperature without EDT
+        expect(
+            trueglideStatus({ power_guard_esc_temp: "40", ...dshot, dshot_edt: "OFF" }, [], { escSensor: true })[0].warn,
+        ).toBeUndefined();
+        // current limit without a current sensor
+        expect(trueglideStatus({ power_guard_current: "60", ...dshot, current_meter: "NONE" }, [])[0]).toEqual({
+            key: "power_guard",
+            on: true,
+            detail: "60 A",
+            warn: ["tfDashWarnNoCurrent"],
+        });
+        // motor restart without a motor speed source
+        expect(trueglideStatus({ motor_desync_recovery: "ON", ...dshot, dshot_bidir: "OFF" }, [])[0]).toEqual({
+            key: "motor_health",
+            on: true,
+            detail: "",
+            warn: ["tfDashWarnNoMotorSpeed"],
+        });
+        expect(trueglideStatus({ motor_desync_recovery: "ON", ...dshot }, [])[0].warn).toBeUndefined();
+        // a PINIO tied to arming (camera power when armed, SpeedyBee Bluetooth) is shown with its use
+        expect(trueglideStatus({}, [0, 255, 255, 255])).toEqual([{ key: "pinio", on: true, detail: "PINIO1 → ARM" }]);
+        expect(trueglideStatus({}, [255, 255, 255, 255])).toEqual([{ key: "pinio", on: false, detail: "" }]);
     });
 
     it("follows the guided setup steps", () => {

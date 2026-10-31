@@ -85,9 +85,10 @@ export function usePower() {
 
     // Visibility computed properties
     const powerDraw = computed(() => batteryState.voltage * batteryState.amperage);
+    // TrueGlide: null (shown "—") without a battery or before the full-cell voltage is read, never a made-up 0.00 V
     const voltageDrop = computed(() => {
-        if (batteryState.cellCount <= 0) {
-            return 0;
+        if (batteryState.cellCount <= 0 || !(batteryConfig.vbatmaxcellvoltage > 0)) {
+            return null;
         }
         return batteryConfig.vbatmaxcellvoltage * batteryState.cellCount - batteryState.voltage;
     });

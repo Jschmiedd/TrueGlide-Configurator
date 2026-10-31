@@ -1633,7 +1633,9 @@ const getTelemetryHtml = (index) => {
     }
 
     if (fcStore.motorTelemetryData.temperature) {
-        html += `<br>Temp: ${fcStore.motorTelemetryData.temperature[index]}°C`;
+        // TrueGlide: the firmware sends 0 when the ESC gave no temperature (no extended DShot telemetry): show "—"
+        const temp = fcStore.motorTelemetryData.temperature[index];
+        html += `<br>Temp: ${temp > 0 ? `${temp}°C` : "—"}`;
     }
 
     return html;

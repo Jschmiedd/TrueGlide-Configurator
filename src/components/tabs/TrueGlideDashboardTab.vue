@@ -24,7 +24,7 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm opacity-80">{{ $t("tfDashLink") }}</span>
-                            <span class="text-2xl font-semibold">{{ link }} %</span>
+                            <span class="text-2xl font-semibold">{{ link > 0 ? `${link} %` : "—" }}</span>
                             <span class="text-sm opacity-80">RSSI</span>
                         </div>
                         <div class="flex flex-col">
@@ -39,7 +39,8 @@
                         </div>
                         <div class="flex flex-col">
                             <span class="text-sm opacity-80">{{ $t("tfDashArming") }}</span>
-                            <span v-if="!blockers.length" class="text-xl font-semibold text-(--ui-primary)">
+                            <span v-if="!armingKnown" class="text-xl font-semibold">—</span>
+                            <span v-else-if="!blockers.length" class="text-xl font-semibold text-(--ui-primary)">
                                 {{ $t("tfDashArmReady") }}
                             </span>
                             <span v-else class="text-xl font-semibold text-(--warning-700)">
@@ -65,7 +66,7 @@
                                 :label="featureLabel(f)"
                             />
                         </div>
-                        <p v-if="f.warn" class="text-sm text-warning mt-1">{{ $t(f.warn) }}</p>
+                        <p v-for="w in f.warn ?? []" :key="w" class="text-sm text-warning mt-1">{{ $t(w) }}</p>
                     </div>
                     <div class="mt-3">
                         <UButton
@@ -190,6 +191,8 @@ const battery = ref({ measured: false });
 const link = ref(0);
 const gps = ref({ present: false, sats: 0, fix: false });
 const blockers = ref([]);
+// the arming state is known once MSP_STATUS_EX gave the flag count; before that "Ready to arm" would be a guess
+const armingKnown = ref(false);
 const features = ref([]);
 
 const boardLine = computed(() => {
@@ -203,6 +206,7 @@ function refresh() {
     link.value = rssiPercent(FC.ANALOG?.rssi ?? 0);
     const hasGps = have_sensor(c.activeSensors, "gps");
     gps.value = { present: hasGps, sats: FC.GPS_DATA?.numSat ?? 0, fix: Boolean(FC.GPS_DATA?.fix) };
+    armingKnown.value = (c.armingDisableCount ?? 0) > 0;
     blockers.value = armingBlockers(c.apiVersion, c.armingDisableCount ?? 0, c.armingDisableFlags ?? 0).map((name) => {
         const key = `initialSetupArmingDisableFlagsTooltip${name}`;
         const text = i18n.getMessage(key);
@@ -217,12 +221,13 @@ async function loadFeatures() {
     try {
         const values = {};
         for (const command of GET_COMMANDS) {
-            Object.assign(values, parseGet(await send(command)));
+            Object.assign(values, parseGet(await send(command, { timeoutMs: 5000 })));
         }
         const pinio = parsePinio(await send("get pinio_box"));
         // the CLI "version" line names the model; build options alone cannot tell TRUENAV_LIGHT from TRUENAV
         versionModel = modelFromVersionLines(await send("version"));
-        features.value = trueglideStatus(values, pinio.boxes);
+        const escSensor = Boolean(FC.FEATURE_CONFIG?.features?.isEnabled?.("ESC_SENSOR"));
+        features.value = trueglideStatus(values, pinio.boxes, { escSensor });
         // the board runs TrueGlide when its CLI "version" line names a TrueGlide model, or when it answers a setting only
         // TrueGlide has (Betaflight also answers gps_rescue_* and failsafe_procedure)
         readInstalled();

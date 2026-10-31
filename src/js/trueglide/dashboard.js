@@ -2,6 +2,7 @@
 // Free software under the GPL-3.0 license, WITHOUT ANY WARRANTY; see the LICENSE file.
 // TrueGlide dashboard and guided setup: pure helpers (no MSP, no DOM), unit tested.
 import semver from "semver";
+import { PINIO_NONE, pinioUseName } from "./camera_power";
 
 // The guided setup steps, in the order of the "Setup" menu group, then the TrueGlide tab.
 // `label` is the tab's existing i18n key, `help` the short guidance shown in the setup bar.
@@ -104,10 +105,20 @@ export function rssiPercent(rssi) {
 }
 
 // State of each TrueGlide feature from the CLI "get" values (strings). A feature whose settings the firmware
-// does not have is left out (plain Betaflight, or a model without it).
-export function trueglideStatus(values, pinioBoxes) {
+// does not have is left out (plain Betaflight, or a model without it). `sources.escSensor`: feature ESC_SENSOR (serial
+// ESC telemetry) on. A feature set "on" but without the data it works from is flagged with `warn` (i18n keys): the
+// firmware then reads 0 (unknown) and the feature never acts (firmware power_guard.c, motor_health.c).
+export function trueglideStatus(values, pinioBoxes, sources = {}) {
     const has = (k) => k in values;
     const num = (k) => Number(values[k]);
+    // speed / temperature from bidirectional DShot: DShot protocol and dshot_bidir ON (firmware core.c, dshot.c);
+    // unknown when the board did not answer these settings (no warning then)
+    const knowsDshot = has("dshot_bidir") && has("motor_pwm_protocol");
+    const dshotTelemetry = values.dshot_bidir === "ON" && /^DSHOT/.test(values.motor_pwm_protocol ?? "");
+    const escSensor = Boolean(sources.escSensor);
+    const speedSource = !knowsDshot || escSensor || dshotTelemetry;
+    // the temperature needs extended DShot telemetry on top (dshot_edt ON or FORCE), or a serial ESC sensor
+    const tempSource = escSensor || (knowsDshot ? dshotTelemetry && values.dshot_edt !== "OFF" : values.dshot_edt !== "OFF");
     const out = [];
     if (has("power_guard_esc_temp") || has("power_guard_current")) {
         const temp = num("power_guard_esc_temp");
@@ -120,26 +131,36 @@ export function trueglideStatus(values, pinioBoxes) {
             parts.push(`${amps} A`);
         }
         const entry = { key: "power_guard", on: parts.length > 0, detail: parts.join(" · ") };
-        // the ESC temperature comes from extended DShot telemetry, asked for at arming only with dshot_edt ON:
-        // without it the firmware reads 0 °C (unknown) and the temperature limit never acts
-        if (temp > 0 && values.dshot_edt === "OFF") {
-            entry.warn = "tfDashWarnNoEdt";
+        const warn = [];
+        if (temp > 0 && !tempSource) {
+            warn.push("tfDashWarnNoEscTemp");
+        }
+        // no current sensor: the firmware reads 0 A and the current limit never acts
+        if (amps > 0 && values.current_meter === "NONE") {
+            warn.push("tfDashWarnNoCurrent");
+        }
+        if (warn.length) {
+            entry.warn = warn;
         }
         out.push(entry);
     }
     if (has("motor_desync_recovery")) {
-        out.push({ key: "motor_health", on: values.motor_desync_recovery === "ON", detail: "" });
+        const entry = { key: "motor_health", on: values.motor_desync_recovery === "ON", detail: "" };
+        if (entry.on && !speedSource) {
+            entry.warn = ["tfDashWarnNoMotorSpeed"];
+        }
+        out.push(entry);
     }
     if (has("speeder_cruise_angle")) {
         out.push({ key: "speeder", on: null, detail: `${num("speeder_cruise_angle")}°` });
     }
     if (Array.isArray(pinioBoxes) && pinioBoxes.length) {
         // what a PINIO powers (camera, VTX, Bluetooth...) is board wiring the firmware does not know: show the
-        // assignment only, never "camera"
-        const switched = pinioBoxes
-            .map((b, i) => (b >= 40 && b <= 43 ? `PINIO${i + 1} → USER${b - 39}` : null))
+        // assignment only (USERn switch, ARM...), never "camera"
+        const used = pinioBoxes
+            .map((b, i) => (b !== PINIO_NONE ? `PINIO${i + 1} → ${pinioUseName(b)}` : null))
             .filter(Boolean);
-        out.push({ key: "pinio", on: switched.length > 0, detail: switched.join(" · ") });
+        out.push({ key: "pinio", on: used.length > 0, detail: used.join(" · ") });
     }
     return out;
 }

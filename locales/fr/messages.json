@@ -672,8 +672,14 @@
     "tfDashFeature_pinio": {
         "message": "Sorties commandées (PINIO)"
     },
-    "tfDashWarnNoEdt": {
-        "message": "La limite de température n'agit pas : dshot_edt est sur OFF, la carte ne reçoit pas la température des ESC (0 °C). Taper set dshot_edt = ON dans le CLI."
+    "tfDashWarnNoEscTemp": {
+        "message": "La limite de température n'agit pas : la carte ne reçoit pas la température des ESC (0 °C). Il faut le protocole DShot avec dshot_bidir = ON et dshot_edt = ON (ou un capteur ESC série, ESC_SENSOR)."
+    },
+    "tfDashWarnNoCurrent": {
+        "message": "La limite de courant n'agit pas : aucun capteur de courant n'est réglé (onglet Alimentation et batterie, capteur de courant)."
+    },
+    "tfDashWarnNoMotorSpeed": {
+        "message": "La relance moteur n'agit pas : la carte ne reçoit pas la vitesse des moteurs. Il faut le protocole DShot avec dshot_bidir = ON (ou un capteur ESC série, ESC_SENSOR)."
     },
     "tfDashOn": {
         "message": "Activé"

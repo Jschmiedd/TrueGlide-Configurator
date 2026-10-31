@@ -113,7 +113,7 @@ import { computed, onMounted, reactive, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
-import { send, saveAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import { send, saveAndReconnect, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import {
@@ -160,7 +160,7 @@ async function load() {
     try {
         const values = {};
         for (const command of GET_COMMANDS) {
-            Object.assign(values, parseGet(await send(command)));
+            Object.assign(values, parseGet(await send(command, { timeoutMs: 5000 })));
         }
         for (const k of Object.keys(original)) {
             delete original[k];
@@ -201,11 +201,18 @@ async function save() {
     } catch (error) {
         errorText.value = String(error?.message ?? error);
         state.value = "error";
+        // nothing stored: the settings already sent are dropped by a restart without saving
+        await discardAndReconnect();
+        return;
+    }
+    // "save" reboots the flight controller; the app reconnects like after a preset. "Saved" only once it succeeded.
+    const saved = await saveAndReconnect();
+    if (!saved.ok) {
+        errorText.value = String(saved.error?.message ?? saved.error);
+        state.value = "error";
         return;
     }
     gui_log(i18n.getMessage("trueglideSaved"));
-    // "save" reboots the flight controller; the app reconnects like after a preset.
-    await saveAndReconnect();
 }
 
 // Camera / payload power: a PINIO output switched by a radio switch (USER1..4) or by arming
@@ -259,10 +266,16 @@ async function applyCameraPower() {
     } catch (error) {
         errorText.value = String(error?.message ?? error);
         state.value = "error";
+        await discardAndReconnect();
+        return;
+    }
+    const saved = await saveAndReconnect();
+    if (!saved.ok) {
+        errorText.value = String(saved.error?.message ?? saved.error);
+        state.value = "error";
         return;
     }
     gui_log(i18n.getMessage("tfCameraDone"));
-    await saveAndReconnect();
 }
 
 onMounted(load);
