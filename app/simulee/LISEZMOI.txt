@@ -1,0 +1,3 @@
+Cartes simulées : firmware exact d'une carte (TrueGlide ou Betaflight), compilé pour le navigateur par
+vraie_carte.py (dépôt du firmware TrueGlide). Copiées par scripts/sync-trueglide-simulee.mjs : ne pas modifier
+ici. Licence : GPL-3.0, comme les firmwares ; sources dans le dépôt du firmware TrueGlide.

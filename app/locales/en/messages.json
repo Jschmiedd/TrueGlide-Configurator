@@ -669,6 +669,15 @@
     "tfDashFeature_pinio": {
         "message": "Switched outputs (PINIO)"
     },
+    "tfDashWarnNoEscTemp": {
+        "message": "The temperature limit does not act: the board gets no ESC temperature (0 °C). It needs the DShot protocol with dshot_bidir = ON and dshot_edt = ON (or a serial ESC sensor, ESC_SENSOR)."
+    },
+    "tfDashWarnNoCurrent": {
+        "message": "The current limit does not act: no current sensor is set (Power & Battery tab, current meter)."
+    },
+    "tfDashWarnNoMotorSpeed": {
+        "message": "Motor restart does not act: the board gets no motor speed. It needs the DShot protocol with dshot_bidir = ON (or a serial ESC sensor, ESC_SENSOR)."
+    },
     "tfDashOn": {
         "message": "On"
     },
@@ -846,6 +855,135 @@
     "tabTfCamera": {
         "message": "Camera"
     },
+    "tabEsc": {
+        "message": "ESC"
+    },
+    "tfEscIntro": {
+        "message": "TrueGlide ESC Configurator (separate software, AGPL v3 license) to set up and flash the ESCs through the flight controller. One USB connection at a time: TrueGlide Configurator has disconnected from the board; connect here with \"Connect\". Props off."
+    },
+    "tfEscBusy": {
+        "message": "Operation in progress on the ESCs, wait before leaving the ESC tab."
+    },
+    "tabStudio": {
+        "message": "Studio"
+    },
+    "tfStudioIntro": {
+        "message": "TrueGlide Studio: prepare a quad, even with the board unplugged (starting tune, ports, pin check, drone file). With the board connected: \"Read the board configuration\" gives its diff all to Studio, and each Studio command block has a \"Send to the board\" button (confirmation, nothing saved at the first refused command)."
+    },
+    "tfStudioReadBoard": {
+        "message": "Read the board configuration"
+    },
+    "tfStudioReading": {
+        "message": "Reading…"
+    },
+    "tfStudioReadDone": {
+        "message": "Board configuration given to Studio ($1 lines)."
+    },
+    "tfStudioReadEmpty": {
+        "message": "the board returned no configuration."
+    },
+    "tfStudioReadFailed": {
+        "message": "Cannot read:"
+    },
+    "tfStudioSendDone": {
+        "message": "$1 command(s) accepted by the board. Saving (save), then the board reboots: reopen Studio and read the board to check."
+    },
+    "tfStudioSendRefused": {
+        "message": "Stopped at command \"$1\": $2. Nothing was saved (the board reboots without saving)."
+    },
+    "tfStudioSendCancelled": {
+        "message": "Sending cancelled: nothing was sent."
+    },
+    "tfStudioSendConfirm": {
+        "message": "Send $1 Studio command(s) to the board, then save?\n\nProps off. Read the commands first. At the first refused command nothing is saved. The board reboots at the end."
+    },
+    "tfStudioSendNoBoard": {
+        "message": "No board connected: nothing is sent. With the offline board, set up with the software tabs, or plug the board back in."
+    },
+    "tfOfflineBoardPort": {
+        "message": "Offline board: $1"
+    },
+    "tfOfflineTitle": {
+        "message": "Set up offline"
+    },
+    "tfOfflineHarvestHelp": {
+        "message": "Harvest the board: the software opens every tab by itself and keeps everything the board shows (a blank board too). Nothing is written to the board. Then, with the board unplugged, pick \"Offline board\" in the port list: the same tabs open, with the harvested configuration."
+    },
+    "tfOfflineHarvest": {
+        "message": "Harvest this board"
+    },
+    "tfOfflineHarvesting": {
+        "message": "Harvest: $1 / $2 ($3)…"
+    },
+    "tfOfflineHarvested": {
+        "message": "Board harvested: $1. It is kept in this browser."
+    },
+    "tfOfflineHarvestWait": {
+        "message": "The software opens each tab by itself: do not unplug the board."
+    },
+    "tfOfflinePending": {
+        "message": "$1 change(s) prepared offline for this board, not sent yet."
+    },
+    "tfOfflineOtherBoard": {
+        "message": "$1 change(s) prepared offline for another board ($2): they are only sent to the harvested board."
+    },
+    "tfOfflineOtherFirmware": {
+        "message": "$1 change(s) prepared with another firmware on this board ($2): harvest again before sending."
+    },
+    "tfOfflineOtherProfile": {
+        "message": "$1 change(s) prepared offline with other active profiles (harvest: $2): select these profiles on the board again, or harvest again, before sending."
+    },
+    "tfOfflineHarvestDiscard": {
+        "message": "$1 change(s) prepared offline are not sent yet. A new harvest replaces the offline board: they will be lost.\n\nTo keep them: \"Cancel\", then \"Send the prepared changes\".\n\nHarvest anyway?"
+    },
+    "tfOfflineSend": {
+        "message": "Send the prepared changes"
+    },
+    "tfOfflineSendConfirm": {
+        "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
+    },
+    "tfOfflineSending": {
+        "message": "Sending the prepared changes: do not unplug the board."
+    },
+    "tfOfflineSent": {
+        "message": "$1 change(s) sent and saved. The board reboots."
+    },
+    "tfOfflineSendRefused": {
+        "message": "Change refused by the board ($1: $2). Nothing was saved: the board reboots without saving."
+    },
+    "tfOfflineSendFailed": {
+        "message": "Cannot send:"
+    },
+    "tfOfflineOpenFile": {
+        "message": "Open a board file…"
+    },
+    "tfOfflineOpenFailed": {
+        "message": "Board file not opened:"
+    },
+    "tfOfflineNotReread": {
+        "message": "$1 kind(s) of change cannot be read back offline (the tab shows the old value); they will still be sent."
+    },
+    "tfOfflineHarvestFailed": {
+        "message": "Cannot harvest:"
+    },
+    "tfOfflineDownload": {
+        "message": "Save the board file"
+    },
+    "tfOfflineConnected": {
+        "message": "Offline board: $1, harvested on $2. Nothing is sent to a board."
+    },
+    "tfOfflineWrites": {
+        "message": "Changes prepared offline: $1."
+    },
+    "tfOfflineSimulated": {
+        "message": "Simulated board: this board's exact firmware (the one on the real board) runs in the browser. Changes count once saved (\"Save and reboot\"). Live data (sensors, battery, CPU load) comes from the simulation, not the drone."
+    },
+    "tfOfflinePreparing": {
+        "message": "Preparing the simulated board: loading the harvested configuration into the board's firmware (a few seconds)…"
+    },
+    "tfOfflineSimulatedUnavailable": {
+        "message": "Simulated board not used ($1): the offline board replays the harvest."
+    },
     "tabTfRadio": {
         "message": "Radio telemetry"
     },
@@ -1006,7 +1144,13 @@
         "message": "Motor protocol"
     },
     "tftuneLoop": {
-        "message": "PID loop"
+        "message": "Possible PID loop"
+    },
+    "tftuneApplyConfirm": {
+        "message": "Write $1 setting(s) to the board, then save and reboot?\n\nPropellers off. Check the motor protocol, dshot_bidir and dshot_edt above all.\n\n$2"
+    },
+    "tftuneChooseEscCells": {
+        "message": "ESC “$1” and $2 cells checked (required before applying)"
     },
     "tftuneAxis": {
         "message": "Axis"
@@ -1102,13 +1246,37 @@
         "message": "Battery current limit"
     },
     "trueglideSetting_power_guard_currentHelp": {
-        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start."
+        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start. Always well above the hover current: otherwise the limit stays on the whole flight and the throttle stays at the floor (minimum below)."
     },
     "trueglideSetting_power_guard_min_throttle": {
         "message": "Minimum available throttle"
     },
     "trueglideSetting_power_guard_min_throttleHelp": {
         "message": "While limiting, the available throttle never goes below this percentage, so the drone can always be flown home."
+    },
+    "trueglideBatteryTitle": {
+        "message": "Low battery"
+    },
+    "trueglideBatteryHelp": {
+        "message": "The motors are never cut in flight because of a low battery: the pilot decides, warned by the OSD and the beeper. In addition, disabled by default (0): take-off refused below a cell voltage, and return home (GPS RESCUE) when the voltage stays low in flight."
+    },
+    "trueglideSetting_battery_arm_min_cell_voltage": {
+        "message": "Minimum voltage to take off (per cell)"
+    },
+    "trueglideSetting_battery_arm_min_cell_voltageHelp": {
+        "message": "Below this cell voltage, at rest before take-off, arming is refused (LOW_BATTERY). 0 = off. Example: 3.70 V. Without a measured battery (unknown cell count), nothing is blocked."
+    },
+    "trueglideSetting_battery_rth_cell_voltage": {
+        "message": "Return home below (per cell)"
+    },
+    "trueglideSetting_battery_rth_cell_voltageHelp": {
+        "message": "In flight, if the cell voltage stays below this value for the whole delay, the quad returns home with GPS RESCUE (only if it is available: home point, GPS, heading; otherwise the OSD shows BAT RTH N\/A). The pilot takes over by moving the roll or pitch stick past 30 %, until the next disarm. 0 = off. Example: 3.50 V."
+    },
+    "trueglideSetting_battery_rth_delay": {
+        "message": "Delay before the return"
+    },
+    "trueglideSetting_battery_rth_delayHelp": {
+        "message": "Time the voltage must stay below the threshold. A short sag on a punch restarts the count. 10 s by default."
     },
     "trueglideMotorsTitle": {
         "message": "Motor health"
@@ -1386,6 +1554,9 @@
     },
     "tabLedStrip": {
         "message": "LED Strip"
+    },
+    "tfPidBothMethods": {
+        "message": "Numbers and sliders work together: typing a number stops the sliders for that axis (the typed number is kept); moving a slider turns them back on and recalculates the numbers."
     },
     "tabCLI": {
         "message": "CLI"
@@ -2150,6 +2321,9 @@
     "initialSetupArmingDisableFlagsTooltipAUTOPILOT": {
         "message": "Autopilot mode switch is active",
         "description": "Message that pops up to describe the AUTOPILOT arming disable flag"
+    },
+    "initialSetupArmingDisableFlagsTooltipLOW_BATTERY": {
+        "message": "Battery too low to take off (TrueGlide setting \"Minimum voltage to take off\")."
     },
     "initialSetupArmingDisableFlagsTooltipARM_SWITCH": {
         "message": "One of the others disarm flags is active when arming",
@@ -6871,7 +7045,7 @@
         "message": "$1 W"
     },
     "powerBatteryVoltageDrop": {
-        "message": "Voltage Drop"
+        "message": "Gap to full battery"
     },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"

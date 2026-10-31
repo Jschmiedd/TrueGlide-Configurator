@@ -1,0 +1,2 @@
+Copie de TrueGlide Studio (dépôt du firmware TrueGlide, trueglide/studio), générée par
+scripts/sync-trueglide-studio.mjs : ne pas modifier ici, modifier Studio dans le dépôt du firmware.
