@@ -6,7 +6,7 @@
 
 // Version figée de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator, v4 ; v1 à v3 restent en
 // ligne). v4 : la coupure tension basse des ESC est toujours désactivée (jamais de moteurs coupés en vol).
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v8/";
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v10/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
