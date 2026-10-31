@@ -115,6 +115,7 @@ export default defineComponent({
             // Contrôle du nom de fichier TrueGlide (voir js/trueglide/firmware_source.js)
             tfFirmwareCheck: null,
             tfNonTrueGlideConfirmed: false,
+            tfBoardMismatchConfirmed: false,
             // UI State - Checkboxes
             noRebootSequence: false,
             flashOnConnect: false,
@@ -340,6 +341,7 @@ export default defineComponent({
             state.firmwareLoadedSize = $t("firmwareFlasherFirmwareSize", { bytes });
             state.firmwareLoadedIsLocal = state.localFirmwareLoaded;
             state.tfNonTrueGlideConfirmed = false;
+            state.tfBoardMismatchConfirmed = false;
             refreshTrueGlideCheck();
 
             flashingMessage(
@@ -362,19 +364,37 @@ export default defineComponent({
          */
         const confirmNonTrueGlideFirmware = async () => {
             const check = refreshTrueGlideCheck();
-            if (!check || check.isTrueGlide || state.tfNonTrueGlideConfirmed) {
+            if (!check) {
                 return true;
             }
-            const confirmed = await dialog.showYesNo(
-                $t("tfFlasherNotTrueGlideTitle"),
-                $t("tfFlasherNotTrueGlideConfirm", { filename: check.filename }),
-                {
-                    yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),
-                    noText: $t("cancel"),
-                },
-            );
-            state.tfNonTrueGlideConfirmed = confirmed === true;
-            return state.tfNonTrueGlideConfirmed;
+            if (!check.isTrueGlide && !state.tfNonTrueGlideConfirmed) {
+                const confirmed = await dialog.showYesNo(
+                    $t("tfFlasherNotTrueGlideTitle"),
+                    $t("tfFlasherNotTrueGlideConfirm", { filename: check.filename }),
+                    {
+                        yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),
+                        noText: $t("cancel"),
+                    },
+                );
+                state.tfNonTrueGlideConfirmed = confirmed === true;
+                if (!state.tfNonTrueGlideConfirmed) {
+                    return false;
+                }
+            }
+            // TrueGlide: a file for another board than the one connected needs an explicit yes too (not only a banner)
+            if (check.boardMismatch && !state.tfBoardMismatchConfirmed) {
+                const confirmed = await dialog.showYesNo(
+                    $t("tfFlasherBoardMismatchTitle"),
+                    $t("tfFlasherBoardMismatchWarning", { fileBoard: check.board, connectedBoard: check.connectedBoard }),
+                    {
+                        yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),
+                        noText: $t("cancel"),
+                    },
+                );
+                state.tfBoardMismatchConfirmed = confirmed === true;
+                return state.tfBoardMismatchConfirmed;
+            }
+            return true;
         };
 
         const cleanUnifiedConfigFileWrapper = (input) => {
@@ -571,9 +591,10 @@ export default defineComponent({
                 flashManualBaudRate: state.flashManualBaudRate,
                 filename: state.filename,
                 resetFlashingState,
-                // Firmware toujours local : pas de carte « sélectionnée » à vérifier côté protocole.
-                selectedBoard: undefined,
-                localFirmwareLoaded: true,
+                // TrueGlide : quand le nom du fichier donne la carte, le protocole série la compare à la carte lue par
+                // MSP juste avant le redémarrage (dialogue de vérification) ; sinon pas de carte à vérifier.
+                selectedBoard: state.tfFirmwareCheck?.board ?? undefined,
+                localFirmwareLoaded: !state.tfFirmwareCheck?.board,
                 showDialogVerifyBoard,
                 // UI callbacks
                 flashingMessage,

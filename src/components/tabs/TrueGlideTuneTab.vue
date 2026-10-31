@@ -175,9 +175,13 @@
             <template v-if="page === 'drone'">
                 <UButton
                     :label="$t('tftuneApply')"
-                    :disabled="!rec || verifErreurs.length > 0 || occupe"
+                    :disabled="!rec || verifErreurs.length > 0 || occupe || !champsChoisis"
                     @click="appliquer(commandesReglage)"
                 />
+                <label v-if="!champsChoisis" class="text-sm flex items-center gap-2">
+                    <USwitch :model-value="false" size="sm" @update:model-value="confirmerChamps" />
+                    {{ $t("tftuneChooseEscCells", [escNom, d.cellules]) }}
+                </label>
             </template>
             <template v-else>
                 <UButton
@@ -189,9 +193,13 @@
                 />
                 <UButton
                     :label="$t('tftuneApplyGaps')"
-                    :disabled="analyse.etat !== 'ok' || !analyse.ecarts.length || occupe"
+                    :disabled="analyse.etat !== 'ok' || !analyse.ecarts.length || occupe || !champsChoisis"
                     @click="appliquer(commandesEcarts)"
                 />
+                <label v-if="!champsChoisis" class="text-sm flex items-center gap-2">
+                    <USwitch :model-value="false" size="sm" @update:model-value="confirmerChamps" />
+                    {{ $t("tftuneChooseEscCells", [escNom, d.cellules]) }}
+                </label>
             </template>
         </div>
     </BaseTab>
@@ -252,6 +260,40 @@ watch(d, () => {
         // stockage indisponible : le formulaire reste utilisable
     }
 });
+// ESC et nombre de cellules choisis par le pilote (pas seulement les valeurs par défaut) : sans eux, « Appliquer »
+// pourrait écrire dshot_bidir, dshot_edt ou les seuils de batterie d'un autre drone.
+let memoChoisi = {};
+try {
+    memoChoisi = JSON.parse(localStorage.getItem("tf-drone-choisi") || "{}");
+} catch {
+    memoChoisi = {};
+}
+const choisi = reactive({ esc: memoChoisi.esc === true, cellules: memoChoisi.cellules === true });
+const champsChoisis = computed(() => choisi.esc && choisi.cellules);
+function retenirChoix() {
+    try {
+        localStorage.setItem("tf-drone-choisi", JSON.stringify(choisi));
+    } catch {
+        // stockage indisponible : le choix vaut pour cette session
+    }
+}
+// valeurs déjà justes : le pilote les confirme sans avoir à les changer
+function confirmerChamps(v) {
+    if (v) {
+        choisi.esc = true;
+        choisi.cellules = true;
+        retenirChoix();
+    }
+}
+for (const k of ["esc", "cellules"]) {
+    watch(
+        () => d[k],
+        () => {
+            choisi[k] = true;
+            retenirChoix();
+        },
+    );
+}
 
 const champsNombres = [
     { k: "pouces", label: "tftuneProp", min: 1.2, max: 15, step: 0.1 },
@@ -282,6 +324,7 @@ const escs = computed(() => {
     void langue.value;
     return Object.keys(TFTune.ESC).map((k) => ({ label: TFTune.ESC[k].nom, value: k }));
 });
+const escNom = computed(() => TFTune.ESC[d.esc]?.nom ?? d.esc);
 const axes = [
     { k: "roll", label: "tftuneRoll" },
     { k: "pitch", label: "tftunePitch" },
@@ -368,6 +411,10 @@ async function absents(commandes) {
 
 async function appliquer(commandes, sansManquants = false) {
     if (!commandes.length) {
+        return;
+    }
+    // comme Studio : le pilote relit la liste avant l'écriture et la sauvegarde (une seule fois)
+    if (!sansManquants && !globalThis.confirm(i18n.getMessage("tftuneApplyConfirm", [commandes.length, commandes.join("\n")]))) {
         return;
     }
     occupe.value = true;

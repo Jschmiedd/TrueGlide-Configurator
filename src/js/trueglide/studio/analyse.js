@@ -55,6 +55,20 @@ const root = {};
 
   // Valeur courante : celle du diff, sinon le défaut d'une vraie carte, sinon celui du firmware (base extraite).
   function valeur(cfg, nom, db) {
+    // Réglage de profil (PID ou rates) : la valeur du profil actif, ou son défaut s'il n'y figure pas. cfg.set garde la
+    // dernière valeur lue, qui vient du dernier profil listé par « diff all », pas forcément du profil actif.
+    var groupes = [[cfg.profilsPid, cfg.profil], [cfg.profilsRate, cfg.profilRate]];
+    for (var g = 0; g < groupes.length; g++) {
+      var tous = groupes[g][0] || {};
+      var dansUnProfil = Object.keys(tous).some(function (k) { return nom in tous[k]; });
+      if (dansUnProfil) {
+        var actif = tous[groupes[g][1]] || {};
+        if (nom in actif) return actif[nom];
+        if (nom in DEFAUTS_CARTE) return DEFAUTS_CARTE[nom];
+        if (db && db[nom] && 'default' in db[nom]) return db[nom].default;
+        return null;
+      }
+    }
     if (nom in cfg.set) return cfg.set[nom];
     if (nom in DEFAUTS_CARTE) return DEFAUTS_CARTE[nom];
     if (db && db[nom] && 'default' in db[nom]) return db[nom].default;

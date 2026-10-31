@@ -930,6 +930,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 change(s) prepared with another firmware on this board ($2): harvest again before sending."
     },
+    "tfOfflineOtherProfile": {
+        "message": "$1 change(s) prepared offline with other active profiles (harvest: $2): select these profiles on the board again, or harvest again, before sending."
+    },
     "tfOfflineHarvestDiscard": {
         "message": "$1 change(s) prepared offline are not sent yet. A new harvest replaces the offline board: they will be lost.\n\nTo keep them: \"Cancel\", then \"Send the prepared changes\".\n\nHarvest anyway?"
     },
@@ -1141,7 +1144,13 @@
         "message": "Motor protocol"
     },
     "tftuneLoop": {
-        "message": "PID loop"
+        "message": "Possible PID loop"
+    },
+    "tftuneApplyConfirm": {
+        "message": "Write $1 setting(s) to the board, then save and reboot?\n\nPropellers off. Check the motor protocol, dshot_bidir and dshot_edt above all.\n\n$2"
+    },
+    "tftuneChooseEscCells": {
+        "message": "ESC “$1” and $2 cells checked (required before applying)"
     },
     "tftuneAxis": {
         "message": "Axis"
@@ -1237,7 +1246,7 @@
         "message": "Battery current limit"
     },
     "trueglideSetting_power_guard_currentHelp": {
-        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start."
+        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start. Always well above the hover current: otherwise the limit stays on the whole flight and the throttle stays at the floor (minimum below)."
     },
     "trueglideSetting_power_guard_min_throttle": {
         "message": "Minimum available throttle"

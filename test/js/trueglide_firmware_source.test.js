@@ -85,6 +85,13 @@ describe("TrueGlide firmware source", () => {
         expect(checkTrueGlideFirmwareFile(name, "speedybeef405mini").boardMismatch).toBe(false);
     });
 
+    it("signale aussi un fichier Betaflight prévu pour une autre carte (revue Fable 2, C10)", () => {
+        const check = checkTrueGlideFirmwareFile("betaflight_2026.6.2_STM32F405_MATEKF405.hex", "SPEEDYBEEF405MINI");
+        expect(check.isTrueGlide).toBe(false);
+        expect(check.board).toBe("MATEKF405");
+        expect(check.boardMismatch).toBe(true);
+    });
+
     it("ne compare pas la carte quand le nom ne contient pas de carte", () => {
         expect(checkTrueGlideFirmwareFile("trueglide_2026.6.2.hex", "MATEKF405").boardMismatch).toBe(false);
         expect(checkTrueGlideFirmwareFile("firmware.hex", "MATEKF405").boardMismatch).toBe(false);

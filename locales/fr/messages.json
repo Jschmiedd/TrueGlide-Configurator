@@ -933,6 +933,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 changement(s) préparé(s) avec un autre firmware sur cette carte ($2) : refaire la récolte avant d'envoyer."
     },
+    "tfOfflineOtherProfile": {
+        "message": "$1 changement(s) préparé(s) hors ligne avec d'autres profils actifs (récolte : $2) : remettre ces profils sur la carte, ou refaire la récolte, avant d'envoyer."
+    },
     "tfOfflineHarvestDiscard": {
         "message": "$1 changement(s) préparé(s) hors ligne ne sont pas encore envoyés. Une nouvelle récolte remplace la carte hors ligne : ils seront perdus.\n\nPour les garder : « Annuler », puis « Envoyer les changements préparés ».\n\nRécolter quand même ?"
     },
@@ -1156,7 +1159,13 @@
         "message": "Protocole moteur"
     },
     "tftuneLoop": {
-        "message": "Boucle PID"
+        "message": "Boucle PID possible"
+    },
+    "tftuneApplyConfirm": {
+        "message": "Écrire $1 réglage(s) sur la carte, puis enregistrer et redémarrer ?\n\nHélices retirées. Vérifier surtout le protocole moteur, dshot_bidir et dshot_edt.\n\n$2"
+    },
+    "tftuneChooseEscCells": {
+        "message": "ESC « $1 » et $2 cellules vérifiés (obligatoire avant d'appliquer)"
     },
     "tftuneAxis": {
         "message": "Axe"
@@ -1252,7 +1261,7 @@
         "message": "Courant batterie limite"
     },
     "trueglideSetting_power_guard_currentHelp": {
-        "message": "Courant batterie au-delà duquel les gaz sont limités. 0 = arrêt. Demande un capteur de courant (FC ou télémétrie des ESC). Environ 80 % du calibre total des ESC est un bon départ."
+        "message": "Courant batterie au-delà duquel les gaz sont limités. 0 = arrêt. Demande un capteur de courant (FC ou télémétrie des ESC). Environ 80 % du calibre total des ESC est un bon départ. Toujours bien au-dessus du courant en vol stationnaire : sinon la limite reste active tout le vol et les gaz restent au plancher (minimum ci-dessous)."
     },
     "trueglideSetting_power_guard_min_throttle": {
         "message": "Gaz disponibles minimum"

@@ -194,6 +194,26 @@ describe("TrueGlide offline: writes read back like the firmware", () => {
         expect(w(r, MSPCodes.MSP_SET_VTX_CONFIG, [1, 2])).toBe(false); // jamais récoltée : signalée
     });
 
+    it("voltage and current meters: the meter with the written id is changed (Fable review 2, C4)", () => {
+        const r = rec();
+        // 2 compteurs de tension (id 10 et 50), 1 compteur de courant (id 10, échelle 400, décalage 0)
+        r.msp[key(MSPCodes.MSP_VOLTAGE_METER_CONFIG, "")] = `02${"050a016e0a01"}${"053201000000"}`;
+        r.msp[key(MSPCodes.MSP_CURRENT_METER_CONFIG, "")] = `01${"060a01900100"}00`;
+        expect(w(r, MSPCodes.MSP_SET_VOLTAGE_METER_CONFIG, [10, 120, 11, 2])).toBe(true);
+        expect(r.msp[key(MSPCodes.MSP_VOLTAGE_METER_CONFIG, "")]).toBe("02" + "050a01780b02" + "053201000000");
+        expect(w(r, MSPCodes.MSP_SET_CURRENT_METER_CONFIG, [10, 0x2c, 0x01, 0x05, 0x00])).toBe(true);
+        expect(r.msp[key(MSPCodes.MSP_CURRENT_METER_CONFIG, "")]).toBe("01" + "060a012c0105" + "00");
+        // compteur absent de la lecture : signalé, rien de changé
+        expect(w(r, MSPCodes.MSP_SET_CURRENT_METER_CONFIG, [60, 1, 0, 0, 0])).toBe(false);
+        expect(r.msp[key(MSPCodes.MSP_CURRENT_METER_CONFIG, "")]).toBe("01" + "060a012c0105" + "00");
+    });
+
+    it("a write longer than its read is reported as not read back (Fable review 2, C4)", () => {
+        const r = rec();
+        expect(w(r, MSPCodes.MSP_SET_RC_DEADBAND, [5, 0, 0, 0, 9, 9])).toBe(false);
+        expect(r.msp[key(MSPCodes.MSP_RC_DEADBAND, "")]).toBe("00000000");
+    });
+
     it("CLI set: same lines as the firmware, « Default value » only when changed", () => {
         const r = rec();
         applyCliSet(r, "set power_guard_esc_temp = 95");

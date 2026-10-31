@@ -67,16 +67,18 @@ export function parseTrueGlideFirmwareName(filename) {
     const baseName = filename.split(/[\\/]/).pop();
     const lower = baseName.toLowerCase();
     const entry = TRUEGLIDE_FIRMWARE_MODELS.find(({ prefix }) => lower.startsWith(prefix));
-    if (!entry) {
+    // a Betaflight file names its board the same way: read it too, so a file for another board is caught
+    const betaflight = !entry && lower.startsWith("betaflight_");
+    if (!entry && !betaflight) {
         return empty;
     }
 
-    const stem = baseName.slice(entry.prefix.length).replace(/\.hex$/i, "");
+    const stem = baseName.slice(entry ? entry.prefix.length : "betaflight_".length).replace(/\.hex$/i, "");
     const parts = stem.split("_").filter((part) => part.length > 0);
 
     return {
-        isTrueGlide: true,
-        model: entry.model,
+        isTrueGlide: Boolean(entry),
+        model: entry ? entry.model : null,
         version: parts[0] ?? null,
         mcu: parts[1] ?? null,
         board: parts.length > 2 ? parts.slice(2).join("_") : null,
@@ -99,7 +101,6 @@ export function checkTrueGlideFirmwareFile(filename, connectedBoardName) {
             : null;
 
     const boardMismatch =
-        parsed.isTrueGlide &&
         !!parsed.board &&
         !!connectedBoard &&
         parsed.board.toUpperCase() !== connectedBoard.toUpperCase();

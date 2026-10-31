@@ -70,6 +70,24 @@ function textResponse(type, payload) {
     return Uint8Array.from([type, length, ...payload.slice(2, 2 + length)]);
 }
 
+// Lecture « nombre, puis pour chaque compteur : longueur, id, type, réglages » (MSP_VOLTAGE / CURRENT_METER_CONFIG) :
+// les réglages du compteur id sont remplacés à partir de l'octet at de sa sous-trame. false si le compteur n'y est pas.
+function patchMeter(s, readCode, length, id, values, at) {
+    let found = false;
+    const done = s.patch(readCode, (g) => {
+        let i = 1;
+        for (let n = 0; n < g[0] && i < g.length; n++) {
+            const len = g[i];
+            if (len === length && g[i + 1] === id && i + 1 + len <= g.length) {
+                overlay(g, values, i + 1 + at);
+                found = true;
+            }
+            i += 1 + len;
+        }
+    });
+    return done && found;
+}
+
 // Écritures dont la lecture n'a pas le même format.
 function specialHandlers(C) {
     return {
@@ -132,6 +150,9 @@ function specialHandlers(C) {
                     put16(g, at + 1, PWM_PULSE_MIN + 25 * step);
                 }
             }),
+        // une écriture = un compteur (repéré par son id) dans la liste des sous-trames de la lecture
+        [C.MSP_SET_VOLTAGE_METER_CONFIG]: (s, p) => patchMeter(s, C.MSP_VOLTAGE_METER_CONFIG, 5, p[0], p.slice(1, 4), 2),
+        [C.MSP_SET_CURRENT_METER_CONFIG]: (s, p) => patchMeter(s, C.MSP_CURRENT_METER_CONFIG, 6, p[0], p.slice(1, 5), 2),
         [C.MSP_SET_NAME]: (s, p) => {
             const name = p.slice(0, MAX_NAME_LENGTH);
             const done = s.patch(C.MSP_NAME, () => Uint8Array.from(name));
@@ -166,6 +187,11 @@ export function applyWrite(rec, MSPCodes, code, payload) {
     const readName = name?.replace("_COMMON_SET_", "_COMMON_").replace("_SET_", "_");
     const read = MSPCodes[readName];
     if (read === undefined) {
+        return false;
+    }
+    // une écriture plus longue que la lecture n'y tient pas : la lecture ne serait qu'à moitié à jour
+    const current = store.get(read);
+    if (current && payload.length > current.length) {
         return false;
     }
     return store.patch(read, (g) => overlay(g, payload));

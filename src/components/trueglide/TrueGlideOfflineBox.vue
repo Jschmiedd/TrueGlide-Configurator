@@ -11,10 +11,12 @@
             <p v-if="check.ok" class="text-sm mt-2 font-semibold">{{ msg("tfOfflinePending", [writes]) }}</p>
             <p v-else class="text-sm mt-2">
                 {{
-                    msg(check.reason === "carte" ? "tfOfflineOtherBoard" : "tfOfflineOtherFirmware", [
-                        writes,
-                        board?.carte?.nom || "?",
-                    ])
+                    check.reason === "profil"
+                        ? msg("tfOfflineOtherProfile", [writes, profileText])
+                        : msg(check.reason === "carte" ? "tfOfflineOtherBoard" : "tfOfflineOtherFirmware", [
+                              writes,
+                              board?.carte?.nom || "?",
+                          ])
                 }}
             </p>
         </template>
@@ -64,6 +66,12 @@ const board = computed(() => {
 // carte simulée : commandes tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
 const writes = computed(() => board.value?.simulee?.commandes?.length || (board.value?.writes?.length ?? 0));
 const check = computed(() => (board.value ? sameBoard(board.value.carte, boardIdentity(FC.CONFIG)) : { ok: false }));
+// profils au moment de la récolte (numérotés à partir de 1 comme dans le Configurator) ; « ? » si le fichier ne les a pas
+const profileText = computed(() => {
+    const c = board.value?.carte;
+    const n = (v) => (Number.isInteger(v) ? v + 1 : "?");
+    return `PID ${n(c?.profil)}, rates ${n(c?.profilRate)}`;
+});
 const date = computed(() => (board.value?.date ? new Date(board.value.date).toLocaleString() : "?"));
 
 async function start() {

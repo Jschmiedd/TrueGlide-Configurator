@@ -52,8 +52,8 @@
                             </dl>
                         </div>
                     </div>
-                    <!-- TrueGlide: attitude and heading dials only for the navigation firmwares (TRUENAV) -->
-                    <div v-if="showNavInstruments" class="instruments-right">
+                    <!-- attitude and heading dials on every firmware: the horizon checks the gyro / accelerometer orientation -->
+                    <div class="instruments-right">
                         <span id="attitude"></span>
                         <span id="heading"></span>
                     </div>
@@ -314,7 +314,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
+import { onMounted, onBeforeUnmount, ref, reactive, watch } from "vue";
 import { useTranslation } from "i18next-vue";
 import { i18n } from "../../js/localization";
 import BaseTab from "./BaseTab.vue";
@@ -347,8 +347,6 @@ const { t } = useTranslation();
 
 const yaw_fix = ref(0);
 
-// The board reports USE_FLIGHT_PLAN only in the TRUENAV models (and the simulator)
-const showNavInstruments = computed(() => FC.CONFIG?.buildOptions?.includes("USE_FLIGHT_PLAN") ?? false);
 
 let modelInstance = null;
 // Local reactive state to replace jQuery DOM updates
@@ -764,10 +762,6 @@ function process_html() {
 }
 
 function initializeInstruments() {
-    if (!showNavInstruments.value) {
-        globalThis.updateInstruments = () => {};
-        return;
-    }
     const options = { size: 90, showBox: false, img_directory: "images/flightindicators/" };
     const attitude = flightIndicator("#attitude", "attitude", options);
     const heading = flightIndicator("#heading", "heading", options);
