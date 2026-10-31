@@ -549,6 +549,9 @@
     "tfFlasherBoardMismatchTitle": {
         "message": "Different board"
     },
+    "tfFlasherBoardUnknownWarning": {
+        "message": "The app cannot read the board right now (disconnected, or in DFU mode): it cannot check that this file suits it. File made for: {{fileBoard}}. Last connected board: {{lastBoard}}. Flash only if this is the file for your board."
+    },
     "tfFlasherBoardMismatchWarning": {
         "message": "This firmware is built for board {{fileBoard}}, but the detected board is {{connectedBoard}}. Make sure this is the right file before flashing."
     },
@@ -668,6 +671,15 @@
     },
     "tfDashFeature_pinio": {
         "message": "Switched outputs (PINIO)"
+    },
+    "tfDashWarnNoEscTemp": {
+        "message": "The temperature limit does not act: the board gets no ESC temperature (0 °C). It needs the DShot protocol with dshot_bidir = ON and dshot_edt = ON (or a serial ESC sensor, ESC_SENSOR)."
+    },
+    "tfDashWarnNoCurrent": {
+        "message": "The current limit does not act: no current sensor is set (Power & Battery tab, current meter)."
+    },
+    "tfDashWarnNoMotorSpeed": {
+        "message": "Motor restart does not act: the board gets no motor speed. It needs the DShot protocol with dshot_bidir = ON (or a serial ESC sensor, ESC_SENSOR)."
     },
     "tfDashOn": {
         "message": "On"
@@ -921,6 +933,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 change(s) prepared with another firmware on this board ($2): harvest again before sending."
     },
+    "tfOfflineOtherProfile": {
+        "message": "$1 change(s) prepared offline with other active profiles (harvest: $2): select these profiles on the board again, or harvest again, before sending."
+    },
     "tfOfflineHarvestDiscard": {
         "message": "$1 change(s) prepared offline are not sent yet. A new harvest replaces the offline board: they will be lost.\n\nTo keep them: \"Cancel\", then \"Send the prepared changes\".\n\nHarvest anyway?"
     },
@@ -1132,7 +1147,13 @@
         "message": "Motor protocol"
     },
     "tftuneLoop": {
-        "message": "PID loop"
+        "message": "Possible PID loop"
+    },
+    "tftuneApplyConfirm": {
+        "message": "Write $1 setting(s) to the board, then save and reboot?\n\nPropellers off. Check the motor protocol, dshot_bidir and dshot_edt above all.\n\n$2"
+    },
+    "tftuneChooseEscCells": {
+        "message": "ESC “$1” and $2 cells checked (required before applying)"
     },
     "tftuneAxis": {
         "message": "Axis"
@@ -1228,7 +1249,7 @@
         "message": "Battery current limit"
     },
     "trueglideSetting_power_guard_currentHelp": {
-        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start."
+        "message": "Battery current above which the throttle is limited. 0 = off. Needs a current sensor (FC or ESC telemetry). About 80 % of the total ESC rating is a good start. Always well above the hover current: otherwise the limit stays on the whole flight and the throttle stays at the floor (minimum below)."
     },
     "trueglideSetting_power_guard_min_throttle": {
         "message": "Minimum available throttle"
@@ -7027,7 +7048,7 @@
         "message": "$1 W"
     },
     "powerBatteryVoltageDrop": {
-        "message": "Voltage Drop"
+        "message": "Gap to full battery"
     },
     "powerBatteryCapacity": {
         "message": "Capacity (mAh)"

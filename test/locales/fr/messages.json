@@ -552,6 +552,9 @@
     "tfFlasherBoardMismatchTitle": {
         "message": "Carte différente"
     },
+    "tfFlasherBoardUnknownWarning": {
+        "message": "Le logiciel ne lit pas la carte en ce moment (déconnectée, ou en mode DFU) : il ne peut pas vérifier que ce fichier lui convient. Fichier prévu pour : {{fileBoard}}. Dernière carte connectée : {{lastBoard}}. Flasher seulement si c'est bien le fichier de votre carte."
+    },
     "tfFlasherBoardMismatchWarning": {
         "message": "Ce firmware est prévu pour la carte {{fileBoard}}, mais la carte détectée est {{connectedBoard}}. Vérifiez que c'est le bon fichier avant de flasher."
     },
@@ -671,6 +674,15 @@
     },
     "tfDashFeature_pinio": {
         "message": "Sorties commandées (PINIO)"
+    },
+    "tfDashWarnNoEscTemp": {
+        "message": "La limite de température n'agit pas : la carte ne reçoit pas la température des ESC (0 °C). Il faut le protocole DShot avec dshot_bidir = ON et dshot_edt = ON (ou un capteur ESC série, ESC_SENSOR)."
+    },
+    "tfDashWarnNoCurrent": {
+        "message": "La limite de courant n'agit pas : aucun capteur de courant n'est réglé (onglet Alimentation et batterie, capteur de courant)."
+    },
+    "tfDashWarnNoMotorSpeed": {
+        "message": "La relance moteur n'agit pas : la carte ne reçoit pas la vitesse des moteurs. Il faut le protocole DShot avec dshot_bidir = ON (ou un capteur ESC série, ESC_SENSOR)."
     },
     "tfDashOn": {
         "message": "Activé"
@@ -924,6 +936,9 @@
     "tfOfflineOtherFirmware": {
         "message": "$1 changement(s) préparé(s) avec un autre firmware sur cette carte ($2) : refaire la récolte avant d'envoyer."
     },
+    "tfOfflineOtherProfile": {
+        "message": "$1 changement(s) préparé(s) hors ligne avec d'autres profils actifs (récolte : $2) : remettre ces profils sur la carte, ou refaire la récolte, avant d'envoyer."
+    },
     "tfOfflineHarvestDiscard": {
         "message": "$1 changement(s) préparé(s) hors ligne ne sont pas encore envoyés. Une nouvelle récolte remplace la carte hors ligne : ils seront perdus.\n\nPour les garder : « Annuler », puis « Envoyer les changements préparés ».\n\nRécolter quand même ?"
     },
@@ -1147,7 +1162,13 @@
         "message": "Protocole moteur"
     },
     "tftuneLoop": {
-        "message": "Boucle PID"
+        "message": "Boucle PID possible"
+    },
+    "tftuneApplyConfirm": {
+        "message": "Écrire $1 réglage(s) sur la carte, puis enregistrer et redémarrer ?\n\nHélices retirées. Vérifier surtout le protocole moteur, dshot_bidir et dshot_edt.\n\n$2"
+    },
+    "tftuneChooseEscCells": {
+        "message": "ESC « $1 » et $2 cellules vérifiés (obligatoire avant d'appliquer)"
     },
     "tftuneAxis": {
         "message": "Axe"
@@ -1243,7 +1264,7 @@
         "message": "Courant batterie limite"
     },
     "trueglideSetting_power_guard_currentHelp": {
-        "message": "Courant batterie au-delà duquel les gaz sont limités. 0 = arrêt. Demande un capteur de courant (FC ou télémétrie des ESC). Environ 80 % du calibre total des ESC est un bon départ."
+        "message": "Courant batterie au-delà duquel les gaz sont limités. 0 = arrêt. Demande un capteur de courant (FC ou télémétrie des ESC). Environ 80 % du calibre total des ESC est un bon départ. Toujours bien au-dessus du courant en vol stationnaire : sinon la limite reste active tout le vol et les gaz restent au plancher (minimum ci-dessous)."
     },
     "trueglideSetting_power_guard_min_throttle": {
         "message": "Gaz disponibles minimum"
@@ -7141,7 +7162,7 @@
         "message": "$1 W"
     },
     "powerBatteryVoltageDrop": {
-        "message": "Chute de tension"
+        "message": "Écart avec la batterie pleine"
     },
     "powerBatteryCapacity": {
         "message": "Capacité (mAh)"
