@@ -41,7 +41,7 @@
                     </div>
                     <div class="waypoint-details">
                         <template v-if="waypoint.type === 'alt_change'">
-                            {{ $t("flightPlanTypeAltChange") }} → {{ waypoint.altitude }}ft AMSL
+                            {{ $t("flightPlanTypeAltChange") }} → {{ formatFeet(waypoint.altitude) }} AMSL
                         </template>
                         <template v-else-if="waypoint.type === 'delay'">
                             {{ $t("flightPlanTypeDelay") }}: {{ waypoint.duration }}min
@@ -50,7 +50,7 @@
                             {{ $t("flightPlanTypeYawRate") }}: {{ waypoint.speed }}°/s
                         </template>
                         <template v-else>
-                            {{ waypoint.altitude }}ft AMSL - {{ waypoint.speed }}kts -
+                            {{ formatFeet(waypoint.altitude) }} AMSL - {{ formatKnots(waypoint.speed) }} -
                             {{ getWaypointTypeLabel(waypoint.type) }}
                             <span v-if="waypoint.type === 'hold'" class="hold-details">
                                 ({{ waypoint.duration }}min, {{ getPatternLabel(waypoint.pattern) }})
@@ -103,6 +103,7 @@ import Dialog from "@/components/elements/Dialog.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { i18n } from "@/js/localization";
+import { formatFeet, formatKnots } from "@/js/trueglide/units.js";
 
 const {
     waypoints,

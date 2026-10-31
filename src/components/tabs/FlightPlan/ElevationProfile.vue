@@ -9,16 +9,16 @@
                     <strong>{{ $t("flightPlanFlightTime") }}:</strong> {{ totalFlightTime }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMinAlt") }}:</strong> {{ minAltitude }}ft
+                    <strong>{{ $t("flightPlanMinAlt") }}:</strong> {{ formatFeet(minAltitude) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMaxAlt") }}:</strong> {{ maxAltitude }}ft
+                    <strong>{{ $t("flightPlanMaxAlt") }}:</strong> {{ formatFeet(maxAltitude) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanGroundElev") }}:</strong> {{ groundElevation }}ft
+                    <strong>{{ $t("flightPlanGroundElev") }}:</strong> {{ formatFeet(groundElevation) }}
                 </span>
                 <span class="stat">
-                    <strong>{{ $t("flightPlanMaxGroundElev") }}:</strong> {{ maxGroundElevation }}ft
+                    <strong>{{ $t("flightPlanMaxGroundElev") }}:</strong> {{ formatFeet(maxGroundElevation) }}
                 </span>
             </div>
 
@@ -174,7 +174,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            {{ $t("flightPlanAlt") }}: {{ hoveredPoint.altitude }}ft
+                            {{ $t("flightPlanAlt") }}: {{ formatFeet(hoveredPoint.altitude) }}
                         </text>
                         <text
                             :x="hoveredPoint.tooltipX"
@@ -200,6 +200,7 @@ import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { METERS_TO_FEET } from "@/js/utils/common";
+import { formatFeet } from "@/js/trueglide/units.js";
 
 const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
 // Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.

@@ -47,6 +47,7 @@
                     :aria-label="$t('flightPlanAltitude')"
                     class="w-48"
                 />
+                <span v-if="feetToMeters(form.altitude) !== null" class="metric">= {{ feetToMeters(form.altitude) }} m</span>
             </SettingRow>
 
             <SettingRow v-if="showSpeed" :label="$t('flightPlanSpeed')" full-width>
@@ -59,6 +60,7 @@
                     :aria-label="$t('flightPlanSpeed')"
                     class="w-48"
                 />
+                <span v-if="knotsToKmh(form.speed) !== null" class="metric">= {{ knotsToKmh(form.speed) }} km/h</span>
             </SettingRow>
 
             <SettingRow v-if="showYawRate" :label="$t('flightPlanYawRate')" full-width>
@@ -114,6 +116,7 @@ import { useTranslation } from "i18next-vue";
 import Dialog from "@/components/elements/Dialog.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
+import { feetToMeters, knotsToKmh } from "@/js/trueglide/units.js";
 
 const { t } = useTranslation();
 const {
@@ -292,6 +295,11 @@ const handleCancel = () => {
 </script>
 
 <style scoped>
+.metric {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
 .editor-form {
     min-width: 400px;
 }
