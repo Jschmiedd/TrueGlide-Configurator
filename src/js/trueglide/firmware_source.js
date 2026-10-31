@@ -58,6 +58,9 @@ export function isOnlineFirmwareSourceEnabled() {
  * @param {string} filename nom (ou chemin) du fichier
  * @returns {{ isTrueGlide: boolean, model: string|null, version: string|null, mcu: string|null, board: string|null }}
  */
+// familles de processeurs des cartes Betaflight (champ <MCU> du nom de fichier)
+const MCU_NAME = /^(STM32|AT32|APM32|GD32|RP2|X32|SITL)/i;
+
 export function parseTrueGlideFirmwareName(filename) {
     const empty = { isTrueGlide: false, model: null, version: null, mcu: null, board: null };
     if (typeof filename !== "string" || filename.length === 0) {
@@ -76,6 +79,17 @@ export function parseTrueGlideFirmwareName(filename) {
     const stem = baseName.slice(entry ? entry.prefix.length : "betaflight_".length).replace(/\.hex$/i, "");
     const parts = stem.split("_").filter((part) => part.length > 0);
 
+    // <version>_<MCU>_<CARTE> ; sans processeur reconnu (ex. « _SPEEDYBEEF405MINI_24a71eb », révision en dernier),
+    // la carte est la partie qui suit la version : une révision n'est jamais prise pour une carte
+    if (parts.length > 1 && !MCU_NAME.test(parts[1])) {
+        return {
+            isTrueGlide: Boolean(entry),
+            model: entry ? entry.model : null,
+            version: parts[0] ?? null,
+            mcu: null,
+            board: parts[1],
+        };
+    }
     return {
         isTrueGlide: Boolean(entry),
         model: entry ? entry.model : null,

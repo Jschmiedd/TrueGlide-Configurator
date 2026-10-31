@@ -57,6 +57,12 @@ describe("TrueGlide firmware source", () => {
         expect(parsed).toEqual({ isTrueGlide: true, model, version: "2026.6.2", mcu, board });
     });
 
+    it("ne prend pas une révision pour une carte quand le processeur manque dans le nom", () => {
+        const parsed = parseTrueGlideFirmwareName("trueglide_2026.6.2_SPEEDYBEEF405MINI_24a71eb.hex");
+        expect(parsed).toEqual({ isTrueGlide: true, model: "STANDARD", version: "2026.6.2", mcu: null, board: "SPEEDYBEEF405MINI" });
+        expect(checkTrueGlideFirmwareFile("trueglide_2026.6.2_SPEEDYBEEF405MINI_24a71eb.hex", "SPEEDYBEEF405MINI").boardMismatch).toBe(false);
+    });
+
     it("ignore le chemin du fichier", () => {
         const parsed = parseTrueGlideFirmwareName("/home/x/obj/truenav_2026.6.2_STM32F405_FOO.hex");
         expect(parsed.model).toBe("TRUENAV");
