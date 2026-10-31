@@ -411,7 +411,7 @@ MspHelper.prototype.process_data = function (dataHandler) {
 
                     FC.BATTERY_STATE.voltage = data.readU8() / 10.0; // V
                     FC.BATTERY_STATE.mAhDrawn = data.readU16(); // mAh
-                    FC.BATTERY_STATE.amperage = data.readU16() / 100; // A
+                    FC.BATTERY_STATE.amperage = data.read16() / 100; // A (signé : le firmware envoie un int16, -320 à 320 A)
                     FC.BATTERY_STATE.batteryState = data.readU8();
                     FC.BATTERY_STATE.voltage = data.readU16() / 100;
                     break;

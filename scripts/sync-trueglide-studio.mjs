@@ -15,6 +15,8 @@ for (const [file, name] of Object.entries(MODULES)) {
         throw new Error(`${file} : fin de module inattendue`);
     }
     code = code.replace(/\}\)\(this\);\s*$/, "})(root);\n");
+    // module ES : jamais « module.exports » (sous l'outil de test, « module » existe et n'accepte pas l'affectation)
+    code = code.replace(/typeof module !== (['"])undefined\1/, "false");
     const out = `// Copie générée par scripts/sync-trueglide-studio.mjs depuis le firmware TrueGlide : ne pas modifier.\n/* eslint-disable */\nconst root = {};\n${code}export default root.${name};\n`;
     fs.writeFileSync(path.join(dest, file), out);
     console.log(`${file} -> ${dest}/${file}`);

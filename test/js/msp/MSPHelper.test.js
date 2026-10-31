@@ -36,6 +36,27 @@ describe("MspHelper", () => {
 
             expect(callbackCalled).toEqual(true);
         });
+        it("reads MSP_BATTERY_STATE amperage as signed (-0.02 A is not 655.34 A)", () => {
+            // firmware msp.c: sbufWriteU16(dst, (int16_t)constrain(getAmperage(), -0x8000, 0x7FFF)) in 0.01 A
+            const d = new DataView(new ArrayBuffer(9));
+            d.setUint8(0, 4); // cells
+            d.setUint16(1, 1300, true); // capacity mAh
+            d.setUint8(3, 168); // voltage 0.1 V
+            d.setUint16(4, 12, true); // mAh drawn
+            d.setInt16(6, -2, true); // amperage -0.02 A
+            d.setUint8(8, 0); // state
+            const full = new DataView(new ArrayBuffer(11));
+            for (let i = 0; i < 9; i++) full.setUint8(i, d.getUint8(i));
+            full.setUint16(9, 1680, true); // voltage 0.01 V
+            mspHelper.process_data({
+                code: MSPCodes.MSP_BATTERY_STATE,
+                dataView: full,
+                crcError: false,
+                callbacks: [],
+            });
+            expect(FC.BATTERY_STATE.amperage).toBeCloseTo(-0.02, 5);
+            expect(FC.BATTERY_STATE.voltage).toBeCloseTo(16.8, 5);
+        });
         it("handles MSP_API_VERSION correctly", () => {
             let randomValues = crypto.getRandomValues(new Uint8Array(3));
             const [mspProtocolVersion, apiVersionMajor, apiVersionMinor] = randomValues;
