@@ -20,7 +20,7 @@ describe("TrueGlide ESC tab", () => {
     });
 
     it("shows a fixed version of TrueGlide ESC Configurator", () => {
-        expect(ESC_TAB_URL).toBe("https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v11/");
+        expect(ESC_TAB_URL).toBe("https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v12/");
         expect(ESC_TAB_ORIGIN).toBe("https://jschmiedd.github.io");
     });
 
