@@ -135,8 +135,8 @@
       </div>
       <div class="fonction">
         <h3>Les cartes de Betaflight</h3>
-        <p><b>TRUEGLIDE</b> se compile pour les cartes de Betaflight. Les firmwares publiés s'installent depuis le logiciel, avec contrôle de l'empreinte.</p>
-        <div class="chiffre">621 cartes compilées · non testées en vol</div>
+        <p><b>TRUEGLIDE</b> se compile pour les cartes de Betaflight. Le firmware en ligne est retiré en attendant la fin des essais en vol : il reviendra, corrigé, pour toutes les cartes.</p>
+        <div class="chiffre">Essais en vol en cours (SpeedyBee F405 Mini)</div>
       </div>
       <div class="fonction">
         <h3>Logiciel en français</h3>
@@ -181,8 +181,8 @@
         <h3>Firmware TRUEGLIDE</h3>
         <div class="version">2026.6.2 · TRUEGLIDE · TRUENAV · TRUENAV_LIGHT</div>
         <ul>
-          <li>Installation depuis le logiciel, onglet <b>Flasher le Firmware</b> : mise à jour en ligne ou fichier <code>.hex</code>.</li>
-          <li>Publié pour l'instant pour la SpeedyBee F405 Mini et la T-Motor Velox F7 SE.</li>
+          <li>Firmware en ligne <b>retiré le 31/10/2026</b> : l'ancienne version n'avait pas les dernières corrections. Il revient, corrigé, après les essais en vol.</li>
+          <li>Installation, une fois publié : depuis le logiciel, onglet <b>Flasher le Firmware</b>.</li>
           <li>Revenir en arrière : reflasher Betaflight, puis recoller son <code>diff all</code>.</li>
         </ul>
         <a class="btn" href="docs/flasher.html">Installer le firmware</a>
@@ -204,7 +204,7 @@
 <section class="bloc" id="essais">
   <div class="large">
     <h2>Essais</h2>
-    <p class="sous">Chaque étape est notée avec son résultat. Aucun vol réel n'a encore été fait.</p>
+    <p class="sous">Chaque étape est notée avec son résultat. Premiers vols faits ; les fonctions TrueGlide ne sont pas encore essayées en vol.</p>
     <ol class="chronologie">
       <li><time datetime="2026-10-11">11/10/2026</time><div><b>Mode SPEEDER au simulateur</b><span>L'inclinaison visée suit le programme : 0 → 30° en 0,5 s, maintien, retour vers 0, nez vers le bas comme le manche.</span></div></li>
       <li><time datetime="2026-10-13">13/10/2026</time><div><b>Missions GPS au simulateur</b><span>Banc de missions de Betaflight : 19 scénarios sur 19 réussis sur <b>TRUENAV</b>.</span></div></li>
@@ -213,8 +213,12 @@
       <li><time datetime="2026-10-22">22/10/2026</time><div><b>Toutes les cartes compilées</b><span>621 cartes en <b>TRUEGLIDE</b> ; compiler ne veut pas dire tester.</span></div></li>
       <li><time datetime="2026-10-23">23/10/2026</time><div><b>Nouvelle version en ligne</b><span>Logiciel et site publiés ; mise à jour en ligne pour 621 cartes.</span></div></li>
       <li><time datetime="2026-10-23">23/10/2026</time><div><b>Version d'essai : batterie basse et onglet ESC</b><span>Décollage refusé et retour au départ sur batterie basse (7 tests du firmware), onglet ESC dans le logiciel. Pas encore dans les firmwares publiés ni essayés en vol.</span></div></li>
-      <li class="a-venir"><time>à venir</time><div><b>Première carte</b><span>SpeedyBee F405 Mini : flash et contrôles à plat, hélices retirées.</span></div></li>
-      <li class="a-venir"><time>à venir</time><div><b>Premiers vols</b><span>Stationnaire, journaux blackbox et analyse.</span></div></li>
+      <li><time datetime="2026-10-28">28/10/2026</time><div><b>Première carte</b><span>SpeedyBee F405 Mini : flash et contrôles à plat, hélices retirées.</span></div></li>
+      <li><time datetime="2026-10-29">29/10/2026</time><div><b>Premiers vols</b><span>Vols en ANGLE, fonctions TrueGlide désactivées, journaux blackbox analysés.</span></div></li>
+      <li><time datetime="2026-10-30">30/10/2026</time><div><b>Fonctions TrueGlide au banc</b><span>Limites ESC et courant, relance moteur, température sur la radio, Speeder : vérifiés sans hélices.</span></div></li>
+      <li><time datetime="2026-10-31">31/10/2026</time><div><b>Contrôles et corrections</b><span>Erreurs trouvées par les contrôles corrigées et testées ; baromètre vérifié au banc. Firmware en ligne retiré en attendant les essais en vol.</span></div></li>
+      <li class="a-venir"><time>à venir</time><div><b>Fonctions TrueGlide en vol</b><span>Limite de courant, température des ESC, relance moteur, Speeder.</span></div></li>
+      <li class="a-venir"><time>à venir</time><div><b>Toutes les cartes</b><span>Firmware corrigé compilé et publié pour toutes les cartes.</span></div></li>
     </ol>
   </div>
 </section>
@@ -328,7 +332,7 @@
       <div class="fonction">
         <h3>Firmware TRUEGLIDE</h3>
         <p>Le firmware de vol, avec ses modèles <b>TRUENAV</b> (navigation GPS) et <b>TRUENAV_LIGHT</b>. Tout ajout est désactivé par défaut.</p>
-        <div class="chiffre">621 cartes compilées · non testées en vol</div>
+        <div class="chiffre">Essais en vol en cours · firmware en ligne retiré</div>
       </div>
       <div class="fonction">
         <h3>TRUEGLIDE CONFIGURATOR</h3>
