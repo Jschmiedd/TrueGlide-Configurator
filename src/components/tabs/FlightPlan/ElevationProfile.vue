@@ -3,7 +3,7 @@
         <template v-if="waypoints.length > 0">
             <div class="profile-stats">
                 <span class="stat">
-                    <strong>{{ $t("flightPlanDistance") }}:</strong> {{ formatDistance(totalDistance) }}
+                    <strong>{{ $t("flightPlanDistance") }}:</strong> {{ formatDistanceBoth(totalDistance) }}
                 </span>
                 <span class="stat">
                     <strong>{{ $t("flightPlanFlightTime") }}:</strong> {{ totalFlightTime }}
@@ -51,6 +51,17 @@
                         >
                             {{ tick.value }}ft
                         </text>
+                        <!-- TrueGlide: the same ticks in metres, on the right -->
+                        <text
+                            v-for="tick in yAxisTicks"
+                            :key="`y-label-m-${tick.value}`"
+                            :x="chartWidth - padding.right + 6"
+                            :y="tick.y + 3"
+                            class="axis-label"
+                            text-anchor="start"
+                        >
+                            {{ feetToMeters(tick.value) }}m
+                        </text>
                     </g>
 
                     <!-- X-axis grid lines and labels -->
@@ -73,6 +84,17 @@
                             text-anchor="middle"
                         >
                             {{ formatDistance(point.distance) }}
+                        </text>
+                        <!-- TrueGlide: same distance in m / km, on a second line -->
+                        <text
+                            v-for="(point, index) in scaledProfilePoints"
+                            :key="`x-label-m-${index}`"
+                            :x="point.x"
+                            :y="chartHeight - padding.bottom + 27"
+                            class="axis-label"
+                            text-anchor="middle"
+                        >
+                            {{ formatMetricDistance(point.distance) }}
                         </text>
                     </g>
 
@@ -182,7 +204,7 @@
                             class="tooltip-text"
                             text-anchor="middle"
                         >
-                            {{ $t("flightPlanDist") }}: {{ formatDistance(hoveredPoint.distance) }}
+                            {{ $t("flightPlanDist") }}: {{ formatDistanceBoth(hoveredPoint.distance) }}
                         </text>
                     </g>
                 </svg>
@@ -200,7 +222,7 @@ import { ref, computed, watch } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { METERS_TO_FEET } from "@/js/utils/common";
-import { formatFeet } from "@/js/trueglide/units.js";
+import { feetToMeters, formatFeet, formatMetricDistance } from "@/js/trueglide/units.js";
 
 const { positionalWaypoints, selectedWaypointUid, selectWaypoint } = useFlightPlan();
 // Modifier waypoints (lat/lon = 0) would otherwise skew distance and altitude.
@@ -214,8 +236,8 @@ const chartWidth = 800;
 const chartHeight = 150;
 const padding = {
     top: 20,
-    right: 20,
-    bottom: 35,
+    right: 45, // TrueGlide: room for the metre scale
+    bottom: 45, // TrueGlide: room for the m / km line
     left: 45,
 };
 
@@ -296,6 +318,8 @@ const formatDistance = (meters) => {
     const nauticalMiles = meters * METERS_TO_NAUTICAL_MILES;
     return `${nauticalMiles.toFixed(2)}nm`;
 };
+// TrueGlide: nautical miles and m / km
+const formatDistanceBoth = (meters) => `${formatDistance(meters)} (${formatMetricDistance(meters)})`;
 
 // Calculate profile points with cumulative distance
 const profilePoints = computed(() => {

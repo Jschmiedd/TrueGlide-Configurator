@@ -37,3 +37,12 @@ export function formatKnots(knots) {
     const k = knotsToKmh(knots);
     return k === null ? `${knots ?? ""} kts` : `${knots} kts (${k} km/h)`;
 }
+
+/** Distance en mètres sous 1 km (« 352 m »), sinon en km avec une décimale (« 2.2 km ») ; null si pas un nombre. */
+export function formatMetricDistance(meters) {
+    const n = number(meters);
+    if (n === null) {
+        return null;
+    }
+    return Math.abs(Math.round(n)) < 1000 ? `${Math.round(n)} m` : `${(n / 1000).toFixed(1)} km`;
+}

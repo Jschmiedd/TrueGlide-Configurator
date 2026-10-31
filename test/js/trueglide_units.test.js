@@ -2,7 +2,7 @@
 // Free software under the GPL-3.0 license, WITHOUT ANY WARRANTY; see the LICENSE file.
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import { feetToMeters, formatFeet, formatKnots, knotsToKmh } from "../../src/js/trueglide/units.js";
+import { feetToMeters, formatFeet, formatKnots, formatMetricDistance, knotsToKmh } from "../../src/js/trueglide/units.js";
 
 describe("Plan de vol : mètres et km/h à côté des pieds et des nœuds", () => {
     it("convertit avec les facteurs exacts (1 ft = 0,3048 m ; 1 nœud = 1,852 km/h)", () => {
@@ -25,5 +25,15 @@ describe("Plan de vol : mètres et km/h à côté des pieds et des nœuds", () =
         expect(formatFeet(undefined)).toBe(" ft");
         expect(formatKnots("")).toBe(" kts");
         expect(knotsToKmh(null)).toBe(null);
+    });
+
+    it("distance en mètres sous 1 km, en km au-delà", () => {
+        expect(formatMetricDistance(352)).toBe("352 m");
+        expect(formatMetricDistance(999.4)).toBe("999 m");
+        expect(formatMetricDistance(999.6)).toBe("1.0 km");
+        expect(formatMetricDistance(1000)).toBe("1.0 km");
+        expect(formatMetricDistance(2240)).toBe("2.2 km");
+        expect(formatMetricDistance(0)).toBe("0 m");
+        expect(formatMetricDistance(undefined)).toBe(null);
     });
 });
