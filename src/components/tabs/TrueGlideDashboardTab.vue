@@ -369,6 +369,11 @@ onMounted(() => {
     loadSetupProgress();
     refresh();
     readInstalled();
+    // the flasher preselects the last connected board: remember it from MSP at once, so a board whose CLI cannot be
+    // read (old firmware, read error) does not leave the previous board selected; loadFeatures() completes the model
+    if (installed.value.board) {
+        rememberConnectedBoard(installed.value);
+    }
     timer = setInterval(refresh, 500);
     loadFeatures();
 });
