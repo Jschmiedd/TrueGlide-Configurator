@@ -549,6 +549,9 @@
     "tfFlasherBoardMismatchTitle": {
         "message": "Different board"
     },
+    "tfFlasherBoardUnknownWarning": {
+        "message": "The app cannot read the board right now (disconnected, or in DFU mode): it cannot check that this file suits it. File made for: {{fileBoard}}. Last connected board: {{lastBoard}}. Flash only if this is the file for your board."
+    },
     "tfFlasherBoardMismatchWarning": {
         "message": "This firmware is built for board {{fileBoard}}, but the detected board is {{connectedBoard}}. Make sure this is the right file before flashing."
     },
