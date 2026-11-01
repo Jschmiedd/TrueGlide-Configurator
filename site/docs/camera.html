@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caméra · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Caméra (groupe « Fonctions TrueGlide ») sert à allumer et éteindre une caméra ou une nacelle avec un interrupteur de la radio, ou automatiquement à l&#x27;armement, pour économiser la batterie. Il utilise une sortie commutable PINIO de la carte, une fonction de base du firmware.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html" aria-current="page">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#principe">Comment ça marche</a></li>
+      <li><a href="#cadre">Cadre « Caméra / charge utile (alimentation) »</a></li>
+      <li><a href="#procedure">Mettre en place l&#x27;alimentation de la caméra</a></li>
+      <li><a href="#sans-pinio">Si la carte n&#x27;a pas de sortie PINIO</a></li>
+      <li><a href="#cli">Commandes CLI équivalentes</a></li>
+      <li><a href="#etats">Messages possibles</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Caméra</h1>
+<p class="chapeau">L'onglet <b>Caméra</b> (groupe « Fonctions TrueGlide ») sert à allumer et éteindre une caméra ou une nacelle avec un interrupteur de la radio, ou automatiquement à l'armement, pour économiser la batterie. Il utilise une sortie commutable PINIO de la carte, une fonction de base du firmware.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/camera.webp" alt="Onglet Caméra : cadre Caméra / charge utile (alimentation) avec le message Cette carte n'a pas de sortie commutable (PINIO) déclarée, et la solution avec un module interrupteur MOSFET"><img class="t-clair" src="../assets/img/onglets/camera-clair.webp" alt="Onglet Caméra en thème clair : même message, pas de sortie PINIO déclarée">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Le simulateur n'a pas de sortie PINIO : l'onglet affiche donc le message « Cette carte n'a pas de sortie commutable (PINIO) déclarée ». Sur une carte qui en a, le cadre montre les deux listes décrites plus bas.</figcaption>
+</figure>
+
+<div class="encart">Avant de brancher la caméra, vérifier sur le schéma de la carte ce que la sortie alimente et sa tension (par exemple 12 V commutable). Une caméra branchée sur une tension trop forte est détruite.</div>
+
+<h2 id="principe">Comment ça marche</h2>
+<p>Une sortie PINIO est une broche de la carte que le firmware allume ou éteint. Elle commande soit une alimentation commutable intégrée à la carte, soit un module interrupteur (MOSFET) relié à un plot libre. Chaque sortie PINIO suit un mode :</p>
+<ul>
+  <li>un mode <b>USER1</b> à <b>USER4</b>, que vous placez ensuite sur un interrupteur de la radio dans l'onglet <a href="modes.html">Modes</a> ;</li>
+  <li>ou le mode <b>ARM</b> : la sortie est allumée tant que le drone est armé.</li>
+</ul>
+<p>Le firmware gère en général 4 sorties PINIO. L'onglet ne montre que celles qui ont une broche déclarée.</p>
+
+<h2 id="cadre">Cadre « Caméra / charge utile (alimentation) »</h2>
+<ul>
+  <li><b>Sortie commutable</b> : liste des sorties PINIO de la carte, sous la forme « PINIO 1 (C01) : libre ». Entre parenthèses, la broche du processeur. Après les deux-points, l'usage actuel : « libre », USER1 à USER4, ARM, VTX PIT MODE, ou un numéro de mode (#…) pour un autre usage. Choisir la sortie qui alimente la caméra (voir le schéma de câblage). À l'ouverture, l'onglet présélectionne une sortie déjà commandée par un mode USER, sinon la première sortie libre.</li>
+  <li><b>Commande</b> : ce qui allume la sortie.
+    <ul>
+      <li><b>Interrupteur radio (USER1)</b> à <b>Interrupteur radio (USER4)</b> : un mode USER, à placer ensuite sur un interrupteur dans l'onglet <a href="modes.html">Modes</a>. Choix par défaut : USER1, ou le mode USER déjà utilisé par la sortie.</li>
+      <li><b>Allumée quand le drone est armé</b> : la caméra s'allume à l'armement et s'éteint au désarmement.</li>
+    </ul>
+  </li>
+  <li><b>Avertissement de conflit</b> : si la sortie choisie sert déjà à autre chose, l'onglet affiche « Cette sortie sert déjà à « … » : la choisir pour la caméra supprime cette fonction ». Par exemple l'alimentation de l'émetteur vidéo (VTX PIT MODE) ou un module Bluetooth commandé par ARM.</li>
+  <li><b>Enregistrer et redémarrer</b> : écrit la nouvelle commande de la sortie choisie, sans toucher aux autres sorties, puis enregistre. Le contrôleur de vol redémarre et le logiciel se reconnecte. Le journal affiche « Alimentation caméra enregistrée : le contrôleur de vol redémarre. »</li>
+</ul>
+
+<h2 id="procedure">Mettre en place l'alimentation de la caméra</h2>
+<ol>
+  <li>Repérer sur le schéma de la carte la sortie commutable et sa tension. Brancher la caméra dessus.</li>
+  <li>Onglet <b>Caméra</b> : choisir la <b>Sortie commutable</b>, puis la <b>Commande</b>.</li>
+  <li>Lire l'avertissement de conflit s'il apparaît. Si la sortie sert déjà à une autre fonction utile, en choisir une autre.</li>
+  <li>Cliquer sur <b>Enregistrer et redémarrer</b>.</li>
+  <li>Avec un mode USER : onglet <a href="modes.html">Modes</a>, placer le mode choisi (USER1 à USER4) sur un interrupteur de la radio, puis enregistrer. Le mode USER n'apparaît dans l'onglet Modes qu'une fois la sortie PINIO enregistrée.</li>
+  <li>Essai <b>Hélices retirées</b> : l'interrupteur doit allumer et éteindre la caméra. Avec « Allumée quand le drone est armé », armer <b>hélices retirées</b> : la caméra doit s'allumer, puis s'éteindre au désarmement.</li>
+</ol>
+
+<h2 id="sans-pinio">Si la carte n'a pas de sortie PINIO</h2>
+<p>L'onglet affiche : « Cette carte n'a pas de sortie commutable (PINIO) déclarée ». Solution :</p>
+<ol>
+  <li>Relier un module interrupteur (MOSFET) à un plot libre de la carte.</li>
+  <li>Onglet <a href="cli.html">Ligne de commande (CLI)</a> : déclarer la broche avec <code>resource PINIO 1 &lt;plot&gt;</code> (par exemple <code>resource PINIO 1 C01</code>), puis <code>save</code>.</li>
+  <li>Revenir dans l'onglet <b>Caméra</b> : la sortie apparaît dans la liste.</li>
+</ol>
+
+<h2 id="cli">Commandes CLI équivalentes</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Commande</th><th>Rôle</th></tr></thead>
+  <tbody>
+    <tr><td><code>resource PINIO 2 C01</code></td><td>Déclare la broche d'une sortie PINIO (ici la sortie 2 sur la broche C01).</td></tr>
+    <tr><td><code>get pinio_box</code></td><td>Affiche le mode suivi par chaque sortie PINIO, par exemple <code>pinio_box = 40,255,255,255</code>.</td></tr>
+    <tr><td><code>set pinio_box = …</code></td><td>Change ces modes. C'est la commande que l'onglet envoie.</td></tr>
+  </tbody>
+</table></div>
+<div class="tableau"><table>
+  <thead><tr><th>Valeur dans <code>pinio_box</code></th><th>Mode</th></tr></thead>
+  <tbody>
+    <tr><td>0</td><td>ARM (allumé quand le drone est armé)</td></tr>
+    <tr><td>39</td><td>VTX PIT MODE</td></tr>
+    <tr><td>40</td><td>USER1</td></tr>
+    <tr><td>41</td><td>USER2</td></tr>
+    <tr><td>42</td><td>USER3</td></tr>
+    <tr><td>43</td><td>USER4</td></tr>
+    <tr><td>255</td><td>aucun (sortie libre)</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="etats">Messages possibles</h2>
+<ul>
+  <li><b>Ce contrôleur de vol n'a pas le firmware TrueGlide…</b> : l'onglet ne fonctionne qu'avec le firmware <b>TRUEGLIDE</b> (ou ses dérivés <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>). Voir <a href="flasher.html">Installer le firmware</a>.</li>
+  <li><b>Le contrôleur de vol n'a pas répondu :</b> suivi de l'erreur : la lecture ou l'écriture a échoué. Rien n'a été enregistré si l'erreur apparaît pendant l'enregistrement.</li>
+</ul>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

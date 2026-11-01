@@ -1,0 +1,58 @@
+<h1>Émetteur vidéo</h1>
+<p class="chapeau">L'onglet <b>Émetteur vidéo</b> (groupe « Vidéo et lumières ») sert à régler l'émetteur vidéo (VTX) piloté par la carte : bande, canal ou fréquence, puissance, mode Pit, et la table VTX qui liste les fréquences et puissances autorisées.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/emetteur-video.png" alt="Onglet Émetteur vidéo sans VTX : encadré « Attention : Votre VTX n'est pas configuré ou non pris en charge » et cadre « Table VTX » avec Nombre de bandes, Nombre de canaux par bande et Nombre de niveaux de puissance à 0 ; boutons du bas « Charger à partir du fichier », « Enregistrer sous » et « Enregistrer »"><img class="t-clair" src="../assets/img/onglets/emetteur-video-clair.png" alt="Onglet Émetteur vidéo en thème clair, sans VTX détecté">
+  <figcaption>Capture du logiciel en mode virtuel (sans carte) : le simulateur n'a pas d'émetteur vidéo. Sans VTX reconnu, seuls l'avertissement et la table VTX s'affichent ; les cadres de réglage décrits plus bas apparaissent avec un VTX réel.</figcaption>
+</figure>
+
+<h2 id="prerequis">Avant de commencer</h2>
+<ul>
+  <li>La carte doit dialoguer avec le VTX par un protocole comme SmartAudio, Tramp ou MSP. Pour SmartAudio et Tramp, réglez d'abord le port série du VTX dans l'onglet <a href="ports.html">Ports</a>.</li>
+  <li>Sinon, l'onglet affiche « Votre VTX n'est pas configuré ou non pris en charge » et les réglages restent cachés.</li>
+  <li>Si la carte gère une table VTX mais qu'elle est vide (0 bande, 0 canal ou 0 niveau de puissance), un message demande de la configurer et de l'enregistrer <b>avant</b> de choisir bande, canal et puissance.</li>
+</ul>
+<div class="encart">Toutes les fréquences et puissances ne sont pas autorisées partout. Ne gardez dans la table que celles permises dans votre pays : mettez <b>0</b> sur une fréquence interdite pour la désactiver.</div>
+
+<h2 id="mode">Choisir le mode</h2>
+<ul>
+  <li><b>Saisir la fréquence directement</b> : remplace bande et canal par une fréquence, si le VTX le permet.</li>
+  <li><b>Bande</b> et <b>Canal</b> : choisis parmi ceux de la table VTX.</li>
+  <li><b>Fréquence</b> (mode fréquence directe) : en MHz.</li>
+  <li><b>Puissance</b> : niveau choisi parmi ceux de la table.</li>
+  <li><b>Mode Pit</b> : puissance très faible, pour laisser le drone allumé à l'atelier sans gêner les autres pilotes. Avec certains protocoles (SmartAudio), le mode Pit ne peut pas être activé par logiciel après la mise sous tension.</li>
+  <li><b>Fréquence du mode Pit</b> : fréquence utilisée en mode Pit, en MHz.</li>
+  <li><b>Faible puissance d'émission lors du désarmement</b> : <b>Off</b>, <b>On</b> (puissance la plus basse tant que le drone est désarmé, sauf en failsafe) ou <b>On jusqu'au premier armement</b>.</li>
+</ul>
+
+<h2 id="etat">Valeur actuelle</h2>
+<p>Ce cadre résume ce que la carte connaît : <b>Périphérique - Prêt</b> (relu chaque seconde), <b>Type VTX</b>, <b>Bande</b>, <b>Canal</b>, <b>Fréquence</b>, <b>Puissance</b>, <b>Mode Pit</b>, <b>Fréquence du mode Pit</b> et <b>Faible puissance d'émission lors du désarmement</b>.</p>
+
+<h2 id="table">Table VTX</h2>
+<ul>
+  <li><b>Nombre de bandes</b> et <b>Nombre de canaux par bande</b> : de 0 à 8 chacun.</li>
+  <li>Tableau des bandes, une ligne par bande :
+    <ul>
+      <li><b>Nom</b> : nom de la bande (8 caractères au plus, en majuscules), par exemple RACEBAND ;</li>
+      <li><b>Lettre</b> : une seule lettre qui désigne la bande ;</li>
+      <li><b>Usine</b> (VTX SmartAudio seulement) : la carte envoie au VTX la bande et le canal, et le VTX utilise sa propre table ; les fréquences saisies ne servent alors qu'à l'affichage. Décoché : la carte envoie la fréquence saisie ;</li>
+      <li>une case par canal : la fréquence en MHz (0 = canal désactivé).</li>
+    </ul>
+  </li>
+  <li><b>Nombre de niveaux de puissance</b> : de 0 à 8.</li>
+  <li>Tableau des puissances : pour chaque niveau, une <b>Valeur</b> (donnée par le fabricant du VTX, de 0 à 65535) et une <b>Désignation</b> (3 caractères au plus, par exemple 25, 200, MAX).</li>
+</ul>
+
+<h2 id="charger-table">Charger la table de votre VTX</h2>
+<ol>
+  <li>Procurez-vous le fichier de table VTX (<code>.json</code>) de votre modèle, par exemple auprès du fabricant, et vérifiez qu'il respecte les règles de votre pays.</li>
+  <li>Cliquez sur <b>Charger à partir du fichier</b> (ou, avec la flèche à côté, <b>Charger depuis le presse-papiers</b>). Le fichier est vérifié avant d'être lu.</li>
+  <li>Un message rappelle que la table est chargée dans le logiciel mais <b>pas encore</b> dans la carte : relisez chaque valeur.</li>
+  <li>Cliquez sur <b>Enregistrer</b>.</li>
+</ol>
+
+<h2 id="boutons">Boutons du bas</h2>
+<ul>
+  <li><b>Charger à partir du fichier</b> / <b>Charger depuis le presse-papiers</b> : lit une table VTX au format JSON.</li>
+  <li><b>Enregistrer sous</b> : enregistre la table dans un fichier <code>.json</code>. Avec la flèche, <b>Sauvegarder Script Lua</b> crée un fichier <code>.lua</code> pour les scripts Lua de la radio ; il est nommé d'après l'identifiant unique de la carte.</li>
+  <li><b>Enregistrer</b> : actif dès qu'une valeur a changé. Envoie les réglages et la table à la carte et les enregistre, sans redémarrage.</li>
+</ul>

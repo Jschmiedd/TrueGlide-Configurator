@@ -1,0 +1,45 @@
+<h1>Ajustements</h1>
+<p class="chapeau">L'onglet <b>Ajustements</b> (groupe « Réglage du vol ») permet de changer certains réglages en vol depuis la radio : un interrupteur ou un potentiomètre modifie par exemple un gain PID, le profil de rates ou le multiplicateur maître, sans brancher le drone au PC.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/ajustements.png" alt="Onglet Ajustements : texte 0 emplacements actifs sur 30, lien Afficher tous les emplacements, en-têtes de colonnes Si activé, lorsque la voie, est dans l'intervalle, activer alors, par la voie, mode, centre et échelle, et un seul emplacement numéro 1 désactivé avec Aucun changement ; bouton Enregistrer en bas à droite"><img class="t-clair" src="../assets/img/onglets/ajustements-clair.png" alt="Même onglet Ajustements en thème clair, aucun emplacement actif">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Aucune radio n'est reliée : aucun ajustement n'est réglé et il n'y a pas de voie AUX à choisir ni de repère de position de voie.</figcaption>
+</figure>
+
+<h2 id="principe">Principe</h2>
+<p>Chaque ligne est un emplacement. Il se lit comme une phrase : « <b>Si activé</b>, <b>lorsque la voie</b> AUX… <b>est dans l'intervalle</b> …, <b>activer alors</b> telle fonction <b>par la voie</b> AUX… ». La première voie AUX sert d'autorisation (l'ajustement n'agit que quand elle est dans l'intervalle) ; la seconde est l'interrupteur ou le potentiomètre qui fait varier la valeur. Les deux peuvent être la même voie.</p>
+<p>Le firmware garde 30 emplacements. En haut, le texte « … emplacements actifs sur … » les compte. Par défaut, seuls les emplacements actifs et le premier libre sont montrés ; <b>Afficher tous les emplacements</b> / <b>Masquer les emplacements vides</b> change l'affichage.</p>
+<div class="encart">Un ajustement change le réglage pendant le vol. Une mauvaise manipulation peut rendre le drone instable. Essayez d'abord chaque ajustement au sol, <b>Hélices retirées</b>, en regardant la valeur changer (OSD ou onglet <a href="reglages-pid.html">Réglages de PID</a>), puis en vol dans un lieu dégagé.</div>
+
+<h2 id="colonnes">Les colonnes</h2>
+<ul>
+  <li><b>Si activé</b> : numéro de l'emplacement (#1, #2…) et interrupteur. Activer un emplacement règle l'intervalle sur 1300–1700 s'il était vide. Le désactiver le remet à zéro.</li>
+  <li><b>lorsque la voie</b> : la voie AUX qui autorise l'ajustement (AUX 1, AUX 2…). La liste dépend du nombre de voies reçues par le récepteur.</li>
+  <li><b>est dans l'intervalle</b> : un curseur double de 900 à 2100 µs, par pas de 25. Les valeurs de début et de fin sont affichées de chaque côté. Un trait jaune montre la position actuelle de la voie, si la radio est reliée.</li>
+  <li><b>activer alors</b> : la fonction à ajuster. La liste se trie par ordre alphabétique et permet la recherche. Exemples : <b>Ajustement du P Pitch &amp; Roll</b>, <b>Ajustement du D Yaw</b>, <b>Sélection des profils de Rate</b>, <b>Multiplicateur maître des curseurs</b>, <b>Sélection du profil OSD</b>, <b>Ajustement de la luminosité des LED</b>, <b>Sélection du profil de batterie</b>. <b>Aucun changement</b> ne fait rien.</li>
+  <li><b>par la voie</b> : la voie AUX qui fait varier la valeur.</li>
+  <li><b>mode</b> : voir ci-dessous.</li>
+  <li><b>centre (val.)</b> et <b>échelle (val.|%)</b> : modifiables seulement en mode <b>Absolu</b>, de 1 à 2000 pour le centre et de 0 à 2000 pour l'échelle. Ailleurs, la case affiche « — ».</li>
+</ul>
+
+<h2 id="modes">Les modes</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Mode affiché</th><th>Quand</th><th>Effet</th></tr></thead>
+  <tbody>
+    <tr><td><b>Pas à pas</b></td><td>fonctions de réglage d'une valeur (gains, rates, expo…), centre à 0</td><td>la valeur part de sa valeur actuelle : voie au-dessus du milieu + 200 µs (1700 µs avec le milieu par défaut de 1500 µs), elle monte d'un pas ; voie sous le milieu − 200 µs (1300 µs), elle descend d'un pas</td></tr>
+    <tr><td><b>Absolu</b></td><td>mêmes fonctions, avec un centre</td><td>la position de la voie donne directement la valeur, dans la plage centre ± échelle. Exemple de l'aide : centre 50 et échelle 25 donnent 25 à 75, avec 50 au milieu de la course</td></tr>
+    <tr><td><b>Sélection</b></td><td>fonctions de choix : profil de rates, force du mode Horizon, PID-Audio, profil OSD, profil LED, luminosité des LED, multiplicateur maître des curseurs, profil de batterie</td><td>la position de la voie choisit une valeur ; affiché comme une étiquette, non modifiable</td></tr>
+  </tbody>
+</table></div>
+<p>Passer de <b>Absolu</b> à <b>Pas à pas</b> remet le centre et l'échelle à 0. Passer en <b>Absolu</b> met le centre à 50 s'il était à 0. Choisir une fonction de sélection remet le centre et l'échelle à 0.</p>
+
+<h2 id="exemple">Exemple : choisir le profil de rates avec un interrupteur 3 positions</h2>
+<ol>
+  <li>Activez un emplacement libre.</li>
+  <li><b>lorsque la voie</b> : la voie de l'interrupteur (par exemple AUX 3). Élargissez l'intervalle à toute la course (900 à 2100) pour que l'ajustement soit toujours autorisé.</li>
+  <li><b>activer alors</b> : <b>Sélection des profils de Rate</b>.</li>
+  <li><b>par la voie</b> : la même voie AUX 3.</li>
+  <li>Cliquez sur <b>Enregistrer</b>, puis vérifiez dans l'onglet <a href="reglages-pid.html">Réglages de PID</a> que le profil de rates change avec l'interrupteur.</li>
+</ol>
+
+<h2 id="enregistrer">Enregistrer</h2>
+<p><b>Enregistrer</b> (en bas à droite) envoie tous les emplacements au contrôleur de vol et les écrit dans sa mémoire permanente. Le bouton n'est actif que s'il y a des changements. Les voies AUX elles-mêmes se vérifient dans l'onglet <a href="recepteur.html">Récepteur</a>.</p>

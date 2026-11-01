@@ -1,0 +1,74 @@
+<h1>Plan de vol</h1>
+<p class="chapeau">L'onglet <b>Plan de vol</b> (groupe « Navigation GPS ») sert à préparer une mission GPS : une liste de points de passage posés sur une carte, avec altitude, vitesse et type d'action, puis à l'envoyer au contrôleur de vol des modèles <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/plan-de-vol.png" alt="Onglet Plan de vol : cadre Carte du plan de vol vide avec Veuillez patienter, cadre Liste des points de passage avec le bouton plus et le message Aucun point de passage défini, cadre Profil d'élévation vide ; boutons Effacer, Charger et Enregistrer en bas à droite"><img class="t-clair" src="../assets/img/onglets/plan-de-vol-clair.png" alt="Même onglet Plan de vol en thème clair, sans point de passage">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Pas de GPS réel ; la carte est restée sur « Veuillez patienter... » car elle n'a pas pu se charger (elle a besoin d'Internet) et aucun point de passage n'est encore défini.</figcaption>
+</figure>
+
+<h2 id="disponibilite">Quand l'onglet est disponible</h2>
+<ul>
+  <li><b>Sans carte branchée</b> : l'onglet apparaît dans le menu en Mode Expert (bouton en forme de clé en haut de la fenêtre). On peut préparer un plan et le garder dans le logiciel, mais pas l'envoyer.</li>
+  <li><b>Carte branchée</b> : l'onglet n'apparaît que si le firmware contient le moteur de missions. C'est le cas des modèles <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b> (et du simulateur). Le modèle <b>TRUEGLIDE</b> de base ne l'a pas. Le moteur de missions demande un accéléromètre et ne sert pas aux ailes volantes.</li>
+</ul>
+<p>Le plan affiché est toujours gardé dans le logiciel. Les boutons <b>Charger</b> et <b>Enregistrer</b> ne sont actifs que connecté à un firmware qui a le moteur de missions.</p>
+<div class="encart">Le moteur de missions de Betaflight est récent et expérimental. Les missions <b>TRUENAV</b> ont été vérifiées en simulateur, <b>pas encore en vol réel</b>. Premiers essais : terrain dégagé, basse vitesse, toujours prêt à reprendre la main. Pour tout essai au sol batterie branchée : <b>Hélices retirées</b>.</div>
+
+<h2 id="carte">Cadre Carte du plan de vol</h2>
+<ul>
+  <li>Un clic sur la carte ajoute un point de passage à cet endroit. Un marqueur se déplace en le faisant glisser ; un clic simple le sélectionne.</li>
+  <li>La carte a besoin d'Internet. Tant qu'elle n'est pas prête, elle affiche « Veuillez patienter... ».</li>
+  <li>Pour se centrer, elle demande d'abord votre position au navigateur. Si c'est refusé ou impossible, une fenêtre propose de déduire une position approximative de votre adresse IP par geojs.io, un service tiers : rien n'est envoyé sans votre accord. Sans position, la carte s'ouvre sur Sydney (Australie) : déplacez-la vers votre terrain.</li>
+</ul>
+
+<h2 id="liste">Cadre Liste des points de passage</h2>
+<ul>
+  <li>Le bouton <b>+</b> ouvre le formulaire <b>Ajouter un point de passage</b>.</li>
+  <li>Chaque ligne montre le numéro d'ordre, la position (ou le type pour les points sans position), l'altitude en ft AMSL, la vitesse en nœuds et le type.</li>
+  <li>Glisser-déposer une ligne change l'ordre de la mission.</li>
+  <li>Le crayon ouvre <b>Modifier le point de passage</b> ; la corbeille supprime le point après confirmation.</li>
+</ul>
+
+<h2 id="point">Formulaire d'un point de passage</h2>
+<ul>
+  <li><b>Type de point de passage</b> : voir le tableau ci-dessous.</li>
+  <li><b>Latitude</b> (−90 à 90°) et <b>Longitude</b> (−180 à 180°), au millionième de degré.</li>
+  <li><b>Altitude</b> en <b>ft AMSL</b> (pieds au-dessus du niveau de la mer, pas au-dessus du sol) : 0 à 50 000. Valeur par défaut : 400 ft. Pensez à ajouter l'altitude du terrain : voir le profil d'élévation plus bas.</li>
+  <li><b>Vitesse</b> en <b>nœuds</b> : 0 à 500, par pas de 0,1. Valeur par défaut : 10 nœuds (environ 5 m/s).</li>
+  <li><b>Durée d'attente</b> (type Attente) ou <b>Durée du délai</b> (type Délai), en minutes : 0 à 60.</li>
+  <li><b>Circuit d'attente</b> (type Attente) : <b>Cercle</b>, <b>En huit</b> ou <b>Orbite</b>.</li>
+  <li><b>Vitesse de lacet</b> en °/s (type Limite de vitesse de lacet) : 0 à 720.</li>
+</ul>
+<div class="tableau"><table>
+  <thead><tr><th>Type</th><th>Position</th><th>Champs utilisés</th></tr></thead>
+  <tbody>
+    <tr><td><b>Survol</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Passage à proximité</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Attente</b></td><td>oui</td><td>position, altitude, vitesse, durée d'attente, circuit</td></tr>
+    <tr><td><b>Atterrissage</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Décollage</b></td><td>oui</td><td>position, altitude, vitesse</td></tr>
+    <tr><td><b>Changer d'altitude</b></td><td>non</td><td>altitude ; s'applique au point suivant</td></tr>
+    <tr><td><b>Délai</b></td><td>non</td><td>durée du délai ; s'applique au point suivant</td></tr>
+    <tr><td><b>Limite de vitesse de lacet</b></td><td>non</td><td>vitesse de lacet en °/s ; s'applique au point suivant</td></tr>
+  </tbody>
+</table></div>
+<p>Les trois derniers types n'ont pas de position : ils ne sont pas dessinés sur la carte ni sur le profil d'élévation.</p>
+<p>Le firmware garde au plus 30 points de passage (valeur par défaut de sa construction).</p>
+
+<h2 id="profil">Cadre Profil d'élévation</h2>
+<p>Sans point de passage, il affiche « Ajoutez des points de passage pour voir le profil d'élévation ». Ensuite, en haut : <b>Distance totale</b>, <b>Temps de vol</b> (calculé avec les vitesses saisies : c'est une estimation), <b>Altitude min</b>, <b>Altitude max</b>, <b>Élév. sol</b> (moyenne) et <b>Élév. sol max</b>, en pieds. Le graphique montre l'altitude de la mission au-dessus du relief, avec les lignes « Sol moy. » et « Sol max ». L'altitude du sol est demandée au service en ligne open-elevation.com : sans Internet, elle n'est pas disponible. Vérifiez que la mission reste bien au-dessus du sol et des obstacles sur tout le trajet.</p>
+
+<h2 id="boutons">Boutons du bas</h2>
+<ul>
+  <li><b>Effacer</b> : supprime tous les points après confirmation (« Effacer le plan de vol »). Connecté à un firmware avec le moteur de missions, la mission est aussi effacée dans le contrôleur de vol et sauvegardée.</li>
+  <li><b>Charger</b> : lit la mission enregistrée dans le contrôleur de vol (commande CLI <code>waypoint list</code>) et remplace le plan affiché.</li>
+  <li><b>Enregistrer</b> : efface la mission du contrôleur (<code>waypoint clear</code>), envoie chaque point (<code>waypoint insert</code>), puis sauvegarde (<code>save</code>). Les pieds et les nœuds sont convertis en centimètres et en cm/s pour le firmware.</li>
+</ul>
+<p>À l'ouverture de l'onglet, carte branchée : si le plan du logiciel est vide, la mission du contrôleur est chargée. Sinon, une fenêtre demande s'il faut la charger (<b>Charger depuis le FC</b>) ou garder le plan actuel (<b>Conserver l'actuel</b>), pour pouvoir l'enregistrer ensuite dans le contrôleur.</p>
+
+<h2 id="voler">Voler la mission</h2>
+<ol>
+  <li>Enregistrez la mission dans le contrôleur, puis relisez-la avec <b>Charger</b> pour vérifier.</li>
+  <li>Dans l'onglet <a href="modes.html">Modes</a>, mettez le mode <b>AUTOPILOT</b> sur un interrupteur. Avec les modèles <b>TRUENAV</b>, rien ne change en vol tant qu'aucun mode de navigation n'est sur un interrupteur.</li>
+  <li>Vérifiez le GPS dans l'onglet <a href="gps.html">GPS</a> (accroche stable) et le retour en cas de perte radio dans l'onglet <a href="failsafe.html">Failsafe</a>.</li>
+  <li>Premier essai : terrain dégagé, mission courte et basse vitesse, le pouce sur l'interrupteur pour reprendre la main.</li>
+</ol>
