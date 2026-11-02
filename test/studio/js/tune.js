@@ -384,10 +384,20 @@
       tr('ESC à 24 kHz : pas de linéarisation (UAV Tech).', '24 kHz ESC: no linearization (UAV Tech).'));
 
     // Terme I et anti-gravité
-    var relax = e.pouces <= 4 ? 10 : (e.pouces <= 5.5 ? 15 : (e.pouces <= 8 ? 8 : 5));
-    relax = clamp(Math.round(relax * style.relax), 3, 30);
-    set('iterm_relax_cutoff', relax, tr('Gros drones : coupure plus basse (inertie plus grande), comme les préréglages 7" et 10".',
-      'Bigger quads: lower cutoff (more inertia), like the 7" and 10" presets.'));
+    var relaxBase = e.pouces <= 4 ? 10 : (e.pouces <= 5.5 ? 15 : (e.pouces <= 8 ? 8 : 5));
+    var relax = clamp(Math.round(relaxBase * style.relax), 3, 30);
+    // explication propre à chaque taille (préréglages Betaflight 4.5 relus le 02/11/2026)
+    var pourquoiRelax = e.pouces <= 4 ?
+      tr('Jusqu\'à 4" : coupure à 10, comme les préréglages SupaflyFPV Freestyle 3/4" et « AOS 3.5 V1 4s » de mouseFPV.',
+        'Up to 4": cutoff 10, like the SupaflyFPV Freestyle 3/4" and mouseFPV "AOS 3.5 V1 4s" presets.') :
+      (e.pouces <= 5.5 ? tr('4 à 5,5" : 15, la valeur d\'origine de Betaflight.', '4 to 5.5": 15, the Betaflight default.') :
+        (e.pouces <= 8 ? tr('5,5 à 8" : coupure plus basse (inertie plus grande), entre les préréglages SupaflyFPV 7" (6) et UAV Tech 6-7" (10).',
+          '5.5 to 8": lower cutoff (more inertia), between the SupaflyFPV 7" (6) and UAV Tech 6-7" (10) presets.') :
+          tr('Plus de 8" : 5 (inertie bien plus grande), comme le préréglage AOS UL10 de Chris Rosser.', 'Over 8": 5 (much more inertia), like the AOS UL10 preset by Chris Rosser.')));
+    if (relax !== relaxBase) {
+      pourquoiRelax += tr(' Ajustée selon le style de vol.', ' Adjusted for the flying style.');
+    }
+    set('iterm_relax_cutoff', relax, pourquoiRelax);
     var ag = e.pouces <= 5.5 ? 100 : (e.pouces <= 8 ? 90 : 80);
     set('anti_gravity_gain', ag, '');
     if (e.pouces < 2) {
