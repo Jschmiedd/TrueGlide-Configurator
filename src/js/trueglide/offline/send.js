@@ -11,12 +11,17 @@ import { send, saveAndReconnect } from "../../../composables/useMspCliSession.js
 import { fromHex } from "./frames.js";
 import { boardIdentity, sameBoard } from "./identity.js";
 import { recordingSerialProblem } from "./serial_rules.js";
-import { loadBoard, saveBoard } from "./store.js";
+import { findBoardIndex, loadBoard, saveBoard, setActiveBoard } from "./store.js";
 import { boardChanged } from "./harvest_state.js";
 import { cliRefused } from "../studio_tab.js";
 
 // Rend { ok } ou { ok: false, reason, index, write, reply }.
 export async function sendPrepared({ onProgress } = {}) {
+    // la carte hors ligne de ce drone (même numéro unique que la carte branchée), parmi celles gardées
+    const own = findBoardIndex(boardIdentity(FC.CONFIG).uid);
+    if (own >= 0) {
+        setActiveBoard(own);
+    }
     const rec = loadBoard();
     // carte simulée : commandes du CLI tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
     const writes = rec?.simulee?.commandes?.length

@@ -134,7 +134,7 @@ import { set as setConfig } from "../../js/ConfigStorage";
 import { isExpertModeEnabled } from "../../js/utils/isExpertModeEnabled";
 import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 import GUI from "../../js/gui";
-import { loadBoard, parseBoardFile, saveBoard } from "../../js/trueglide/offline/store.js";
+import { addBoard, boardLabel, listBoards, parseBoardFile, setActiveBoard } from "../../js/trueglide/offline/store.js";
 import { OFFLINE_PATH } from "../../js/protocols/OfflineBoardSerial.js";
 
 function selectAndConnect(path) {
@@ -179,10 +179,12 @@ export default defineComponent({
         // TrueGlide: offline board (harvested from a real board), refreshed when a harvest is saved or removed
         const offlineVersion = ref(0);
         globalThis.addEventListener?.("trueglide-offline-changed", () => offlineVersion.value++);
-        const offlineBoard = computed(() => {
+        // TrueGlide: up to 3 offline boards, one entry each in the list
+        const offlineBoards = computed(() => {
             offlineVersion.value; // dependency
-            return loadBoard();
+            return listBoards();
         });
+        const offlineBoard = computed(() => offlineBoards.value.find((b) => b.active)?.rec ?? null);
         function openBoardFile() {
             const input = document.createElement("input");
             input.type = "file";
@@ -193,7 +195,8 @@ export default defineComponent({
                     return;
                 }
                 try {
-                    saveBoard(parseBoardFile(await file.text()));
+                    // replaces the offline board of the same drone, or takes a free place (at most 3)
+                    addBoard(parseBoardFile(await file.text()));
                     globalThis.dispatchEvent?.(new Event("trueglide-offline-changed"));
                     selectAndConnect(OFFLINE_PATH);
                 } catch (e) {
@@ -203,7 +206,7 @@ export default defineComponent({
             input.click();
         }
         const offlineLabel = computed(() =>
-            i18n.getMessage("tfOfflineBoardPort", [offlineBoard.value?.carte?.nom || "?"]),
+            i18n.getMessage("tfOfflineBoardPort", [boardLabel(offlineBoard.value)]),
         );
         const connectedTo = computed(() => connectionStore.connectedTo);
 
@@ -291,11 +294,15 @@ export default defineComponent({
                 icon: "i-lucide-folder-open",
                 onSelect: openBoardFile,
             });
-            if (offlineBoard.value) {
+            for (const b of offlineBoards.value) {
                 devices.push({
-                    label: offlineLabel.value,
+                    label: i18n.getMessage("tfOfflineBoardPort", [boardLabel(b.rec)]),
                     icon: "i-lucide-hard-drive",
-                    onSelect: () => selectAndConnect(OFFLINE_PATH),
+                    onSelect: () => {
+                        setActiveBoard(b.index);
+                        globalThis.dispatchEvent?.(new Event("trueglide-offline-changed"));
+                        selectAndConnect(OFFLINE_PATH);
+                    },
                 });
             }
             if (expertMode && DeviceHandler.showVirtualMode) {

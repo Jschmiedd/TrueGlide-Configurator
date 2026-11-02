@@ -17,7 +17,7 @@ import {
     uidNombres,
     versBase64,
 } from "../trueglide/offline/simulation.js";
-import { loadBoard, saveBoard } from "../trueglide/offline/store.js";
+import { listBoards, loadBoard, saveBoard } from "../trueglide/offline/store.js";
 import { boardChanged, offlineState } from "../trueglide/offline/harvest_state.js";
 import MSPCodes from "../msp/MSPCodes.js";
 
@@ -218,7 +218,7 @@ class OfflineBoardSerial extends EventTarget {
     }
 
     async getDevices() {
-        return loadBoard() ? [{ path: OFFLINE_PATH, displayName: "Carte hors ligne" }] : [];
+        return listBoards().length ? [{ path: OFFLINE_PATH, displayName: "Carte hors ligne" }] : [];
     }
 }
 

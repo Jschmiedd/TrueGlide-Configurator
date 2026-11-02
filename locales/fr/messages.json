@@ -969,6 +969,24 @@
     "tfOfflinePortsRefused": {
         "message": "Ports refusés par le firmware ($1) : sur la vraie carte, tous les ports seraient remis par défaut au redémarrage, récepteur compris. Corriger dans l'onglet Ports : rien ne sera envoyé avant."
     },
+    "tfOfflineKept": {
+        "message": "Cartes hors ligne gardées dans ce navigateur : $1 sur $2."
+    },
+    "tfOfflineKeptLine": {
+        "message": "récoltée le $1 · changements préparés : $2"
+    },
+    "tfOfflineRemove": {
+        "message": "Supprimer"
+    },
+    "tfOfflineRemoveConfirm": {
+        "message": "Supprimer la carte hors ligne « $1 » de ce navigateur ?"
+    },
+    "tfOfflineRemoveConfirmPending": {
+        "message": "Supprimer la carte hors ligne « $1 » ? Ses $2 changement(s) préparé(s), pas encore envoyé(s), seront perdus."
+    },
+    "tfOfflineFull": {
+        "message": "$1 cartes hors ligne sont déjà gardées : supprimer d'abord une carte (liste du Tableau de bord), puis récolter."
+    },
     "tfOfflineNotReread": {
         "message": "$1 type(s) de changement ne se relisent pas hors ligne (l'onglet montre l'ancienne valeur) ; ils seront quand même envoyés."
     },

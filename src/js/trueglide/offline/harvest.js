@@ -10,7 +10,7 @@ import { serial } from "../../serial.js";
 import { switchTab } from "../../tab_switch.js";
 import { sidebarItems } from "../../../components/sidebar/sidebar_items.js";
 import { send } from "../../../composables/useMspCliSession.js";
-import { saveBoard } from "./store.js";
+import { addBoard } from "./store.js";
 import { harvestTabs } from "./harvest_tabs.js";
 import { boardIdentity } from "./identity.js";
 import { boardChanged, offlineState } from "./harvest_state.js";
@@ -68,8 +68,9 @@ export async function harvest() {
         recording.date = new Date().toISOString();
         recording.carte = boardIdentity(FC.CONFIG);
         recording.writes = [];
-        saveBoard(recording);
-        offlineState.done = recording.carte.nom || "?";
+        // la récolte remplace la carte du même drone (même numéro unique), sinon prend une place libre
+        addBoard(recording);
+        offlineState.done = recording.carte.drone || recording.carte.nom || "?";
         boardChanged();
         if (startTab) {
             switchTab(startTab, { mode: "connected" });

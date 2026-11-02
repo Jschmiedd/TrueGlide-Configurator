@@ -5,6 +5,7 @@
 export function boardIdentity(config) {
     return {
         nom: config.boardName || config.targetName || "",
+        drone: config.craftName || config.name || "", // nom du drone (craft_name) : distingue deux drones de même carte
         cible: config.targetName || "",
         fabricant: config.manufacturerId || "",
         uid: Array.isArray(config.uid) ? config.uid.map((n) => (n >>> 0).toString(16).padStart(8, "0")).join("") : "",

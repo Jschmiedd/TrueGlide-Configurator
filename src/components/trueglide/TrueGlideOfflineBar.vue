@@ -13,7 +13,7 @@
         <strong>{{ $t("tfOfflinePreparing") }}</strong>
     </div>
     <div v-else-if="offline" class="tf-offline-bar tf-offline-bar--offline">
-        <strong>{{ msg("tfOfflineConnected", [board?.carte?.nom || "?", date]) }}</strong>
+        <strong>{{ msg("tfOfflineConnected", [boardLabel(board), date]) }}</strong>
         <span>{{ msg("tfOfflineWrites", [writes]) }}</span>
         <span v-if="simulated">{{ $t("tfOfflineSimulated") }}</span>
         <span v-else-if="board?.simulee?.erreur">{{
@@ -42,7 +42,7 @@ import { computed } from "vue";
 import { i18n } from "@/js/localization";
 import { useConnectionStore } from "@/stores/connection";
 import { OFFLINE_PATH } from "@/js/protocols/OfflineBoardSerial.js";
-import { loadBoard } from "@/js/trueglide/offline/store.js";
+import { boardLabel, loadBoard } from "@/js/trueglide/offline/store.js";
 import { offlineState as state } from "@/js/trueglide/offline/harvest_state.js";
 import { recordingSerialProblem } from "@/js/trueglide/offline/serial_rules.js";
 import MSPCodes from "@/js/msp/MSPCodes.js";
