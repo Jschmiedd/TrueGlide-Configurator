@@ -963,6 +963,9 @@
     "tfOfflineOpenFailed": {
         "message": "Board file not opened:"
     },
+    "tfOfflinePortsRefused": {
+        "message": "Ports refused by the firmware ($1): on the real board, all ports would be reset to defaults at reboot, receiver included. Fix them in the Ports tab: nothing is sent until then."
+    },
     "tfOfflineNotReread": {
         "message": "$1 kind(s) of change cannot be read back offline (the tab shows the old value); they will still be sent."
     },

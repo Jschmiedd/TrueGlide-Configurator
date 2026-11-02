@@ -966,6 +966,9 @@
     "tfOfflineOpenFailed": {
         "message": "Fichier carte non ouvert :"
     },
+    "tfOfflinePortsRefused": {
+        "message": "Ports refusés par le firmware ($1) : sur la vraie carte, tous les ports seraient remis par défaut au redémarrage, récepteur compris. Corriger dans l'onglet Ports : rien ne sera envoyé avant."
+    },
     "tfOfflineNotReread": {
         "message": "$1 type(s) de changement ne se relisent pas hors ligne (l'onglet montre l'ancienne valeur) ; ils seront quand même envoyés."
     },
