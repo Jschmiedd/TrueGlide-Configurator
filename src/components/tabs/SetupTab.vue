@@ -334,6 +334,7 @@ import { mspHelper } from "../../js/msp/MSPHelper";
 import MSP from "../../js/msp";
 import Model, { mixerList } from "../../js/model";
 import { TOP_VIEW_TILT, motorMarkers, frontMarker } from "../../js/trueglide/model_markers";
+import { nextLift } from "../../js/trueglide/model_lift";
 import { get as getConfig, set as setConfig } from "../../js/ConfigStorage";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { isMspCancelled } from "@/js/msp/mspErrors";
@@ -349,6 +350,7 @@ const yaw_fix = ref(0);
 
 
 let modelInstance = null;
+let modelLift = null; // TrueGlide: model height shown, 0 (throttle low) to 1 (full throttle)
 // Local reactive state to replace jQuery DOM updates
 const state = reactive({
     batVoltage: "0 V",
@@ -745,6 +747,15 @@ function process_html() {
             }
         });
 
+        // TrueGlide: throttle stick position, to lift the 3D model (channel 4 = throttle, in µs)
+        MSP.send_message(MSPCodes.MSP_RC, false, false, function () {
+            if (mountedFlag && modelInstance) {
+                modelLift = nextLift(modelLift, FC.RC.channels[3]);
+                modelInstance.setLift(modelLift);
+                updateMarkers();
+            }
+        });
+
         if (have_sensor(fcStore.config.activeSensors, "sonar")) {
             MSP.send_message(MSPCodes.MSP_SONAR, false, false, function () {
                 if (mountedFlag) {
@@ -845,6 +856,7 @@ function cleanup(callback) {
             modelInstance.dispose();
         }
         modelInstance = null;
+        modelLift = null;
     }
 
     // clear intervals used by this tab

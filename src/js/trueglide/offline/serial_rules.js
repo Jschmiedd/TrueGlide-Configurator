@@ -21,8 +21,14 @@ export const FUNCTION = {
     VTX_MSP: 1 << 17,
 };
 const F = FUNCTION;
+// numéros des ports (src/main/io/serial.h) : USB 20, ports logiciels 30 à 39, LPUART 40 à 49, UART 50 à 69
+// (UART1 = 51, ou UART0 = 50 sur les processeurs qui en ont un), ports PIO 70 et plus
 const SERIAL_PORT_USB_VCP = 20;
-const SOFTSERIAL_FIRST = 30; // SERIAL_PORT_SOFTSERIAL1, SOFTSERIAL2 = 31
+const SOFTSERIAL_FIRST = 30;
+const LPUART_FIRST = 40;
+const UART_FIRST = 50;
+const PIOUART_FIRST = 70;
+const isSoftSerial = (id) => id >= SOFTSERIAL_FIRST && id < LPUART_FIRST;
 const MAX_MSP_PORT_COUNT = 3;
 const TELEMETRY_SHAREABLE = F.TELEMETRY_FRSKY_HUB | F.TELEMETRY_LTM | F.TELEMETRY_MAVLINK;
 const TELEMETRY_PORT_FUNCTIONS = TELEMETRY_SHAREABLE | F.TELEMETRY_HOTT | F.TELEMETRY_SMARTPORT;
@@ -43,10 +49,19 @@ function portName(id) {
     if (id === SERIAL_PORT_USB_VCP) {
         return "USB";
     }
-    if (id >= SOFTSERIAL_FIRST) {
+    if (isSoftSerial(id)) {
         return `SOFTSERIAL${id - SOFTSERIAL_FIRST + 1}`;
     }
-    return `UART${id + 1}`;
+    if (id >= LPUART_FIRST && id < UART_FIRST) {
+        return `LPUART${id - LPUART_FIRST + 1}`;
+    }
+    if (id >= UART_FIRST && id < PIOUART_FIRST) {
+        return `UART${id - UART_FIRST}`;
+    }
+    if (id >= PIOUART_FIRST) {
+        return `PIOUART${id - PIOUART_FIRST}`;
+    }
+    return `port ${id}`;
 }
 
 function rxSharesTelemetry(mask, serialrxProvider) {
@@ -65,7 +80,7 @@ export function serialPortsProblem(ports, serialrxProvider) {
     let mspPorts = 0;
     for (const { identifier, mask: raw } of ports) {
         // ports logiciels : le firmware retire de lui-même MSP et récepteur, sans refuser
-        const mask = identifier >= SOFTSERIAL_FIRST ? raw & ~(F.MSP | F.RX_SERIAL) : raw >>> 0;
+        const mask = isSoftSerial(identifier) ? (raw & ~(F.MSP | F.RX_SERIAL)) >>> 0 : raw >>> 0;
         if (mask & F.MSP) {
             mspPorts++;
         }

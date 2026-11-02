@@ -309,6 +309,24 @@ Model.prototype.performRender = function () {
     this.renderer.render(this.scene, this.camera);
 };
 
+// TrueGlide: lift the model with the throttle (0 = low in the view, 1 = high), display only. The image is shifted
+// (camera view offset), not the model: the viewing angle stays the same, and projectPoints() follows the shift.
+const LIFT_TRAVEL = 0.5; // share of the view height between throttle low and full throttle
+Model.prototype.applyLift = function () {
+    const { width, height } = getContentBoxSize(this.wrapper);
+    if (!width || !height) {
+        return;
+    }
+    const shift = (0.5 - this.lift) * LIFT_TRAVEL * height;
+    this.camera.setViewOffset(width, height, 0, -shift, width, height);
+    this.camera.updateProjectionMatrix();
+};
+Model.prototype.setLift = function (fraction) {
+    this.lift = Math.min(1, Math.max(0, fraction));
+    this.applyLift();
+    this.render();
+};
+
 // TrueGlide: tilt the whole model towards the user (radians, 0 = side view). rotateTo() never touches
 // modelWrapper.rotation.x, so the tilt stays while the attitude updates.
 Model.prototype.setViewTilt = function (tilt) {
@@ -364,6 +382,9 @@ Model.prototype.resize = function () {
     this.renderer.setSize(width, height);
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
+    if (this.lift !== undefined) {
+        this.applyLift(); // TrueGlide: keep the throttle lift after a resize
+    }
 
     this.render();
 };
