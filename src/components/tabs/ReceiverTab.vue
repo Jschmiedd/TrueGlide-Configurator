@@ -11,7 +11,8 @@
                 <!-- Left Column: Model Preview + Channel Bars -->
                 <div class="col-span-2">
                     <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
-                        <div class="background_paper h-48 w-full" ref="modelPreviewContainer">
+                        <!-- TrueGlide: larger preview (close to the Setup tab), the model also rises with the throttle -->
+                        <div class="background_paper tg-receiver-preview w-full" ref="modelPreviewContainer">
                             <canvas ref="modelCanvas"></canvas>
                         </div>
                     </UiBox>
@@ -528,6 +529,7 @@ import GUI from "@/js/gui";
 import Model from "@/js/model";
 import RateCurve from "@/js/RateCurve";
 import { degToRad } from "@/js/utils/common";
+import { nextLift } from "@/js/trueglide/model_lift";
 import { bit_check } from "@/js/bit";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { updateTabList } from "@/js/utils/updateTabList";
@@ -567,6 +569,7 @@ const selectedRxMode = ref(0);
 
 // Model preview state
 let model = null;
+let modelLift = null; // TrueGlide: model height shown, 0 (throttle low) to 1 (full throttle)
 let rateCurve = null;
 let currentRates = null;
 let clock = null;
@@ -1187,6 +1190,11 @@ function renderModel() {
 
         model.rotateBy(-degToRad(pitch), -degToRad(yaw), -degToRad(roll));
     }
+    // TrueGlide: the model rises with the throttle stick (channel 4), smoothed (about 60 frames per second here)
+    if (model?.setLift && channels?.[3]) {
+        modelLift = nextLift(modelLift, channels[3], 0.2);
+        model.setLift(modelLift);
+    }
 }
 
 // D3 Chart setup
@@ -1310,6 +1318,11 @@ onUnmounted(() => {
 </script>
 
 <style lang="less" scoped>
+/* TrueGlide: model preview close to the Setup tab size (the column is narrower), the channel bars stay below */
+.tg-receiver-preview {
+    height: 26rem;
+}
+
 .content_wrapper {
     padding-bottom: 60px;
 }
