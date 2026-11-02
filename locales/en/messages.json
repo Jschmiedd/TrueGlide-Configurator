@@ -942,6 +942,21 @@
     "tfOfflineSend": {
         "message": "Send the prepared changes"
     },
+    "tfOfflineSendList": {
+        "message": "What will be sent:"
+    },
+    "tfOfflineSendMore": {
+        "message": "… and $1 more."
+    },
+    "tfOfflineSendProfilePid": {
+        "message": "PID profile $1"
+    },
+    "tfOfflineSendProfileRates": {
+        "message": "rate profile $1"
+    },
+    "tfOfflineSendProfiles": {
+        "message": "Warning: after sending, the real board will be on $1 (chosen offline). Cancel to go back to the right profile offline, then save."
+    },
     "tfOfflineSendConfirm": {
         "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
     },

@@ -271,7 +271,8 @@ const root = {};
     set('simplified_feedforward_gain', c.ff, tr('Réactivité aux manches selon le style « ' + style.nom + ' ».', 'Stick responsiveness for the "' + style.nom + '" style.'));
     set('simplified_pitch_pi_gain', c.pitchPi, tr('Tangage comme roulis (le firmware garde déjà un tangage un peu plus fort).',
       'Pitch same as roll (the firmware already keeps pitch slightly stronger).'));
-    set('simplified_pitch_d_gain', c.pitchD, '');
+    set('simplified_pitch_d_gain', c.pitchD, tr('D du tangage au rapport d\'origine (100) : le firmware garde déjà un D de tangage un peu plus fort que le roulis.',
+      'Pitch D at the default ratio (100): the firmware already keeps pitch D slightly higher than roll.'));
 
     // ESC et carte : protocole, télémétrie disponible
     var caps = e.esc ? ESC[e.esc] : { dshot: true, bidir: !!e.bidir, edt: !!e.bidir, serie: false };
@@ -282,11 +283,13 @@ const root = {};
     var f = FILTRES[e.qualite || 'normal'][taille(e.pouces)].slice();
     var sansRpm = !caps.bidir;
     if (sansRpm) f = [Math.min(f[0], 70), Math.min(f[1], 100)];
-    set('simplified_gyro_filter', 'ON', '');
+    set('simplified_gyro_filter', 'ON', tr('Filtres gyro calculés par le curseur (réglage simplifié), selon le multiplicateur ci-dessous.',
+      'Gyro filters computed by the slider (simplified tuning), from the multiplier below.'));
     set('simplified_gyro_filter_multiplier', f[0], sansRpm ?
       tr('Filtrage gyro selon la taille et la qualité de construction, renforcé faute de filtre RPM.', 'Gyro filtering based on size and build quality, strengthened since there is no RPM filter.') :
       tr('Filtrage gyro selon la taille et la qualité de construction.', 'Gyro filtering based on size and build quality.'));
-    set('simplified_dterm_filter', 'ON', '');
+    set('simplified_dterm_filter', 'ON', tr('Filtres du terme D calculés par le curseur (réglage simplifié), selon le multiplicateur ci-dessous.',
+      'D-term filters computed by the slider (simplified tuning), from the multiplier below.'));
     set('simplified_dterm_filter_multiplier', f[1], sansRpm ?
       tr('Filtrage du terme D, renforcé faute de filtre RPM : vérifier la température des moteurs après le premier vol.', 'D-term filtering, strengthened since there is no RPM filter: check motor temperature after the first flight.') :
       tr('Filtrage du terme D.', 'D-term filtering.'));
@@ -402,14 +405,18 @@ const root = {};
     }
     set('iterm_relax_cutoff', relax, pourquoiRelax);
     var ag = e.pouces <= 5.5 ? 100 : (e.pouces <= 8 ? 90 : 80);
-    set('anti_gravity_gain', ag, '');
+    set('anti_gravity_gain', ag, e.pouces <= 5.5 ?
+      tr('Anti-gravité 100 (Betaflight : 80), comme une option du préréglage SupaflyFPV Freestyle 3/4" : garde l\'assiette pendant les coups de gaz.',
+        'Anti-gravity 100 (Betaflight: 80), like an option of the SupaflyFPV Freestyle 3/4" preset: holds attitude during throttle punches.') :
+      (e.pouces <= 8 ? tr('Anti-gravité 90, comme le préréglage UAV Tech 6-7".', 'Anti-gravity 90, like the UAV Tech 6-7" preset.') :
+        tr('Anti-gravité 80, la valeur d\'origine de Betaflight, comme le préréglage UAV Tech 10".', 'Anti-gravity 80, the Betaflight default, like the UAV Tech 10" preset.')));
     if (e.pouces < 2) {
       set('pidsum_limit', 1000, tr('Tiny Whoop : toute l\'autorité au PID (UAV Tech Whoop).', 'Tiny Whoop: full authority to the PID (UAV Tech Whoop).'));
-      set('pidsum_limit_yaw', 1000, '');
+      set('pidsum_limit_yaw', 1000, tr('Même chose pour le lacet.', 'Same for yaw.'));
     }
     if (e.pouces >= 6) {
       set('pidsum_limit', 1000, tr('Grandes hélices : laisser toute l\'autorité au PID (UAV Tech).', 'Large props: give the PID full authority (UAV Tech).'));
-      set('pidsum_limit_yaw', 1000, '');
+      set('pidsum_limit_yaw', 1000, tr('Même chose pour le lacet.', 'Same for yaw.'));
     }
     if (e.style === 'longue_portee' || e.style === 'cinema' || e.pouces >= 7 || e.pouces < 2) {
       set('vbat_sag_compensation', 100, tr('Même réponse du début à la fin de la batterie (AOS).', 'Same response from the start to the end of the pack (AOS).'));

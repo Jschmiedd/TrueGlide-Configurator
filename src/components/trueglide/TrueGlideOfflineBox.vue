@@ -79,6 +79,7 @@ import {
 import { boardChanged } from "@/js/trueglide/offline/harvest_state.js";
 import { offlineState as state } from "@/js/trueglide/offline/harvest_state.js";
 import { boardIdentity, sameBoard } from "@/js/trueglide/offline/identity.js";
+import { describePrepared } from "@/js/trueglide/offline/describe.js";
 import { recordingSerialProblem } from "@/js/trueglide/offline/serial_rules.js";
 import MSPCodes from "@/js/msp/MSPCodes.js";
 import FC from "@/js/fc";
@@ -141,8 +142,29 @@ async function start() {
     await harvest();
 }
 
+// question avant l'envoi : le nombre, la liste de ce qui partira, et le profil de la vraie carte s'il change
+function sendQuestion() {
+    const d = describePrepared(board.value, MSPCodes);
+    let text = msg("tfOfflineSendConfirm", [writes.value]);
+    text += `\n\n${msg("tfOfflineSendList")}\n${d.lignes.join("\n")}`;
+    if (d.reste) {
+        text += `\n${msg("tfOfflineSendMore", [d.reste])}`;
+    }
+    if (d.profils) {
+        const parts = [];
+        if (d.profils.pid !== null) {
+            parts.push(msg("tfOfflineSendProfilePid", [d.profils.pid]));
+        }
+        if (d.profils.rates !== null) {
+            parts.push(msg("tfOfflineSendProfileRates", [d.profils.rates]));
+        }
+        text += `\n\n${msg("tfOfflineSendProfiles", [parts.join(", ")])}`;
+    }
+    return text;
+}
+
 async function sendNow() {
-    if (!globalThis.confirm(msg("tfOfflineSendConfirm", [writes.value]))) {
+    if (!globalThis.confirm(sendQuestion())) {
         return;
     }
     state.sending = true;

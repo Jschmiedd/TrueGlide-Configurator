@@ -305,6 +305,13 @@
       messages.push({ niveau: 'conseil', texte: tr('Pôles des moteurs : 14, la valeur d\'usine du firmware (la carte ne la change pas). À corriger si vos moteurs en ont un autre nombre (« 12N14P » : 14).',
         'Motor poles: 14, the firmware default (the board does not change it). Correct it if your motors have another count ("12N14P": 14).') });
     }
+    // KV des moteurs : seulement s'il a été réglé sur la carte (sans ligne motor_kv, la valeur d'usine 1960 n'est pas
+    // celle des moteurs : le champ reste à remplir)
+    var kv = (t.match(/^\s*set\s+motor_kv\s*=\s*(\d+)/m) || [])[1];
+    if (kv && Number(kv) > 0) {
+      drone.kv = kv;
+      messages.push({ niveau: 'note', texte: tr('KV des moteurs : ' + kv + ', lu sur la carte (motor_kv).', 'Motor KV: ' + kv + ', read from the board (motor_kv).') });
+    }
     return { carte: carte.toUpperCase(), drone: drone, ports: {}, configuration: t, messages: messages };
   }
 

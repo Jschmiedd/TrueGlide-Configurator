@@ -945,6 +945,21 @@
     "tfOfflineSend": {
         "message": "Envoyer les changements préparés"
     },
+    "tfOfflineSendList": {
+        "message": "Ce qui partira :"
+    },
+    "tfOfflineSendMore": {
+        "message": "… et $1 autre(s)."
+    },
+    "tfOfflineSendProfilePid": {
+        "message": "profil PID $1"
+    },
+    "tfOfflineSendProfileRates": {
+        "message": "profil de rates $1"
+    },
+    "tfOfflineSendProfiles": {
+        "message": "Attention : après l'envoi, la vraie carte sera sur le $1 (choisi hors ligne). Annuler pour revenir au bon profil hors ligne, puis enregistrer."
+    },
     "tfOfflineSendConfirm": {
         "message": "Envoyer $1 changement(s) préparé(s) hors ligne à la carte, puis enregistrer ?\n\nHélices retirées. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
     },
