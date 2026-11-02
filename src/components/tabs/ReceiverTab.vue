@@ -8,8 +8,8 @@
             </UiBox>
 
             <div class="grid-row grid-box col5">
-                <!-- Left Column: Model Preview + Channel Bars -->
-                <div class="col-span-2">
+                <!-- Left Column: Model Preview + Channel Bars (TrueGlide: 3 of 5 columns, larger preview) -->
+                <div class="col-span-2 tg-rx-left">
                     <UiBox :title="$t('receiverModelPreview')" :padding="false" class="bg-muted">
                         <!-- TrueGlide: larger preview (close to the Setup tab), the model also rises with the throttle -->
                         <div class="background_paper tg-receiver-preview w-full" ref="modelPreviewContainer">
@@ -53,7 +53,7 @@
                 </div>
 
                 <!-- Right Column: Configuration -->
-                <div class="col-span-3">
+                <div class="col-span-3 tg-rx-right">
                     <!-- Receiver Mode -->
                     <div class="receiver">
                         <UiBox :title="$t('configurationReceiver')">
@@ -1320,7 +1320,19 @@ onUnmounted(() => {
 <style lang="less" scoped>
 /* TrueGlide: model preview close to the Setup tab size (the column is narrower), the channel bars stay below */
 .tg-receiver-preview {
-    height: 26rem;
+    height: 30rem;
+}
+/* wide screens: the preview takes 3 of the 5 columns, and is taller */
+@media all and (min-width: 1536px) {
+    .tg-rx-left {
+        grid-column: span 3 / span 3;
+    }
+    .tg-rx-right {
+        grid-column: span 2 / span 2;
+    }
+    .tg-receiver-preview {
+        height: 36rem;
+    }
 }
 
 .content_wrapper {
