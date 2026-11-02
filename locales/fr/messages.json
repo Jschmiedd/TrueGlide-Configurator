@@ -1694,7 +1694,7 @@
         "message": "Bandeau LED"
     },
     "tfPidBothMethods": {
-        "message": "Les chiffres et les curseurs marchent ensemble : taper un chiffre arrête les curseurs pour cet axe (le chiffre tapé est gardé) ; bouger un curseur les remet en marche et recalcule les chiffres."
+        "message": "Les chiffres et les curseurs marchent ensemble : taper un chiffre du lacet passe en mode RP (lacet hors curseurs) ; taper un chiffre du roulis ou du tangage coupe les curseurs PID des 3 axes (mode OFF). Les chiffres tapés sont gardés ; bouger un curseur remet le mode d'avant et recalcule les chiffres."
     },
     "tabCLI": {
         "message": "Ligne de commande (CLI)"

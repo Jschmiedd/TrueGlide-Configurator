@@ -1580,7 +1580,7 @@
         "message": "LED Strip"
     },
     "tfPidBothMethods": {
-        "message": "Numbers and sliders work together: typing a number stops the sliders for that axis (the typed number is kept); moving a slider turns them back on and recalculates the numbers."
+        "message": "Numbers and sliders work together: typing a yaw number switches to RP mode (yaw off the sliders); typing a roll or pitch number turns the PID sliders off for all 3 axes (OFF mode). Typed numbers are kept; moving a slider restores the previous mode and recalculates the numbers."
     },
     "tabCLI": {
         "message": "CLI"
