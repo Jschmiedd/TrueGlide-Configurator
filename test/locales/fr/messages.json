@@ -945,6 +945,21 @@
     "tfOfflineSend": {
         "message": "Envoyer les changements préparés"
     },
+    "tfOfflineSendList": {
+        "message": "Ce qui partira :"
+    },
+    "tfOfflineSendMore": {
+        "message": "… et $1 autre(s)."
+    },
+    "tfOfflineSendProfilePid": {
+        "message": "profil PID $1"
+    },
+    "tfOfflineSendProfileRates": {
+        "message": "profil de rates $1"
+    },
+    "tfOfflineSendProfiles": {
+        "message": "Attention : après l'envoi, la vraie carte sera sur le $1 (choisi hors ligne). Annuler pour revenir au bon profil hors ligne, puis enregistrer."
+    },
     "tfOfflineSendConfirm": {
         "message": "Envoyer $1 changement(s) préparé(s) hors ligne à la carte, puis enregistrer ?\n\nHélices retirées. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
     },
@@ -1694,7 +1709,7 @@
         "message": "Bandeau LED"
     },
     "tfPidBothMethods": {
-        "message": "Les chiffres et les curseurs marchent ensemble : taper un chiffre arrête les curseurs pour cet axe (le chiffre tapé est gardé) ; bouger un curseur les remet en marche et recalcule les chiffres."
+        "message": "Les chiffres et les curseurs marchent ensemble : taper un chiffre du lacet passe en mode RP (lacet hors curseurs) ; taper un chiffre du roulis ou du tangage coupe les curseurs PID des 3 axes (mode OFF). Les chiffres tapés sont gardés ; bouger un curseur remet le mode d'avant et recalcule les chiffres."
     },
     "tabCLI": {
         "message": "Ligne de commande (CLI)"

@@ -942,6 +942,21 @@
     "tfOfflineSend": {
         "message": "Send the prepared changes"
     },
+    "tfOfflineSendList": {
+        "message": "What will be sent:"
+    },
+    "tfOfflineSendMore": {
+        "message": "… and $1 more."
+    },
+    "tfOfflineSendProfilePid": {
+        "message": "PID profile $1"
+    },
+    "tfOfflineSendProfileRates": {
+        "message": "rate profile $1"
+    },
+    "tfOfflineSendProfiles": {
+        "message": "Warning: after sending, the real board will be on $1 (chosen offline). Cancel to go back to the right profile offline, then save."
+    },
     "tfOfflineSendConfirm": {
         "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
     },
@@ -1580,7 +1595,7 @@
         "message": "LED Strip"
     },
     "tfPidBothMethods": {
-        "message": "Numbers and sliders work together: typing a number stops the sliders for that axis (the typed number is kept); moving a slider turns them back on and recalculates the numbers."
+        "message": "Numbers and sliders work together: typing a yaw number switches to RP mode (yaw off the sliders); typing a roll or pitch number turns the PID sliders off for all 3 axes (OFF mode). Typed numbers are kept; moving a slider restores the previous mode and recalculates the numbers."
     },
     "tabCLI": {
         "message": "CLI"
