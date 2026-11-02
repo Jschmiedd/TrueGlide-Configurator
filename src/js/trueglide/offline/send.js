@@ -5,10 +5,12 @@
 // enregistré (la carte redémarre sans sauvegarder) ; sinon « save ».
 
 import MSP from "../../msp.js";
+import MSPCodes from "../../msp/MSPCodes.js";
 import FC from "../../fc.js";
 import { send, saveAndReconnect } from "../../../composables/useMspCliSession.js";
 import { fromHex } from "./frames.js";
 import { boardIdentity, sameBoard } from "./identity.js";
+import { recordingSerialProblem } from "./serial_rules.js";
 import { loadBoard, saveBoard } from "./store.js";
 import { boardChanged } from "./harvest_state.js";
 import { cliRefused } from "../studio_tab.js";
@@ -26,6 +28,12 @@ export async function sendPrepared({ onProgress } = {}) {
     const check = sameBoard(rec.carte, boardIdentity(FC.CONFIG));
     if (!check.ok) {
         return { ok: false, reason: check.reason };
+    }
+    // ports que le firmware refuserait (il les remettrait tous par défaut, récepteur compris) : rien n'est envoyé.
+    // La carte simulée fait tourner le vrai firmware : elle les a déjà jugés elle-même.
+    const ports = rec.simulee?.commandes?.length ? null : recordingSerialProblem(rec, MSPCodes);
+    if (ports) {
+        return { ok: false, reason: "ports", reply: ports };
     }
     for (let i = 0; i < writes.length; i++) {
         onProgress?.({ step: i + 1, total: writes.length });

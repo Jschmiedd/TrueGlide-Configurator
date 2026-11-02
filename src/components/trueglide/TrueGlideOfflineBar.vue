@@ -20,6 +20,7 @@
             msg("tfOfflineSimulatedUnavailable", [board.simulee.erreur])
         }}</span>
         <span v-if="notReread">{{ msg("tfOfflineNotReread", [notReread]) }}</span>
+        <strong v-if="portsProblem" class="tf-offline-warn">{{ msg("tfOfflinePortsRefused", [portsProblem]) }}</strong>
     </div>
     <div v-else-if="state.sending" class="tf-offline-bar tf-offline-bar--busy">
         <strong>{{ $t("tfOfflineSending") }}</strong>
@@ -43,6 +44,8 @@ import { useConnectionStore } from "@/stores/connection";
 import { OFFLINE_PATH } from "@/js/protocols/OfflineBoardSerial.js";
 import { loadBoard } from "@/js/trueglide/offline/store.js";
 import { offlineState as state } from "@/js/trueglide/offline/harvest_state.js";
+import { recordingSerialProblem } from "@/js/trueglide/offline/serial_rules.js";
+import MSPCodes from "@/js/msp/MSPCodes.js";
 
 // textes avec $1, $2… ; Vue échappe déjà le texte affiché : pas de second échappement (dates « 25/10/2026 »)
 const msg = (key, args = []) =>
@@ -63,6 +66,8 @@ const writes = computed(
     () => (simulated.value ? board.value.simulee.commandes?.length : board.value?.writes?.length) ?? 0,
 );
 const notReread = computed(() => board.value?.notReread?.length ?? 0);
+// ports que la vraie carte refuserait (remis par défaut au redémarrage) ; la carte simulée les juge elle-même
+const portsProblem = computed(() => (simulated.value ? null : recordingSerialProblem(board.value, MSPCodes)));
 
 function close() {
     state.done = "";
@@ -71,6 +76,9 @@ function close() {
 </script>
 
 <style scoped>
+.tf-offline-warn {
+    color: var(--error-700, #b91c1c);
+}
 .tf-offline-bar {
     display: flex;
     flex-wrap: wrap;

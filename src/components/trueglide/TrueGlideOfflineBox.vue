@@ -8,7 +8,10 @@
         <p v-if="offline" class="text-sm">{{ msg("tfOfflineConnected", [board?.carte?.nom || "?", date]) }}</p>
         <p v-else class="text-sm">{{ $t("tfOfflineHarvestHelp") }}</p>
         <template v-if="!offline && writes">
-            <p v-if="check.ok" class="text-sm mt-2 font-semibold">{{ msg("tfOfflinePending", [writes]) }}</p>
+            <p v-if="check.ok && portsProblem" class="text-sm mt-2 font-semibold text-(--error-700)">
+                {{ msg("tfOfflinePortsRefused", [portsProblem]) }}
+            </p>
+            <p v-else-if="check.ok" class="text-sm mt-2 font-semibold">{{ msg("tfOfflinePending", [writes]) }}</p>
             <p v-else class="text-sm mt-2">
                 {{
                     check.reason === "profil"
@@ -22,7 +25,7 @@
         </template>
         <div class="flex flex-wrap gap-2 mt-3">
             <UButton
-                v-if="!offline && writes && check.ok"
+                v-if="!offline && writes && check.ok && !portsProblem"
                 :disabled="state.sending || state.running"
                 size="sm"
                 color="warning"
@@ -49,6 +52,8 @@ import { OFFLINE_PATH } from "@/js/protocols/OfflineBoardSerial.js";
 import { loadBoard } from "@/js/trueglide/offline/store.js";
 import { offlineState as state } from "@/js/trueglide/offline/harvest_state.js";
 import { boardIdentity, sameBoard } from "@/js/trueglide/offline/identity.js";
+import { recordingSerialProblem } from "@/js/trueglide/offline/serial_rules.js";
+import MSPCodes from "@/js/msp/MSPCodes.js";
 import FC from "@/js/fc";
 
 // textes avec $1, $2… ; Vue échappe déjà le texte affiché : pas de second échappement (dates « 25/10/2026 »)
@@ -66,6 +71,10 @@ const board = computed(() => {
 // carte simulée : commandes tirées des « dump all » ; sinon, écritures gardées par la carte hors ligne
 const writes = computed(() => board.value?.simulee?.commandes?.length || (board.value?.writes?.length ?? 0));
 const check = computed(() => (board.value ? sameBoard(board.value.carte, boardIdentity(FC.CONFIG)) : { ok: false }));
+// ports que la vraie carte refuserait : pas d'envoi (la carte simulée fait tourner le vrai firmware, elle juge seule)
+const portsProblem = computed(() =>
+    board.value && !board.value.simulee?.commandes?.length ? recordingSerialProblem(board.value, MSPCodes) : null,
+);
 // profils au moment de la récolte (numérotés à partir de 1 comme dans le Configurator) ; « ? » si le fichier ne les a pas
 const profileText = computed(() => {
     const c = board.value?.carte;
