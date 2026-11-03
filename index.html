@@ -99,7 +99,7 @@
         <a class="btn plein" href="#telecharger">Télécharger la 2026.6.2</a>
         <a class="btn" href="docs/index.html">Documentation</a>
       </div>
-      <div class="etat"><span>version 2026.6.2</span><span>premier vol : pas encore fait</span><span>essais : simulateur</span></div>
+      <div class="etat"><span>version 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 31 cartes</span></div>
     </div>
     <figure>
       <img src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
@@ -135,8 +135,8 @@
       </div>
       <div class="fonction">
         <h3>Les cartes de Betaflight</h3>
-        <p><b>TRUEGLIDE</b> se compile pour les cartes de Betaflight. Le firmware en ligne est retiré en attendant la fin des essais en vol : il reviendra, corrigé, pour toutes les cartes.</p>
-        <div class="chiffre">Essais en vol en cours (SpeedyBee F405 Mini)</div>
+        <p><b>TRUEGLIDE</b> se compile pour les cartes de Betaflight. Version d'essai en ligne depuis le 03/11/2026 pour 31 cartes courantes (SpeedyBee, Mamba, Matek, Kakute, JHEMCU, Foxeer, Flywoo, GEPRC, BetaFPV, iFlight…) ; les autres cartes suivront après les essais en vol des fonctions TrueGlide.</p>
+        <div class="chiffre">31 cartes en ligne · version d'essai</div>
       </div>
       <div class="fonction">
         <h3>Logiciel en français</h3>
@@ -181,8 +181,8 @@
         <h3>Firmware TRUEGLIDE</h3>
         <div class="version">2026.6.2 · TRUEGLIDE · TRUENAV · TRUENAV_LIGHT</div>
         <ul>
-          <li>Firmware en ligne <b>retiré le 31/10/2026</b> : l'ancienne version n'avait pas les dernières corrections. Il revient, corrigé, après les essais en vol.</li>
-          <li>Installation, une fois publié : depuis le logiciel, onglet <b>Flasher le Firmware</b>.</li>
+          <li><b>Version d'essai</b> (révision 24a71eb, 03/11/2026) pour <b>31 cartes courantes</b>, modèle <b>TRUEGLIDE</b>. Premier vol réussi ; fonctions TrueGlide en vol en cours d'essai. Toutes les fonctions TrueGlide sont désactivées par défaut.</li>
+          <li>Installation : depuis le logiciel, onglet <b>Flasher le Firmware</b> (empreinte SHA vérifiée avant le flash).</li>
           <li>Revenir en arrière : reflasher Betaflight, puis recoller son <code>diff all</code>.</li>
         </ul>
         <a class="btn" href="docs/flasher.html">Installer le firmware</a>
@@ -204,7 +204,7 @@
 <section class="bloc" id="essais">
   <div class="large">
     <h2>Essais</h2>
-    <p class="sous">Chaque étape est notée avec son résultat. Premiers vols faits ; les fonctions TrueGlide ne sont pas encore essayées en vol.</p>
+    <p class="sous">Chaque étape est notée avec son résultat. Premier vol du firmware corrigé réussi ; les fonctions TrueGlide sont en cours d'essai en vol.</p>
     <ol class="chronologie">
       <li><time datetime="2026-10-11">11/10/2026</time><div><b>Mode SPEEDER au simulateur</b><span>L'inclinaison visée suit le programme : 0 → 30° en 0,5 s, maintien, retour vers 0, nez vers le bas comme le manche.</span></div></li>
       <li><time datetime="2026-10-13">13/10/2026</time><div><b>Missions GPS au simulateur</b><span>Banc de missions de Betaflight : 19 scénarios sur 19 réussis sur <b>TRUENAV</b>.</span></div></li>
@@ -217,6 +217,9 @@
       <li><time datetime="2026-10-29">29/10/2026</time><div><b>Premiers vols</b><span>Vols en ANGLE, fonctions TrueGlide désactivées, journaux blackbox analysés.</span></div></li>
       <li><time datetime="2026-10-30">30/10/2026</time><div><b>Fonctions TrueGlide au banc</b><span>Limites ESC et courant, relance moteur, température sur la radio, Speeder : vérifiés sans hélices.</span></div></li>
       <li><time datetime="2026-10-31">31/10/2026</time><div><b>Contrôles et corrections</b><span>Erreurs trouvées par les contrôles corrigées et testées ; baromètre vérifié au banc. Firmware en ligne retiré en attendant les essais en vol.</span></div></li>
+      <li><time datetime="2026-11-02">02/11/2026</time><div><b>Logiciel essayé avec la vraie carte</b><span>Studio, carte hors ligne (3 cartes, ports jugés comme le firmware), plan de vol en mètres, onglet ESC v15 : essayés, puis publiés sur le logiciel en ligne.</span></div></li>
+      <li><time datetime="2026-11-03">03/11/2026</time><div><b>Premier vol du firmware corrigé</b><span>TRUEGLIDE 24a71eb sur SpeedyBee F405 Mini, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox, 0 erreur I2C.</span></div></li>
+      <li><time datetime="2026-11-03">03/11/2026</time><div><b>Version d'essai en ligne</b><span>31 cartes courantes compilées (contrôle strict -Werror) et publiées dans la mise à jour en ligne.</span></div></li>
       <li class="a-venir"><time>à venir</time><div><b>Fonctions TrueGlide en vol</b><span>Limite de courant, température des ESC, relance moteur, Speeder.</span></div></li>
       <li class="a-venir"><time>à venir</time><div><b>Toutes les cartes</b><span>Firmware corrigé compilé et publié pour toutes les cartes.</span></div></li>
     </ol>
@@ -332,7 +335,7 @@
       <div class="fonction">
         <h3>Firmware TRUEGLIDE</h3>
         <p>Le firmware de vol, avec ses modèles <b>TRUENAV</b> (navigation GPS) et <b>TRUENAV_LIGHT</b>. Tout ajout est désactivé par défaut.</p>
-        <div class="chiffre">Essais en vol en cours · firmware en ligne retiré</div>
+        <div class="chiffre">Version d'essai en ligne · 31 cartes</div>
       </div>
       <div class="fonction">
         <h3>TRUEGLIDE CONFIGURATOR</h3>
@@ -342,12 +345,12 @@
       <div class="fonction">
         <h3>TRUEGLIDE ESC CONFIGURATOR</h3>
         <p>Pour régler et flasher les ESC Bluejay, BLHeli_S et AM32 par la carte de vol. Logiciel séparé, libre (licence AGPL v3), dérivé d'ESC Configurator.</p>
-        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">Découvrir</a> · pas encore essayé sur un ESC réel</div>
+        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">Découvrir</a> · essayé sur un ESC réel (BLS 35A)</div>
       </div>
       <div class="fonction">
         <h3>TRUEGLIDE STUDIO</h3>
         <p>Préparer un drone, même carte débranchée : réglage de départ, ports, contrôle des broches, fichier drone. Dans TRUEGLIDE CONFIGURATOR (onglet Studio), qui envoie ensuite les commandes à la carte.</p>
-        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-Configurator/test/#studio">Ouvrir Studio</a> · version d'essai</div>
+        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/#studio">Ouvrir Studio</a> · version d'essai</div>
       </div>
       <div class="fonction">
         <h3>TALKTRUE FPV XRIG</h3>
