@@ -960,6 +960,15 @@
     "tfOfflineSendProfiles": {
         "message": "Attention : après l'envoi, la vraie carte sera sur le $1 (choisi hors ligne). Annuler pour revenir au bon profil hors ligne, puis enregistrer."
     },
+    "tfMotorsBenchLimit": {
+        "message": "Limite au banc (30 % des gaz)"
+    },
+    "tfMotorsBenchLimitHelp": {
+        "message": "Sécurité du test au banc : curseurs de $1 à $2, assez pour voir le sens et l'ordre des moteurs. Seulement dans ce logiciel : le firmware et le vol ne changent pas. Cochée à chaque ouverture de l'onglet."
+    },
+    "tfMotorsBenchLimitOffConfirm": {
+        "message": "Lever la limite au banc ?\n\nLes curseurs iront jusqu'à 100 % des gaz. Hélices retirées obligatoirement, drone tenu ou fixé."
+    },
     "tfOfflineSendConfirm": {
         "message": "Envoyer $1 changement(s) préparé(s) hors ligne à la carte, puis enregistrer ?\n\nHélices retirées. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
     },
