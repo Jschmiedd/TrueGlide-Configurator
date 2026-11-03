@@ -942,6 +942,21 @@
     "tfOfflineSend": {
         "message": "Send the prepared changes"
     },
+    "tfOfflineSendList": {
+        "message": "What will be sent:"
+    },
+    "tfOfflineSendMore": {
+        "message": "… and $1 more."
+    },
+    "tfOfflineSendProfilePid": {
+        "message": "PID profile $1"
+    },
+    "tfOfflineSendProfileRates": {
+        "message": "rate profile $1"
+    },
+    "tfOfflineSendProfiles": {
+        "message": "Warning: after sending, the real board will be on $1 (chosen offline). Cancel to go back to the right profile offline, then save."
+    },
     "tfOfflineSendConfirm": {
         "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
     },
@@ -962,6 +977,27 @@
     },
     "tfOfflineOpenFailed": {
         "message": "Board file not opened:"
+    },
+    "tfOfflinePortsRefused": {
+        "message": "Ports refused by the firmware ($1): on the real board, all ports would be reset to defaults at reboot, receiver included. Fix them in the Ports tab: nothing is sent until then."
+    },
+    "tfOfflineKept": {
+        "message": "Offline boards kept in this browser: $1 of $2."
+    },
+    "tfOfflineKeptLine": {
+        "message": "harvested on $1 · prepared changes: $2"
+    },
+    "tfOfflineRemove": {
+        "message": "Remove"
+    },
+    "tfOfflineRemoveConfirm": {
+        "message": "Remove the offline board “$1” from this browser?"
+    },
+    "tfOfflineRemoveConfirmPending": {
+        "message": "Remove the offline board “$1”? Its $2 prepared change(s), not sent yet, will be lost."
+    },
+    "tfOfflineFull": {
+        "message": "$1 offline boards are already kept: remove one first (Dashboard list), then harvest."
     },
     "tfOfflineNotReread": {
         "message": "$1 kind(s) of change cannot be read back offline (the tab shows the old value); they will still be sent."
@@ -1559,7 +1595,7 @@
         "message": "LED Strip"
     },
     "tfPidBothMethods": {
-        "message": "Numbers and sliders work together: typing a number stops the sliders for that axis (the typed number is kept); moving a slider turns them back on and recalculates the numbers."
+        "message": "Numbers and sliders work together: typing a yaw number switches to RP mode (yaw off the sliders); typing a roll or pitch number turns the PID sliders off for all 3 axes (OFF mode). Typed numbers are kept; moving a slider restores the previous mode and recalculates the numbers."
     },
     "tabCLI": {
         "message": "CLI"

@@ -153,6 +153,7 @@
       <label class="case"><input id="spMix" type="checkbox"> Roulis / lacet tournés avec la transition</label>
     </div>
     <div class="boutons"><button class="action" id="calculer">Calculer le réglage</button><button class="second" id="vider" type="button">Nouveau drone (vider le formulaire)</button></div>
+    <p class="petit">Pas et nombre de pales de l'hélice : pas demandés. Studio ne cherche pas la poussée réelle de ton drone, il le compare à des drones de référence de même taille d'hélice (préréglages Betaflight) avec un coefficient d'hélice fixe, le même pour les deux (pas « moyen ») : c'est la ligne « Puissance / référence (estim.) ». Avec le fichier du calculateur et « Base du réglage : Données du calculateur », le rapport poussée / poids et les gaz de stationnaire viennent de ton hélice réelle (poussée mesurée au banc) ; la correction des PID, elle, reste sur l'estimation.</p>
     <p class="petit">Studio garde le dernier drone saisi dans ce navigateur (rien n'est envoyé sur Internet).</p>
   </div>
   <div class="carte">
@@ -482,8 +483,10 @@
     memoriser();
     var e = drone(), out = $('resultat');
     var manque = OBLIGATOIRES.filter(function (c) { return nombre(c[0]) === null; }).map(function (c) { return c[1]; });
-    if (manque.length) { out.innerHTML = '<div class="carte">' + messages(['À remplir avant de calculer : ' + manque.join(', ') + '.'], 'alerte') + '</div>'; return; }
-    try { dernier = recommandation(e); } catch (err) { out.innerHTML = '<div class="carte">' + messages([err.message], 'alerte') + '</div>'; return; }
+    // le résultat est sous « Fichier drone » : on l'amène à l'écran
+    var montrer = function () { if (out.scrollIntoView) out.scrollIntoView({ block: 'start', behavior: 'smooth' }); };
+    if (manque.length) { out.innerHTML = '<div class="carte">' + messages(['À remplir avant de calculer : ' + manque.join(', ') + '.'], 'alerte') + '</div>'; montrer(); return; }
+    try { dernier = recommandation(e); } catch (err) { out.innerHTML = '<div class="carte">' + messages([err.message], 'alerte') + '</div>'; montrer(); return; }
     var r = dernier, p = r.pids, ph = r.physique;
     var erreurs = TFTune.verifier(r.reglages, baseReglages());
     var h = '<div class="carte"><h2>Réglage proposé' + (betaflight() ? ' (carte en Betaflight)' : '') + '</h2>';
@@ -506,6 +509,7 @@
       r.reglages.map(function (x) { return '<tr><td><code>' + x.nom + '</code></td><td class="num">' + echap(x.valeur) + '</td><td>' + echap(x.pourquoi) + '</td></tr>'; }).join('') +
       '</tbody></table></div><p class="petit">Références les plus proches : ' + echap(r.sources.join(', ')) + '.</p></div>';
     out.innerHTML = h;
+    montrer();
   });
 
   // ---- analyse ----
@@ -628,10 +632,13 @@
       if (lu === 'betaflight') $('modele').value = 'BETAFLIGHT';
       else if (lu && $('modele').value === 'BETAFLIGHT') $('modele').value = 'STANDARD';
       var memeCarte = relecture && o.carte && $('diff').value && o.carte.toUpperCase() === String($('carte').value).toUpperCase();
-      if (!memeCarte) {
-        Object.keys(o.drone).forEach(function (k) { if (CHAMPS.indexOf(k) >= 0) { if ($(k).type === 'checkbox') $(k).checked = !!o.drone[k]; else $(k).value = o.drone[k]; } });
-        if (o.carte) $('carte').value = o.carte;
-      }
+      // même carte relue : le drone préparé est gardé, seuls les champs encore vides sont remplis (KV lu sur la carte…)
+      Object.keys(o.drone).forEach(function (k) {
+        if (CHAMPS.indexOf(k) < 0) return;
+        if ($(k).type === 'checkbox') { if (!memeCarte) $(k).checked = !!o.drone[k]; }
+        else if (!memeCarte || $(k).value === '') $(k).value = o.drone[k];
+      });
+      if (!memeCarte && o.carte) $('carte').value = o.carte;
       if (o.configuration) $('diff').value = o.configuration;
       if (Object.keys(o.ports || {}).length || (o.configuration && !memeCarte)) { choixPorts = o.ports || {}; memoriserPorts(); }
       memoriser();
