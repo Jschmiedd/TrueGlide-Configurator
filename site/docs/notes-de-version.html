@@ -112,7 +112,7 @@
 <h1>Notes de version</h1>
 <p class="chapeau">Version 2026.6.2 du firmware <b>TRUEGLIDE</b> et de TrueGlide Configurator. Le firmware est basé sur Betaflight 2026.6.2, le logiciel sur Betaflight App 2026.6.2. Cette page liste ce que TrueGlide ajoute et où en sont les essais.</p>
 
-<div class="encart"><b>État réel</b> : aucun vol réel n'a encore été fait avec ce firmware. Tout ce qui est décrit ici a été vérifié par des tests automatiques et sur le simulateur (SITL) seulement. Premiers essais <b>Hélices retirées</b>, puis en terrain dégagé, à basse vitesse, prêt à reprendre la main.</div>
+<div class="encart"><b>État réel</b> : version d'essai. Premier vol de la révision 24a71eb réussi le 3 novembre 2026 (SPEEDYBEEF405MINI, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox). Les fonctions TrueGlide sont vérifiées par des tests automatiques, au simulateur et au banc ; leur essai en vol est en cours. Premiers essais <b>Hélices retirées</b>, puis en terrain dégagé, à basse vitesse, prêt à reprendre la main.</div>
 
 <h2 id="principe">Principe</h2>
 <p>Sans réglage TrueGlide, le firmware vole comme Betaflight 2026.6.2 : chaque ajout est désactivé par défaut et ne fait rien tant qu'on ne l'active pas. Le firmware garde volontairement le nom « Betaflight » dans certains textes techniques (en-têtes des journaux blackbox, descripteurs USB) pour rester compatible avec les outils existants.</p>
@@ -160,7 +160,9 @@
 
 <h2 id="verifications">Vérifications faites</h2>
 <ul>
-  <li>Tests unitaires Betaflight + TrueGlide : 70 suites, en mode strict.</li>
+  <li>Tests unitaires Betaflight + TrueGlide : 73 suites, en mode strict (révision 24a71eb).</li>
+  <li>3 novembre : 31 cartes courantes construites avec la révision 24a71eb et le contrôle strict <code>-Werror</code> (F405, F411, F722, F745, H743, AT32F435).</li>
+  <li>3 novembre : premier vol de la révision 24a71eb (SPEEDYBEEF405MINI, 51 s, fonctions TrueGlide coupées) : stable, aucun défaut dans le journal, 0 erreur I2C.</li>
   <li>Construction pour 42 cartes courantes (F405, F411, F722, F745, H743, AT32F435) et pour le simulateur ; puis, le 22 octobre, compilation de toutes les cartes : <b>TRUEGLIDE</b> 621, <b>TRUENAV</b> 606, <b>TRUENAV_LIGHT</b> 611 (les autres ne tiennent pas en mémoire ; cartes RP2350 et simulateur exclus).</li>
   <li>Simulateur, modèles de navigation : banc de missions de Betaflight, 19 scénarios sur 19 réussis (missions, décollage, atterrissage, orbite, perte radio, zone de vol, GPS RESCUE).</li>
   <li>Simulateur : réglages TrueGlide acceptés et sauvegardés, mode SPEEDER annoncé au logiciel, transition suivie.</li>
@@ -169,7 +171,7 @@
 
 <h2 id="pas-encore-verifie">Pas encore vérifié</h2>
 <ul>
-  <li>Aucun vol réel avec le firmware : ni <b>TRUEGLIDE</b>, ni <b>TRUENAV</b>, ni <b>TRUENAV_LIGHT</b>.</li>
+  <li>Fonctions TrueGlide en vol (limite de courant, température des ESC, relance moteur, Speeder) : essai en cours. <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b> : pas encore de vol.</li>
   <li>Mode SPEEDER : logique vérifiée en tests et en simulateur, pas le comportement en vol. Commencer avec un angle de croisière de 20°, en altitude, puis monter par pas de 10°.</li>
   <li>Température des ESC sur la radio : vérifiée en test unitaire seulement.</li>
   <li>Nacelle Caddx GM3 : vérifiée sur le simulateur, pas avec une vraie nacelle.</li>
@@ -177,7 +179,7 @@
 </ul>
 
 <h2 id="publication">Firmwares publiés</h2>
-<p>La mise à jour en ligne propose la révision 1791465a6 (22 octobre 2026) : <b>TRUEGLIDE</b> pour 621 cartes, et les trois modèles pour SPEEDYBEEF405MINI, TMOTORVELOXF7SE et SEQUREH7V2. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>
+<p>Version d'essai du 3 novembre 2026 : la mise à jour en ligne propose la révision 24a71eb02, <b>TRUEGLIDE</b> pour 31 cartes courantes. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>
   </article>
 </div>
 
