@@ -47,17 +47,26 @@ const dragStartCoordinate = ref(null);
 const isLoading = ref(true);
 
 // Helper function to initialize map with given coordinates
-const initializeMapAtLocation = (latitude, longitude, logMessage) => {
-    mapInstance.value = initMap({
-        target: mapRef.value,
-        defaultZoom: 15, // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
-        defaultLat: latitude,
-        defaultLon: longitude,
-        defaultLayer: "satellite",
-    });
-
+// TrueGlide: the map is shown at once (whole world) and centred when the position is known, instead of staying
+// blank while the browser waits for the location permission (an unanswered prompt left no map, and points added
+// with the + button went to 0°, 0°)
+const LOCATED_ZOOM = 15; // Zoom level 15 shows approximately 1 nautical mile (1852m) in view
+const initializeMapAtLocation = (latitude, longitude, logMessage, zoom = LOCATED_ZOOM) => {
+    if (mapInstance.value) {
+        const view = mapInstance.value.map.getView();
+        view.setCenter(fromLonLat([longitude, latitude]));
+        view.setZoom(zoom);
+    } else {
+        mapInstance.value = initMap({
+            target: mapRef.value,
+            defaultZoom: zoom,
+            defaultLat: latitude,
+            defaultLon: longitude,
+            defaultLayer: "satellite",
+        });
+        setupMapLayers();
+    }
     console.log(logMessage);
-    setupMapLayers();
 };
 
 // TrueGlide: the IP geolocation (third-party service) is only used after the user agreed, once
@@ -100,6 +109,9 @@ onMounted(async () => {
     // Final fallback coordinates (Sydney Harbour Bridge, Australia)
     const finalFallbackLat = -33.8523;
     const finalFallbackLon = 151.2108;
+
+    // TrueGlide: map visible right away, before any location answer
+    initializeMapAtLocation(20, 0, "Map shown (world view) while waiting for the location", 2);
 
     // Try to get user's geolocation via browser API
     if (navigator.geolocation) {
