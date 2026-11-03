@@ -180,7 +180,7 @@
                 />
                 <label v-if="!champsChoisis" class="text-sm flex items-center gap-2">
                     <USwitch :model-value="false" size="sm" @update:model-value="confirmerChamps" />
-                    {{ $t("tftuneChooseEscCells", [escNom, d.cellules]) }}
+                    {{ $t("tftuneChooseEscCells", { 1: escNom, 2: d.cellules }) }}
                 </label>
             </template>
             <template v-else>
@@ -198,7 +198,7 @@
                 />
                 <label v-if="!champsChoisis" class="text-sm flex items-center gap-2">
                     <USwitch :model-value="false" size="sm" @update:model-value="confirmerChamps" />
-                    {{ $t("tftuneChooseEscCells", [escNom, d.cellules]) }}
+                    {{ $t("tftuneChooseEscCells", { 1: escNom, 2: d.cellules }) }}
                 </label>
             </template>
         </div>

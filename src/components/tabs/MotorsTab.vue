@@ -462,7 +462,7 @@
                             <SettingRow :label="$t('tfMotorsBenchLimit')" full-width>
                                 <UCheckbox :model-value="benchLimited" @update:model-value="onBenchLimitChange" />
                             </SettingRow>
-                            <p class="text-xs mt-1">{{ $t("tfMotorsBenchLimitHelp", [testRange.min, testRange.max]) }}</p>
+                            <p class="text-xs mt-1">{{ $t("tfMotorsBenchLimitHelp", { 1: testRange.min, 2: testRange.max }) }}</p>
                         </div>
                     </div>
                     <!-- END MOTOR TEST SECTION -->
