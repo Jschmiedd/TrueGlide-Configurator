@@ -90,6 +90,17 @@
     return c.porteurs * c.rendement * pousseeEstimee(pouces, kv, cellules) / masse;
   }
 
+  // Points d'appui dont le calcul se sert vraiment pour cette taille (ceux de l'interpolation ; au-delà de 10" : 7" et 10").
+  function referencesUtilisees(pouces) {
+    var R = REFERENCES;
+    if (pouces <= R[0].pouces) return [R[0]];
+    for (var i = 0; i < R.length - 1; i++) {
+      if (pouces === R[i + 1].pouces) return [R[i + 1]];
+      if (pouces < R[i + 1].pouces) return [R[i], R[i + 1]];
+    }
+    return [R[R.length - 2], R[R.length - 1]];
+  }
+
   // Interpolation géométrique entre points d'appui ; au-delà de 10" : tendance 7" -> 10".
   function interpoler(pouces, cle) {
     var R = REFERENCES;
@@ -101,7 +112,7 @@
         return { v: a[cle] * Math.pow(b[cle] / a[cle], t), extrapole: false };
       }
     }
-    var p7 = R[2], p10 = R[3];
+    var p7 = R[R.length - 2], p10 = R[R.length - 1];   // les deux derniers points d'appui (7" et 10")
     var exposant = Math.log(p10[cle] / p7[cle]) / Math.log(p10.pouces / p7.pouces);
     if (cle === 'F') exposant = 0;            // le feedforward ne suit pas de tendance nette : gardé constant
     return { v: p10[cle] * Math.pow(pouces / p10.pouces, exposant), extrapole: true };
@@ -554,8 +565,7 @@
         rapportCalcule: rapportCalcule === null ? null : Math.round(rapportCalcule * 10) / 10,
         gazStationnaire: gazStationnaire
       },
-      sources: REFERENCES.filter(function (r) { return Math.abs(r.pouces - e.pouces) <= 3; })
-        .reduce(function (a, r) { return a.concat(r.sources); }, [])
+      sources: referencesUtilisees(e.pouces).reduce(function (a, r) { return a.concat(r.sources); }, [])
     };
   }
 
