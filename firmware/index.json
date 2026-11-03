@@ -1,8 +1,27 @@
 {
  "format": 1,
  "version": "2026.6.2",
- "revision": "retire",
- "date": "2026-10-31",
- "note": "Firmware en ligne retiré le 31/10/2026 à la demande de Johann : l'ancienne révision 1791465 n'avait pas les corrections. Nouvelle liste après validation en vol.",
- "files": []
+ "revision": "24a71eb02",
+ "date": "2026-11-03",
+ "files": [
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "AT32F435G",
+   "board": "JHEF435",
+   "file": "STANDARD/trueglide_2026.6.2_AT32F435G_JHEF435.hex.gz",
+   "size": 1521295,
+   "sha256": "a26a98d2c7f6ad05d27729daf31f0e6b6ff2e4e756ef4c107cd0f965b9fa04f5"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "SPEEDYBEEF405MINI",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex.gz",
+   "size": 1552160,
+   "sha256": "69448950a458baa55426625193be3c35cb07f78962f570840aa38003f723e766"
+  }
+ ],
+ "note": "Version d'essai (test limité) : TRUEGLIDE 24a71eb, 31 cartes courantes ; premier vol réussi le 03/11/2026 (TG-V1), fonctions TrueGlide en vol (TG-P3B) en cours. Fonctions TrueGlide désactivées par défaut."
 }
