@@ -98,6 +98,15 @@
    "model": "STANDARD",
    "version": "2026.6.2",
    "mcu": "STM32F722",
+   "board": "HOBBYWING_XROTORF7CONV",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_HOBBYWING_XROTORF7CONV.hex.gz",
+   "size": 1113700,
+   "sha256": "db1ecd0cc6bdc24e612a6cb0e6135eb8aeece4bcafccf5502a6bf1b9bad52ce8"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
    "board": "IFLIGHT_BLITZ_F722",
    "file": "STANDARD/trueglide_2026.6.2_STM32F722_IFLIGHT_BLITZ_F722.hex.gz",
    "size": 1109780,
@@ -282,7 +291,16 @@
    "file": "STANDARD/trueglide_2026.6.2_STM32F722_TMOTORF7.hex.gz",
    "size": 1107292,
    "sha256": "3b8606b9ab8ba43d0b390f3ca1aca6f635d7125af72e3b61cc9ee77d78a427eb"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "TMOTORVELOXF7SE",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_TMOTORVELOXF7SE.hex.gz",
+   "size": 1100010,
+   "sha256": "852f509ebd3191d3dda4b6ddcf0b17b608f8aa11898ef5e09af61e081f80e475"
   }
  ],
- "note": "Version d'essai (test limité) : TRUEGLIDE 24a71eb, 31 cartes courantes ; premier vol réussi le 03/11/2026 (TG-V1), fonctions TrueGlide en vol (TG-P3B) en cours. Fonctions TrueGlide désactivées par défaut."
+ "note": "Version d'essai (test limité) : TRUEGLIDE 24a71eb, 33 cartes ; premier vol réussi le 03/11/2026 (TG-V1), fonctions TrueGlide en vol (TG-P3B) en cours. Fonctions TrueGlide désactivées par défaut."
 }
