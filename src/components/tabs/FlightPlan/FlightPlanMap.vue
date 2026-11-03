@@ -18,6 +18,7 @@
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import { initMap } from "@/js/utils/map";
+import { setFlightPlanMapCenter } from "@/js/trueglide/map_center.js";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { i18n } from "@/js/localization";
 import { fromLonLat, toLonLat } from "ol/proj";
@@ -65,6 +66,14 @@ const initializeMapAtLocation = (latitude, longitude, logMessage, zoom = LOCATED
             defaultLayer: "satellite",
         });
         setupMapLayers();
+        // centre gardé pour le bouton « + » (vue du monde du départ exclue : ce n'est pas un lieu choisi)
+        mapInstance.value.map.on("moveend", () => {
+            const view = mapInstance.value.map.getView();
+            if (view.getZoom() >= 10) {
+                const [lon, lat] = toLonLat(view.getCenter());
+                setFlightPlanMapCenter(lon, lat);
+            }
+        });
     }
     console.log(logMessage);
 };

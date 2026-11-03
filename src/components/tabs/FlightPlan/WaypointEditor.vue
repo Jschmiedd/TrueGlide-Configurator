@@ -117,6 +117,7 @@ import Dialog from "@/components/elements/Dialog.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { useFlightPlan } from "@/composables/useFlightPlan";
 import { feetToMeters, knotsToKmh } from "@/js/trueglide/units.js";
+import { flightPlanMapCenter } from "@/js/trueglide/map_center.js";
 
 const { t } = useTranslation();
 const {
@@ -258,8 +259,9 @@ const buildPayload = () => {
 
 // Reset form to defaults
 const resetForm = () => {
-    form.latitude = 0;
-    form.longitude = 0;
+    // TrueGlide: new point at the centre of the map (0°, 0° only without a map)
+    form.latitude = flightPlanMapCenter.value?.latitude ?? 0;
+    form.longitude = flightPlanMapCenter.value?.longitude ?? 0;
     form.altitude = 400;
     form.speed = 10;
     form.type = "flyover";
