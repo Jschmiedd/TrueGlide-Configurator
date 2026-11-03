@@ -957,6 +957,15 @@
     "tfOfflineSendProfiles": {
         "message": "Warning: after sending, the real board will be on $1 (chosen offline). Cancel to go back to the right profile offline, then save."
     },
+    "tfMotorsBenchLimit": {
+        "message": "Bench limit (30 % throttle)"
+    },
+    "tfMotorsBenchLimitHelp": {
+        "message": "Bench test safety: sliders from $1 to $2, enough to check motor direction and order. Only in this software: the firmware and flight are unchanged. Ticked every time the tab opens."
+    },
+    "tfMotorsBenchLimitOffConfirm": {
+        "message": "Lift the bench limit?\n\nThe sliders will go up to 100 % throttle. Props off, quad held or fixed."
+    },
     "tfOfflineSendConfirm": {
         "message": "Send $1 change(s) prepared offline to the board, then save?\n\nProps off. At the first refused command nothing is saved. The board reboots at the end."
     },
