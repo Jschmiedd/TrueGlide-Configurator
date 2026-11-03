@@ -415,8 +415,8 @@
                                     >
                                         <USlider
                                             orientation="vertical"
-                                            :min="minSliderValue"
-                                            :max="maxSliderValue"
+                                            :min="testRange.min"
+                                            :max="testRange.max"
                                             :model-value="motorValues[i - 1]"
                                             :disabled="slidersDisabled"
                                             tooltip
@@ -430,8 +430,8 @@
                                     >
                                         <USlider
                                             orientation="vertical"
-                                            :min="minSliderValue"
-                                            :max="maxSliderValue"
+                                            :min="testRange.min"
+                                            :max="testRange.max"
                                             :model-value="masterValue"
                                             :disabled="slidersDisabled"
                                             color="warning"
@@ -458,6 +458,11 @@
                             <SettingRow :label="$t('motorsEnableControl')" full-width>
                                 <USwitch v-model="motorsTestingEnabled" size="sm" />
                             </SettingRow>
+                            <!-- TrueGlide: bench safety limit of the motor test (software only, like the ESC tab) -->
+                            <SettingRow :label="$t('tfMotorsBenchLimit')" full-width>
+                                <UCheckbox :model-value="benchLimited" @update:model-value="onBenchLimitChange" />
+                            </SettingRow>
+                            <p class="text-xs mt-1">{{ $t("tfMotorsBenchLimitHelp", [testRange.min, testRange.max]) }}</p>
                         </div>
                     </div>
                     <!-- END MOTOR TEST SECTION -->
@@ -550,6 +555,8 @@ import { useMotorConfiguration } from "@/composables/motors/useMotorConfiguratio
 import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
+import { i18n } from "@/js/localization";
+import { benchRange } from "@/js/trueglide/motor_bench.js";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -741,6 +748,34 @@ const zeroThrottleValue = computed(() => {
     }
     return minSliderValue.value;
 });
+
+// TrueGlide: bench limit (30 % of the throttle range by default, like the ESC tab); the firmware is not touched
+const benchLimited = ref(true);
+const testRange = computed(() => {
+    // the template reads it before the features are loaded from the board
+    const is3d = typeof fcStore.features?.features?.isEnabled === "function" && isFeatureEnabled("3D");
+    return benchRange({
+        min: minSliderValue.value,
+        max: maxSliderValue.value,
+        zero: is3d ? zeroThrottleValue.value : minSliderValue.value,
+        is3d,
+        limited: benchLimited.value,
+    });
+});
+const onBenchLimitChange = (checked) => {
+    if (!checked && !globalThis.confirm(i18n.getMessage("tfMotorsBenchLimitOffConfirm"))) {
+        return;
+    }
+    benchLimited.value = !!checked;
+    if (checked) {
+        // back under the limit: every motor (and the master) stopped
+        motorValues.value.fill(zeroThrottleValue.value);
+        masterValue.value = zeroThrottleValue.value;
+        if (motorsTestingEnabled.value) {
+            sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
+        }
+    }
+};
 
 // Initialize motor testing with safety features
 const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
@@ -1564,7 +1599,7 @@ const onSliderWheel = (index, event) => {
     }
 
     // Clamp
-    newVal = Math.max(minSliderValue.value, Math.min(maxSliderValue.value, newVal));
+    newVal = Math.max(testRange.value.min, Math.min(testRange.value.max, newVal));
     // Round to step
     newVal = Math.round(newVal / step) * step;
 
