@@ -83,6 +83,7 @@
     <nav aria-label="Site">
       <a href="index.html" aria-current="page">Accueil</a>
       <a href="docs/index.html">Documentation</a>
+      <a href="#logiciel-fonctions">Logiciel</a>
       <a href="#telecharger">Télécharger</a>
       <a href="#essais">Essais</a>
     </nav>
@@ -94,7 +95,7 @@
     <div>
       <img class="logo" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
       <h1>Le pilotage de Betaflight, avec des protections et la navigation en plus.</h1>
-      <p><b>TRUEGLIDE</b> est un firmware de contrôleur de vol basé sur Betaflight 2026.6.2. Il ajoute une protection contre la surchauffe, la relance des moteurs, le mode SPEEDER et, dans <b>TRUENAV</b>, les missions GPS. Sans réglage, il vole exactement comme Betaflight. Le logiciel TrueGlide Configurator le règle en français.</p>
+      <p><b>TRUEGLIDE</b> est un firmware de contrôleur de vol basé sur Betaflight 2026.6.2. Il ajoute une protection contre la surchauffe, la relance des moteurs, le mode SPEEDER et, dans <b>TRUENAV</b>, les missions GPS. Sans réglage, il vole exactement comme Betaflight. Le logiciel TrueGlide Configurator le règle en français, même carte débranchée.</p>
       <div class="boutons">
         <a class="btn plein" href="#telecharger">Télécharger la 2026.6.2</a>
         <a class="btn" href="docs/index.html">Documentation</a>
@@ -142,6 +143,45 @@
         <h3>Logiciel en français</h3>
         <p>TrueGlide Configurator : mise en route guidée, assistant de réglage, onglets TrueGlide, et une page de documentation par onglet.</p>
         <div class="chiffre">34 onglets documentés</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="bloc" id="logiciel-fonctions">
+  <div class="large">
+    <h2>Ce que fait TRUEGLIDE CONFIGURATOR</h2>
+    <p class="sous">Le logiciel de réglage, en français, dans le navigateur. Il règle les cartes sous <b>TRUEGLIDE</b> et sous Betaflight. Les fonctions ci-dessous sont essayées avec une vraie carte (SpeedyBee F405 Mini).</p>
+    <div class="fonctions">
+      <div class="fonction">
+        <h3>Carte hors ligne</h3>
+        <p>Préparer son drone sans le brancher : le logiciel récolte une copie de la carte, puis tous les onglets se règlent sur cette copie, à la maison ou au terrain. Avant l'envoi à la vraie carte, la liste exacte des commandes s'affiche. Jusqu'à 3 cartes gardées.</p>
+        <div class="chiffre">essayée avec la vraie carte · 02/11/2026</div>
+      </div>
+      <div class="fonction">
+        <h3>TRUEGLIDE STUDIO</h3>
+        <p>Un réglage de départ calculé selon la taille, le poids, la batterie et les moteurs du drone. Chaque valeur est expliquée, avec les réglages de référence d'où elle vient. Prépare aussi les ports et contrôle les broches de la carte.</p>
+        <div class="chiffre">onglet Studio · aussi pour Betaflight</div>
+      </div>
+      <div class="fonction">
+        <h3>Mise en route guidée</h3>
+        <p>Un guide en haut de l'écran conduit, onglet par onglet, de l'installation au failsafe : ce qu'il faut vérifier, puis « Étape réglée, continuer ».</p>
+        <div class="chiffre">9 étapes</div>
+      </div>
+      <div class="fonction">
+        <h3>Limite au banc</h3>
+        <p>Onglet Moteurs : les curseurs s’arrêtent à 30&nbsp;% des gaz, assez pour voir le sens et l'ordre des moteurs. La case est cochée à chaque ouverture ; la lever demande une confirmation, la recocher arrête les moteurs.</p>
+        <div class="chiffre">1000 → 1300 · contrôlée sur la vraie carte</div>
+      </div>
+      <div class="fonction">
+        <h3>Onglet ESC</h3>
+        <p>Régler et flasher les ESC Bluejay, BLHeli_S et AM32 par la carte de vol, sans quitter le logiciel.</p>
+        <div class="chiffre">essayé sur un ESC réel (BLS 35A)</div>
+      </div>
+      <div class="fonction">
+        <h3>Flash sûr et plan de vol</h3>
+        <p>Mise à jour en ligne : le fichier est vérifié (taille et somme SHA-256) avant le flash, avec un avertissement si la carte ne correspond pas. Plan de vol sur carte satellite, avec les mètres et les km/h à côté des pieds et des nœuds.</p>
+        <div class="chiffre">33 cartes en ligne</div>
       </div>
     </div>
   </div>
@@ -219,6 +259,7 @@
       <li><time datetime="2026-10-31">31/10/2026</time><div><b>Contrôles et corrections</b><span>Erreurs trouvées par les contrôles corrigées et testées ; baromètre vérifié au banc. Firmware en ligne retiré en attendant les essais en vol.</span></div></li>
       <li><time datetime="2026-11-02">02/11/2026</time><div><b>Logiciel essayé avec la vraie carte</b><span>Studio, carte hors ligne (3 cartes, ports jugés comme le firmware), plan de vol en mètres, onglet ESC v15 : essayés, puis publiés sur le logiciel en ligne.</span></div></li>
       <li><time datetime="2026-11-03">03/11/2026</time><div><b>Premier vol du firmware corrigé</b><span>TRUEGLIDE 24a71eb sur SpeedyBee F405 Mini, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox, 0 erreur I2C.</span></div></li>
+      <li><time datetime="2026-11-03">03/11/2026</time><div><b>Limite au banc dans l'onglet Moteurs</b><span>Curseurs arrêtés à 30&nbsp;% des gaz : contrôlé sur la vraie carte, puis publié dans le logiciel en ligne.</span></div></li>
       <li><time datetime="2026-11-03">03/11/2026</time><div><b>Version d'essai en ligne</b><span>31 cartes courantes compilées (contrôle strict -Werror) et publiées dans la mise à jour en ligne, puis TMOTORVELOXF7SE et HOBBYWING_XROTORF7CONV (même révision) : 33 cartes.</span></div></li>
       <li class="a-venir"><time>à venir</time><div><b>Fonctions TrueGlide en vol</b><span>Limite de courant, température des ESC, relance moteur, Speeder.</span></div></li>
       <li class="a-venir"><time>à venir</time><div><b>Toutes les cartes</b><span>Firmware corrigé compilé et publié pour toutes les cartes.</span></div></li>
