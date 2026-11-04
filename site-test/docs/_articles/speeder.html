@@ -1,0 +1,63 @@
+<h1>Speeder</h1>
+<p class="chapeau">L'onglet <b>Speeder</b> (groupe « Fonctions TrueGlide ») sert à régler le mode SPEEDER du firmware <b>TRUEGLIDE</b>. Ce mode est fait pour les speeders qui décollent fuselage vertical et volent vite presque à l'horizontale. Un schéma montre l'inclinaison choisie et le temps de la transition.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/speeder.png" alt="Onglet Speeder : cadre Mode SPEEDER avec Angle de croisière 60°, Vitesse de transition 30 °/s, Mixage FPV progressif coupé ; à droite, cadre Ce que fait le SPEEDER avec le speeder vertical et le speeder penché de 60°, et la phrase Transition : 60° à 30 °/s, soit 2,0 s"><img class="t-clair" src="../assets/img/onglets/speeder-clair.png" alt="Onglet Speeder en thème clair : mêmes réglages (60°, 30 °/s, mixage coupé) et même schéma du speeder penché de 60°">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC, sans vrais capteurs. Les valeurs affichées sont les valeurs par défaut du firmware.</figcaption>
+</figure>
+
+<div class="encart"><b>Pas encore essayé en vol réel.</b> La logique du mode SPEEDER est vérifiée par des tests et dans le simulateur, pas sur un vrai drone. Premier essai : mettre l'<b>Angle de croisière</b> à 20°, voler en altitude, puis monter par pas de 10°. Attention : la valeur par défaut est 60°, il faut donc la baisser avant le premier vol.</div>
+
+<h2 id="principe">Ce que fait le mode SPEEDER</h2>
+<p>Le mode n'agit que si le mode <b>SPEEDER</b> est placé sur un interrupteur dans l'onglet <a href="modes.html">Modes</a>. Sans cet interrupteur, rien ne change en vol.</p>
+<ul>
+  <li><b>Interrupteur activé</b>, drone armé et en mode ANGLE : le nez descend petit à petit, à la <b>Vitesse de transition</b>, jusqu'à l'<b>Angle de croisière</b>.</li>
+  <li>Le manche de tangage reste actif : il ajoute ou retire de l'inclinaison autour de l'angle de transition, dans la limite d'angle habituelle du mode ANGLE (réglage <code>angle_limit</code>). Le total ne dépasse jamais 80° : plus près de 90°, l'estimation de l'attitude n'est pas fiable.</li>
+  <li><b>Interrupteur coupé</b> ou <b>failsafe</b> : le nez remonte petit à petit jusqu'au stationnaire, à la même vitesse.</li>
+  <li><b>Désarmement</b>, <b>GPS RESCUE</b>, <b>ALTHOLD</b> ou <b>POS HOLD</b> : retour immédiat au stationnaire. Ces modes commandent eux-mêmes l'inclinaison.</li>
+  <li>En <b>HORIZON</b> ou en <b>ACRO</b>, le mode SPEEDER n'agit pas.</li>
+</ul>
+<p>Le mode n'existe pas sur les ailes volantes et avions (firmware compilé pour les ailes), ni sur une carte sans accéléromètre. Dans ce cas, l'onglet affiche « Le firmware de la carte n'a pas ces réglages ».</p>
+
+<h2 id="reglages">Cadre « Mode SPEEDER »</h2>
+<ul>
+  <li><b>Angle de croisière</b> : inclinaison vers l'avant atteinte à la fin de la transition, en degrés. De 10 à 80°. Par défaut : 60°. L'angle se compte à partir du stationnaire (fuselage vertical) : plus il est grand, plus le fuselage se rapproche de l'horizontale.</li>
+  <li><b>Vitesse de transition</b> : vitesse à laquelle le nez descend, et remonte quand l'interrupteur est coupé, en degrés par seconde (°/s). De 5 à 180 °/s. Par défaut : 30 °/s.</li>
+  <li><b>Mixage FPV progressif</b> : interrupteur. Activé, le roulis et le lacet des manches tournent avec l'angle de transition, comme le réglage <code>fpv_mix_degrees</code> mais de façon progressive. Ainsi, vus de la caméra, les manches gardent le même effet : un roulis reste un roulis autour de la trajectoire en vol rapide, et un roulis normal en stationnaire. Par défaut : coupé.</li>
+</ul>
+<p>Le bouton <b>?</b> à côté de chaque réglage affiche une courte aide.</p>
+
+<h2 id="schema">Cadre « Ce que fait le SPEEDER »</h2>
+<p>Ce cadre se met à jour pendant que vous tapez, avant même d'enregistrer :</p>
+<ul>
+  <li>À gauche, le speeder en <b>stationnaire</b> : fuselage vertical, nez en haut.</li>
+  <li>À droite, le speeder en <b>croisière</b>, penché vers l'avant de l'<b>Angle de croisière</b> saisi. L'arc et la mention « A = … ° » donnent cet angle.</li>
+  <li>La phrase <b>Transition</b> donne le temps du stationnaire à la croisière : angle ÷ vitesse de transition, arrondi au dixième de seconde. Exemple avec les valeurs par défaut : 60° à 30 °/s, soit 2,0 s. Le retour au stationnaire prend le même temps.</li>
+  <li>En dessous, un rappel du comportement (voir <a href="#principe">Ce que fait le mode SPEEDER</a>) et le conseil du premier essai.</li>
+</ul>
+<p>Le schéma n'est dessiné que pour un angle entier entre 10 et 80°, les seules valeurs que le firmware accepte.</p>
+
+<h2 id="mise-en-place">Mettre en place le mode SPEEDER</h2>
+<ol>
+  <li>Dans cet onglet, régler l'<b>Angle de croisière</b> à 20° pour commencer.</li>
+  <li>Cliquer sur <b>Enregistrer et redémarrer</b>. Le contrôleur de vol redémarre et le logiciel se reconnecte.</li>
+  <li>Onglet <a href="modes.html">Modes</a> : placer <b>SPEEDER</b> sur un interrupteur libre de la radio. Vérifier aussi que le mode <b>ANGLE</b> est actif quand vous voulez utiliser le SPEEDER. <b>Hélices retirées</b>, basculer l'interrupteur : la ligne SPEEDER de l'onglet Modes doit s'allumer.</li>
+  <li>Premier vol : en altitude, dans un lieu dégagé, prêt à couper l'interrupteur SPEEDER pour revenir au stationnaire.</li>
+  <li>Si tout va bien, monter l'angle par pas de 10°.</li>
+</ol>
+
+<h2 id="boutons">Boutons en bas de l'onglet</h2>
+<ul>
+  <li><b>Relire</b> : relit les réglages dans le contrôleur de vol. Les valeurs non enregistrées sont perdues.</li>
+  <li><b>Enregistrer et redémarrer</b> : actif seulement si une valeur a changé. Le logiciel envoie seulement les réglages modifiés, puis enregistre : le contrôleur de vol redémarre. Si une valeur est hors limites, rien n'est enregistré et le journal affiche « Valeur hors limites, rien n'a été enregistré : » suivi du nom du réglage.</li>
+</ul>
+
+<h2 id="cli">Réglages équivalents dans le CLI</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Libellé dans l'onglet</th><th>Réglage CLI</th><th>Bornes</th><th>Défaut</th></tr></thead>
+  <tbody>
+    <tr><td>Angle de croisière</td><td><code>speeder_cruise_angle</code></td><td>10 à 80</td><td>60</td></tr>
+    <tr><td>Vitesse de transition</td><td><code>speeder_transition_rate</code></td><td>5 à 180</td><td>30</td></tr>
+    <tr><td>Mixage FPV progressif</td><td><code>speeder_fpv_mix</code></td><td>OFF / ON</td><td>OFF</td></tr>
+  </tbody>
+</table></div>
+<p>Ces réglages se changent aussi dans l'onglet <a href="cli.html">Ligne de commande (CLI)</a>, avec <code>set</code> puis <code>save</code>.</p>

@@ -1,0 +1,58 @@
+<h1>Bandeau LED</h1>
+<p class="chapeau">L'onglet <b>Bandeau LED</b> (groupe « Vidéo et lumières ») sert à placer les LED RGB du drone sur une grille, à indiquer leur ordre de câblage et à choisir ce que chaque LED affiche : couleur fixe, orientation et modes de vol, état de l'armement, batterie, GPS…</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/bandeau-led.png" alt="Onglet Bandeau LED : grille vide de 16 × 16 cases à gauche ; à droite le compteur « 256 Restantes », les boutons « Effacer la sélection » et « Tout effacer », le menu Fonction sur « Aucune », les boutons d'orientation N, O, E, S, H, B, seize couleurs numérotées de 0 à 15, le curseur Luminosité à 50 % et la partie « Câblage de bande de LED »"><img class="t-clair" src="../assets/img/onglets/bandeau-led-clair.png" alt="Onglet Bandeau LED en thème clair, grille vide">
+  <figcaption>Capture du logiciel en mode virtuel (sans carte) : le simulateur n'a pas de LED. Le mode virtuel annonce 256 LED ; un firmware sur une vraie carte en accepte 32, ou 64 si la carte est construite avec l'option <code>USE_LED_STRIP_64</code>.</figcaption>
+</figure>
+
+<h2 id="acces">Où le trouver</h2>
+<p>L'onglet n'apparaît dans le menu que si la fonction <b>LED_STRIP</b> (« LED RGB multicolore ») est activée dans l'onglet <a href="configuration.html">Configuration</a>.</p>
+
+<h2 id="principe">Principe</h2>
+<ul>
+  <li>La grille de 16 × 16 cases représente le drone vu de dessus. Chaque case peut recevoir une LED.</li>
+  <li>Le numéro de câblage dit dans quel ordre les LED sont reliées : 0 pour la première LED après la carte, puis 1, 2… <b>Une LED sans numéro n'est pas enregistrée.</b></li>
+  <li>Le grand chiffre <b>Restantes</b> indique combien de LED peuvent encore être numérotées.</li>
+</ul>
+
+<h2 id="selection">Sélectionner des cases</h2>
+<ul>
+  <li>Clic sur une case : la sélectionne seule.</li>
+  <li>Clic maintenu et glissé : sélectionne toutes les cases du rectangle.</li>
+  <li>Touche Maj enfoncée : ajoute à la sélection (ou retire une case déjà sélectionnée).</li>
+  <li><b>Effacer la sélection</b> : efface fonction, orientation, couleur et numéro des cases sélectionnées.</li>
+  <li><b>Tout effacer</b> : efface toute la grille.</li>
+</ul>
+<p>Les réglages ci-dessous s'appliquent aux cases sélectionnées.</p>
+
+<h2 id="cablage">Câblage de bande de LED</h2>
+<ol>
+  <li>Cliquez sur <b>Mode commande par numéro</b> (le bouton reste allumé).</li>
+  <li>Cliquez les cases dans l'ordre réel du câblage : chacune reçoit le numéro suivant libre.</li>
+  <li>Cliquez de nouveau sur <b>Mode commande par numéro</b> pour en sortir.</li>
+</ol>
+<ul>
+  <li><b>Effacer sélection</b> : retire le numéro des cases sélectionnées.</li>
+  <li><b>Tout effacer</b> (sous le câblage) : retire tous les numéros, sans toucher aux fonctions.</li>
+</ul>
+
+<h2 id="fonctions">Fonctions LED</h2>
+<p><b>Fonction</b> : rôle des LED sélectionnées. Elle ne s'applique qu'aux cases qui ont déjà un numéro de câblage. Choix : <b>Aucune</b>, <b>Couleur</b>, <b>Modes &amp; Orientation</b>, <b>Etat de l'armement</b>, <b>Batterie</b>, <b>RSSI</b>, <b>GPS</b>, <b>Anneau</b>, <b>Barre GPS</b>, <b>Barre batterie</b>, <b>Altitude</b>.</p>
+<p>Selon la fonction choisie, d'autres options apparaissent :</p>
+<ul>
+  <li><b>Modifier les couleurs</b> : <b>Teinte selon les gaz</b> (avec la voie qui commande la teinte : Roll, Pitch, Yaw, Throttle ou AUX 1 à AUX 8), <b>Scanner Larson</b>, <b>clignote en permanence</b>, <b>Arc-en-ciel</b> (avec <b>Delta</b>, écart de teinte entre deux LED, de 0 à 359, et <b>Fréquence</b>, vitesse de l'effet, de 1 à 360).</li>
+  <li><b>Priorité</b> : <b>Avertissements</b>, <b>Indicateur (position sur la matrice)</b>, <b>VTX (couleur selon la fréquence vtx)</b>.</li>
+  <li><b>Mode couleurs</b> (fonction <b>Modes &amp; Orientation</b>) : pour Orientation, Headfree, Horizon, Angle, Mag et Baro, une couleur par direction (N, E, S, O, H, B).</li>
+  <li><b>Couleurs spéciales</b> : <b>Désarmé</b> et <b>Armé</b> (fonction <b>Etat de l'armement</b>) ; <b>GPS: aucun satellite</b>, <b>GPS: aucune accroche</b>, <b>GPS: attaché</b> (fonction <b>GPS</b>).</li>
+</ul>
+
+<h2 id="orientation">Orientation et couleur</h2>
+<ul>
+  <li>Boutons d'orientation : <b>N</b> (nord, l'avant), <b>E</b> (est, la droite), <b>S</b> (sud, l'arrière), <b>O</b> (ouest, la gauche), <b>H</b> (haut), <b>B</b> (bas). Un clic ajoute ou retire la direction aux LED sélectionnées.</li>
+  <li>Palette de 16 couleurs numérotées de 0 à 15 : un clic donne la couleur aux LED sélectionnées. Un <b>double-clic</b> ouvre <b>Configurer la couleur</b> avec trois curseurs : <b>H</b> (teinte, 0 à 359), <b>S</b> (saturation, 0 à 255), <b>V</b> (luminosité, 0 à 255). Échap ferme cette fenêtre.</li>
+  <li>Pour changer une couleur de <b>Mode couleurs</b> ou de <b>Couleurs spéciales</b> : cliquez sur son bouton, puis sur une couleur de la palette.</li>
+  <li><b>Luminosité</b> : pourcentage de la luminosité maximale des LED, de 5 % à 100 % (firmwares récents).</li>
+</ul>
+
+<h2 id="sauvegarder">Sauvegarder</h2>
+<p>Le bouton <b>Sauvegarder</b> devient actif dès qu'un réglage a changé. Il envoie la grille, les couleurs et les couleurs de mode à la carte puis les enregistre, sans redémarrage ; le bouton affiche « Enregistré » un court instant. Les curseurs de luminosité et d'arc-en-ciel agissent tout de suite sur la carte, mais ne sont gardés qu'après <b>Sauvegarder</b>.</p>

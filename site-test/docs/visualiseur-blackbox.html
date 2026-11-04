@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Visualiseur Blackbox · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet Visualiseur Blackbox (groupe « Analyse ») sert à ouvrir un journal de vol blackbox et à l&#x27;étudier en courbes : gyro, PID, moteurs, voies radio, spectre de bruit, carte GPS, avec la vidéo du vol si vous l&#x27;avez.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html" aria-current="page">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#acces">Où le trouver</a></li>
+      <li><a href="#ouvrir">Ouvrir un journal</a></li>
+      <li><a href="#barre-haut">Barre du haut (journal ouvert)</a></li>
+      <li><a href="#affichage">Choisir ce qui s&#x27;affiche</a></li>
+      <li><a href="#video">Caler la vidéo sur le journal</a></li>
+      <li><a href="#voir-aussi">Voir aussi</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Visualiseur Blackbox</h1>
+<p class="chapeau">L'onglet <b>Visualiseur Blackbox</b> (groupe « Analyse ») sert à ouvrir un journal de vol blackbox et à l'étudier en courbes : gyro, PID, moteurs, voies radio, spectre de bruit, carte GPS, avec la vidéo du vol si vous l'avez.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/visualiseur-blackbox.webp" alt="Onglet Visualiseur Blackbox sans journal ouvert : fenêtre centrale « Open a flight log » avec les boutons « Open log file » et « Download from FC » et le lien « Getting started with Blackbox », sur un fond de courbes estompé"><img class="t-clair" src="../assets/img/onglets/visualiseur-blackbox-clair.webp" alt="Onglet Visualiseur Blackbox en thème clair, fenêtre d'ouverture d'un journal">
+  <figcaption>Capture du logiciel connecté au simulateur TRUEGLIDE (SITL) sur PC, sans journal ouvert. Le simulateur n'a pas de mémoire de vol : « Download from FC » reste grisé.</figcaption>
+</figure>
+
+<h2 id="acces">Où le trouver</h2>
+<p>Cet onglet est toujours dans le menu, avec ou sans carte branchée : on peut lire un journal sans drone. Ses textes sont en anglais.</p>
+
+<h2 id="ouvrir">Ouvrir un journal</h2>
+<ul>
+  <li><b>Open log file</b> : choisit un fichier sur l'ordinateur. Extensions acceptées : <code>.bbl</code>, <code>.bfl</code>, <code>.cfl</code>, <code>.log</code>, <code>.txt</code> (journaux) et <code>.json</code> (espaces de travail du visualiseur).</li>
+  <li><b>Download from FC</b> : récupère le journal enregistré dans la mémoire de la carte branchée, avec un pourcentage d'avancement. Actif seulement si une carte est connectée et que sa mémoire contient des données. Ce transfert passe par la liaison de configuration : il est lent pour les gros journaux (voir <a href="blackbox.html">Blackbox</a>, cadre « Mémoire embarquée »).</li>
+  <li><b>Glisser-déposer</b> : un fichier déposé sur l'onglet est ouvert comme journal (<code>.bbl</code>, <code>.txt</code>, <code>.cfl</code>, <code>.bfl</code>, <code>.log</code>), comme vidéo (<code>.avi</code>, <code>.mov</code>, <code>.mp4</code>, <code>.mpeg</code>) ou comme espaces de travail (<code>.json</code>).</li>
+  <li><b>Getting started with Blackbox</b> : lien vers le guide blackbox du site Betaflight (en anglais, nécessite Internet).</li>
+</ul>
+<p>Les journaux écrits par <b>TRUEGLIDE</b> indiquent « Betaflight » comme type de firmware dans leur en-tête : c'est voulu, les visualiseurs choisissent leur décodeur d'après ce nom.</p>
+
+<h2 id="barre-haut">Barre du haut (journal ouvert)</h2>
+<ul>
+  <li><b>Open log file</b> et le nom du fichier ouvert.</li>
+  <li><b>CSV</b> : exporte les données du journal en tableau.</li>
+  <li><b>GPX</b> : exporte la trace GPS, pour l'ouvrir dans un logiciel de cartes.</li>
+  <li><b>Export Workspaces</b> : enregistre vos réglages d'affichage (espaces de travail) dans un fichier.</li>
+  <li>Roue dentée (<b>User Settings</b>) : réglages du visualiseur.</li>
+  <li>Clavier (<b>Keyboard Shortcuts</b>) : liste des raccourcis clavier.</li>
+</ul>
+
+<h2 id="affichage">Choisir ce qui s'affiche</h2>
+<p>Les boutons d'affichage (au-dessus des courbes, groupes « View » et « Overlay ») montrent ou cachent :</p>
+<ul>
+  <li><b>Log header</b> (touche H) : l'en-tête du journal, c'est-à-dire les réglages de la carte au moment du vol ;</li>
+  <li><b>Table</b> (touche T) : les valeurs au point de lecture ;</li>
+  <li><b>Video</b> : la vidéo chargée ;</li>
+  <li><b>Craft</b> : le dessin du drone et de ses moteurs ;</li>
+  <li><b>Sticks</b> : la position des manches ;</li>
+  <li><b>Analyser</b> (touche A) : le spectre de fréquences (bruit) ;</li>
+  <li><b>Map</b> : la carte de la trace GPS.</li>
+</ul>
+<p>La barre de défilement en bas sert à se déplacer dans le vol. Les espaces de travail mémorisent un choix de courbes : renommez-les ou enregistrez-y l'affichage en cours avec leurs boutons.</p>
+
+<h2 id="video">Caler la vidéo sur le journal</h2>
+<p>Après avoir déposé une vidéo, les boutons de synchronisation déplacent le journal plus tôt (<b>Move log earlier</b>) ou plus tard (<b>Move log later</b>), le font commencer à l'instant affiché (<b>Start log here</b>), ou permettent de saisir un décalage (<b>Enter a time offset</b>). <b>Smart Sync</b> (Alt+M) cherche le calage seul.</p>
+
+<h2 id="voir-aussi">Voir aussi</h2>
+<ul>
+  <li><a href="blackbox.html">Blackbox</a> : régler l'enregistrement et vider la mémoire de la carte.</li>
+  <li><a href="memo-wiki.html">Mémo &amp; Wiki</a>, page « Analyse des journaux » : l'outil d'analyse en français fourni avec le firmware, et le sens des modes debug <code>POWER_GUARD</code> et <code>MOTOR_HEALTH</code>.</li>
+</ul>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

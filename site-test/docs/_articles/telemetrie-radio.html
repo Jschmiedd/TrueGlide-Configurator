@@ -1,0 +1,52 @@
+<h1>Télémétrie radio</h1>
+<p class="chapeau">L'onglet <b>Télémétrie radio</b> (groupe « Fonctions TrueGlide ») sert à envoyer la température de chaque ESC à la radio par la télémétrie ELRS / Crossfire (CRSF). La radio peut alors afficher ces températures et donner une alerte vocale.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/telemetrie-radio.png" alt="Onglet Télémétrie radio : texte d'introduction des réglages TrueGlide, puis cadre orange Le firmware de la carte n'a pas ces réglages"><img class="t-clair" src="../assets/img/onglets/telemetrie-radio-clair.png" alt="Onglet Télémétrie radio en thème clair : même message, réglage absent du firmware">
+  <figcaption>Capture du logiciel connecté au simulateur <b>TRUEGLIDE</b> (SITL) sur PC. Le simulateur n'a ni télémétrie CRSF ni ESC : le réglage n'existe pas, et l'onglet affiche « Le firmware de la carte n'a pas ces réglages ». Sur une vraie carte qui a la télémétrie CRSF, le cadre décrit plus bas apparaît.</figcaption>
+</figure>
+
+<h2 id="conditions">Quand le réglage existe</h2>
+<p>Le firmware <b>TRUEGLIDE</b> ne contient ce réglage que si la carte a les deux :</p>
+<ul>
+  <li>la télémétrie CRSF ;</li>
+  <li>une source de température des ESC : télémétrie DShot ou télémétrie série des ESC (fil séparé).</li>
+</ul>
+<p>Sinon, l'onglet affiche « Le firmware de la carte n'a pas ces réglages ».</p>
+
+<h2 id="cadre">Cadre « Télémétrie radio (ELRS / Crossfire) »</h2>
+<ul>
+  <li><b>Température des ESC vers la radio</b> : interrupteur. Activé, la carte envoie toutes les 2 secondes une trame de température CRSF, avec une valeur par moteur, dans l'ordre des moteurs (8 moteurs au plus). Par défaut : coupé. Coupé, la télémétrie reste exactement celle du firmware de base.</li>
+</ul>
+<p>Détails utiles :</p>
+<ul>
+  <li><b>Rien n'est envoyé</b> si un seul ESC ne donne pas sa température. Le firmware préfère ne rien envoyer plutôt que décaler les valeurs sur le mauvais moteur ou envoyer un faux 0 °C.</li>
+  <li>Avec la télémétrie DShot, la température demande la télémétrie DShot étendue (réglage <code>dshot_edt</code>), avec un ESC qui la fournit (par exemple Bluejay ou AM32).</li>
+  <li>Avec la télémétrie série des ESC, une donnée trop ancienne n'est pas envoyée.</li>
+  <li>La commande du drone n'est pas touchée : seule la télémétrie vers la radio change.</li>
+</ul>
+
+<h2 id="procedure">Activer la température des ESC sur la radio</h2>
+<ol>
+  <li>Vérifier que le récepteur est en CRSF (ELRS ou Crossfire) et que l'interrupteur <b>Sortie télémétrie</b> est activé dans l'onglet <a href="recepteur.html">Récepteur</a>. Sans lui, aucune télémétrie n'est envoyée.</li>
+  <li>Vérifier que les ESC donnent leur température : télémétrie DShot étendue, ou fil de télémétrie série (onglet <a href="moteurs.html">Moteurs</a>).</li>
+  <li>Onglet <b>Télémétrie radio</b> : activer <b>Température des ESC vers la radio</b>.</li>
+  <li>Cliquer sur <b>Enregistrer et redémarrer</b>. Le contrôleur de vol redémarre et le logiciel se reconnecte.</li>
+  <li>Brancher la batterie, <b>Hélices retirées</b>. Sur la radio (EdgeTX 2.10 ou plus récent) : Télémesure, puis Découvrir les capteurs. Les capteurs « Temp » apparaissent, un par moteur.</li>
+  <li>Régler l'alerte vocale sur ces capteurs dans la radio.</li>
+</ol>
+<div class="encart">Cette fonction est vérifiée par des tests du firmware, pas encore en vol avec une vraie radio. Vérifier au sol que les valeurs arrivent avant de compter sur l'alerte.</div>
+
+<h2 id="boutons">Boutons en bas de l'onglet</h2>
+<ul>
+  <li><b>Relire</b> : relit le réglage dans le contrôleur de vol. Un changement non enregistré est perdu.</li>
+  <li><b>Enregistrer et redémarrer</b> : actif seulement si le réglage a changé. Envoie le réglage puis enregistre : le contrôleur de vol redémarre.</li>
+</ul>
+
+<h2 id="cli">Réglage équivalent dans le CLI</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Libellé dans l'onglet</th><th>Réglage CLI</th><th>Valeurs</th><th>Défaut</th></tr></thead>
+  <tbody>
+    <tr><td>Température des ESC vers la radio</td><td><code>crsf_tlm_esc_temp</code></td><td>OFF / ON</td><td>OFF</td></tr>
+  </tbody>
+</table></div>
+<p>La même température des ESC peut aussi limiter les gaz en cas de surchauffe : voir l'onglet <a href="protections.html">Protections</a>.</p>

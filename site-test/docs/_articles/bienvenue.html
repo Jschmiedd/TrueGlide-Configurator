@@ -1,0 +1,69 @@
+<h1>Bienvenue</h1>
+<p class="chapeau">L'onglet <b>Bienvenue</b> (groupe « Sans carte branchée ») est la page d'accueil du logiciel quand aucun drone n'est connecté. Il présente les trois firmwares, ce que TrueGlide ajoute, les quatre étapes pour démarrer et des liens vers les onglets utiles sans carte.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/bienvenue.png" alt="Onglet Bienvenue en thème sombre : logo TRUEGLIDE en haut, puis un bandeau vert à trois colonnes (TRUEGLIDE et ses deux dérivés, Ce que TrueGlide ajoute, Démarrer) et le choix de la langue en bas"><img class="t-clair" src="../assets/img/onglets/bienvenue-clair.png" alt="Onglet Bienvenue en thème clair : logo TRUEGLIDE en haut, puis un bandeau à trois colonnes (TRUEGLIDE et ses deux dérivés, Ce que TrueGlide ajoute, Démarrer) et le choix de la langue en bas">
+  <figcaption>Capture du logiciel non connecté. Le menu de gauche ne montre que les onglets utilisables sans carte.</figcaption>
+</figure>
+
+<h2 id="en-tete">En-tête</h2>
+<p>Le logo, une phrase d'accueil et la devise « Réglages Optimisés pour chaque Build. ». Rien à régler ici.</p>
+
+<h2 id="modeles">TRUEGLIDE et ses deux dérivés</h2>
+<p>Colonne de gauche, en haut. Elle décrit les trois firmwares :</p>
+<ul>
+  <li><b>TRUEGLIDE</b> : le firmware de base, pour la course, le freestyle et le cinéma.</li>
+  <li><b>TRUENAV</b> (dérivé combiné) : <b>TRUEGLIDE</b> + navigation GPS complète (missions, maintien de position, retour au départ).</li>
+  <li><b>TRUENAV_LIGHT</b> (dérivé navigation) : <b>TRUENAV</b> sans les fonctions de course, pour les drones de longue portée.</li>
+</ul>
+<p>Un seul fichier est flashé sur la carte. On peut changer de modèle à tout moment en flashant un autre fichier. Voir <a href="flasher.html">Installer le firmware</a>.</p>
+
+<h2 id="securite">Sécurité</h2>
+<p>Cadre sombre sous les modèles. Il rappelle que le logiciel est fourni sans garantie : vérifier chaque réglage, tester <b>hélices retirées</b>, puis voler dans un lieu dégagé. Le pilote reste seul responsable de son drone et du respect de la réglementation de son pays (en Suisse : OFAC ; en France : DGAC).</p>
+
+<h2 id="materiel">Matériel</h2>
+<p>Le firmware fonctionne sur les contrôleurs de vol compatibles Betaflight (STM32 F4, F7, G4, H7, AT32, APM32, RP2350). Le cadre donne trois liens vers des pilotes USB, utiles surtout sous Windows :</p>
+<ul>
+  <li><b>Pilotes CP210x</b> : pour les anciennes cartes qui ont une puce USB-série CP210x (site silabs.com).</li>
+  <li><b>Zadig</b> : pilote USB Windows pour le mode DFU (site zadig.akeo.ie).</li>
+  <li><b>ImpulseRC Driver Fixer</b> : outil de réparation des pilotes (lien vers github.com).</li>
+</ul>
+
+<h2 id="ajouts">Ce que TrueGlide ajoute</h2>
+<p>Colonne du milieu. Une ligne par fonction :</p>
+<ul>
+  <li><b>Protection anti-surchauffe</b> : limite les gaz si un ESC chauffe ou si le courant dépasse la limite. Réglage dans <a href="protections.html">Protections</a>.</li>
+  <li><b>Relance moteur</b> : un moteur calé ou désynchronisé est relancé ; alertes OSD. Réglage dans <a href="protections.html">Protections</a>.</li>
+  <li><b>Mode SPEEDER</b> : passage progressif du stationnaire au vol rapide. Voir <a href="speeder.html">Speeder</a>.</li>
+  <li><b>Assistant de réglage</b> : PID et filtres calculés selon le drone. Voir <a href="assistant-de-reglage.html">Assistant de réglage</a>.</li>
+  <li><b>Navigation GPS (TRUENAV)</b> : missions, maintien de position, retour au départ. Voir <a href="gps.html">GPS</a> et <a href="plan-de-vol.html">Plan de vol</a>.</li>
+  <li><b>Caméra commandée</b> : alimentation par un interrupteur de la radio ; nacelle Caddx GM3. Voir <a href="camera.html">Caméra</a>.</li>
+</ul>
+<p>Sous la liste : « Tout est désactivé par défaut : le drone vole comme avant tant qu'on ne l'active pas. »</p>
+
+<h2 id="liens">Liens vers les onglets</h2>
+<p>Quatre liens ouvrent directement un onglet, sans carte branchée :</p>
+<ul>
+  <li><b>Mémo &amp; Wiki</b> : tous les réglages TrueGlide expliqués, en français, lisibles sans Internet. Voir <a href="memo-wiki.html">Mémo &amp; Wiki</a>.</li>
+  <li><b>Flasher le Firmware</b> : installer le firmware sur la carte. Voir <a href="flasher-le-firmware.html">Flasher le Firmware</a>.</li>
+  <li><b>Pré-vol</b> : météo et conditions du lieu de vol. Voir <a href="pre-vol.html">Pré-vol</a>.</li>
+  <li><b>Visualiseur Blackbox</b> : lire les journaux de vol sans brancher le drone. Voir <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</li>
+</ul>
+
+<h2 id="demarrer">Démarrer</h2>
+<p>Colonne de droite. Les quatre étapes affichées :</p>
+<ol class="etapes">
+  <li>Installer le firmware TrueGlide : onglet <b>Flasher le Firmware</b>, fichier .hex TrueGlide.</li>
+  <li>Brancher le drone en USB, puis <b>Connexion</b> en haut à droite : le tableau de bord s'ouvre (voir <a href="tableau-de-bord.html">Tableau de bord</a>).</li>
+  <li>Suivre la mise en route guidée : 9 étapes, de l'installation aux fonctions TrueGlide.</li>
+  <li>Assistant de réglage, puis premier vol : stationnaire de 30 s, atterrir, toucher les moteurs.</li>
+</ol>
+<p>La procédure complète est dans <a href="mise-en-route.html">Mise en route</a>.</p>
+
+<h2 id="logiciel-libre">Logiciel libre et vie privée</h2>
+<ul>
+  <li><b>Logiciel libre</b> : licence GPL-3.0, sans aucune garantie, modifié à partir de Betaflight App 2026.6.2. Le lien mène au code source sur GitHub. Le lien <b>Licences des composants tiers</b> ouvre la liste des licences des bibliothèques utilisées.</li>
+  <li><b>Vie privée</b> : aucune statistique d'utilisation n'est envoyée. Seuls les onglets GPS, Plan de vol, Preset et Pré-vol contactent un service tiers à leur ouverture (cartes, altitude, préréglages, météo, espace aérien). La mise à jour du firmware contacte GitHub seulement quand vous cliquez. La localisation par adresse IP n'est faite qu'après votre accord.</li>
+</ul>
+
+<h2 id="langue">Modifier la langue</h2>
+<p>En bas de la page : la liste <b>Modifier la langue</b>. « Sélection par défaut » suit la langue du navigateur. Le changement s'applique tout de suite.</p>
