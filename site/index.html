@@ -15,6 +15,9 @@
   .ouverture .logo { width: min(560px, 100%); display: block; margin-bottom: 22px; }
   .ouverture h1 { font-size: clamp(30px, 4.4vw, 46px); margin: 0 0 14px; color: #ffffff; }
   .ouverture p { color: #b9bbb4; font-size: 18px; max-width: 34em; margin: 0 0 22px; }
+  .ouverture .points { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 12px; max-width: 36em; color: #b9bbb4; font-size: 16.5px; }
+  .ouverture .points li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; }
+  .ouverture .points b { color: #ececea; }
   .ouverture .boutons { display: flex; gap: 12px; flex-wrap: wrap; }
   .ouverture .btn { color: #ececea; border-color: #3a3b37; }
   .ouverture .btn.plein { background: #c6f700; border-color: #c6f700; color: #121212; }
@@ -94,9 +97,13 @@
   <div class="large">
     <div>
       <img class="logo" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
-      <h1>Régler son drone FPV en français, même carte débranchée.</h1>
-      <p><b>TRUEGLIDE CONFIGURATOR</b> règle le drone dans le navigateur, sans rien installer. Avec la <b>carte hors ligne</b>, on lit la carte une fois, on règle tous les onglets débranché, puis on renvoie les changements : ça marche avec le firmware <b>TRUEGLIDE</b> comme avec Betaflight (4.4 ou plus récent). En plus : <b>TRUEGLIDE STUDIO</b> pour un réglage de départ expliqué, une mise en route guidée en 9 étapes, l'onglet ESC et une limite des moteurs au banc.</p>
-      <p>Le firmware <b>TRUEGLIDE</b>, basé sur Betaflight 2026.6.2, ajoute des protections et le mode SPEEDER. Sans réglage, il vole comme Betaflight.</p>
+      <h1>Branchez votre carte une fois, réglez votre drone n'importe où.</h1>
+      <p><b>TRUEGLIDE CONFIGURATOR</b> simplifie le paramétrage de votre drone FPV, dans votre navigateur et sans aucune installation.</p>
+      <ul class="points">
+        <li><span aria-hidden="true">💾</span><div><b>Mode hors ligne complet :</b> branchez votre carte une seule fois pour la lire. Vous pouvez ensuite ajuster tous vos onglets sans câble, où vous voulez, et appliquer les changements au prochain branchement.</div></li>
+        <li><span aria-hidden="true">🛠️</span><div><b>TRUEGLIDE STUDIO :</b> profitez d'un préréglage de départ calculé spécifiquement pour la taille, le poids et les moteurs de votre drone, avec chaque valeur expliquée.</div></li>
+        <li><span aria-hidden="true">🔧</span><div><b>Tout-en-un et sécurisé :</b> flashez vos ESC (Bluejay, AM32) directement dans l'interface, suivez un guide de mise en route en 9 étapes et testez vos moteurs en toute sécurité avec une limite automatique à 30&nbsp;% des gaz.</div></li>
+      </ul>
       <div class="boutons">
         <a class="btn plein" href="https://jschmiedd.github.io/TrueGlide-Configurator/app/">Ouvrir le logiciel</a>
         <a class="btn" href="docs/flasher.html">Installer le firmware</a>
