@@ -15,6 +15,9 @@
   .ouverture .logo { width: min(560px, 100%); display: block; margin-bottom: 22px; }
   .ouverture h1 { font-size: clamp(30px, 4.4vw, 46px); margin: 0 0 14px; color: #ffffff; }
   .ouverture p { color: #b9bbb4; font-size: 18px; max-width: 34em; margin: 0 0 22px; }
+  .ouverture .points { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 12px; max-width: 36em; color: #b9bbb4; font-size: 16.5px; }
+  .ouverture .points li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; }
+  .ouverture .points b { color: #ececea; }
   .ouverture .boutons { display: flex; gap: 12px; flex-wrap: wrap; }
   .ouverture .btn { color: #ececea; border-color: #3a3b37; }
   .ouverture .btn.plein { background: #c6f700; border-color: #c6f700; color: #121212; }
@@ -94,13 +97,18 @@
   <div class="large">
     <div>
       <img class="logo" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
-      <h1>Le pilotage de Betaflight, avec des protections et la navigation en plus.</h1>
-      <p><b>TRUEGLIDE</b> est un firmware de contrôleur de vol basé sur Betaflight 2026.6.2. Il ajoute une protection contre la surchauffe, la relance des moteurs, le mode SPEEDER et, dans <b>TRUENAV</b>, les missions GPS. Sans réglage, il vole exactement comme Betaflight. Le logiciel TrueGlide Configurator le règle en français, même carte débranchée.</p>
+      <h1>Branchez votre carte une fois, réglez votre drone n'importe où.</h1>
+      <p><b>TRUEGLIDE CONFIGURATOR</b> simplifie le paramétrage de votre drone FPV, dans votre navigateur et sans aucune installation.</p>
+      <ul class="points">
+        <li><span aria-hidden="true">💾</span><div><b>Mode hors ligne complet :</b> branchez votre carte une seule fois pour la lire. Vous pouvez ensuite ajuster tous vos onglets sans câble, où vous voulez, et appliquer les changements au prochain branchement.</div></li>
+        <li><span aria-hidden="true">🛠️</span><div><b>TRUEGLIDE STUDIO :</b> profitez d'un préréglage de départ calculé spécifiquement pour la taille, le poids et les moteurs de votre drone, avec chaque valeur expliquée.</div></li>
+        <li><span aria-hidden="true">🔧</span><div><b>Tout-en-un et sécurisé :</b> flashez vos ESC (Bluejay, BLHeli_S, AM32) directement dans l'interface, suivez un guide de mise en route en 9 étapes et testez vos moteurs en toute sécurité avec une limite automatique à 30&nbsp;% des gaz.</div></li>
+      </ul>
       <div class="boutons">
-        <a class="btn plein" href="#telecharger">Télécharger la 2026.6.2</a>
-        <a class="btn" href="docs/index.html">Documentation</a>
+        <a class="btn plein" href="https://jschmiedd.github.io/TrueGlide-Configurator/app/">Ouvrir le logiciel</a>
+        <a class="btn" href="docs/flasher.html">Installer le firmware</a>
       </div>
-      <div class="etat"><span>version 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 33 cartes</span></div>
+      <div class="etat"><span>TRUEGLIDE 2026.6.2 · base Betaflight 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 33 cartes</span></div>
     </div>
     <figure>
       <img src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
@@ -155,7 +163,7 @@
     <div class="fonctions">
       <div class="fonction">
         <h3>Carte hors ligne</h3>
-        <p>Préparer son drone sans le brancher : le logiciel récolte une copie de la carte, puis tous les onglets se règlent sur cette copie, à la maison ou au terrain. Avant l'envoi à la vraie carte, la liste exacte des commandes s'affiche. Jusqu'à 3 cartes gardées.</p>
+        <p>Préparer son drone sans le brancher : le logiciel récolte une copie de la carte, puis tous les onglets se règlent sur cette copie, à la maison ou au terrain. Avant l'envoi à la vraie carte, la liste exacte des commandes s'affiche. Jusqu'à 3 cartes gardées. Fonctionne avec les cartes sous <b>TRUEGLIDE</b> et sous Betaflight.</p>
         <div class="chiffre">essayée avec la vraie carte · 02/11/2026</div>
       </div>
       <div class="fonction">
