@@ -1,0 +1,35 @@
+# TrueGlide Configurator : contrôle automatique (audit du 06/11/2026, constat 13).
+# Les commits portent « [skip ci] » (règle de Johann) : le contrôle tourne donc aussi chaque nuit et à la demande
+# (onglet Actions > Tests > Run workflow), sur main (= /app/) et sur essai-onglets (= /test/).
+# Dépôt public : les minutes GitHub Actions sont gratuites.
+
+name: Tests
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  push:
+    branches: [main, essai-onglets]
+  pull_request:
+
+jobs:
+  tests:
+    name: Lint, tests et construction (${{ matrix.branche }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        branche: [main, essai-onglets]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'schedule' && matrix.branche || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx vitest run
+      - run: npx vite build

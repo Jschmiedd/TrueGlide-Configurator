@@ -5,6 +5,7 @@
 // carte branchée. Les écritures sont gardées dans l'ordre, pour être envoyées plus tard à la vraie carte.
 // Format du fichier carte : « trueglide-carte » (propre à TrueGlide).
 
+import { isSettingCommand } from "../cli_safety.js";
 import { FrameReader, encodeCli, encodeResponse, fromHex, hex } from "./frames.js";
 import { applyCliSet, applyWrite } from "./writes.js";
 
@@ -164,6 +165,10 @@ export class OfflineBoard {
         }
         if (/^(save|exit|defaults|bl|dfu|reboot|flash_erase)\b|^(profile|rateprofile|battery_profile)\s+\d/i.test(c)) {
             return [`# ${c} : impossible hors ligne`];
+        }
+        // seulement des réglages : jamais une commande qui agit tout de suite sur la carte (moteurs, passerelle…)
+        if (!isSettingCommand(c)) {
+            return [`# ${c} : refusée hors ligne (seuls les réglages sont gardés pour l'envoi)`];
         }
         this.rec.writes.push({ cli: c });
         applyCliSet(this.rec, c);

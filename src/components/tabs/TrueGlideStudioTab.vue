@@ -24,12 +24,14 @@
 </template>
 
 <script setup>
+import { forbiddenCommands } from "@/js/trueglide/cli_safety.js";
+import { backupBeforeWrite, saveAndVerify } from "@/js/trueglide/write_guard.js";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { i18n } from "@/js/localization";
 import { gui_log } from "@/js/gui_log";
 import { useConnectionStore } from "@/stores/connection";
-import { isMspCliSupported, readDumpAll, saveAndReconnect, send } from "@/composables/useMspCliSession";
+import { isMspCliSupported, readDumpAll, send } from "@/composables/useMspCliSession";
 import { OFFLINE_PATH } from "@/js/protocols/OfflineBoardSerial.js";
 import FC from "@/js/fc";
 import {
@@ -101,12 +103,25 @@ async function sendCommands(id, texte) {
         post(resultMessage(id, false, i18n.getMessage("tfStudioSendNoBoard")));
         return;
     }
+    // audit du 06/11/2026 : seulement des réglages, jamais une commande qui agit tout de suite sur la carte
+    const forbidden = forbiddenCommands(commands);
+    if (forbidden.length) {
+        post(resultMessage(id, false, i18n.getMessage("tfStudioSendForbidden", [forbidden.slice(0, 3).join(" · ")])));
+        return;
+    }
     if (!commands.length || !globalThis.confirm(i18n.getMessage("tfStudioSendConfirm", [commands.length]))) {
         post(resultMessage(id, false, i18n.getMessage("tfStudioSendCancelled")));
         return;
     }
     sending.value = true;
     try {
+        // sauvegarde de la carte sur l'ordinateur avant toute écriture (audit du 06/11/2026)
+        const backup = await backupBeforeWrite(FC.CONFIG?.craftName || FC.CONFIG?.boardName);
+        if (!backup.ok) {
+            post(resultMessage(id, false, i18n.getMessage("tfOfflineBackupFailed", [backup.reason])));
+            return;
+        }
+        gui_log(i18n.getMessage("tfStudioBackupSaved", [backup.file]));
         for (const command of commands) {
             let refused;
             try {
@@ -128,9 +143,16 @@ async function sendCommands(id, texte) {
         const text = i18n.getMessage("tfStudioSendDone", [commands.length]);
         post(resultMessage(id, true, text));
         gui_log(text);
-        const saved = await saveAndReconnect();
+        const saved = await saveAndVerify(backup.lines);
         if (!saved.ok) {
             gui_log(`${i18n.getMessage("tfStudioReadFailed")} ${saved.error?.message ?? saved.error}`);
+        } else if (saved.lost) {
+            gui_log(i18n.getMessage("tfOfflineSentLost", [backup.file]));
+            globalThis.alert?.(i18n.getMessage("tfOfflineSentLost", [backup.file]));
+        } else if (saved.verified) {
+            gui_log(i18n.getMessage("tfOfflineSentVerified"));
+        } else {
+            gui_log(i18n.getMessage("tfOfflineSentNotVerified", [backup.file]));
         }
     } finally {
         sending.value = false;

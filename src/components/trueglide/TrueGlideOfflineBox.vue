@@ -170,11 +170,32 @@ async function sendNow() {
     state.sending = true;
     state.sent = "";
     const { sendPrepared } = await import("@/js/trueglide/offline/send.js");
-    const r = await sendPrepared();
+    let r = await sendPrepared();
+    // la vraie carte a changé depuis la récolte (ou depuis le dernier envoi) : le pilote décide
+    if (!r.ok && (r.reason === "changee" || r.reason === "inconnue")) {
+        const question =
+            r.reason === "changee"
+                ? msg("tfOfflineBoardChanged", [r.count, r.lignes.join("\n"), r.file])
+                : msg("tfOfflineBoardUnknown", [r.file]);
+        if (globalThis.confirm(question)) {
+            r = await sendPrepared({ force: true, backup: r.backup });
+        } else {
+            r = { ok: false, reason: "annule", file: r.file };
+        }
+    }
     state.sending = false;
-    state.sentOk = r.ok;
+    state.sentOk = r.ok && !r.lost;
     if (r.ok) {
         state.sent = msg("tfOfflineSent", [r.count]);
+        state.sent += ` ${r.lost ? msg("tfOfflineSentLost", [r.file]) : r.verified ? msg("tfOfflineSentVerified") : msg("tfOfflineSentNotVerified", [r.file])}`;
+    } else if (r.reason === "annule") {
+        state.sent = msg("tfOfflineSendCancelledBackup", [r.file]);
+    } else if (r.reason === "sauvegarde") {
+        state.sent = msg("tfOfflineBackupFailed", [r.reply]);
+    } else if (r.reason === "coupure") {
+        state.sent = msg("tfOfflineSendCut", [r.file]);
+    } else if (r.reason === "interdit") {
+        state.sent = msg("tfOfflineSendForbidden", [r.write?.cli ?? `MSP ${r.write?.code}`]);
     } else if (r.reason === "refus") {
         state.sent = msg("tfOfflineSendRefused", [r.write?.cli ?? r.write?.code, r.reply]);
     } else {
@@ -185,7 +206,9 @@ async function sendNow() {
 
 function remove(b) {
     const pending = pendingOf(b.rec);
-    const text = pending ? msg("tfOfflineRemoveConfirmPending", [boardLabel(b.rec), pending]) : msg("tfOfflineRemoveConfirm", [boardLabel(b.rec)]);
+    const text = pending
+        ? msg("tfOfflineRemoveConfirmPending", [boardLabel(b.rec), pending])
+        : msg("tfOfflineRemoveConfirm", [boardLabel(b.rec)]);
     if (!globalThis.confirm(text)) {
         return;
     }

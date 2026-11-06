@@ -549,6 +549,15 @@
     "tfFlasherBoardMismatchTitle": {
         "message": "Different board"
     },
+    "tfFlasherContentTitle": {
+        "message": "File refused"
+    },
+    "tfFlasherContentRefused": {
+        "message": "The content of this file is not a firmware for {{fileBoard}}, although its name says so (renamed file?). Flashing refused: use your board's file."
+    },
+    "tfFlasherContentOtherBoard": {
+        "message": "The content of this file does not name the connected board ({{connectedBoard}}): it is probably for another board. Flash only if you are sure it is this board's firmware."
+    },
     "tfFlasherBoardUnknownWarning": {
         "message": "The app cannot read the board right now (disconnected, or in DFU mode): it cannot check that this file suits it. File made for: {{fileBoard}}. Last connected board: {{lastBoard}}. Flash only if this is the file for your board."
     },
@@ -896,6 +905,39 @@
     },
     "tfStudioSendCancelled": {
         "message": "Sending cancelled: nothing was sent."
+    },
+    "tfOfflineBoardChanged": {
+        "message": "The real board has changed since the harvest ($1 diff all line(s) differ), for example:\n$2\n\nSending will replace these settings with the ones prepared offline. Advice: Cancel, then harvest the board again.\n\nBoard backup saved on the computer: $3\n\nSend anyway?"
+    },
+    "tfOfflineBoardUnknown": {
+        "message": "This board was changed by a previous sending that could not be read back: it is impossible to know whether it changed since. Advice: Cancel, then harvest the board again.\n\nBoard backup saved on the computer: $1\n\nSend anyway?"
+    },
+    "tfOfflineSendCancelledBackup": {
+        "message": "Sending cancelled: nothing was written. Board backup saved on the computer: $1."
+    },
+    "tfOfflineBackupFailed": {
+        "message": "Sending stopped before any write: the board backup (diff all) could not be read ($1)."
+    },
+    "tfOfflineSendCut": {
+        "message": "USB link cut during sending: nothing was saved, the board keeps its previous configuration. Reconnect and check with diff all. Backup: $1."
+    },
+    "tfOfflineSentVerified": {
+        "message": "Board read back after saving: configuration in place."
+    },
+    "tfOfflineSentNotVerified": {
+        "message": "The board could not be read back after saving: check with diff all. Backup: $1."
+    },
+    "tfOfflineSentLost": {
+        "message": "WARNING: after saving, the board seems back to factory settings (cut during saving?). Do not fly: paste the backup $1 in the CLI tab, then save."
+    },
+    "tfStudioBackupSaved": {
+        "message": "Board backup (diff all) saved on the computer: $1"
+    },
+    "tfStudioSendForbidden": {
+        "message": "Sending refused: these commands are not settings ($1). Studio only sends settings (set, serial, feature, aux…), never a command that acts on the board at once."
+    },
+    "tfOfflineSendForbidden": {
+        "message": "Sending refused: \"$1\" is not a setting. Nothing was sent. Only settings are sent, never a command that acts on the board at once (motors, passthrough…)."
     },
     "tfStudioSendConfirm": {
         "message": "Send $1 Studio command(s) to the board, then save?\n\nProps off. Read the commands first. At the first refused command nothing is saved. The board reboots at the end."

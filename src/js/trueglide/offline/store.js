@@ -5,6 +5,7 @@
 // loadBoard() / saveBoard() lisent et écrivent. Le fichier carte s'enregistre aussi sur l'ordinateur.
 
 import { FORMAT, VERSION } from "./board.js";
+import { forbiddenWrite } from "./safety.js";
 
 export const MAX_BOARDS = 3;
 const KEY = "trueglide-cartes-hors-ligne";
@@ -159,7 +160,7 @@ function craftNameFromRecording(rec) {
 }
 
 // Ouvre un fichier carte (texte JSON) ; refuse un autre format ou une autre version.
-export function parseBoardFile(text) {
+export function parseBoardFile(text, MSPCodes = null) {
     let o;
     try {
         o = JSON.parse(text);
@@ -171,6 +172,19 @@ export function parseBoardFile(text) {
     }
     if (o.version !== VERSION) {
         throw new Error(`Version du fichier carte non prise en charge : ${o.version}.`);
+    }
+    // audit du 06/11/2026 : un fichier carte ne peut contenir que des réglages (rien qui agisse tout de suite)
+    if (MSPCodes) {
+        const writes = [
+            ...(Array.isArray(o.writes) ? o.writes : []),
+            ...(o.simulee?.commandes ?? []).map((cli) => ({ cli })),
+        ];
+        const bad = forbiddenWrite(writes, MSPCodes);
+        if (bad) {
+            throw new Error(
+                `Ce fichier contient une commande qui n'est pas un réglage (${bad.cli ?? `MSP ${bad.code}`}) : refusé.`,
+            );
+        }
     }
     return o;
 }

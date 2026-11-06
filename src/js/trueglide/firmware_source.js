@@ -17,7 +17,7 @@ export const TRUEGLIDE_FIRMWARE_URL = "https://jschmiedd.github.io/TrueGlide-Con
 export const TRUEGLIDE_FIRMWARE_TEST_URL = TRUEGLIDE_FIRMWARE_URL;
 const TEST_APP_PATH = "/TrueGlide-Configurator/test/";
 
-// Autre adresse (essais, serveur local) : localStorage « tf_update_url » (sans le mot « firmware », que main.js efface
+// Autre adresse (essais sur serveur local seulement) : localStorage « tf_update_url » (sans le mot « firmware », que main.js efface
 // du stockage au démarrage).
 const URL_OVERRIDE_KEY = "tf_update_url";
 
@@ -25,8 +25,13 @@ const URL_OVERRIDE_KEY = "tf_update_url";
 export function firmwareBaseUrl() {
     const isTestApp = String(globalThis.location?.pathname ?? "").startsWith(TEST_APP_PATH);
     let url = isTestApp ? TRUEGLIDE_FIRMWARE_TEST_URL : TRUEGLIDE_FIRMWARE_URL;
+    // audit du 06/11/2026 : toutes les pages de jschmiedd.github.io partagent le même stockage ; l'autre adresse n'est
+    // donc lue que sur un serveur local (essais), jamais sur les pages publiées /app/ et /test/
+    const host = String(globalThis.location?.hostname ?? "");
     try {
-        url = globalThis.localStorage?.getItem(URL_OVERRIDE_KEY) || url;
+        if (host === "localhost" || host === "127.0.0.1") {
+            url = globalThis.localStorage?.getItem(URL_OVERRIDE_KEY) || url;
+        }
     } catch {
         // stockage indisponible (navigation privée) : adresse par défaut
     }
@@ -115,9 +120,7 @@ export function checkTrueGlideFirmwareFile(filename, connectedBoardName) {
             : null;
 
     const boardMismatch =
-        !!parsed.board &&
-        !!connectedBoard &&
-        parsed.board.toUpperCase() !== connectedBoard.toUpperCase();
+        !!parsed.board && !!connectedBoard && parsed.board.toUpperCase() !== connectedBoard.toUpperCase();
 
     return {
         filename: typeof filename === "string" ? filename : "",
@@ -125,6 +128,37 @@ export function checkTrueGlideFirmwareFile(filename, connectedBoardName) {
         connectedBoard,
         boardMismatch,
     };
+}
+
+/**
+ * Audit du 06/11/2026 : le nom de la carte est écrit dans le firmware lui-même (BOARD_NAME). Contrôle sur le contenu
+ * du fichier, pas seulement sur son nom (fichier renommé, ou flash en mode DFU où la carte ne répond pas).
+ *
+ * @param {{data: {data: number[]}[]}|null} parsedHex fichier .hex décodé (workers/hex_parser.js)
+ * @param {string} boardName nom de carte cherché (ex. SPEEDYBEEF405MINI)
+ * @returns {boolean|null} null si le contenu n'est pas disponible
+ */
+export function hexContainsBoardName(parsedHex, boardName) {
+    const blocks = parsedHex?.data;
+    if (!Array.isArray(blocks) || !boardName) {
+        return null;
+    }
+    const needle = [...String(boardName).toUpperCase()].map((c) => c.charCodeAt(0));
+    for (const block of blocks) {
+        const d = block?.data ?? [];
+        // le nom est suivi d'un octet nul (chaîne C) : évite qu'un nom plus court soit trouvé dans un plus long
+        outer: for (let i = 0; i + needle.length < d.length; i++) {
+            for (let j = 0; j < needle.length; j++) {
+                if (d[i + j] !== needle[j]) {
+                    continue outer;
+                }
+            }
+            if (d[i + needle.length] === 0) {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /**

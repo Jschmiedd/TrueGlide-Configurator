@@ -462,7 +462,9 @@
                             <SettingRow :label="$t('tfMotorsBenchLimit')" full-width>
                                 <UCheckbox :model-value="benchLimited" @update:model-value="onBenchLimitChange" />
                             </SettingRow>
-                            <p class="text-xs mt-1">{{ $t("tfMotorsBenchLimitHelp", { 1: testRange.min, 2: testRange.max }) }}</p>
+                            <p class="text-xs mt-1">
+                                {{ $t("tfMotorsBenchLimitHelp", { 1: testRange.min, 2: testRange.max }) }}
+                            </p>
                         </div>
                     </div>
                     <!-- END MOTOR TEST SECTION -->
@@ -729,7 +731,8 @@ const useUnsyncedPwm = computed({
 
 // Feature helper (needed by zeroThrottleValue below)
 const isFeatureEnabled = (featureName) => {
-    return fcStore.features.features.isEnabled(featureName);
+    // TrueGlide: features not loaded yet (offline board file without them) -> treated as disabled, never a crash
+    return fcStore.features?.features?.isEnabled?.(featureName) ?? false;
 };
 
 // Slider range values (needed by zeroThrottleValue below)
@@ -1365,7 +1368,8 @@ const openMotorOutputReorderDialog = () => {
         "MotorOutputReorderingDialog",
         {
             droneConfiguration: mixerName,
-            motorStopValue: minSliderValue.value,
+            // TrueGlide (audit 06/11): stop = zero throttle (3D neutral), never 1000 (full reverse in 3D)
+            motorStopValue: zeroThrottleValue.value,
             motorSpinValue: idleThrottleValue.value,
         },
         {
@@ -1388,7 +1392,7 @@ const openEscDshotDirectionDialog = () => {
     const motorConfig = {
         escProtocolIsDshot: digitalProtocolConfigured.value,
         numberOfMotors: numberOfMotors,
-        motorStopValue: minSliderValue.value,
+        motorStopValue: zeroThrottleValue.value,
         motorSpinValue: idleThrottleValue.value,
     };
 
@@ -1421,7 +1425,7 @@ const handleSave = (reboot = true) => {
             }
 
             // Explicitly stop all motors to ensure no spinning after reboot
-            stopAllMotors(minSliderValue.value);
+            stopAllMotors(zeroThrottleValue.value);
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -1688,7 +1692,7 @@ onUnmounted(() => {
     }
     // ensure disarmed safety - use proper stop values, not 0
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(new Array(8).fill(minSliderValue.value));
+        sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
     }
 });
 </script>

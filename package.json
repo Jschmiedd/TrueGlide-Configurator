@@ -49,8 +49,8 @@
     "node": "24.x"
   },
   "dependencies": {
-    "@capacitor/android": "8.3.4",
-    "@capacitor/core": "8.3.4",
+    "@capacitor/android": "8.6.0",
+    "@capacitor/core": "8.6.0",
     "@iconify-json/lucide": "^1.2.101",
     "@nuxt/ui": "^4.4.0",
     "@simplewebauthn/browser": "^13.2.2",
@@ -59,7 +59,7 @@
     "crypto-es": "^2.1.0",
     "d3": "^7.9.0",
     "djv": "^2.1.4",
-    "dompurify": "^3.4.11",
+    "dompurify": "^3.4.17",
     "esptool-js": "^0.6.0",
     "geomagnetism": "^0.2.0",
     "i18next": "^24.2.2",
@@ -84,7 +84,7 @@
     "throttle-debounce": "^5.0.0",
     "tiny-emitter": "^2.1.0",
     "vite-plugin-pwa": "^1.3.0",
-    "vue": "^3.5.13",
+    "vue": "^3.5.45",
     "vue-multiselect": "^3.0.0",
     "vue-router": "^4"
   },
@@ -114,9 +114,16 @@
     "rollup": "^4.59.0",
     "run-script-os": "^1.1.6",
     "storybook": "^10.5.2",
-    "vite": "^8.0.16",
+    "vite": "^8.3.6",
     "vite-plugin-mkcert": "^1.17.9",
     "vite-plugin-static-copy": "^4.1.1",
     "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "fast-uri@3": "3.1.9",
+    "brace-expansion@2": "2.1.7",
+    "undici@7": "7.30.2",
+    "browserslist": "4.29.5",
+    "prosemirror-view": "1.42.9"
   }
 }
