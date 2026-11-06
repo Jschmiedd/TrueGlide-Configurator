@@ -8,7 +8,14 @@ import MSP from "../../msp.js";
 import MSPCodes from "../../msp/MSPCodes.js";
 import FC from "../../fc.js";
 import { send, isConnectionClosedError } from "../../../composables/useMspCliSession.js";
-import { backupBeforeWrite, compareDiffs, saveAndVerify, settingLines } from "../write_guard.js";
+import {
+    RISKY_MSP_NAMES,
+    backupBeforeWrite,
+    compareDiffs,
+    riskyChanges,
+    saveAndVerify,
+    settingLines,
+} from "../write_guard.js";
 import { fromHex } from "./frames.js";
 import { boardIdentity, sameBoard } from "./identity.js";
 import { recordingSerialProblem } from "./serial_rules.js";
@@ -18,7 +25,7 @@ import { cliRefused } from "../studio_tab.js";
 import { forbiddenWrite } from "./safety.js";
 
 // Rend { ok } ou { ok: false, reason, index, write, reply }.
-export async function sendPrepared({ onProgress, force = false, backup: earlier = null } = {}) {
+export async function sendPrepared({ onProgress, force = false, risksOk = false, backup: earlier = null } = {}) {
     // la carte hors ligne de ce drone (même numéro unique que la carte branchée), parmi celles gardées
     const own = findBoardIndex(boardIdentity(FC.CONFIG).uid);
     if (own >= 0) {
@@ -68,6 +75,22 @@ export async function sendPrepared({ onProgress, force = false, backup: earlier 
             backup,
         };
     }
+    // changements à risque (moteurs, mélangeur, failsafe, armement, orientation) : confirmation à part, avec la valeur
+    // d'avant (contre-audit N4)
+    const cliCommands = writes.filter((w) => w.cli !== undefined).map((w) => w.cli);
+    const riskyCodes = new Set(RISKY_MSP_NAMES.map((n) => MSPCodes[n]).filter((c) => c !== undefined));
+    const risky = [
+        ...riskyChanges(cliCommands, backup.lines),
+        ...writes
+            .filter((w) => w.cli === undefined && riskyCodes.has(Number(w.code)))
+            .map((w) => ({
+                command: Object.keys(MSPCodes).find((k) => MSPCodes[k] === Number(w.code)) ?? `MSP ${w.code}`,
+                before: "onglet",
+            })),
+    ];
+    if (risky.length && !risksOk) {
+        return { ok: false, reason: "risque", risky, file: backup.file, backup };
+    }
     for (let i = 0; i < writes.length; i++) {
         onProgress?.({ step: i + 1, total: writes.length });
         const w = writes[i];
@@ -93,7 +116,7 @@ export async function sendPrepared({ onProgress, force = false, backup: earlier 
             return { ok: false, reason: "refus", index: i, write: w, reply: refused, file: backup.file };
         }
     }
-    const saved = await saveAndVerify(backup.lines);
+    const saved = await saveAndVerify(backup.lines, { commands: cliCommands });
     if (!saved.ok) {
         return { ok: false, reason: "save", reply: String(saved.error?.message ?? saved.error), file: backup.file };
     }

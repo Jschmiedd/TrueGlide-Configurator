@@ -59,10 +59,23 @@
                 </li>
             </ul>
         </div>
+        <!-- TrueGlide (audit du 06/11/2026) : sauvegardes faites avant chaque envoi, gardées aussi dans le navigateur -->
+        <div v-if="backups.length" class="mt-3 text-sm">
+            <p class="font-semibold">{{ msg("tfBackupsKept", [backups.length]) }}</p>
+            <ul class="mt-1">
+                <li v-for="b in backups" :key="b.file" class="flex flex-wrap items-center gap-2 py-0.5">
+                    <span>{{ b.file }}</span>
+                    <UButton size="xs" variant="soft" @click="downloadKeptBackup(b)">
+                        {{ $t("tfBackupDownload") }}
+                    </UButton>
+                </li>
+            </ul>
+        </div>
     </UiBox>
 </template>
 
 <script setup>
+import { downloadKeptBackup, keptBackups, riskyQuestion, verificationMessage } from "@/js/trueglide/write_guard.js";
 import { computed } from "vue";
 import { i18n } from "@/js/localization";
 import UiBox from "@/components/elements/UiBox.vue";
@@ -92,6 +105,10 @@ const msg = (key, args = []) =>
     });
 const connectionStore = useConnectionStore();
 const offline = computed(() => connectionStore.connectedTo === OFFLINE_PATH);
+const backups = computed(() => {
+    state.version; // dependency
+    return keptBackups();
+});
 const boards = computed(() => {
     state.version; // dependency
     return listBoards();
@@ -171,6 +188,7 @@ async function sendNow() {
     state.sent = "";
     const { sendPrepared } = await import("@/js/trueglide/offline/send.js");
     let r = await sendPrepared();
+    const options = {};
     // la vraie carte a changé depuis la récolte (ou depuis le dernier envoi) : le pilote décide
     if (!r.ok && (r.reason === "changee" || r.reason === "inconnue")) {
         const question =
@@ -178,16 +196,25 @@ async function sendNow() {
                 ? msg("tfOfflineBoardChanged", [r.count, r.lignes.join("\n"), r.file])
                 : msg("tfOfflineBoardUnknown", [r.file]);
         if (globalThis.confirm(question)) {
-            r = await sendPrepared({ force: true, backup: r.backup });
+            Object.assign(options, { force: true, backup: r.backup });
+            r = await sendPrepared(options);
+        } else {
+            r = { ok: false, reason: "annule", file: r.file };
+        }
+    }
+    // changements à risque : confirmation à part, ligne par ligne, avec la valeur d'avant
+    if (!r.ok && r.reason === "risque") {
+        if (globalThis.confirm(riskyQuestion(r.risky, msg))) {
+            Object.assign(options, { risksOk: true, backup: r.backup });
+            r = await sendPrepared(options);
         } else {
             r = { ok: false, reason: "annule", file: r.file };
         }
     }
     state.sending = false;
-    state.sentOk = r.ok && !r.lost;
+    state.sentOk = r.ok && !r.lost && !r.mismatches?.length;
     if (r.ok) {
-        state.sent = msg("tfOfflineSent", [r.count]);
-        state.sent += ` ${r.lost ? msg("tfOfflineSentLost", [r.file]) : r.verified ? msg("tfOfflineSentVerified") : msg("tfOfflineSentNotVerified", [r.file])}`;
+        state.sent = `${msg("tfOfflineSent", [r.count])} ${verificationMessage(r, r.file, msg)}`;
     } else if (r.reason === "annule") {
         state.sent = msg("tfOfflineSendCancelledBackup", [r.file]);
     } else if (r.reason === "sauvegarde") {

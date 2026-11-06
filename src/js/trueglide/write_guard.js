@@ -69,8 +69,104 @@ export async function backupBeforeWrite(label) {
         return { ok: false, reason: "diff all illisible" };
     }
     const file = backupFileName(label);
+    // aussi gardée dans le navigateur : le téléchargement peut être bloqué sans que le logiciel le sache
+    keepBackup(file, lines);
     download(file, lines);
     return { ok: true, lines, file };
+}
+
+// Sauvegardes avant envoi gardées dans le navigateur (les 10 dernières), téléchargeables depuis le Tableau de bord.
+const BACKUPS_KEY = "trueglide-sauvegardes-avant-envoi";
+export const MAX_KEPT_BACKUPS = 10;
+
+export function keptBackups(storage = globalThis.localStorage) {
+    try {
+        const list = JSON.parse(storage?.getItem(BACKUPS_KEY) ?? "[]");
+        return Array.isArray(list) ? list.filter((b) => b && typeof b.file === "string" && Array.isArray(b.lines)) : [];
+    } catch {
+        return [];
+    }
+}
+
+export function keepBackup(file, lines, storage = globalThis.localStorage) {
+    const list = [{ file, date: new Date().toISOString(), lines }, ...keptBackups(storage)].slice(0, MAX_KEPT_BACKUPS);
+    try {
+        storage?.setItem(BACKUPS_KEY, JSON.stringify(list));
+    } catch {
+        // stockage plein ou indisponible : le fichier téléchargé reste la sauvegarde
+    }
+}
+
+export function downloadKeptBackup(backup) {
+    download(backup.file, backup.lines);
+}
+
+// Commandes à risque (moteurs, mélangeur, ressources, failsafe, armement, orientation) avec leur valeur avant
+// (lue dans la sauvegarde) : [{ command, before }]. Contre-audit N4.
+const RISKY_SET =
+    /^set\s+(failsafe_\w+|yaw_motors_reversed|motor_output_reordering|3d_\w+|motor_pwm_protocol|align_board_\w+|small_angle|runaway_takeoff_\w+|mixer_type)\s*=/i;
+const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux)\b|^feature\s+-?3D\b/i;
+
+export function riskyChanges(commands, backupLines) {
+    const before = settingLines(backupLines);
+    const out = [];
+    for (const command of commands ?? []) {
+        const c = String(command).trim();
+        let previous = null;
+        const set = c.match(/^set\s+(\w+)\s*=/i);
+        if (set && RISKY_SET.test(c)) {
+            const name = set[1].toLowerCase();
+            previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
+        } else if (RISKY_LINE.test(c)) {
+            const words = c.split(/\s+/);
+            // même réglage : « resource MOTOR 1 », « aux 0 », « mmix 0 », « mixer », « feature 3D »
+            const key = /^(resource|timer|dma)$/i.test(words[0])
+                ? words.slice(0, 3)
+                : /^(mixer|map|feature)$/i.test(words[0])
+                    ? words.slice(0, 1)
+                    : words.slice(0, 2);
+            const prefix = key.join(" ").toLowerCase();
+            previous = /^feature$/i.test(words[0])
+                ? before.filter((l) => /^feature\s+-?3D\b/i.test(l)).join(" · ") || null
+                : (before.find((l) => l.toLowerCase() === prefix || l.toLowerCase().startsWith(`${prefix} `)) ?? null);
+        } else {
+            continue;
+        }
+        if (previous !== c) {
+            out.push({ command: c, before: previous });
+        }
+    }
+    return out;
+}
+
+// Réglages envoyés relus après l'enregistrement : chaque « set x = v » hors changement de profil est relu par
+// « get x » ; les autres lignes sont cherchées dans le « diff all » relu. { checked, mismatches, unchecked }.
+export async function verifySent(commands, afterDiff, getFn = (c) => send(c, { timeoutMs: 5000 })) {
+    const after = new Set(settingLines(afterDiff).map((l) => l.toLowerCase()));
+    const result = { checked: 0, mismatches: [], unchecked: 0 };
+    let inProfile = false;
+    for (const command of commands ?? []) {
+        const c = String(command).trim();
+        if (/^(profile|rateprofile|battery_profile|osd_profile)\s+\d+$/i.test(c)) {
+            inProfile = true;
+            continue;
+        }
+        const set = c.match(/^set\s+(\w+)\s*=\s*(.*)$/i);
+        if (set && !inProfile) {
+            const reply = await getFn(`get ${set[1]}`);
+            const line = (reply ?? []).map(String).find((l) => l.toLowerCase().startsWith(`${set[1].toLowerCase()} =`));
+            const value = line ? line.slice(line.indexOf("=") + 1).trim() : null;
+            result.checked++;
+            if (value === null || value.toLowerCase() !== set[2].trim().toLowerCase()) {
+                result.mismatches.push(`${set[1]} : envoyé ${set[2].trim()}, relu ${value ?? "?"}`);
+            }
+        } else if (!set && after.has(c.toLowerCase())) {
+            result.checked++;
+        } else {
+            result.unchecked++;
+        }
+    }
+    return result;
 }
 
 function waitFor(test, timeoutMs) {
@@ -90,7 +186,7 @@ function waitFor(test, timeoutMs) {
 }
 
 // « save », reconnexion, puis vérification. { ok, verified, lost, after } ou { ok: false, reason: "save", error }.
-export async function saveAndVerify(backupLines, { timeoutMs = 45000 } = {}) {
+export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands = [] } = {}) {
     const saved = await saveAndReconnect();
     if (!saved.ok) {
         return { ok: false, reason: "save", error: saved.error };
@@ -119,5 +215,55 @@ export async function saveAndVerify(backupLines, { timeoutMs = 45000 } = {}) {
     } catch {
         return { ok: true, verified: false, lost: false };
     }
-    return { ok: true, verified: true, lost: looksLost(backupLines, after), after };
+    const lost = looksLost(backupLines, after);
+    let check = { checked: 0, mismatches: [], unchecked: 0 };
+    if (!lost && commands.length) {
+        try {
+            check = await verifySent(commands, after);
+        } catch {
+            check = { checked: 0, mismatches: [], unchecked: commands.length };
+        }
+    }
+    return { ok: true, verified: true, lost, after, ...check };
+}
+
+// Codes MSP des onglets qui touchent les moteurs, le mélangeur, le failsafe, l'armement ou l'orientation.
+export const RISKY_MSP_NAMES = [
+    "MSP_SET_MIXER_CONFIG",
+    "MSP_SET_MOTOR_CONFIG",
+    "MSP_SET_MOTOR_3D_CONFIG",
+    "MSP2_SET_MOTOR_OUTPUT_REORDERING",
+    "MSP_SET_FAILSAFE_CONFIG",
+    "MSP_SET_FEATURE_CONFIG",
+    "MSP_SET_BOARD_ALIGNMENT_CONFIG",
+    "MSP_SET_MODE_RANGE",
+    "MSP_SET_ARMING_CONFIG",
+    "MSP_SET_RX_MAP",
+];
+
+// Texte de la confirmation des changements à risque (msg : (clé, [args]) -> texte).
+export function riskyQuestion(risky, msg) {
+    // before : ligne de la sauvegarde ; null : valeur par défaut ; "onglet" : réglage d'onglet (MSP), voir la sauvegarde
+    const label = (b) => (b === null ? msg("tfRiskyDefault") : b === "onglet" ? msg("tfRiskyTabSetting") : b);
+    const lines = risky.map((r) => `• ${r.command}\n   ${msg("tfRiskyBefore", [label(r.before)])}`).join("\n");
+    return msg("tfRiskyConfirm", [lines]);
+}
+
+// Message du résultat après l'enregistrement (msg : (clé, [args]) -> texte).
+export function verificationMessage(saved, file, msg) {
+    if (saved.lost) {
+        return msg("tfOfflineSentLost", [file]);
+    }
+    if (!saved.verified) {
+        return msg("tfOfflineSentNotVerified", [file]);
+    }
+    if (saved.mismatches?.length) {
+        return msg("tfVerifyMismatch", [saved.mismatches.length, saved.mismatches.slice(0, 5).join(" ; "), file]);
+    }
+    if (!saved.checked) {
+        return msg("tfVerifyNone");
+    }
+    return saved.unchecked
+        ? msg("tfVerifyPartial", [saved.checked, saved.unchecked])
+        : msg("tfVerifyAllOk", [saved.checked]);
 }

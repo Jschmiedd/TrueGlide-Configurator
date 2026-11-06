@@ -44,3 +44,111 @@ describe("write_guard", () => {
         );
     });
 });
+
+import {
+    keepBackup,
+    keptBackups,
+    MAX_KEPT_BACKUPS,
+    riskyChanges,
+    verificationMessage,
+    verifySent,
+} from "../../src/js/trueglide/write_guard.js";
+
+const msg = (k, a = []) => `${k}(${a.join("|")})`;
+
+describe("contre-audit N4 : changements à risque avec la valeur d'avant", () => {
+    const backup = [
+        "set failsafe_procedure = GPS-RESCUE",
+        "resource MOTOR 1 B06",
+        "aux 0 0 0 1700 2100 0 0",
+        "mixer QUADX",
+        "set p_roll = 45",
+    ];
+    it("trouve moteurs, mélangeur, failsafe, armement, orientation", () => {
+        const r = riskyChanges(
+            [
+                "set failsafe_procedure = DROP",
+                "resource MOTOR 1 B07",
+                "aux 0 0 0 1300 1700 0 0",
+                "mixer QUADX1234",
+                "set yaw_motors_reversed = ON",
+                "feature 3D",
+                "set p_roll = 50",
+                "set align_board_yaw = 90",
+            ],
+            backup,
+        );
+        expect(r.map((x) => x.command)).toEqual([
+            "set failsafe_procedure = DROP",
+            "resource MOTOR 1 B07",
+            "aux 0 0 0 1300 1700 0 0",
+            "mixer QUADX1234",
+            "set yaw_motors_reversed = ON",
+            "feature 3D",
+            "set align_board_yaw = 90",
+        ]);
+        expect(r[0].before).toBe("set failsafe_procedure = GPS-RESCUE");
+        expect(r[1].before).toBe("resource MOTOR 1 B06");
+        expect(r[2].before).toBe("aux 0 0 0 1700 2100 0 0");
+        expect(r[4].before).toBeNull();
+    });
+    it("rien à confirmer si la valeur ne change pas ou n'est pas à risque", () => {
+        expect(
+            riskyChanges(
+                ["set failsafe_procedure = GPS-RESCUE", "set p_roll = 60", "serial UART2 64 115200 57600 0 115200"],
+                backup,
+            ),
+        ).toEqual([]);
+    });
+});
+
+describe("contre-audit (constat 6) : relecture réglage par réglage", () => {
+    const get = (table) => async (c) => {
+        const name = c.replace(/^get\s+/, "");
+        return name in table ? [`${name} = ${table[name]}`] : ["###ERROR: get: unknown"];
+    };
+    it("signale une valeur différente de celle envoyée", async () => {
+        const r = await verifySent(
+            ["set p_roll = 50", "set small_angle = 30"],
+            [],
+            get({ p_roll: "50", small_angle: "180" }),
+        );
+        expect(r.checked).toBe(2);
+        expect(r.mismatches).toEqual(["small_angle : envoyé 30, relu 180"]);
+    });
+    it("ne relit pas un réglage d'un autre profil, compte les lignes retrouvées dans le diff", async () => {
+        const r = await verifySent(
+            ["feature GPS", "profile 2", "set p_roll = 50", "serial UART3 2 115200 57600 0 115200"],
+            ["feature GPS"],
+            get({ p_roll: "50" }),
+        );
+        expect(r).toEqual({ checked: 1, mismatches: [], unchecked: 2 });
+    });
+    it("message : jamais « tout en place » sans relecture réelle", () => {
+        expect(verificationMessage({ verified: true, checked: 0, mismatches: [], unchecked: 3 }, "f.txt", msg)).toBe(
+            "tfVerifyNone()",
+        );
+        expect(
+            verificationMessage({ verified: true, checked: 2, mismatches: ["x"], unchecked: 0 }, "f.txt", msg),
+        ).toMatch(/^tfVerifyMismatch/);
+        expect(verificationMessage({ verified: false }, "f.txt", msg)).toBe("tfOfflineSentNotVerified(f.txt)");
+        expect(verificationMessage({ verified: true, lost: true }, "f.txt", msg)).toBe("tfOfflineSentLost(f.txt)");
+        expect(verificationMessage({ verified: true, checked: 3, mismatches: [], unchecked: 0 }, "f.txt", msg)).toBe(
+            "tfVerifyAllOk(3)",
+        );
+    });
+});
+
+describe("contre-audit (constat 4) : sauvegarde aussi gardée dans le navigateur", () => {
+    it("garde les 10 dernières, la plus récente d'abord", () => {
+        const store = new Map();
+        const storage = { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, v) };
+        for (let i = 0; i < 12; i++) {
+            keepBackup(`f${i}.txt`, [`set a = ${i}`], storage);
+        }
+        const list = keptBackups(storage);
+        expect(list).toHaveLength(MAX_KEPT_BACKUPS);
+        expect(list[0].file).toBe("f11.txt");
+        expect(list[0].lines).toEqual(["set a = 11"]);
+    });
+});

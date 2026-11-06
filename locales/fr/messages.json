@@ -922,10 +922,7 @@
         "message": "Envoi arrêté avant toute écriture : la sauvegarde de la carte (diff all) n'a pas pu être lue ($1)."
     },
     "tfOfflineSendCut": {
-        "message": "Liaison USB coupée pendant l'envoi : rien n'a été enregistré, la carte garde sa configuration d'avant. Rebranchez et vérifiez avec diff all. Sauvegarde : $1."
-    },
-    "tfOfflineSentVerified": {
-        "message": "Carte relue après l'enregistrement : configuration en place."
+        "message": "Liaison USB coupée pendant l'envoi : rien n'a été enregistré dans la mémoire de la carte. Si la batterie est restée branchée, les changements déjà envoyés restent actifs jusqu'au prochain redémarrage : débranchez la batterie et l'USB avant de voler, puis vérifiez avec diff all. Sauvegarde : $1."
     },
     "tfOfflineSentNotVerified": {
         "message": "La carte n'a pas pu être relue après l'enregistrement : vérifiez avec diff all. Sauvegarde : $1."
@@ -936,14 +933,44 @@
     "tfStudioBackupSaved": {
         "message": "Sauvegarde de la carte (diff all) enregistrée sur l'ordinateur : $1"
     },
+    "tfRiskyConfirm": {
+        "message": "ATTENTION : ces changements touchent les moteurs, le mélangeur, le failsafe, l'armement ou l'orientation de la carte. Vérifiez chaque ligne (après, puis avant) :\n\n$1\n\nHélices retirées. Continuer ?"
+    },
+    "tfRiskyBefore": {
+        "message": "avant : $1"
+    },
+    "tfVerifyAllOk": {
+        "message": "Carte relue après l'enregistrement : $1 réglage(s) contrôlé(s) un par un, tous en place."
+    },
+    "tfVerifyPartial": {
+        "message": "Carte relue après l'enregistrement : $1 réglage(s) contrôlé(s) un par un, tous en place ; $2 autre(s) non relu(s) un par un (réglages d'un autre profil ou d'onglet) : vérifiez-les à l'écran."
+    },
+    "tfVerifyNone": {
+        "message": "Carte relue après l'enregistrement : elle n'est pas revenue aux réglages d'usine. Les réglages envoyés par les onglets ne sont pas relus un par un : vérifiez-les à l'écran."
+    },
+    "tfVerifyMismatch": {
+        "message": "ATTENTION : après l'enregistrement, $1 réglage(s) n'ont pas la valeur envoyée : $2. Ne volez pas avant d'avoir vérifié (diff all). Sauvegarde : $3."
+    },
+    "tfStudioSendConfirmList": {
+        "message": "Envoyer ces $1 commande(s) de Studio à la carte, puis enregistrer ?\n\n$2\n\nHélices retirées. Une sauvegarde (diff all) est faite avant. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
+    },
+    "tfBackupsKept": {
+        "message": "Sauvegardes de la carte faites avant un envoi (gardées dans ce navigateur) : $1. Restauration : coller le fichier dans l'onglet CLI, puis save."
+    },
+    "tfBackupDownload": {
+        "message": "Télécharger"
+    },
+    "tfRiskyDefault": {
+        "message": "valeur par défaut"
+    },
+    "tfRiskyTabSetting": {
+        "message": "réglage d'onglet : comparer avec la sauvegarde"
+    },
     "tfStudioSendForbidden": {
         "message": "Envoi refusé : ces commandes ne sont pas des réglages ($1). Studio n'envoie que des réglages (set, serial, feature, aux…), jamais une commande qui agit tout de suite sur la carte."
     },
     "tfOfflineSendForbidden": {
         "message": "Envoi refusé : « $1 » n'est pas un réglage. Rien n'a été envoyé. Seuls les réglages sont envoyés, jamais une commande qui agit tout de suite sur la carte (moteurs, passerelle…)."
-    },
-    "tfStudioSendConfirm": {
-        "message": "Envoyer $1 commande(s) de Studio à la carte, puis enregistrer ?\n\nHélices retirées. Relire les commandes avant. À la première commande refusée, rien n'est enregistré. La carte redémarre à la fin."
     },
     "tfStudioSendNoBoard": {
         "message": "Pas de carte branchée : rien n'est envoyé. Avec la carte hors ligne, régler avec les onglets du logiciel, ou rebrancher la carte."

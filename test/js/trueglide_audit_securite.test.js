@@ -6,11 +6,41 @@ import { forbiddenWrite } from "../../src/js/trueglide/offline/safety.js";
 import { OfflineBoard, writeCodes, FORMAT, VERSION } from "../../src/js/trueglide/offline/board.js";
 import { parseBoardFile } from "../../src/js/trueglide/offline/store.js";
 import MSPCodes from "../../src/js/msp/MSPCodes.js";
+import { motorStopValue } from "../../src/js/trueglide/motor_bench.js";
 
 // Audit indépendant du 06/11/2026 : constats 1 à 3.
-describe("audit 1 : arrêt des moteurs au neutre (3D)", () => {
-    const src = fs.readFileSync(path.resolve(__dirname, "../../src/components/tabs/MotorsTab.vue"), "utf8");
-    it("n'envoie jamais minSliderValue comme valeur d'arrêt", () => {
+// Copie du choix du firmware (src/main/drivers/dshot.c, dshotConvertFromExternal) : en 3D, seul 1500 donne la
+// commande d'arrêt DShot ; toute autre valeur fait tourner le moteur (marche arrière sous 1500).
+const DSHOT_CMD_MOTOR_STOP = 0;
+function firmwareDshotValue(external, is3d) {
+    const v = Math.min(2000, Math.max(1000, external));
+    if (is3d) {
+        return v === 1500 ? DSHOT_CMD_MOTOR_STOP : v < 1500 ? "arriere" : "avant";
+    }
+    return v === 1000 ? DSHOT_CMD_MOTOR_STOP : "avant";
+}
+
+describe("audit 1 (contre-audit N2) : la valeur d'arrêt arrête vraiment les moteurs", () => {
+    it("DShot sans 3D : 1000, commande d'arrêt", () => {
+        const v = motorStopValue({ is3d: false, digital: true, mincommand: 1070, neutral3d: 1460 });
+        expect(v).toBe(1000);
+        expect(firmwareDshotValue(v, false)).toBe(DSHOT_CMD_MOTOR_STOP);
+    });
+    it("DShot + 3D : 1500 quel que soit 3d_neutral (1460 par défaut ferait tourner en arrière)", () => {
+        for (const neutral3d of [1460, 1425, 1500, 1575, 1300]) {
+            const v = motorStopValue({ is3d: true, digital: true, mincommand: 1070, neutral3d });
+            expect(firmwareDshotValue(v, true)).toBe(DSHOT_CMD_MOTOR_STOP);
+        }
+        expect(firmwareDshotValue(1460, true)).toBe("arriere");
+    });
+    it("PWM + 3D : le neutre réglé ; PWM sans 3D : mincommand", () => {
+        expect(motorStopValue({ is3d: true, digital: false, mincommand: 1000, neutral3d: 1460 })).toBe(1460);
+        expect(motorStopValue({ is3d: true, digital: false, mincommand: 1000, neutral3d: 1700 })).toBe(1500);
+        expect(motorStopValue({ is3d: false, digital: false, mincommand: 1070, neutral3d: 1460 })).toBe(1070);
+    });
+    it("l'onglet Moteurs utilise cette valeur pour tous ses arrêts", () => {
+        const src = fs.readFileSync(path.resolve(__dirname, "../../src/components/tabs/MotorsTab.vue"), "utf8");
+        expect(src).toMatch(/const zeroThrottleValue = computed\(\(\) =>\s*motorStopValue\(/);
         expect(src).not.toMatch(/motorStopValue:\s*minSliderValue/);
         expect(src).not.toMatch(/stopAllMotors\(\s*minSliderValue/);
         expect(src).not.toMatch(/sendMotorCommand\(new Array\(8\)\.fill\(minSliderValue/);
@@ -151,5 +181,21 @@ describe("lectures du CLI jamais gardées comme réglages", () => {
             b.cli(c);
         }
         expect(rec.writes).toEqual([]);
+    });
+});
+
+describe("contre-audit N3 : pas de commande cachée derrière un réglage", () => {
+    it("refuse les retours à la ligne et caractères de contrôle", () => {
+        for (const c of [
+            "set small_angle = 25\nmotor 0 1100",
+            "set a = 1\rdefaults",
+            "set a = 1\u0000",
+            "set a = 1\tdfu",
+            "feature GPS\x1bmsc",
+        ]) {
+            expect(isSettingCommand(c), JSON.stringify(c)).toBe(false);
+        }
+        expect(forbiddenWrite([{ cli: "set small_angle = 25\nmotor 0 1100" }], MSPCodes)).toBeTruthy();
+        expect(forbiddenCommands(["set a = 1", "set b = 2\nflash_erase"])).toEqual(["set b = 2\nflash_erase"]);
     });
 });

@@ -25,7 +25,13 @@
 
 <script setup>
 import { forbiddenCommands } from "@/js/trueglide/cli_safety.js";
-import { backupBeforeWrite, saveAndVerify } from "@/js/trueglide/write_guard.js";
+import {
+    backupBeforeWrite,
+    riskyChanges,
+    riskyQuestion,
+    saveAndVerify,
+    verificationMessage,
+} from "@/js/trueglide/write_guard.js";
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { i18n } from "@/js/localization";
@@ -109,7 +115,11 @@ async function sendCommands(id, texte) {
         post(resultMessage(id, false, i18n.getMessage("tfStudioSendForbidden", [forbidden.slice(0, 3).join(" · ")])));
         return;
     }
-    if (!commands.length || !globalThis.confirm(i18n.getMessage("tfStudioSendConfirm", [commands.length]))) {
+    // contre-audit N4 : la liste complète des commandes, pas seulement leur nombre
+    if (
+        !commands.length ||
+        !globalThis.confirm(i18n.getMessage("tfStudioSendConfirmList", [commands.length, commands.join("\n")]))
+    ) {
         post(resultMessage(id, false, i18n.getMessage("tfStudioSendCancelled")));
         return;
     }
@@ -122,6 +132,12 @@ async function sendCommands(id, texte) {
             return;
         }
         gui_log(i18n.getMessage("tfStudioBackupSaved", [backup.file]));
+        // changements à risque : confirmation à part, avec la valeur d'avant (lue dans la sauvegarde)
+        const risky = riskyChanges(commands, backup.lines);
+        if (risky.length && !globalThis.confirm(riskyQuestion(risky, (k, a) => i18n.getMessage(k, a)))) {
+            post(resultMessage(id, false, i18n.getMessage("tfStudioSendCancelled")));
+            return;
+        }
         for (const command of commands) {
             let refused;
             try {
@@ -143,16 +159,15 @@ async function sendCommands(id, texte) {
         const text = i18n.getMessage("tfStudioSendDone", [commands.length]);
         post(resultMessage(id, true, text));
         gui_log(text);
-        const saved = await saveAndVerify(backup.lines);
+        const saved = await saveAndVerify(backup.lines, { commands });
         if (!saved.ok) {
             gui_log(`${i18n.getMessage("tfStudioReadFailed")} ${saved.error?.message ?? saved.error}`);
-        } else if (saved.lost) {
-            gui_log(i18n.getMessage("tfOfflineSentLost", [backup.file]));
-            globalThis.alert?.(i18n.getMessage("tfOfflineSentLost", [backup.file]));
-        } else if (saved.verified) {
-            gui_log(i18n.getMessage("tfOfflineSentVerified"));
         } else {
-            gui_log(i18n.getMessage("tfOfflineSentNotVerified", [backup.file]));
+            const result = verificationMessage(saved, backup.file, (k, a) => i18n.getMessage(k, a));
+            gui_log(result);
+            if (saved.lost || saved.mismatches?.length) {
+                globalThis.alert?.(result);
+            }
         }
     } finally {
         sending.value = false;

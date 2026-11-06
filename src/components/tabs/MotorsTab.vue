@@ -558,7 +558,7 @@ import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { i18n } from "@/js/localization";
-import { benchRange } from "@/js/trueglide/motor_bench.js";
+import { benchRange, motorStopValue } from "@/js/trueglide/motor_bench.js";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -743,14 +743,15 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
-const zeroThrottleValue = computed(() => {
-    if (isFeatureEnabled("3D")) {
-        let neutral = fcStore.motor3dConfig.neutral;
-        // Sanity check from legacy
-        return neutral > 1575 || neutral < 1425 ? 1500 : neutral;
-    }
-    return minSliderValue.value;
-});
+// TrueGlide (contre-audit N2) : en DShot + 3D, seul 1500 arrête les moteurs ; le neutre ne sert qu'en PWM
+const zeroThrottleValue = computed(() =>
+    motorStopValue({
+        is3d: isFeatureEnabled("3D"),
+        digital: digitalProtocolConfigured.value,
+        mincommand: fcStore.motorConfig.mincommand,
+        neutral3d: fcStore.motor3dConfig.neutral,
+    }),
+);
 
 // TrueGlide: bench limit (30 % of the throttle range by default, like the ESC tab); the firmware is not touched
 const benchLimited = ref(true);

@@ -42,6 +42,11 @@ const SETTING_COMMANDS = new Set([
 const NUMBER_ONLY = new Set(["profile", "rateprofile", "battery_profile", "osd_profile"]);
 
 export function isSettingCommand(line) {
+    // contre-audit N3 : le firmware exécute chaque ligne séparée par \r ou \n ; une commande cachée derrière un réglage
+    // (« set a = 1\nmotor 0 2000 ») ou tout autre caractère de contrôle est refusée
+    if (/[\x00-\x1f\x7f]/.test(String(line ?? ""))) {
+        return false;
+    }
     const words = String(line ?? "")
         .trim()
         .split(/\s+/);
