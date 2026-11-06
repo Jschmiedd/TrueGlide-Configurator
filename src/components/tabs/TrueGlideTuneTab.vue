@@ -215,7 +215,8 @@ import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
-import { send, readDumpAll, saveAndReconnect, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import { send, readDumpAll, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import { backupBeforeWrite, riskyChanges, riskyQuestion, saveAndVerify, verificationMessage } from "@/js/trueglide/write_guard.js";
 import TFTune from "@/js/trueglide/studio/tune.js";
 import TFAnalyse from "@/js/trueglide/studio/analyse.js";
 import TF_SETTINGS from "@/js/trueglide/studio/settings_db.js";
@@ -418,6 +419,7 @@ async function appliquer(commandes, sansManquants = false) {
         return;
     }
     occupe.value = true;
+    let sauvegarde = null;
     try {
         if (!sansManquants) {
             const a = await absents(commandes);
@@ -430,6 +432,17 @@ async function appliquer(commandes, sansManquants = false) {
         } else {
             commandes = commandes.filter((c) => !manquants.value.includes(nomDe(c)));
             manquants.value = [];
+        }
+        // audit du 06/11/2026 : sauvegarde (diff all) avant toute écriture, puis relecture après l'enregistrement
+        sauvegarde = await backupBeforeWrite(FC.CONFIG?.craftName || FC.CONFIG?.boardName);
+        if (!sauvegarde.ok) {
+            throw new Error(i18n.getMessage("tfOfflineBackupFailed", [sauvegarde.reason]));
+        }
+        gui_log(i18n.getMessage("tfStudioBackupSaved", [sauvegarde.file]));
+        const risque = riskyChanges(commandes, sauvegarde.lines);
+        if (risque.length && !globalThis.confirm(riskyQuestion(risque, (k, a) => i18n.getMessage(k, a)))) {
+            occupe.value = false;
+            return;
         }
         for (const c of commandes) {
             const reponse = await send(c);
@@ -446,12 +459,17 @@ async function appliquer(commandes, sansManquants = false) {
         return;
     }
     occupe.value = false;
-    const enregistre = await saveAndReconnect();
+    const enregistre = await saveAndVerify(sauvegarde.lines, { commands: commandes });
     if (!enregistre.ok) {
         gui_log(`${i18n.getMessage("tftuneApplyError")} ${String(enregistre.error?.message ?? enregistre.error)}`);
         return;
     }
     gui_log(i18n.getMessage("tftuneApplied"));
+    const verification = verificationMessage(enregistre, sauvegarde.file, (k, a) => i18n.getMessage(k, a));
+    gui_log(verification);
+    if (enregistre.lost || enregistre.mismatches?.length) {
+        globalThis.alert?.(verification);
+    }
 }
 
 // Capteur de courant réglé sur la carte (onglet Alimentation) : 0 = aucun. Sans lui, power_guard_current n'agit pas.
