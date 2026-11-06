@@ -81,9 +81,14 @@ export const LIVE_CODE_NAMES = [
 // peut pas montrer les autres. Refusées hors ligne (le logiciel affiche l'erreur habituelle).
 export const OFFLINE_REFUSED_NAMES = ["MSP_SELECT_SETTING", "MSP_COPY_PROFILE", "MSP_SET_RESET_CURR_PID"];
 
+const HASH = 0x23;
+const LF = 0x0a;
+const CR = 0x0d;
+const TAB = 0x09;
+
 // Commandes du CLI qui ne changent pas la configuration : rendues depuis la récolte.
 const CLI_READ =
-    /^(get|diff|dump|version|status|help|tasks|resource|serial$|feature$|map$|aux$|mmix$|smix$|vtxtable$|led$|color$|mode_color$|adjrange$|rxrange$|rxfail$|profile$|rateprofile$|batch\s+end|#)/i;
+    /^(get|diff|dump|version|status|help|tasks|resource|serial$|feature$|map$|aux$|mmix$|smix$|vtxtable$|led$|color$|mode_color$|adjrange$|rxrange$|rxfail$|profile$|rateprofile$|batch\s+end|#)|^(mixer|feature|beeper|beacon|timer|dma|resource|mmix|smix|servo)\s+(list|show)\b|^(timer|dma|beeper|beacon|mixer)$/i;
 
 // Carte hors ligne. codes : { writes: Set des codes d'écriture, live: Set des codes immédiats, eepromWrite, reboot }.
 export class OfflineBoard {
@@ -100,7 +105,50 @@ export class OfflineBoard {
     handle(octets) {
         const replies = [];
         const events = [];
-        for (const m of this.reader.feed(octets)) {
+        for (const o of octets) {
+            // onglet CLI : texte brut (« # » pour entrer, puis des lignes), comme le CLI série de la vraie carte
+            if (this.rawCli || (o === HASH && this.reader.state === "idle")) {
+                const text = this.rawCliByte(o);
+                if (text !== null) {
+                    replies.push(Uint8Array.from(Array.from(text, (c) => c.charCodeAt(0) & 0xff)));
+                }
+                continue;
+            }
+            this.handleMessages(this.reader.feed([o]), replies, events);
+        }
+        return { replies, events };
+    }
+
+    // Onglet CLI hors ligne : mêmes réponses et même liste blanche que le CLI par MSP (cli()). « exit » quitte le mode
+    // texte sans redémarrer (rien n'est enregistré sur une carte : les réglages restent gardés pour l'envoi).
+    rawCliByte(o) {
+        if (!this.rawCli) {
+            this.rawCli = true;
+            this.rawLine = [];
+            return "\r\nEntering CLI Mode (carte hors ligne : les réglages tapés sont gardés pour l'envoi), type 'exit' to return\r\n\r\n# ";
+        }
+        if (o === CR || o === TAB) {
+            return null;
+        }
+        if (o !== LF) {
+            this.rawLine.push(o);
+            return null;
+        }
+        const line = String.fromCharCode(...this.rawLine).trim();
+        this.rawLine = [];
+        if (/^exit$/i.test(line)) {
+            this.rawCli = false;
+            return "\r\nLeaving CLI mode (carte hors ligne)\r\n";
+        }
+        if (/^save$/i.test(line)) {
+            return "\r\n# save : rien à enregistrer hors ligne, les réglages sont déjà gardés. Envoi à la vraie carte : Tableau de bord.\r\n# ";
+        }
+        const lines = line ? this.cli(line) : [];
+        return `\r\n${lines.join("\r\n")}${lines.length ? "\r\n" : ""}# `;
+    }
+
+    handleMessages(messages, replies, events) {
+        for (const m of messages) {
             if (m.type === "cli") {
                 replies.push(encodeCli(this.cli(m.command)));
                 continue;
@@ -111,7 +159,6 @@ export class OfflineBoard {
                 events.push(event);
             }
         }
-        return { replies, events };
     }
 
     msp(m) {

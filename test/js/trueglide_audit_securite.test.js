@@ -114,3 +114,42 @@ describe("audit 9 : contenu du fichier .hex", () => {
         expect(hexContainsBoardName(null, "X")).toBeNull();
     });
 });
+
+describe("onglet CLI en carte hors ligne (texte brut)", () => {
+    const txt = (r) => r.replies.map((b) => String.fromCharCode(...b)).join("");
+    const bytes = (s) => Uint8Array.from(Array.from(s, (c) => c.charCodeAt(0)));
+    it("entre en mode CLI, applique la liste blanche, garde les réglages", () => {
+        const rec = { msp: {}, unsupported: {}, cli: { "get p_roll": ["p_roll = 45"] }, writes: [] };
+        const b = new OfflineBoard(rec, writeCodes(MSPCodes));
+        expect(txt(b.handle(bytes("#")))).toMatch(/\r\n# $/);
+        expect(txt(b.handle(bytes("get p_roll\n")))).toContain("p_roll = 45");
+        expect(txt(b.handle(bytes("motor 0 2000\n")))).toMatch(/refusée hors ligne/);
+        b.handle(bytes("set p_roll = 50\n"));
+        expect(rec.writes).toEqual([{ cli: "set p_roll = 50" }]);
+        expect(txt(b.handle(bytes("save\n")))).toMatch(/rien à enregistrer/);
+        const fin = b.handle(bytes("exit\n"));
+        expect(txt(fin)).toMatch(/Leaving CLI/);
+        expect(fin.events).toEqual([]);
+    });
+});
+
+describe("lectures du CLI jamais gardées comme réglages", () => {
+    it("mixer list, feature list, beeper list, dma show… ne sont pas envoyées", () => {
+        const rec = { msp: {}, unsupported: {}, cli: {}, writes: [] };
+        const b = new OfflineBoard(rec, writeCodes(MSPCodes));
+        for (const c of [
+            "mixer list",
+            "feature list",
+            "beeper list",
+            "dma show",
+            "timer show",
+            "mixer",
+            "help",
+            "dump",
+            "get",
+        ]) {
+            b.cli(c);
+        }
+        expect(rec.writes).toEqual([]);
+    });
+});
