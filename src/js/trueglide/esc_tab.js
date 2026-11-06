@@ -4,10 +4,10 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v14, la
-// dernière essayée sur un ESC réel (BLHeli_S 35 A). La v15 (v14 + broches AM32 PA0, PA15, PB2, PC6) est restée en ligne
-// mais n'est plus chargée : retour en v14 après l'audit du 06/11/2026 (constat 7), tant qu'un ESC AM32 ne l'a pas essayée.
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v14/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v16 (master
+// 29100f6, corrections de l'audit du 06/11/2026 faites par la discussion ESC), sur /test/ à la demande
+// de Johann (06/11) pour son contrôle (fiche TG-A1, partie 5) ; /app/ la recevra avec la prochaine publication.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v16/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
