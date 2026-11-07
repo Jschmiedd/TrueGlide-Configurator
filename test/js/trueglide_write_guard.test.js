@@ -126,6 +126,9 @@ describe("contre-audit (constat 6) : relecture réglage par réglage", () => {
     });
     it("message : jamais « tout en place » sans relecture réelle", () => {
         expect(verificationMessage({ verified: true, checked: 0, mismatches: [], unchecked: 3 }, "f.txt", msg)).toBe(
+            "tfVerifyNotRead(3|f.txt)",
+        );
+        expect(verificationMessage({ verified: true, checked: 0, mismatches: [], unchecked: 0 }, "f.txt", msg)).toBe(
             "tfVerifyNone()",
         );
         expect(
@@ -205,4 +208,24 @@ describe("relecture à la connexion suivante (Connexion automatique coupée)", (
         const r2 = await runPendingVerification("AAA", { sendFn: async () => ["# diff all", "board_name X"], storage });
         expect(r2.lost).toBe(true);
     });
+});
+
+describe("relecture : CLI muet juste après le redémarrage", () => {
+    it("réessaie, puis compte « non relu », jamais « en place »", async () => {
+        let n = 0;
+        const getFn = async () => {
+            n++;
+            if (n < 3) {
+                throw new Error("CLI pas prêt");
+            }
+            return ["craft_name = Mini Pouce"];
+        };
+        const r = await verifySent(["set craft_name = Mini Pouce"], [], getFn);
+        expect(r).toEqual({ checked: 1, mismatches: [], unchecked: 0 });
+        const r2 = await verifySent(["set craft_name = Mini Pouce"], [], async () => {
+            throw new Error("muet");
+        });
+        expect(r2).toEqual({ checked: 0, mismatches: [], unchecked: 1 });
+        expect(verificationMessage({ verified: true, ...r2 }, "f.txt", msg)).toBe("tfVerifyNotRead(1|f.txt)");
+    }, 10000);
 });

@@ -155,7 +155,20 @@ export async function verifySent(commands, afterDiff, getFn = (c) => send(c, { t
         }
         const set = c.match(/^set\s+(\w+)\s*=\s*(.*)$/i);
         if (set && !inProfile) {
-            const reply = await getFn(`get ${set[1]}`);
+            // juste après le redémarrage, le CLI peut ne pas répondre encore : jusqu'à 3 essais
+            let reply = null;
+            for (let essai = 0; essai < 3 && reply === null; essai++) {
+                try {
+                    reply = await getFn(`get ${set[1]}`);
+                } catch {
+                    reply = null;
+                    await new Promise((r) => setTimeout(r, essai === 2 ? 0 : 1000));
+                }
+            }
+            if (reply === null) {
+                result.unchecked++;
+                continue;
+            }
             const line = (reply ?? []).map(String).find((l) => l.toLowerCase().startsWith(`${set[1].toLowerCase()} =`));
             const value = line ? line.slice(line.indexOf("=") + 1).trim() : null;
             result.checked++;
@@ -216,11 +229,14 @@ export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands =
         savePendingVerification({ uid, commands, backupLines, file });
         return { ok: true, verified: false, lost: false, pending: Boolean(uid) };
     }
+    // la connexion vient de se faire : laisser le logiciel finir ses lectures avant d'ouvrir le CLI
+    await new Promise((r) => setTimeout(r, 2000));
     let after;
     try {
         after = await send("diff all", { timeoutMs: 20000 });
     } catch {
-        return { ok: true, verified: false, lost: false };
+        savePendingVerification({ uid, commands, backupLines, file });
+        return { ok: true, verified: false, lost: false, pending: Boolean(uid) };
     }
     const lost = looksLost(backupLines, after);
     let check = { checked: 0, mismatches: [], unchecked: 0 };
@@ -268,7 +284,8 @@ export function verificationMessage(saved, file, msg) {
         return msg("tfVerifyMismatch", [saved.mismatches.length, saved.mismatches.slice(0, 5).join(" ; "), file]);
     }
     if (!saved.checked) {
-        return msg("tfVerifyNone");
+        // réglages du CLI non relus (carte muette) : pas « en place » ; réglages d'onglets seulement : à vérifier à l'écran
+        return saved.unchecked ? msg("tfVerifyNotRead", [saved.unchecked, file]) : msg("tfVerifyNone");
     }
     return saved.unchecked
         ? msg("tfVerifyPartial", [saved.checked, saved.unchecked])
