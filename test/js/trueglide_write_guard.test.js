@@ -159,3 +159,50 @@ describe("contre-audit (mineur) : rxfail compte comme réglage à risque", () =>
         expect(r).toEqual([{ command: "rxfail 3 s 1500", before: "rxfail 3 h" }]);
     });
 });
+
+import { runPendingVerification, savePendingVerification } from "../../src/js/trueglide/write_guard.js";
+
+describe("relecture à la connexion suivante (Connexion automatique coupée)", () => {
+    const memoire = () => {
+        const m = new Map();
+        return { getItem: (k) => m.get(k) ?? null, setItem: (k, v) => m.set(k, v), removeItem: (k) => m.delete(k) };
+    };
+    const backup = Array.from({ length: 12 }, (_, i) => `set r${i} = ${i}`);
+    it("relit seulement la même carte, une seule fois", async () => {
+        const storage = memoire();
+        savePendingVerification(
+            { uid: "AAA", commands: ["set craft_name = AUDIT"], backupLines: backup, file: "f.txt" },
+            storage,
+        );
+        const sendFn = async (c) => (c === "diff all" ? [...backup, "set craft_name = AUDIT"] : ["craft_name = AUDIT"]);
+        expect(await runPendingVerification("BBB", { sendFn, storage })).toBeNull();
+        const r = await runPendingVerification("AAA", { sendFn, storage });
+        expect(r).toMatchObject({
+            verified: true,
+            lost: false,
+            checked: 1,
+            mismatches: [],
+            unchecked: 0,
+            file: "f.txt",
+        });
+        expect(await runPendingVerification("AAA", { sendFn, storage })).toBeNull();
+    });
+    it("signale un réglage pas en place et une carte revenue aux réglages d'usine", async () => {
+        const storage = memoire();
+        savePendingVerification(
+            { uid: "AAA", commands: ["set craft_name = AUDIT"], backupLines: backup, file: "f.txt" },
+            storage,
+        );
+        const r = await runPendingVerification("AAA", {
+            sendFn: async (c) => (c === "diff all" ? backup : ["craft_name = Mini"]),
+            storage,
+        });
+        expect(r.mismatches).toEqual(["craft_name : envoyé AUDIT, relu Mini"]);
+        savePendingVerification(
+            { uid: "AAA", commands: ["set craft_name = AUDIT"], backupLines: backup, file: "f.txt" },
+            storage,
+        );
+        const r2 = await runPendingVerification("AAA", { sendFn: async () => ["# diff all", "board_name X"], storage });
+        expect(r2.lost).toBe(true);
+    });
+});

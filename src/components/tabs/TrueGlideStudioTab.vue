@@ -159,7 +159,7 @@ async function sendCommands(id, texte) {
         const text = i18n.getMessage("tfStudioSendDone", [commands.length]);
         post(resultMessage(id, true, text));
         gui_log(text);
-        const saved = await saveAndVerify(backup.lines, { commands });
+        const saved = await saveAndVerify(backup.lines, { commands, file: backup.file });
         if (!saved.ok) {
             gui_log(`${i18n.getMessage("tfStudioReadFailed")} ${saved.error?.message ?? saved.error}`);
         } else {

@@ -11,6 +11,8 @@
 import { send, saveAndReconnect } from "../../composables/useMspCliSession.js";
 import { getConnectionState, State } from "../connection_state.js";
 import { isUsableDiff } from "./studio_tab.js";
+import FC from "../fc.js";
+import { boardIdentity } from "./offline/identity.js";
 
 // Lignes de réglage d'un « diff all », comparables d'une lecture à l'autre (sans commentaires ni lignes d'identité).
 export function settingLines(lines) {
@@ -186,7 +188,9 @@ function waitFor(test, timeoutMs) {
 }
 
 // « save », reconnexion, puis vérification. { ok, verified, lost, after } ou { ok: false, reason: "save", error }.
-export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands = [] } = {}) {
+export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands = [], file = "" } = {}) {
+    // carte enregistrée : la relecture se fera à sa prochaine connexion si le logiciel ne la reconnecte pas tout seul
+    const uid = boardIdentity(FC.CONFIG ?? {}).uid;
     const saved = await saveAndReconnect();
     if (!saved.ok) {
         return { ok: false, reason: "save", error: saved.error };
@@ -207,7 +211,10 @@ export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands =
     }, timeoutMs);
     const back = state() === State.CONNECTED;
     if (!back) {
-        return { ok: true, verified: false, lost: false };
+        // « Connexion automatique » coupée : Betaflight ne reconnecte pas après le redémarrage. La relecture attend
+        // la prochaine connexion de cette carte (Tableau de bord).
+        savePendingVerification({ uid, commands, backupLines, file });
+        return { ok: true, verified: false, lost: false, pending: Boolean(uid) };
     }
     let after;
     try {
@@ -255,7 +262,7 @@ export function verificationMessage(saved, file, msg) {
         return msg("tfOfflineSentLost", [file]);
     }
     if (!saved.verified) {
-        return msg("tfOfflineSentNotVerified", [file]);
+        return msg(saved.pending ? "tfVerifyPending" : "tfOfflineSentNotVerified", [file]);
     }
     if (saved.mismatches?.length) {
         return msg("tfVerifyMismatch", [saved.mismatches.length, saved.mismatches.slice(0, 5).join(" ; "), file]);
@@ -266,4 +273,54 @@ export function verificationMessage(saved, file, msg) {
     return saved.unchecked
         ? msg("tfVerifyPartial", [saved.checked, saved.unchecked])
         : msg("tfVerifyAllOk", [saved.checked]);
+}
+
+// Relecture en attente (une seule : la dernière écriture), faite à la prochaine connexion de la même carte.
+const PENDING_KEY = "trueglide-relecture-en-attente";
+
+export function savePendingVerification({ uid, commands, backupLines, file }, storage = globalThis.localStorage) {
+    if (!uid) {
+        return;
+    }
+    try {
+        storage?.setItem(
+            PENDING_KEY,
+            JSON.stringify({ uid, commands, backupLines, file, date: new Date().toISOString() }),
+        );
+    } catch {
+        // stockage indisponible : le message demande alors de vérifier avec diff all
+    }
+}
+
+export function takePendingVerification(uid, storage = globalThis.localStorage) {
+    try {
+        const p = JSON.parse(storage?.getItem(PENDING_KEY) ?? "null");
+        if (!p || !uid || p.uid !== uid) {
+            return null;
+        }
+        storage.removeItem(PENDING_KEY);
+        return p;
+    } catch {
+        return null;
+    }
+}
+
+// Relecture de la carte branchée si une écriture l'attend : { verified: true, lost, checked, mismatches, unchecked,
+// file } ou null (rien en attente pour cette carte).
+export async function runPendingVerification(uid, { sendFn = (c) => send(c, { timeoutMs: 20000 }), storage } = {}) {
+    const p = takePendingVerification(uid, storage ?? globalThis.localStorage);
+    if (!p) {
+        return null;
+    }
+    let after;
+    try {
+        after = await sendFn("diff all");
+    } catch {
+        return { verified: false, lost: false, file: p.file };
+    }
+    const lost = looksLost(p.backupLines, after);
+    const check = lost
+        ? { checked: 0, mismatches: [], unchecked: 0 }
+        : await verifySent(p.commands, after, (c) => sendFn(c));
+    return { verified: true, lost, ...check, file: p.file };
 }

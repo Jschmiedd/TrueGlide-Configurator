@@ -75,8 +75,14 @@
 </template>
 
 <script setup>
-import { downloadKeptBackup, keptBackups, riskyQuestion, verificationMessage } from "@/js/trueglide/write_guard.js";
-import { computed } from "vue";
+import {
+    downloadKeptBackup,
+    keptBackups,
+    riskyQuestion,
+    runPendingVerification,
+    verificationMessage,
+} from "@/js/trueglide/write_guard.js";
+import { computed, onMounted } from "vue";
 import { i18n } from "@/js/localization";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useConnectionStore } from "@/stores/connection";
@@ -105,6 +111,24 @@ const msg = (key, args = []) =>
     });
 const connectionStore = useConnectionStore();
 const offline = computed(() => connectionStore.connectedTo === OFFLINE_PATH);
+// Relecture en attente : une écriture enregistrée sans reconnexion automatique est relue à la connexion de la carte.
+onMounted(async () => {
+    if (offline.value || !connectionStore.connectionValid) {
+        return;
+    }
+    const r = await runPendingVerification(boardIdentity(FC.CONFIG).uid);
+    if (!r) {
+        return;
+    }
+    const text = `${msg("tfVerifyAtConnection")} ${verificationMessage(r, r.file, msg)}`;
+    state.sentOk = r.verified && !r.lost && !r.mismatches?.length;
+    state.sent = text;
+    state.version++;
+    if (!state.sentOk) {
+        globalThis.alert?.(text);
+    }
+});
+
 const backups = computed(() => {
     state.version; // dependency
     return keptBackups();

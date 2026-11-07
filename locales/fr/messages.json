@@ -966,6 +966,12 @@
     "tfRiskyTabSetting": {
         "message": "réglage d'onglet : comparer avec la sauvegarde"
     },
+    "tfVerifyPending": {
+        "message": "La carte redémarre. Cliquez sur « Connexion » : elle sera relue réglage par réglage à la connexion (Tableau de bord). Sauvegarde : $1."
+    },
+    "tfVerifyAtConnection": {
+        "message": "Relecture de la carte après le dernier enregistrement :"
+    },
     "tfStudioSendForbidden": {
         "message": "Envoi refusé : ces commandes ne sont pas des réglages ($1). Studio n'envoie que des réglages (set, serial, feature, aux…), jamais une commande qui agit tout de suite sur la carte."
     },

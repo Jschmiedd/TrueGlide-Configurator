@@ -225,7 +225,7 @@ async function save() {
         return;
     }
     // "save" reboots the flight controller; the app reconnects like after a preset. "Saved" only once it succeeded.
-    const saved = await saveAndVerify(backup.lines, { commands });
+    const saved = await saveAndVerify(backup.lines, { commands, file: backup.file });
     if (!saved.ok) {
         errorText.value = String(saved.error?.message ?? saved.error);
         state.value = "error";
@@ -296,7 +296,7 @@ async function applyCameraPower() {
         await discardAndReconnect();
         return;
     }
-    const saved = await saveAndVerify(backup.lines, { commands: [command] });
+    const saved = await saveAndVerify(backup.lines, { commands: [command], file: backup.file });
     if (!saved.ok) {
         errorText.value = String(saved.error?.message ?? saved.error);
         state.value = "error";

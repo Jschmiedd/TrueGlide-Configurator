@@ -963,6 +963,12 @@
     "tfRiskyTabSetting": {
         "message": "tab setting: compare with the backup"
     },
+    "tfVerifyPending": {
+        "message": "The board is rebooting. Click \"Connect\": it will be read back setting by setting at connection (Dashboard). Backup: $1."
+    },
+    "tfVerifyAtConnection": {
+        "message": "Board read back after the last saving:"
+    },
     "tfStudioSendForbidden": {
         "message": "Sending refused: these commands are not settings ($1). Studio only sends settings (set, serial, feature, aux…), never a command that acts on the board at once."
     },

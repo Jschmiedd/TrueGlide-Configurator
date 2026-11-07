@@ -116,7 +116,7 @@ export async function sendPrepared({ onProgress, force = false, risksOk = false,
             return { ok: false, reason: "refus", index: i, write: w, reply: refused, file: backup.file };
         }
     }
-    const saved = await saveAndVerify(backup.lines, { commands: cliCommands });
+    const saved = await saveAndVerify(backup.lines, { commands: cliCommands, file: backup.file });
     if (!saved.ok) {
         return { ok: false, reason: "save", reply: String(saved.error?.message ?? saved.error), file: backup.file };
     }
