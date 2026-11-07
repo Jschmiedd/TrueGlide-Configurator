@@ -1,0 +1,305 @@
+{
+ "format": 1,
+ "version": "2026.6.2",
+ "revision": "4b3d47cba",
+ "date": "2026-11-07",
+ "files": [
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "BETAFPVF405",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_BETAFPVF405.hex.gz",
+   "size": 1579963,
+   "sha256": "456f764888a66e9d1cbff98caf9cc28f7ba1232a34f14734a9dae332cb60ffc6"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F411",
+   "board": "BETAFPVF4SX1280",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F411_BETAFPVF4SX1280.hex.gz",
+   "size": 1167401,
+   "sha256": "3b7967252c95a0310fcac24135781802fdc3c2e27e4073b007bc0ac7c49bde99"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "DAKEFPVH743",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_DAKEFPVH743.hex.gz",
+   "size": 1677625,
+   "sha256": "019f336d6ff9cf7a8931c79dbff651c31362d82f8c133205e23487dd19b88d9b"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "FLYWOOF405S_AIO",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_FLYWOOF405S_AIO.hex.gz",
+   "size": 1581464,
+   "sha256": "c6dada09e384357c1bc5f90d711a8b9626e1428ae5d3e88aa82984d96c60d3e2"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F745",
+   "board": "FLYWOOF745",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F745_FLYWOOF745.hex.gz",
+   "size": 1561905,
+   "sha256": "b4a3fca1b84083fb532d6b0ae801ab98474c437c696dc04f4fe1341cd3c43216"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "FOXEERF722V4",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_FOXEERF722V4.hex.gz",
+   "size": 1104541,
+   "sha256": "381b2a6f41b4c33cf0c040fd54d15223c15bae8216991fc8a44595fe39145045"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "FOXEERH743",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_FOXEERH743.hex.gz",
+   "size": 1642786,
+   "sha256": "068560faa605caa59583587fe1b98a1d9a6c6e29dcc240bbb2dfbc83f335b709"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "GEPRCF405",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_GEPRCF405.hex.gz",
+   "size": 1581374,
+   "sha256": "e9de57223e5af7a179c4ed4824f3b450b9221a8cb9b23dfded3dd1dfe6b148b7"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "GEPRCF722",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_GEPRCF722.hex.gz",
+   "size": 1106222,
+   "sha256": "71c9f350058352180913ba9107fa1da69a701ad5eac0c0f026262f04ec3cd4a1"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "HAKRCF722",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_HAKRCF722.hex.gz",
+   "size": 1029975,
+   "sha256": "1ade9efb4b4f9b6f6bcb31277d699b3ad98c7e44c21f07489cd7cf420183da9b"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "HOBBYWING_XROTORF7CONV",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_HOBBYWING_XROTORF7CONV.hex.gz",
+   "size": 1115050,
+   "sha256": "b4042bda416db2db08ac50fb3368400660461f2e1412453ed95e5f928d5c34f3"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "IFLIGHT_BLITZ_F722",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_IFLIGHT_BLITZ_F722.hex.gz",
+   "size": 1111040,
+   "sha256": "4cfc20667a8d4699b2f523e7f680ce94d522d7a2c2bd3efd9ad6fd36857c1ad3"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "IFLIGHT_BLITZ_H7_PRO",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_IFLIGHT_BLITZ_H7_PRO.hex.gz",
+   "size": 1658459,
+   "sha256": "83ec7dcd618d55fb6e2ea9ae4f237ee77b5f91f2de4ca8830e336b939a070079"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "JHEF405PRO",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_JHEF405PRO.hex.gz",
+   "size": 1587706,
+   "sha256": "2417879be20921857aea26148214940cdc8db5132b617714b0468cb70bed0163"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "AT32F435G",
+   "board": "JHEF435",
+   "file": "STANDARD/trueglide_2026.6.2_AT32F435G_JHEF435.hex.gz",
+   "size": 1522375,
+   "sha256": "9298041fbf3d86d95a3d0ba134c5191abaad7b5899788ae530c3ea9520061241"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "KAKUTEH7",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_KAKUTEH7.hex.gz",
+   "size": 1691186,
+   "sha256": "f18fe3fdb9662d86e3aefeb923b7054ad82373837c377b0a6011d8d6152948ae"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "KAKUTEH7MINI",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_KAKUTEH7MINI.hex.gz",
+   "size": 1677850,
+   "sha256": "98e880a0ccd2edcd6cde0a1110a6f6ff07b1eb3e67b6f4f4c39e4d4655b6137a"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "KAKUTEH7V2",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_KAKUTEH7V2.hex.gz",
+   "size": 1663966,
+   "sha256": "516ac1007946f9c823ab86c8c18ce1859a65f359e2dc0f990241c15f3bb9c0df"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "MAMBAF405US",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_MAMBAF405US.hex.gz",
+   "size": 1539314,
+   "sha256": "55e631ce98c584700142d26625a23cac301424676c017fe5085705027600b0f8"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "MAMBAF722",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_MAMBAF722.hex.gz",
+   "size": 1081533,
+   "sha256": "cb87cf92204c973d3d7f5358ff6161bf4050f0c2ecd6c8d3f8ae04d50903e33d"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "MAMBAH743",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_MAMBAH743.hex.gz",
+   "size": 1673334,
+   "sha256": "4e2224d78e69b578994f58cf3c2c25d50077a4f3aba4a41e908eb98b921436cd"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "MATEKF405SE",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_MATEKF405SE.hex.gz",
+   "size": 1543298,
+   "sha256": "d0dcea991aaa6d9a2272e33ac71fd816dd8a4589cede06ee626f2595a6038288"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "MATEKF722SE",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_MATEKF722SE.hex.gz",
+   "size": 1128534,
+   "sha256": "99d9fce60643abe27d36dd13d4fe208819c65ecb1e69cd2a667b3095c82cc1f2"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "MATEKH743",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_MATEKH743.hex.gz",
+   "size": 1665398,
+   "sha256": "99bdab0062ba6253b8f84ea40065d57102f018d65193b526ba240364ac0fa9ed"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32H743",
+   "board": "SKYSTARSH7HD",
+   "file": "STANDARD/trueglide_2026.6.2_STM32H743_SKYSTARSH7HD.hex.gz",
+   "size": 1668670,
+   "sha256": "40f7612abaf67dc4ab00a9f4688b2bd50118a944554cc6927dbb6c8610c611e4"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "SPEEDYBEEF405AIO",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_SPEEDYBEEF405AIO.hex.gz",
+   "size": 1553277,
+   "sha256": "6480c27262fc15755b4f07e495513a9ef69114a43b72fd5cd78b6591f2cafb91"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "SPEEDYBEEF405MINI",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_SPEEDYBEEF405MINI.hex.gz",
+   "size": 1553105,
+   "sha256": "740f2b811e64432af95e71db6caf39f6fc5cb4c818ec5128728aec240cfee6a9"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "SPEEDYBEEF405V3",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_SPEEDYBEEF405V3.hex.gz",
+   "size": 1571527,
+   "sha256": "e18a46f45ef4ffada2cdd37ec69e177f498bd6db5b6109e953f05d39818fdcdc"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F405",
+   "board": "SPEEDYBEEF405V4",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F405_SPEEDYBEEF405V4.hex.gz",
+   "size": 1551120,
+   "sha256": "334f3afd0c628beec0841288d68d98d60017c3f75595234c225b32fb1b502bc3"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "SPEEDYBEEF7MINI",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_SPEEDYBEEF7MINI.hex.gz",
+   "size": 1081972,
+   "sha256": "f5887ded21e6fa49ab8f2ccee29b576b5e51475809e4e471a88b9cc794aa200b"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "SPEEDYBEEF7V3",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_SPEEDYBEEF7V3.hex.gz",
+   "size": 1129667,
+   "sha256": "9eb4b433787675fbb548d7a042a664b8260513aa8554cbdecfa8cf7d3a639b39"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "TMOTORF7",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_TMOTORF7.hex.gz",
+   "size": 1108597,
+   "sha256": "4811f0d67a342ea929b2ba4df6bf8f0b286a4dfd4ac382e83f94138103629b58"
+  },
+  {
+   "model": "STANDARD",
+   "version": "2026.6.2",
+   "mcu": "STM32F722",
+   "board": "TMOTORVELOXF7SE",
+   "file": "STANDARD/trueglide_2026.6.2_STM32F722_TMOTORVELOXF7SE.hex.gz",
+   "size": 1101082,
+   "sha256": "fb1b89dd572d2a4f71584a12ea3c37508e221d41dae046b8d28228d2cf360db0"
+  }
+ ]
+}
