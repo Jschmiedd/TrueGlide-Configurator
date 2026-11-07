@@ -743,21 +743,31 @@ const minSliderValue = computed(() => {
     return fcStore.motorConfig.mincommand;
 });
 
-// TrueGlide (contre-audit N2) : en DShot + 3D, seul 1500 arrête les moteurs ; le neutre ne sert qu'en PWM
-const zeroThrottleValue = computed(() =>
-    motorStopValue({
-        is3d: isFeatureEnabled("3D"),
-        digital: digitalProtocolConfigured.value,
-        mincommand: fcStore.motorConfig.mincommand,
-        neutral3d: fcStore.motor3dConfig.neutral,
-    }),
-);
+// TrueGlide (contre-audit N2) : en DShot + 3D, seul 1500 arrête les moteurs ; le neutre ne sert qu'en PWM.
+// TrueGlide (essai TG-A1-5, 07/11/2026) : la carte interprète la valeur avec SON mode 3D et SON protocole, ceux qui
+// tournent, pas ceux modifiés à l'écran (ils ne comptent qu'après l'enregistrement). Calculer l'arrêt avec l'écran
+// faisait tourner les moteurs : 3D coché -> 1500 envoyé à une carte sans 3D (≈ 50 % des gaz) ; 3D décoché -> 1000
+// envoyé à une carte en 3D (marche arrière à fond). L'arrêt suit donc l'état lu sur la carte, mis à jour après
+// chaque enregistrement.
+const liveMotorState = () => ({
+    is3d: isFeatureEnabled("3D"),
+    digital: digitalProtocolConfigured.value,
+    mincommand: fcStore.motorConfig.mincommand,
+    neutral3d: fcStore.motor3dConfig.neutral,
+});
+const boardMotorState = ref(null);
+const captureBoardMotorState = () => {
+    boardMotorState.value = liveMotorState();
+};
+const zeroThrottleValue = computed(() => motorStopValue(boardMotorState.value ?? liveMotorState()));
 
 // TrueGlide: bench limit (30 % of the throttle range by default, like the ESC tab); the firmware is not touched
 const benchLimited = ref(true);
 const testRange = computed(() => {
-    // the template reads it before the features are loaded from the board
-    const is3d = typeof fcStore.features?.features?.isEnabled === "function" && isFeatureEnabled("3D");
+    // the template reads it before the features are loaded from the board; the sliders drive the board as it runs
+    const is3d = boardMotorState.value
+        ? boardMotorState.value.is3d
+        : typeof fcStore.features?.features?.isEnabled === "function" && isFeatureEnabled("3D");
     return benchRange({
         min: minSliderValue.value,
         max: maxSliderValue.value,
@@ -847,6 +857,8 @@ onMounted(async () => {
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
+    // TrueGlide: the motor stop value follows the board as it runs (read now, before any change on screen)
+    captureBoardMotorState();
 
     // Setup configuration change watchers (CRITICAL: tracks all config changes)
     setupConfigWatchers();
@@ -1457,6 +1469,8 @@ const handleSave = (reboot = true) => {
                 );
             }
 
+            // TrueGlide: once saved, the board runs the new 3D mode / protocol (applied at EEPROM save)
+            captureBoardMotorState();
             // Reset state (clears changes and updates defaults)
             resetChanges();
         },
