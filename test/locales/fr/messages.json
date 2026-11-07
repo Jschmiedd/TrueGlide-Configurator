@@ -1,4 +1,7 @@
 {
+    "tfMotorsBoardStopUnknown": {
+        "message": "Test des moteurs refusé : la valeur d'arrêt des moteurs de la carte n'a pas pu être relue (moteurs pas tous à l'arrêt, ou valeur inconnue). Déconnecter, reconnecter et réessayer ; si cela continue, ne pas tester les moteurs."
+    },
     "translation_version": {
         "message": "0"
     },
