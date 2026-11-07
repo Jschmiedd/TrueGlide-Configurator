@@ -1,4 +1,13 @@
 {
+    "tfMotorsArmedRefused": {
+        "message": "Refused: the board is armed (radio). Disarm first; the motor test and the motor dialogs only work with the board disarmed."
+    },
+    "tfMotorsStopNotConfirmed": {
+        "message": "Warning: after the test ended, the board did not confirm that the motors are stopped (read back twice). Unplug the battery, then disconnect and reconnect before any new test."
+    },
+    "tfMotorsBoardStopUnknown": {
+        "message": "Motor test refused: the board's current motor stop value could not be read back (motors not all at rest, or an unknown value). Disconnect, reconnect and try again; if it persists, do not test the motors."
+    },
     "translation_version": {
         "message": "0"
     },
@@ -549,6 +558,15 @@
     "tfFlasherBoardMismatchTitle": {
         "message": "Different board"
     },
+    "tfFlasherContentTitle": {
+        "message": "File refused"
+    },
+    "tfFlasherContentRefused": {
+        "message": "The content of this file is not a firmware for {{fileBoard}}, although its name says so (renamed file?). Flashing refused: use your board's file."
+    },
+    "tfFlasherContentOtherBoard": {
+        "message": "The content of this file does not name the connected board ({{connectedBoard}}): it is probably for another board. Flash only if you are sure it is this board's firmware."
+    },
     "tfFlasherBoardUnknownWarning": {
         "message": "The app cannot read the board right now (disconnected, or in DFU mode): it cannot check that this file suits it. File made for: {{fileBoard}}. Last connected board: {{lastBoard}}. Flash only if this is the file for your board."
     },
@@ -897,8 +915,77 @@
     "tfStudioSendCancelled": {
         "message": "Sending cancelled: nothing was sent."
     },
-    "tfStudioSendConfirm": {
-        "message": "Send $1 Studio command(s) to the board, then save?\n\nProps off. Read the commands first. At the first refused command nothing is saved. The board reboots at the end."
+    "tfOfflineBoardChanged": {
+        "message": "The real board has changed since the harvest ($1 diff all line(s) differ), for example:\n$2\n\nSending will replace these settings with the ones prepared offline. Advice: Cancel, then harvest the board again.\n\nBoard backup saved on the computer: $3\n\nSend anyway?"
+    },
+    "tfOfflineBoardUnknown": {
+        "message": "This board was changed by a previous sending that could not be read back: it is impossible to know whether it changed since. Advice: Cancel, then harvest the board again.\n\nBoard backup saved on the computer: $1\n\nSend anyway?"
+    },
+    "tfOfflineSendCancelledBackup": {
+        "message": "Sending cancelled: nothing was written. Board backup saved on the computer: $1."
+    },
+    "tfOfflineBackupFailed": {
+        "message": "Sending stopped before any write: the board backup (diff all) could not be read ($1)."
+    },
+    "tfOfflineSendCut": {
+        "message": "USB link cut during sending: nothing was saved in the board memory. If the battery stayed connected, the changes already sent stay active until the next restart: unplug the battery and USB before flying, then check with diff all. Backup: $1."
+    },
+    "tfOfflineSentNotVerified": {
+        "message": "The board could not be read back after saving: check with diff all. Backup: $1."
+    },
+    "tfOfflineSentLost": {
+        "message": "WARNING: after saving, the board seems back to factory settings (cut during saving?). Do not fly: paste the backup $1 in the CLI tab, then save."
+    },
+    "tfStudioBackupSaved": {
+        "message": "Board backup (diff all) saved on the computer: $1"
+    },
+    "tfRiskyConfirm": {
+        "message": "WARNING: these changes affect the motors, mixer, failsafe, arming or board orientation. Check each line (new, then before):\n\n$1\n\nProps off. Continue?"
+    },
+    "tfRiskyBefore": {
+        "message": "before: $1"
+    },
+    "tfVerifyAllOk": {
+        "message": "Board read back after saving: $1 setting(s) checked one by one, all in place."
+    },
+    "tfVerifyPartial": {
+        "message": "Board read back after saving: $1 setting(s) checked one by one, all in place; $2 other(s) not read back one by one (another profile or tab settings): check them on screen."
+    },
+    "tfVerifyNone": {
+        "message": "Board read back after saving: it is not back to factory settings. Settings sent by the tabs are not read back one by one: check them on screen."
+    },
+    "tfVerifyMismatch": {
+        "message": "WARNING: after saving, $1 setting(s) do not have the value sent: $2. Do not fly before checking (diff all). Backup: $3."
+    },
+    "tfStudioSendConfirmList": {
+        "message": "Send these $1 Studio command(s) to the board, then save?\n\n$2\n\nProps off. A backup (diff all) is made first. At the first refused command nothing is saved. The board reboots at the end."
+    },
+    "tfBackupsKept": {
+        "message": "Board backups made before a sending (kept in this browser): $1. Restore: paste the file in the CLI tab, then save."
+    },
+    "tfBackupDownload": {
+        "message": "Download"
+    },
+    "tfRiskyDefault": {
+        "message": "default value"
+    },
+    "tfRiskyTabSetting": {
+        "message": "tab setting: compare with the backup"
+    },
+    "tfVerifyPending": {
+        "message": "The board is rebooting. Click \"Connect\": it will be read back setting by setting at connection (Dashboard). Backup: $1."
+    },
+    "tfVerifyAtConnection": {
+        "message": "Board read back after the last saving:"
+    },
+    "tfVerifyNotRead": {
+        "message": "The board could not be read back setting by setting ($1 setting(s) not read back): check with diff all. Backup: $2."
+    },
+    "tfStudioSendForbidden": {
+        "message": "Sending refused: these commands are not settings ($1). Studio only sends settings (set, serial, feature, aux…), never a command that acts on the board at once."
+    },
+    "tfOfflineSendForbidden": {
+        "message": "Sending refused: \"$1\" is not a setting. Nothing was sent. Only settings are sent, never a command that acts on the board at once (motors, passthrough…)."
     },
     "tfStudioSendNoBoard": {
         "message": "No board connected: nothing is sent. With the offline board, set up with the software tabs, or plug the board back in."
