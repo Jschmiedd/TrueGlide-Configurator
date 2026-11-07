@@ -2,6 +2,9 @@
 <html lang="en" translate="no">
     <head>
         <meta name="google" content="notranslate" />
+        <!-- TrueGlide (audit du 06/11/2026) : scripts, polices et cadres seulement depuis ce site ; aucun script extérieur ni
+             script inline. 'unsafe-eval' : Vue compile au démarrage le modèle de <app> (Function), sans lui la page reste blanche. -->
+        <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https: wss: ws: blob: data:; worker-src 'self' blob:; frame-src 'self' https://jschmiedd.github.io; media-src 'self' data: blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'" />
         <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 
         <script type="module" src="/src/js/utils/common.js"></script>

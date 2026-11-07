@@ -11141,5 +11141,17 @@
     },
     "tgPortChoose": {
         "message": "Select a port"
+    },
+    "tfFailsafeDropConfirm": {
+        "message": "Failsafe procedure \"Drop\": when the radio signal is lost, the motors are cut and the drone falls.\n\nSend anyway?"
+    },
+    "tfPowerGuardLowConfirm": {
+        "message": "power_guard_current = $1 A: throttle will be limited almost at once, the drone will not be able to fly (bench test value). 0 = off.\n\nSave anyway?"
+    },
+    "tfGoogleTilesConfirm": {
+        "message": "Show the satellite or hybrid background: the map images come from Google, which receives your IP address and the area shown. Accept (once for this browser)?\n\nWithout consent: OpenStreetMap."
+    },
+    "tfGoogleTilesShow": {
+        "message": "Satellite view (Google)"
     }
 }

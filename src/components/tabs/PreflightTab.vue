@@ -837,7 +837,7 @@ import GUI from "../../js/gui";
 import { i18n } from "@/js/localization";
 import { usePreflight } from "@/composables/usePreflight";
 import { getNotamStatus } from "@/js/notam/index.js";
-import { initMap } from "../../js/utils/map";
+import { initMap, chooseLayer } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 
 function getWeatherEmoji(code) {
@@ -1373,10 +1373,11 @@ export default defineComponent({
             });
         }
 
-        function setLayer(layerKey) {
+        function setLayer(wanted) {
             if (!mapInstance.value?.layers) {
                 return;
             }
+            const layerKey = chooseLayer(wanted, mapInstance.value);
             Object.entries(mapInstance.value.layers).forEach(([key, layer]) => {
                 layer.setVisible(key === layerKey);
             });

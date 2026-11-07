@@ -114,7 +114,7 @@ import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { send, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
-import { backupBeforeWrite, saveAndVerify, verificationMessage } from "@/js/trueglide/write_guard.js";
+import { backupBeforeWrite, saveAndVerify, verificationMessage, lowCurrentLimit } from "@/js/trueglide/write_guard.js";
 import FC from "@/js/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
@@ -198,6 +198,11 @@ async function save() {
         return;
     }
     if (!commands.length) {
+        return;
+    }
+    // power_guard_current de 1 à 9 A : le drone ne pourra pas voler (valeur de banc) : confirmation
+    const low = lowCurrentLimit(commands);
+    if (low !== null && !globalThis.confirm(i18n.getMessage("tfPowerGuardLowConfirm", [low]))) {
         return;
     }
     state.value = "loading";

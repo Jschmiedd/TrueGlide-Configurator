@@ -9,6 +9,13 @@
             </div>
         </div>
         <div class="map-instructions">
+            <UButton
+                v-if="mapInstance && !satelliteShown"
+                size="xs"
+                variant="subtle"
+                :label="$t('tfGoogleTilesShow')"
+                @click="showSatellite"
+            />
             <p v-html="$t('flightPlanMapInstructions')"></p>
         </div>
     </UiBox>
@@ -17,7 +24,7 @@
 <script setup>
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import UiBox from "@/components/elements/UiBox.vue";
-import { initMap } from "@/js/utils/map";
+import { initMap, chooseLayer, googleTilesAllowed } from "@/js/utils/map";
 import { setFlightPlanMapCenter } from "@/js/trueglide/map_center.js";
 import { get as getConfig, set as setConfig } from "@/js/ConfigStorage";
 import { i18n } from "@/js/localization";
@@ -174,6 +181,16 @@ onMounted(async () => {
 });
 
 // Setup map layers and event handlers
+// TrueGlide : fond satellite (Google) seulement après accord ; sinon plan OpenStreetMap
+const satelliteShown = ref(googleTilesAllowed());
+const showSatellite = () => {
+    if (chooseLayer("satellite", mapInstance.value) !== "satellite") {
+        return;
+    }
+    Object.entries(mapInstance.value.layers).forEach(([key, layer]) => layer.setVisible(key === "satellite"));
+    satelliteShown.value = true;
+};
+
 const setupMapLayers = () => {
     if (!mapInstance.value) {
         console.error("Map instance not available");

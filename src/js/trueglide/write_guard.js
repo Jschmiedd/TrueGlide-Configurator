@@ -103,6 +103,21 @@ export function downloadKeptBackup(backup) {
     download(backup.file, backup.lines);
 }
 
+// TrueGlide (audit du 06/11/2026, mineur) : power_guard_current de 1 à 9 A limite les gaz presque tout de suite :
+// le drone ne peut plus voler (valeur des essais au banc, 2 A). 0 = arrêt. Renvoie la valeur basse trouvée, sinon null.
+export const LOW_CURRENT_LIMIT_A = 10;
+export function lowCurrentLimit(commands) {
+    for (const command of commands ?? []) {
+        const m = String(command)
+            .trim()
+            .match(/^set\s+power_guard_current\s*=\s*(\d+)\s*$/i);
+        if (m && Number(m[1]) > 0 && Number(m[1]) < LOW_CURRENT_LIMIT_A) {
+            return Number(m[1]);
+        }
+    }
+    return null;
+}
+
 // Commandes à risque (moteurs, mélangeur, ressources, failsafe, armement, orientation) avec leur valeur avant
 // (lue dans la sauvegarde) : [{ command, before }]. Contre-audit N4.
 const RISKY_SET =
@@ -195,7 +210,7 @@ export function riskyChanges(commands, backupLines) {
             if (!pidChangeIsLarge(b.value, Number(pid[2]))) {
                 continue;
             }
-        } else if (set && RISKY_SET.test(c)) {
+        } else if (set && (RISKY_SET.test(c) || lowCurrentLimit([c]) !== null)) {
             const name = set[1].toLowerCase();
             previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
         } else if (RISKY_LINE.test(c)) {
