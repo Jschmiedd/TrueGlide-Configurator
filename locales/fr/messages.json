@@ -1,4 +1,10 @@
 {
+    "tfMotorsArmedRefused": {
+        "message": "Refusé : la carte est armée (radio). Désarmer d'abord ; le test des moteurs et les dialogues moteurs ne marchent que carte désarmée."
+    },
+    "tfMotorsStopNotConfirmed": {
+        "message": "Attention : après la fin du test, la carte n'a pas confirmé l'arrêt des moteurs (relu deux fois). Débrancher la batterie, puis déconnecter et reconnecter avant tout nouvel essai."
+    },
     "tfMotorsBoardStopUnknown": {
         "message": "Test des moteurs refusé : la valeur d'arrêt des moteurs de la carte n'a pas pu être relue (moteurs pas tous à l'arrêt, ou valeur inconnue). Déconnecter, reconnecter et réessayer ; si cela continue, ne pas tester les moteurs."
     },

@@ -134,3 +134,142 @@ describe("test moteurs : arrêt envoyé dans tous les cas", () => {
         scope.stop();
     });
 });
+
+// --- 2e relecture indépendante du 07/11/2026 (points 2 et 3) ---
+describe("relecture sûre de l'arrêt (readBoardStop)", () => {
+    const base = { digital: true, mincommand: 1070, neutral3d: 1460, wait: async () => {} };
+    const reader = (frames) => {
+        let i = 0;
+        return async () => frames[Math.min(i++, frames.length - 1)];
+    };
+    it("deux relectures identiques, carte désarmée, 3D cohérent : arrêt donné", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        const r = await readBoardStop({
+            ...base,
+            is3dConfigured: false,
+            readArmed: async () => false,
+            readMotors: reader([[1000, 1000, 1000, 1000]]),
+        });
+        expect(r).toEqual({ stop: 1000, is3d: false });
+    });
+    it("armée : refus", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        const r = await readBoardStop({
+            ...base,
+            is3dConfigured: false,
+            readArmed: async () => true,
+            readMotors: reader([[1000, 1000, 1000, 1000]]),
+        });
+        expect(r).toBeNull();
+    });
+    it("1500 relu sur une carte configurée sans 3D (moteur qui tourne) : refus", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        const r = await readBoardStop({
+            ...base,
+            is3dConfigured: false,
+            readArmed: async () => false,
+            readMotors: reader([[1500, 1500, 1500, 1500]]),
+        });
+        expect(r).toBeNull();
+    });
+    it("1000 relu sur une carte configurée en 3D (marche arrière à fond) : refus", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        const r = await readBoardStop({
+            ...base,
+            is3dConfigured: true,
+            readArmed: async () => false,
+            readMotors: reader([[1000, 1000, 1000, 1000]]),
+        });
+        expect(r).toBeNull();
+    });
+    it("deux relectures différentes : refus", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        const r = await readBoardStop({
+            ...base,
+            is3dConfigured: true,
+            readArmed: async () => false,
+            readMotors: reader([
+                [1500, 1500, 1500, 1500],
+                [1000, 1000, 1000, 1000],
+            ]),
+        });
+        expect(r).toBeNull();
+    });
+    it("tours moteur en télémesure : refus ; lecture qui échoue : refus", async () => {
+        const { readBoardStop } = await import("../../src/js/trueglide/motor_bench.js");
+        expect(
+            await readBoardStop({
+                ...base,
+                is3dConfigured: false,
+                readArmed: async () => false,
+                readMotors: reader([[1000, 1000, 1000, 1000]]),
+                readRpm: async () => [0, 0, 900, 0],
+            }),
+        ).toBeNull();
+        expect(
+            await readBoardStop({
+                ...base,
+                is3dConfigured: false,
+                readArmed: async () => false,
+                readMotors: async () => {
+                    throw new Error("USB");
+                },
+            }),
+        ).toBeNull();
+    });
+});
+
+describe("arrêt inconnu (null) : rien n'est envoyé aux moteurs", () => {
+    beforeEach(() => {
+        sent.length = 0;
+        fakeFC.CONFIG.mode = 0;
+    });
+    it("test refusé, aucune trame MSP_SET_MOTOR ni commande DShot", async () => {
+        const { useMotorTesting } = await import("../../src/composables/motors/useMotorTesting.js");
+        const scope = effectScope();
+        let api;
+        scope.run(() => {
+            api = useMotorTesting({ value: false }, () => {}, { value: true }, { value: null });
+        });
+        api.motorsTestingEnabled.value = true;
+        await nextTick();
+        await nextTick();
+        expect(api.motorsTestingEnabled.value).toBe(false);
+        expect(api.stopAllMotors()).toBe(false);
+        expect(sent).toEqual([]);
+        scope.stop();
+    });
+    it("test refusé car configuration changée : AUCUN arrêt envoyé (le test n'a jamais démarré)", async () => {
+        const { useMotorTesting } = await import("../../src/composables/motors/useMotorTesting.js");
+        const scope = effectScope();
+        let api;
+        scope.run(() => {
+            api = useMotorTesting({ value: true }, () => {}, { value: true }, { value: 1000 });
+        });
+        api.motorsTestingEnabled.value = true;
+        await nextTick();
+        await nextTick();
+        expect(api.motorsTestingEnabled.value).toBe(false);
+        expect(sent).toEqual([]);
+        scope.stop();
+    });
+    it("l'arrêt relu au début du test sert jusqu'à la fin, même si la valeur de l'onglet est effacée", async () => {
+        const { ref } = await import("vue");
+        const { useMotorTesting } = await import("../../src/composables/motors/useMotorTesting.js");
+        const zero = ref(1500);
+        const scope = effectScope();
+        let api;
+        scope.run(() => {
+            api = useMotorTesting({ value: false }, () => {}, { value: true }, zero);
+        });
+        api.motorsTestingEnabled.value = true;
+        await nextTick();
+        api.sendMotorCommand(new Array(8).fill(1600));
+        zero.value = null; // relecture effacée pendant le test
+        sent.length = 0;
+        api.motorsTestingEnabled.value = false;
+        await nextTick();
+        expect(motorValuesSent()).toEqual([1500]);
+        scope.stop();
+    });
+});

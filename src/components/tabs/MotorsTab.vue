@@ -562,7 +562,9 @@ import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { i18n } from "@/js/localization";
-import { benchRange, boardStopFromReadback, motorStopValue } from "@/js/trueglide/motor_bench.js";
+import { benchRange, motorStopValue, readBoardStop } from "@/js/trueglide/motor_bench.js";
+import { bit_check } from "@/js/bit";
+import FC from "@/js/fc";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -763,21 +765,47 @@ const liveMotorState = () => {
     };
     return { stop: motorStopValue(live), is3d: live.is3d };
 };
+// TrueGlide (2e relecture indépendante du 07/11/2026, points 2 et 3) : null tant que l'arrêt n'a pas été relu de façon
+// sûre (readBoardStop : carte désarmée, deux relectures identiques, mode 3D relu = celui de la configuration de la carte,
+// aucun tour moteur). null = AUCUN MSP_SET_MOTOR, test et dialogues moteurs refusés. Jamais de repli sur l'écran.
 const boardMotorState = ref(null);
+const boardStopReading = ref(false);
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const hasRpmTelemetry = () => !!(fcStore.motorConfig.use_dshot_telemetry || fcStore.motorConfig.use_esc_sensor);
+const readRpmTelemetry = async () => {
+    await MSP.promise(MSPCodes.MSP_MOTOR_TELEMETRY);
+    return fcStore.motorTelemetryData?.rpm ? [...fcStore.motorTelemetryData.rpm] : null;
+};
 const readBoardMotorState = async () => {
+    boardStopReading.value = true;
     try {
-        await MSP.promise(MSPCodes.MSP_MOTOR);
-        boardMotorState.value = boardStopFromReadback([...(fcStore.motorData ?? [])], {
+        boardMotorState.value = await readBoardStop({
+            readMotors: async () => {
+                await MSP.promise(MSPCodes.MSP_MOTOR);
+                return [...(fcStore.motorData ?? [])];
+            },
+            readArmed: async () => {
+                await MSP.promise(MSPCodes.MSP_STATUS);
+                return bit_check(FC.CONFIG.mode, 0);
+            },
+            readRpm: hasRpmTelemetry() ? readRpmTelemetry : undefined,
             digital: digitalProtocolConfigured.value,
             mincommand: fcStore.motorConfig.mincommand,
             neutral3d: fcStore.motor3dConfig.neutral,
+            is3dConfigured: isFeatureEnabled("3D"),
+            wait,
         });
     } catch {
         boardMotorState.value = null;
+    } finally {
+        boardStopReading.value = false;
     }
     return boardMotorState.value;
 };
-const zeroThrottleValue = computed(() => (boardMotorState.value ?? liveMotorState()).stop);
+// valeur ENVOYÉE pour arrêter : seulement celle relue sur la carte
+const zeroThrottleValue = computed(() => boardMotorState.value?.stop ?? null);
+// valeur AFFICHÉE au repos (curseurs, barres) : jamais envoyée
+const displayZeroValue = computed(() => zeroThrottleValue.value ?? liveMotorState().stop);
 
 // TrueGlide: bench limit (30 % of the throttle range by default, like the ESC tab); the firmware is not touched
 const benchLimited = ref(true);
@@ -789,7 +817,7 @@ const testRange = computed(() => {
     return benchRange({
         min: minSliderValue.value,
         max: maxSliderValue.value,
-        zero: is3d ? zeroThrottleValue.value : minSliderValue.value,
+        zero: is3d ? displayZeroValue.value : minSliderValue.value,
         is3d,
         limited: benchLimited.value,
     });
@@ -801,10 +829,11 @@ const onBenchLimitChange = (checked) => {
     benchLimited.value = !!checked;
     if (checked) {
         // back under the limit: every motor (and the master) stopped
-        motorValues.value.fill(zeroThrottleValue.value);
-        masterValue.value = zeroThrottleValue.value;
         if (motorsTestingEnabled.value) {
-            sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
+            stopAllMotors();
+        } else {
+            motorValues.value.fill(displayZeroValue.value);
+            masterValue.value = displayZeroValue.value;
         }
     }
 };
@@ -815,6 +844,7 @@ const {
     motorValues,
     masterValue,
     slidersDisabled,
+    isArmed,
     sendMotorCommand,
     stopAllMotors,
     motorCommandsSent,
@@ -830,13 +860,37 @@ const onMotorTestSwitch = async (checked) => {
         motorsTestingEnabled.value = true; // the composable refuses it and shows the usual message
         return;
     }
+    if (isArmed.value) {
+        showWarningDialog(i18n.getMessage("tfMotorsArmedRefused"));
+        return;
+    }
     const board = await readBoardMotorState();
     if (!board) {
         showWarningDialog(i18n.getMessage("tfMotorsBoardStopUnknown"));
         return;
     }
+    // la configuration ou l'armement ont pu changer pendant la relecture
+    if (configHasChanged.value || isArmed.value) {
+        return;
+    }
     motorsTestingEnabled.value = true;
 };
+
+// TrueGlide (2e relecture, point 3) : après chaque fin de test, l'arrêt est relu deux fois sur la carte ; s'il ne
+// correspond pas à la valeur envoyée, Johann est prévenu et le test reste refusé jusqu'à une relecture correcte.
+const confirmStoppedAfterTest = async (sentStop) => {
+    await wait(300);
+    const board = await readBoardMotorState();
+    if (!board || board.stop !== sentStop) {
+        boardMotorState.value = null;
+        showWarningDialog(i18n.getMessage("tfMotorsStopNotConfirmed"));
+    }
+};
+watch(motorsTestingEnabled, (enabled, wasEnabled) => {
+    if (!enabled && wasEnabled && !isSaving.value && motorCommandsSent.value && zeroThrottleValue.value !== null) {
+        confirmStoppedAfterTest(zeroThrottleValue.value);
+    }
+});
 
 // Initialize configuration tracking
 const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTestingEnabled, () => {
@@ -1299,7 +1353,7 @@ onUnmounted(() => {
     if (powerPollingIntervalId) {
         clearInterval(powerPollingIntervalId);
     }
-    // Force motor stop when leaving tab
+    // Force motor stop when leaving tab (stop read back on the board when the test started)
     if (motorsTestingEnabled.value) {
         stopAllMotors();
     }
@@ -1407,7 +1461,20 @@ const isMotorReorderingAvailable = computed(() => {
 });
 
 // Motor dialog handlers
+// TrueGlide (2e relecture, point 3) : les dialogues font tourner les moteurs eux-mêmes ; ils ne s'ouvrent qu'avec l'arrêt
+// relu sur la carte (pas pendant la relecture de l'ouverture de l'onglet, jamais armé)
+const motorDialogAllowed = () => {
+    if (boardStopReading.value || zeroThrottleValue.value === null || isArmed.value) {
+        showWarningDialog(i18n.getMessage(isArmed.value ? "tfMotorsArmedRefused" : "tfMotorsBoardStopUnknown"));
+        return false;
+    }
+    return true;
+};
+
 const openMotorOutputReorderDialog = () => {
+    if (!motorDialogAllowed()) {
+        return;
+    }
     const mixer = fcStore.mixerConfig.mixer;
     if (!mixer || mixer < 1 || mixer > mixerList.length) {
         console.error("Invalid mixer configuration");
@@ -1437,6 +1504,9 @@ const openMotorOutputReorderDialog = () => {
 };
 
 const openEscDshotDirectionDialog = () => {
+    if (!motorDialogAllowed()) {
+        return;
+    }
     // Calculate motor configuration
     const mixer = fcStore.mixerConfig.mixer;
     // TrueGlide: a custom mixer has no fixed motor count, use the outputs the board drives
@@ -1483,7 +1553,7 @@ const handleSave = (reboot = true) => {
             // Explicitly stop all motors to ensure no spinning after reboot. TrueGlide: only if this tab has driven the
             // motors (relecture du 07/11/2026) : otherwise nothing is sent, the board keeps its own stop
             if (motorCommandsSent.value) {
-                stopAllMotors(zeroThrottleValue.value);
+                stopAllMotors();
             }
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
@@ -1515,12 +1585,23 @@ const handleSave = (reboot = true) => {
                 );
             }
 
-            // TrueGlide: the board reboots with the settings on screen (read back again before any motor test)
-            boardMotorState.value = liveMotorState();
             // Reset state (clears changes and updates defaults)
             resetChanges();
+            // TrueGlide (2e relecture, point 3) : jamais l'écran ; l'arrêt est relu sur la carte. Avec redémarrage,
+            // l'onglet est rechargé à la reconnexion (relecture à l'ouverture) ; sans redémarrage, relu maintenant.
+            boardMotorState.value = null;
+            if (!reboot) {
+                await readBoardMotorState();
+            }
         },
-        { onError: (error) => console.error("[Motors] Save failed:", error) },
+        {
+            onError: (error) => {
+                console.error("[Motors] Save failed:", error);
+                // sauvegarde ratée : on ne sait plus ce qui tourne sur la carte -> relu, sinon test refusé
+                boardMotorState.value = null;
+                readBoardMotorState();
+            },
+        },
     );
 };
 
@@ -1594,7 +1675,7 @@ const idleThrottleValue = computed(() => {
     return zeroThrottleValue.value + (fcStore.pidAdvancedConfig.motorIdle * 1000) / 100;
 });
 
-watch(zeroThrottleValue, (val) => {
+watch(displayZeroValue, (val) => {
     if (!motorsTestingEnabled.value) {
         motorValues.value.fill(val);
         masterValue.value = val;
@@ -1648,7 +1729,8 @@ const onMasterValueUpdate = (val) => {
 };
 
 const onSliderWheel = (index, event) => {
-    if (!motorsTestingEnabled.value) {
+    // TrueGlide (2e relecture, point 3) : molette sans effet quand les curseurs sont bloqués (armé par la radio)
+    if (!motorsTestingEnabled.value || slidersDisabled.value) {
         return;
     }
 
@@ -1694,9 +1776,9 @@ const getMotorValue = (index) => {
     // zero throttle otherwise. This ensures bars reflect actual motor output whether
     // controlled via sliders (MSP_SET_MOTOR) or via RC input.
     if (motorsTestingEnabled.value) {
-        return fcStore.motorData[index] ?? zeroThrottleValue.value;
+        return fcStore.motorData[index] ?? displayZeroValue.value;
     }
-    return zeroThrottleValue.value;
+    return displayZeroValue.value;
 };
 
 const getMotorBarHeight = (index) => {
@@ -1751,9 +1833,9 @@ onUnmounted(() => {
         clearTimeout(bufferDelay);
         bufferDelay = null;
     }
-    // ensure disarmed safety - use proper stop values, not 0
+    // ensure disarmed safety - stop read back on the board when the test started (nothing sent if unknown)
     if (motorsTestingEnabled.value) {
-        sendMotorCommand(new Array(8).fill(zeroThrottleValue.value));
+        stopAllMotors();
     }
 });
 </script>

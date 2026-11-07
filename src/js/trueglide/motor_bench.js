@@ -81,3 +81,66 @@ export function boardStopFromReadback(values, { digital, mincommand, neutral3d }
     }
     return null;
 }
+
+// TrueGlide (2e relecture indépendante du 07/11/2026, point 3) : délai entre les deux relectures d'arrêt.
+export const READBACK_GAP_MS = 150;
+
+/**
+ * Relecture SÛRE de l'arrêt des moteurs de la carte, avant tout envoi MSP_SET_MOTOR.
+ * Une seule relecture MSP_MOTOR est ambiguë : un moteur qui tourne à 1500 sur une carte sans 3D ressemble à l'arrêt
+ * 3D, et un moteur à 1000 sur une carte en 3D (marche arrière à fond) ressemble à l'arrêt sans 3D ; une réponse
+ * peut aussi venir d'une demande déjà en file (dédoublonnage MSP). Donc :
+ *  - refus si la carte est armée (avant et après) ;
+ *  - deux relectures séparées de gapMs, identiques ;
+ *  - le mode 3D relu doit être celui de la configuration de la carte (is3dConfigured), sinon refus ;
+ *  - refus si un moteur a des tours (télémesure), quand elle existe.
+ * @param {{
+ *   readMotors: () => Promise<number[]>, readArmed: () => Promise<boolean>, readRpm?: () => Promise<number[]|null>,
+ *   digital: boolean, mincommand: number, neutral3d: number, is3dConfigured: boolean,
+ *   wait: (ms: number) => Promise<void>, gapMs?: number
+ * }} p
+ * @returns {Promise<{ stop: number, is3d: boolean } | null>}
+ */
+export async function readBoardStop({
+    readMotors,
+    readArmed,
+    readRpm,
+    digital,
+    mincommand,
+    neutral3d,
+    is3dConfigured,
+    wait,
+    gapMs = READBACK_GAP_MS,
+}) {
+    const opts = { digital, mincommand, neutral3d };
+    const once = async () => {
+        if (await readArmed()) {
+            return null;
+        }
+        const state = boardStopFromReadback(await readMotors(), opts);
+        if (!state || state.is3d !== !!is3dConfigured) {
+            return null;
+        }
+        if (readRpm) {
+            const rpm = await readRpm();
+            if (Array.isArray(rpm) && rpm.some((r) => Number.isFinite(r) && r > 0)) {
+                return null;
+            }
+        }
+        return state;
+    };
+    try {
+        const first = await once();
+        if (!first) {
+            return null;
+        }
+        await wait(gapMs);
+        const second = await once();
+        if (!second || second.stop !== first.stop || second.is3d !== first.is3d) {
+            return null;
+        }
+        return second;
+    } catch {
+        return null;
+    }
+}
