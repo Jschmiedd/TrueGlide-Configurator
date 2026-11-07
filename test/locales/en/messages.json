@@ -969,6 +969,9 @@
     "tfVerifyAtConnection": {
         "message": "Board read back after the last saving:"
     },
+    "tfVerifyNotRead": {
+        "message": "The board could not be read back setting by setting ($1 setting(s) not read back): check with diff all. Backup: $2."
+    },
     "tfStudioSendForbidden": {
         "message": "Sending refused: these commands are not settings ($1). Studio only sends settings (set, serial, feature, aux…), never a command that acts on the board at once."
     },

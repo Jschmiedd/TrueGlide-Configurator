@@ -972,6 +972,9 @@
     "tfVerifyAtConnection": {
         "message": "Relecture de la carte après le dernier enregistrement :"
     },
+    "tfVerifyNotRead": {
+        "message": "La carte n'a pas pu être relue réglage par réglage ($1 réglage(s) non relu(s)) : vérifiez avec diff all. Sauvegarde : $2."
+    },
     "tfStudioSendForbidden": {
         "message": "Envoi refusé : ces commandes ne sont pas des réglages ($1). Studio n'envoie que des réglages (set, serial, feature, aux…), jamais une commande qui agit tout de suite sur la carte."
     },
