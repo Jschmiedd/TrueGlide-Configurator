@@ -112,7 +112,7 @@
 <h1>Notes de version</h1>
 <p class="chapeau">Version 2026.6.2 du firmware <b>TRUEGLIDE</b> et de TrueGlide Configurator. Le firmware est basé sur Betaflight 2026.6.2, le logiciel sur Betaflight App 2026.6.2. Cette page liste ce que TrueGlide ajoute et où en sont les essais.</p>
 
-<div class="encart"><b>État réel</b> : version d'essai. Premier vol de la révision 24a71eb réussi le 3 novembre 2026 (SPEEDYBEEF405MINI, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox). Les fonctions TrueGlide sont vérifiées par des tests automatiques, au simulateur et au banc ; leur essai en vol est en cours. Premiers essais <b>Hélices retirées</b>, puis en terrain dégagé, à basse vitesse, prêt à reprendre la main.</div>
+<div class="encart"><b>État réel</b> : version d'essai (révision 4b3d47cba en ligne depuis le 7 novembre ; seule SPEEDYBEEF405MINI essayée sur une vraie carte). Premier vol de la révision 24a71eb réussi le 3 novembre 2026 (SPEEDYBEEF405MINI, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox). Les fonctions TrueGlide sont vérifiées par des tests automatiques, au simulateur et au banc ; leur essai en vol est en cours. Premiers essais <b>Hélices retirées</b>, puis en terrain dégagé, à basse vitesse, prêt à reprendre la main.</div>
 
 <h2 id="principe">Principe</h2>
 <p>Sans réglage TrueGlide, le firmware vole comme Betaflight 2026.6.2 : chaque ajout est désactivé par défaut et ne fait rien tant qu'on ne l'active pas. Le firmware garde volontairement le nom « Betaflight » dans certains textes techniques (en-têtes des journaux blackbox, descripteurs USB) pour rester compatible avec les outils existants.</p>
@@ -160,6 +160,8 @@
 
 <h2 id="verifications">Vérifications faites</h2>
 <ul>
+  <li>7 novembre : <b>sécurité du test des moteurs</b> (onglet Moteurs). Un défaut a été trouvé au banc : changer le mode 3D puis « Sauvegarder », batterie branchée, faisait démarrer les moteurs. Corrigé dans le logiciel (arrêt relu sur la carte, rien envoyé tant qu'il n'est pas connu) et dans le firmware (révision ee050eb : remise à l'arrêt à l'enregistrement, arrêt seul après 1 s si le logiciel ne parle plus à la carte, valeur de test effacée à l'armement). Vérifié par des tests automatiques, au simulateur, par un audit indépendant, et au banc sur SPEEDYBEEF405MINI (hélices retirées) : aucun moteur ne bouge en changeant le 3D, arrêt en coupant le test, en quittant l'onglet et en débranchant l'USB.</li>
+  <li>7 novembre : 33 cartes construites avec la révision 4b3d47c (même code firmware que ee050eb) et le contrôle strict <code>-Werror</code> ; tests unitaires : 76 suites ; nom de carte, révision et somme SHA-256 contrôlés dans chaque fichier.</li>
   <li>Tests unitaires Betaflight + TrueGlide : 73 suites, en mode strict (révision 24a71eb).</li>
   <li>3 novembre : 31 cartes courantes construites avec la révision 24a71eb et le contrôle strict <code>-Werror</code> (F405, F411, F722, F745, H743, AT32F435).</li>
   <li>3 novembre : TMOTORVELOXF7SE et HOBBYWING_XROTORF7CONV ajoutées, même révision 24a71eb et même contrôle : 33 cartes.</li>
@@ -180,7 +182,7 @@
 </ul>
 
 <h2 id="publication">Firmwares publiés</h2>
-<p>Version d'essai du 3 novembre 2026 : la mise à jour en ligne propose la révision 24a71eb02, <b>TRUEGLIDE</b> pour 33 cartes. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>.</p>
+<p><b>Version d'essai</b> du 7 novembre 2026 : la mise à jour en ligne propose la révision 4b3d47cba, <b>TRUEGLIDE</b> pour 33 cartes. Seule <b>SPEEDYBEEF405MINI</b> a été essayée sur une vraie carte (au banc et en vol intérieur) ; les 32 autres sont construites et contrôlées, pas essayées. Les fonctions TrueGlide ne sont pas encore essayées en vol. Voir <a href="flasher.html#cartes-publiees">Cartes publiées</a>. Version précédente : 24a71eb02 (3 novembre).</p>
   </article>
 </div>
 
