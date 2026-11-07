@@ -92,6 +92,7 @@ import {
     boardConfirmationNeeded,
     checkTrueGlideFirmwareFile,
     hexContainsBoardName,
+    lastBoardLabel,
 } from "../../js/trueglide/firmware_source.js";
 import CONFIGURATOR from "../../js/data_storage";
 
@@ -433,7 +434,7 @@ export default defineComponent({
                         })
                         : $t("tfFlasherBoardUnknownWarning", {
                             fileBoard: check.board || "?",
-                            lastBoard: getLocalBoardName() || "?",
+                            lastBoard: lastBoardLabel(getLocalBoardName()),
                         }),
                     {
                         yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),

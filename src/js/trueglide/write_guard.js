@@ -109,6 +109,47 @@ const RISKY_SET =
     /^set\s+(failsafe_\w+|yaw_motors_reversed|motor_output_reordering|3d_\w+|motor_pwm_protocol|align_board_\w+|small_angle|runaway_takeoff_\w+|mixer_type)\s*=/i;
 const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux|rxfail)\b|^feature\s+-?3D\b/i;
 
+// TrueGlide (audit indépendant du 07/11/2026) : PID. La question n'est posée que pour un changement net (plus de 50 %
+// d'écart avec la valeur d'avant, ou une valeur d'arrivée hors de la plage habituelle), pas pour un réglage fin.
+const PID_SET = /^set\s+((?:p|i|d|f|d_max)_(?:roll|pitch|yaw)|pidsum_limit(?:_yaw)?)\s*=\s*(-?\d+)/i;
+export const PID_USUAL_MAX = 150;
+export function pidChangeIsLarge(before, after) {
+    if (!Number.isFinite(after)) {
+        return false;
+    }
+    if (!Number.isFinite(before)) {
+        return after > PID_USUAL_MAX;
+    }
+    if (before === 0) {
+        return after > 0 && after > PID_USUAL_MAX / 3;
+    }
+    return Math.abs(after - before) / Math.abs(before) > 0.5 || (after > PID_USUAL_MAX && after !== before);
+}
+
+// MSP_SET_PID (onglet PID, carte hors ligne) : 3 octets P, I, D par axe (roulis, tangage, lacet). Comparé aux
+// « set p_/i_/d_<axe> » de la sauvegarde ; même seuil que les commandes CLI.
+export function pidMspRisky(bytes, backupLines) {
+    const before = settingLines(backupLines);
+    const axes = ["roll", "pitch", "yaw"];
+    const terms = ["p", "i", "d"];
+    const out = [];
+    axes.forEach((axis, a) => {
+        terms.forEach((t, k) => {
+            const value = bytes?.[a * 3 + k];
+            if (!Number.isFinite(value)) {
+                return;
+            }
+            const name = `${t}_${axis}`;
+            const previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
+            const old = previous ? Number(previous.split("=")[1]) : NaN;
+            if (pidChangeIsLarge(old, value)) {
+                out.push({ command: `set ${name} = ${value} (onglet PID)`, before: previous });
+            }
+        });
+    });
+    return out;
+}
+
 export function riskyChanges(commands, backupLines) {
     const before = settingLines(backupLines);
     const out = [];
@@ -116,7 +157,15 @@ export function riskyChanges(commands, backupLines) {
         const c = String(command).trim();
         let previous = null;
         const set = c.match(/^set\s+(\w+)\s*=/i);
-        if (set && RISKY_SET.test(c)) {
+        const pid = c.match(PID_SET);
+        if (pid) {
+            const name = pid[1].toLowerCase();
+            previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
+            const old = previous ? Number(previous.split("=")[1]) : NaN;
+            if (!pidChangeIsLarge(old, Number(pid[2]))) {
+                continue;
+            }
+        } else if (set && RISKY_SET.test(c)) {
             const name = set[1].toLowerCase();
             previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
         } else if (RISKY_LINE.test(c)) {
@@ -262,6 +311,7 @@ export const RISKY_MSP_NAMES = [
     "MSP_SET_MODE_RANGE",
     "MSP_SET_ARMING_CONFIG",
     "MSP_SET_RX_MAP",
+    "MSP_SET_RXFAIL_CONFIG",
 ];
 
 // Texte de la confirmation des changements à risque (msg : (clé, [args]) -> texte).

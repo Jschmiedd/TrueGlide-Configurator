@@ -10,6 +10,7 @@ import FC from "../../fc.js";
 import { send, isConnectionClosedError } from "../../../composables/useMspCliSession.js";
 import {
     RISKY_MSP_NAMES,
+    pidMspRisky,
     backupBeforeWrite,
     compareDiffs,
     riskyChanges,
@@ -87,6 +88,10 @@ export async function sendPrepared({ onProgress, force = false, risksOk = false,
                 command: Object.keys(MSPCodes).find((k) => MSPCodes[k] === Number(w.code)) ?? `MSP ${w.code}`,
                 before: "onglet",
             })),
+        // PID changés fortement depuis l'onglet PID (audit du 07/11/2026)
+        ...writes
+            .filter((w) => w.cli === undefined && Number(w.code) === MSPCodes.MSP_SET_PID)
+            .flatMap((w) => pidMspRisky([...fromHex(w.payload)], backup.lines)),
     ];
     if (risky.length && !risksOk) {
         return { ok: false, reason: "risque", risky, file: backup.file, backup };

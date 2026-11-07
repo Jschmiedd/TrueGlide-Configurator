@@ -210,19 +210,23 @@ const testSwitch = () => {
     }
     return found[0];
 };
-const masterWheel = () => container.querySelectorAll('[role="slider"]');
 
 const testOn = () => testSwitch().getAttribute("aria-checked") === "true";
 async function clickTestSwitch() {
     testSwitch().click();
     await settle(400);
 }
-async function wheelMaster(times = 1) {
-    // dernier curseur = maître
-    const sliders = [...container.querySelectorAll('[data-slot="root"]')].filter((e) =>
-        e.querySelector('[role="slider"]'),
-    );
-    const target = sliders.at(-1)?.parentElement ?? masterWheel()[masterWheel().length - 1];
+async function wheelMaster(times = 1, { focus = true } = {}) {
+    // dernier curseur = maître ; la molette n'agit que si son curseur a le focus (audit M1)
+    const thumbs = [...container.querySelectorAll('[role="slider"]')];
+    const thumb = thumbs.at(-1);
+    const target = thumb.closest("li") ?? thumb.parentElement;
+    if (focus) {
+        thumb.focus();
+    } else {
+        document.body.focus?.();
+        thumb.blur();
+    }
     for (let i = 0; i < times; i++) {
         target.dispatchEvent(new WheelEvent("wheel", { deltaY: -100, bubbles: true, cancelable: true }));
         await settle(30);
@@ -342,6 +346,17 @@ describe("onglet Moteurs monté sur une carte simulée (firmware DShot)", () => 
         await wheelMaster(2); // même en insistant sur le curseur
         expect(board.spinning()).toBe(board.out.some((o) => o !== STOP) && board.setMotorLog.length === 0);
         expect(board.setMotorLog).toEqual([]);
+    });
+
+    it("audit M1 : faire défiler la page au-dessus des curseurs (sans focus) ne change pas les moteurs", async () => {
+        await mountTab();
+        await clickTestSwitch();
+        expect(testOn()).toBe(true);
+        await wheelMaster(4, { focus: false });
+        expect(board.spinning()).toBe(false);
+        expect(board.setMotorLog.every((f) => f.every((v) => v === 1000))).toBe(true);
+        await wheelMaster(2); // curseur cliqué : la molette agit
+        expect(board.spinning()).toBe(true);
     });
 
     it("onglet caché pendant le test : arrêt envoyé", async () => {

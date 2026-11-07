@@ -342,15 +342,25 @@ const handleCancel = (e) => {
 };
 
 // Lifecycle
+// TrueGlide (audit du 07/11/2026, M2) : page ou fenêtre cachée -> minuteries ralenties, moteurs plus surveillés :
+// la fenêtre se ferme et arrête les moteurs, comme le test moteurs de l'onglet
+const handleVisibilityChange = () => {
+    if (document.hidden) {
+        close();
+    }
+};
+
 onMounted(async () => {
     initializeConfig();
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 });
 
 onUnmounted(() => {
     cleanup();
     document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 
 // Expose methods

@@ -330,6 +330,14 @@ export function lastConnectedBoard() {
     }
 }
 
+/**
+ * Nom de la dernière carte connectée pour la question « Carte différente » du flasheur (audit du 07/11/2026) : la carte
+ * lue en ce moment, sinon celle gardée à la dernière connexion (le flasheur déconnecte la carte : FC.CONFIG est vidé).
+ */
+export function lastBoardLabel(liveBoardName) {
+    return liveBoardName || lastConnectedBoard()?.board || "?";
+}
+
 /** Mise à jour demandée depuis le tableau de bord, reprise par le flasheur à son ouverture (une seule fois). */
 export function requestFirmwareUpdate(entry) {
     pendingUpdate = entry;

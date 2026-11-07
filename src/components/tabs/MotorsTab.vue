@@ -411,7 +411,7 @@
                                         v-for="i in numberOfValidOutputs"
                                         :key="i"
                                         class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(i - 1, $event)"
+                                        @wheel="onSliderWheel(i - 1, $event)"
                                     >
                                         <USlider
                                             orientation="vertical"
@@ -424,10 +424,7 @@
                                             @update:model-value="onMotorValueUpdate(i - 1, $event)"
                                         />
                                     </li>
-                                    <li
-                                        class="flex items-end justify-center"
-                                        @wheel.prevent="onSliderWheel(-1, $event)"
-                                    >
+                                    <li class="flex items-end justify-center" @wheel="onSliderWheel(-1, $event)">
                                         <USlider
                                             orientation="vertical"
                                             :min="testRange.min"
@@ -1733,6 +1730,12 @@ const onSliderWheel = (index, event) => {
     if (!motorsTestingEnabled.value || slidersDisabled.value) {
         return;
     }
+    // TrueGlide (audit du 07/11/2026, M1) : la molette n'agit que sur le curseur qui a le focus (cliqué). Faire défiler la
+    // page en passant au-dessus des curseurs ne change plus les moteurs : la page défile normalement.
+    if (!event.currentTarget?.contains?.(document.activeElement)) {
+        return;
+    }
+    event.preventDefault();
 
     // index -1 for master
     const step = 25;
