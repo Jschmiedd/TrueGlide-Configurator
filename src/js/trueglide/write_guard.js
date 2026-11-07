@@ -113,6 +113,38 @@ const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux|rxfail)\b|^feat
 // d'écart avec la valeur d'avant, ou une valeur d'arrivée hors de la plage habituelle), pas pour un réglage fin.
 const PID_SET = /^set\s+((?:p|i|d|f|d_max)_(?:roll|pitch|yaw)|pidsum_limit(?:_yaw)?)\s*=\s*(-?\d+)/i;
 export const PID_USUAL_MAX = 150;
+// Valeurs par défaut du firmware (src/main/flight/pid.h, Betaflight 2026.6.2 / TRUEGLIDE) : un PID resté à sa valeur
+// par défaut n'apparaît pas dans le diff all ; il est alors comparé à cette valeur (audit du 07/11/2026).
+export const PID_DEFAULTS = {
+    p_roll: 45,
+    i_roll: 80,
+    d_roll: 30,
+    f_roll: 120,
+    d_max_roll: 40,
+    p_pitch: 47,
+    i_pitch: 84,
+    d_pitch: 34,
+    f_pitch: 125,
+    d_max_pitch: 46,
+    p_yaw: 45,
+    i_yaw: 80,
+    d_yaw: 0,
+    f_yaw: 120,
+    d_max_yaw: 0,
+    pidsum_limit: 500,
+    pidsum_limit_yaw: 400,
+};
+// valeur d'avant d'un PID : la ligne de la sauvegarde, sinon la valeur par défaut du firmware
+function pidBefore(name, before) {
+    const line = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
+    if (line) {
+        return { line, value: Number(line.split("=")[1]) };
+    }
+    const def = PID_DEFAULTS[name];
+    return def === undefined
+        ? { line: null, value: NaN }
+        : { line: `set ${name} = ${def} (valeur par défaut)`, value: def };
+}
 export function pidChangeIsLarge(before, after) {
     if (!Number.isFinite(after)) {
         return false;
@@ -140,10 +172,9 @@ export function pidMspRisky(bytes, backupLines) {
                 return;
             }
             const name = `${t}_${axis}`;
-            const previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
-            const old = previous ? Number(previous.split("=")[1]) : NaN;
-            if (pidChangeIsLarge(old, value)) {
-                out.push({ command: `set ${name} = ${value} (onglet PID)`, before: previous });
+            const b = pidBefore(name, before);
+            if (pidChangeIsLarge(b.value, value)) {
+                out.push({ command: `set ${name} = ${value} (onglet PID)`, before: b.line });
             }
         });
     });
@@ -159,10 +190,9 @@ export function riskyChanges(commands, backupLines) {
         const set = c.match(/^set\s+(\w+)\s*=/i);
         const pid = c.match(PID_SET);
         if (pid) {
-            const name = pid[1].toLowerCase();
-            previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
-            const old = previous ? Number(previous.split("=")[1]) : NaN;
-            if (!pidChangeIsLarge(old, Number(pid[2]))) {
+            const b = pidBefore(pid[1].toLowerCase(), before);
+            previous = b.line;
+            if (!pidChangeIsLarge(b.value, Number(pid[2]))) {
                 continue;
             }
         } else if (set && RISKY_SET.test(c)) {

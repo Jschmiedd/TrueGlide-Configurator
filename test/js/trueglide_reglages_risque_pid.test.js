@@ -37,10 +37,30 @@ describe("onglet PID (MSP_SET_PID, carte hors ligne)", () => {
     it("P de roulis passé de 58 à 200 : question ; petits écarts : rien", async () => {
         const { pidMspRisky } = await import("../../src/js/trueglide/write_guard.js");
         const backup = ["set p_roll = 58", "set i_roll = 85", "set d_roll = 52", "set p_pitch = 58"];
-        const octets = [200, 85, 52, 60, 85, 54, 55, 90, 0];
+        const octets = [200, 85, 52, 60, 85, 34, 55, 90, 0];
         expect(pidMspRisky(octets, backup)).toEqual([
             { command: "set p_roll = 200 (onglet PID)", before: "set p_roll = 58" },
         ]);
-        expect(pidMspRisky([60, 85, 50, 58, 85, 52, 55, 90, 0], backup)).toEqual([]);
+        expect(pidMspRisky([60, 85, 50, 58, 85, 36, 55, 90, 0], backup)).toEqual([]);
+    });
+});
+
+describe("PID resté à sa valeur par défaut (absent du diff all) : comparé au défaut du firmware", () => {
+    it("p_pitch par défaut (47) passé à 140 : question, avec la valeur par défaut", () => {
+        expect(riskyChanges(["set p_pitch = 140"], ["# master"])).toEqual([
+            { command: "set p_pitch = 140", before: "set p_pitch = 47 (valeur par défaut)" },
+        ]);
+    });
+    it("p_pitch par défaut passé à 52 (réglage fin) : pas de question", () => {
+        expect(riskyChanges(["set p_pitch = 52"], ["# master"])).toEqual([]);
+    });
+    it("d_yaw par défaut (0) passé à 60 : question", () => {
+        expect(riskyChanges(["set d_yaw = 60"], ["# master"])).toHaveLength(1);
+    });
+    it("onglet PID : P de tangage par défaut passé à 140 : question", async () => {
+        const { pidMspRisky } = await import("../../src/js/trueglide/write_guard.js");
+        expect(pidMspRisky([45, 80, 30, 140, 84, 34, 45, 80, 0], ["# master"])).toEqual([
+            { command: "set p_pitch = 140 (onglet PID)", before: "set p_pitch = 47 (valeur par défaut)" },
+        ]);
     });
 });
