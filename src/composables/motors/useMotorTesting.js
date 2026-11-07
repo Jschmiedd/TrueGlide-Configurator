@@ -13,7 +13,13 @@ import { i18n } from "@/js/localization";
 import FC from "@/js/fc";
 import { bit_check } from "@/js/bit";
 
-export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
+export function useMotorTesting(
+    configHasChanged,
+    showWarningDialog,
+    digitalProtocolConfigured,
+    zeroThrottleValue,
+    allowedRange = null,
+) {
     // TrueGlide (2e relecture indépendante du 07/11/2026, point 2) : null = arrêt de la carte pas relu. Alors AUCUNE
     // valeur n'est envoyée aux moteurs (plus de repli sur l'écran ni sur 1000, qui fait tourner une carte en 3D).
     const getZeroThrottleValue = () => {
@@ -58,6 +64,11 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const enableMotorTesting = () => {
         testStarted = true;
         activeStop = getZeroThrottleValue();
+        // TrueGlide (audit du 07/11/2026, F1) : au départ du test, TOUS les curseurs (et le maître) sont mis sur l'arrêt
+        // relu sur la carte. Avant, ils gardaient la valeur affichée au montage (1000 avant la relecture) : en 3D,
+        // toucher un seul curseur envoyait 1000 (pleine marche arrière) aux autres moteurs.
+        motorValues.value = new Array(8).fill(activeStop);
+        masterValue.value = activeStop;
         motorCommandsSent.value = true;
         // Only send DShot command for digital protocols
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
@@ -168,6 +179,25 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const sendMotorCommand = (values) => {
         // TrueGlide: an unknown value is never sent (null / NaN would become 0 on the wire)
         if (!Array.isArray(values) || values.some((v) => !Number.isFinite(v))) {
+            return false;
+        }
+        // TrueGlide (audit du 07/11/2026, F1 et F2) : dernier contrôle avant la carte. Seul l'arrêt relu est permis hors
+        // test ; pendant le test, chaque valeur doit être l'arrêt ou dans la plage des curseurs (limite au banc comprise).
+        const stop = currentStop();
+        const range =
+            allowedRange && typeof allowedRange === "object" && "value" in allowedRange
+                ? allowedRange.value
+                : allowedRange;
+        const allowed = (v) =>
+            v === stop ||
+            (testStarted &&
+                range &&
+                Number.isFinite(range.min) &&
+                Number.isFinite(range.max) &&
+                v >= range.min &&
+                v <= range.max);
+        if (!values.every(allowed)) {
+            console.warn("TrueGlide : valeurs moteurs refusées (hors arrêt et hors plage du test)", values);
             return false;
         }
         const buffer = [];

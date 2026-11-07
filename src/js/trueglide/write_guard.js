@@ -8,7 +8,12 @@
 //  - après « save » : attente de la reconnexion, puis nouveau « diff all » ; une configuration perdue (coupure
 //    pendant l'enregistrement, carte revenue aux réglages d'usine) est signalée avec le fichier de sauvegarde.
 
-import { send, saveAndReconnect } from "../../composables/useMspCliSession.js";
+import {
+    send,
+    saveAndReconnect,
+    isMspCliSupported,
+    MIN_FC_VERSION_FOR_MSP_CLI,
+} from "../../composables/useMspCliSession.js";
 import { getConnectionState, State } from "../connection_state.js";
 import { isUsableDiff } from "./studio_tab.js";
 import FC from "../fc.js";
@@ -61,6 +66,12 @@ function download(name, lines) {
 
 // « diff all » de la carte branchée, enregistré sur l'ordinateur. { ok, lines, file } ou { ok: false, reason }.
 export async function backupBeforeWrite(label) {
+    if (!isMspCliSupported()) {
+        return {
+            ok: false,
+            reason: `firmware trop ancien (il faut ${MIN_FC_VERSION_FOR_MSP_CLI} ou plus récent, ou TRUEGLIDE)`,
+        };
+    }
     let lines;
     try {
         lines = await send("diff all", { timeoutMs: 20000 });
@@ -121,8 +132,9 @@ export function lowCurrentLimit(commands) {
 // Commandes à risque (moteurs, mélangeur, ressources, failsafe, armement, orientation) avec leur valeur avant
 // (lue dans la sauvegarde) : [{ command, before }]. Contre-audit N4.
 const RISKY_SET =
-    /^set\s+(failsafe_\w+|yaw_motors_reversed|motor_output_reordering|3d_\w+|motor_pwm_protocol|align_board_\w+|small_angle|runaway_takeoff_\w+|mixer_type)\s*=/i;
-const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux|rxfail)\b|^feature\s+-?3D\b/i;
+    /^set\s+(failsafe_\w+|yaw_motors_reversed|motor_output_reordering|3d_\w+|motor_pwm_protocol|align_board_\w+|small_angle|runaway_takeoff_\w+|mixer_type|min_command|max_throttle|dshot_idle_value|gyro_\w*sensor_align\w*|ap_rx_loss_policy)\s*=/i;
+// TrueGlide (audit du 07/11/2026, F5) : aussi l'arrêt moteur (MOTOR_STOP) et les ports série (port du récepteur)
+const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux|rxfail|serial)\b|^feature\s+-?(3D|MOTOR_STOP)\b/i;
 
 // TrueGlide (audit indépendant du 07/11/2026) : PID. La question n'est posée que pour un changement net (plus de 50 %
 // d'écart avec la valeur d'avant, ou une valeur d'arrivée hors de la plage habituelle), pas pour un réglage fin.
@@ -222,8 +234,9 @@ export function riskyChanges(commands, backupLines) {
                     ? words.slice(0, 1)
                     : words.slice(0, 2);
             const prefix = key.join(" ").toLowerCase();
+            const featureName = (words[1] ?? "").replace(/^-/, "");
             previous = /^feature$/i.test(words[0])
-                ? before.filter((l) => /^feature\s+-?3D\b/i.test(l)).join(" · ") || null
+                ? before.filter((l) => new RegExp(`^feature\\s+-?${featureName}\\b`, "i").test(l)).join(" · ") || null
                 : (before.find((l) => l.toLowerCase() === prefix || l.toLowerCase().startsWith(`${prefix} `)) ?? null);
         } else {
             continue;
@@ -304,7 +317,16 @@ export async function saveAndVerify(backupLines, { timeoutMs = 45000, commands =
     }
     const state = () => getConnectionState().state;
     // la carte redémarre : d'abord la déconnexion, puis la reconnexion
-    await waitFor(() => state() !== State.CONNECTED, 8000);
+    const restarted = await waitFor(() => state() !== State.CONNECTED, 8000);
+    // TrueGlide (audit du 07/11/2026, mineur) : liaison jamais coupée = la carte n'a pas redémarré, l'enregistrement
+    // n'est pas confirmé (les changements peuvent n'être qu'en mémoire vive) : on le dit au lieu de relire
+    if (!restarted) {
+        return {
+            ok: false,
+            reason: "save",
+            error: "la carte n'a pas redémarré après « save » : enregistrement non confirmé, débrancher puis rebrancher et vérifier",
+        };
+    }
     // reconnexion, ou abandon de la reconnexion (logiciel revenu au repos pendant plusieurs secondes)
     let idleSince = null;
     await waitFor(() => {
@@ -357,6 +379,11 @@ export const RISKY_MSP_NAMES = [
     "MSP_SET_ARMING_CONFIG",
     "MSP_SET_RX_MAP",
     "MSP_SET_RXFAIL_CONFIG",
+    // TrueGlide (audit du 07/11/2026, F5) : protocole moteur, orientation du gyro, réglages PID avancés, trims
+    "MSP_SET_ADVANCED_CONFIG",
+    "MSP_SET_SENSOR_ALIGNMENT",
+    "MSP_SET_PID_ADVANCED",
+    "MSP_SET_ACC_TRIM",
 ];
 
 // Texte de la confirmation des changements à risque (msg : (clé, [args]) -> texte).

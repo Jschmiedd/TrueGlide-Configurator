@@ -406,4 +406,97 @@ describe("onglet Moteurs monté sur une carte simulée (firmware DShot)", () => 
         expect(board.setMotorLog).toEqual([]);
         expect(board.spinning()).toBe(false);
     });
+
+    // ---- audit du 07/11/2026 (F1, F2, F3) ----
+    async function wheelMotor(index, times = 1, deltaY = -100) {
+        const thumbs = [...container.querySelectorAll('[role="slider"]')];
+        const thumb = thumbs[index];
+        const target = thumb.closest("li") ?? thumb.parentElement;
+        thumb.focus();
+        for (let i = 0; i < times; i++) {
+            target.dispatchEvent(new WheelEvent("wheel", { deltaY, bubbles: true, cancelable: true }));
+            await settle(30);
+        }
+    }
+
+    it("F1 : en 3D, toucher seulement le moteur 1 laisse les moteurs 2 à 4 à l'arrêt (1500), jamais 1000", async () => {
+        board.stored3d = true;
+        board.runtime3d = true;
+        await mountTab();
+        await clickTestSwitch();
+        expect(testOn()).toBe(true);
+        await wheelMotor(0, 2); // vers le haut
+        await wheelMotor(0, 4, 100); // puis sous le milieu (autre sens)
+        expect(board.setMotorLog.length).toBeGreaterThan(0);
+        for (const frame of board.setMotorLog) {
+            expect(frame.slice(1)).toEqual([1500, 1500, 1500]);
+            expect(frame[0]).toBeGreaterThanOrEqual(1350);
+            expect(frame[0]).toBeLessThanOrEqual(1650);
+        }
+        expect(board.setMotorLog.some((f) => f[0] > 1500)).toBe(true);
+        expect(board.setMotorLog.some((f) => f[0] < 1500)).toBe(true);
+    });
+
+    it("F1 : sans 3D, toucher seulement le moteur 1 laisse les moteurs 2 à 4 à 1000", async () => {
+        await mountTab();
+        await clickTestSwitch();
+        await wheelMotor(0, 2);
+        expect(board.setMotorLog.length).toBeGreaterThan(0);
+        for (const frame of board.setMotorLog) {
+            expect(frame.slice(1)).toEqual([1000, 1000, 1000]);
+            expect(frame[0]).toBeLessThanOrEqual(1300);
+        }
+    });
+
+    it("F3 : interrupteur remis sur non pendant la relecture de la carte -> le test ne démarre pas", async () => {
+        await mountTab();
+        testSwitch().click();
+        await settle(20); // relecture en cours (deux lectures à 150 ms d'écart)
+        testSwitch().click();
+        await settle(600);
+        expect(testOn()).toBe(false);
+        expect(board.setMotorLog.every((f) => f.every((v) => v === 1000))).toBe(true);
+        expect(board.spinning()).toBe(false);
+    });
+});
+
+describe("F2 : dernier contrôle avant la carte (useMotorTesting.sendMotorCommand)", () => {
+    async function mountComposable({ stop, range }) {
+        setActivePinia(createPinia());
+        FC = (await import("@/js/fc")).default;
+        fcRef.FC = FC;
+        FC.resetState();
+        const { ref: vref } = await import("vue");
+        const { useMotorTesting } = await import("../../src/composables/motors/useMotorTesting.js");
+        let api;
+        const host = document.createElement("div");
+        document.body.appendChild(host);
+        const a = createApp({
+            setup() {
+                api = useMotorTesting(vref(false), () => {}, vref(true), vref(stop), vref(range));
+                return () => h("div");
+            },
+        });
+        a.mount(host);
+        return { api, a };
+    }
+    it("hors test : seul l'arrêt relu passe ; pendant le test : valeurs hors plage refusées", async () => {
+        const { api, a } = await mountComposable({ stop: 1500, range: { min: 1350, max: 1650 } });
+        expect(api.sendMotorCommand([1600, 1500, 1500, 1500, 1500, 1500, 1500, 1500])).toBe(false);
+        expect(api.sendMotorCommand(new Array(8).fill(1500))).toBe(true);
+        api.motorsTestingEnabled.value = true;
+        await settle(10);
+        expect(api.motorValues.value.every((v) => v === 1500)).toBe(true);
+        expect(api.masterValue.value).toBe(1500);
+        expect(api.sendMotorCommand([1600, 1500, 1500, 1500, 1500, 1500, 1500, 1500])).toBe(true);
+        expect(api.sendMotorCommand([1600, 1000, 1500, 1500, 1500, 1500, 1500, 1500])).toBe(false);
+        expect(api.sendMotorCommand([2000, 1500, 1500, 1500, 1500, 1500, 1500, 1500])).toBe(false);
+        const before = board.setMotorLog.length;
+        api.sendMotorCommand([1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000]);
+        expect(board.setMotorLog.length).toBe(before);
+        api.motorsTestingEnabled.value = false;
+        await settle(10);
+        expect(board.setMotorLog.at(-1)).toEqual([1500, 1500, 1500, 1500]);
+        a.unmount();
+    });
 });

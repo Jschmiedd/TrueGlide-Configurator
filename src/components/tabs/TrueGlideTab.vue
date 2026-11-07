@@ -114,7 +114,14 @@ import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import { send, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
-import { backupBeforeWrite, saveAndVerify, verificationMessage, lowCurrentLimit } from "@/js/trueglide/write_guard.js";
+import {
+    backupBeforeWrite,
+    saveAndVerify,
+    verificationMessage,
+    lowCurrentLimit,
+    riskyChanges,
+    riskyQuestion,
+} from "@/js/trueglide/write_guard.js";
 import FC from "@/js/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
@@ -203,6 +210,13 @@ async function save() {
     // power_guard_current de 1 à 9 A : le drone ne pourra pas voler (valeur de banc) : confirmation
     const low = lowCurrentLimit(commands);
     if (low !== null && !globalThis.confirm(i18n.getMessage("tfPowerGuardLowConfirm", [low]))) {
+        return;
+    }
+    // TrueGlide (audit du 07/11/2026, F6) : failsafe, perte de signal en vol automatique… : la même question
+    // « réglages à risque » que Studio, Réglage et la carte hors ligne (valeur d'avant : celle lue sur la carte)
+    const beforeLines = Object.entries(original).map(([k, v]) => `set ${k} = ${v}`);
+    const risky = riskyChanges(commands, beforeLines).filter((r) => !/^set\s+power_guard_current\b/i.test(r.command));
+    if (risky.length && !globalThis.confirm(riskyQuestion(risky, (k, a) => i18n.getMessage(k, a)))) {
         return;
     }
     state.value = "loading";

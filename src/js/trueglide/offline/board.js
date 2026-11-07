@@ -73,6 +73,14 @@ export const LIVE_CODE_NAMES = [
     "MSP_ACC_CALIBRATION",
     "MSP_MAG_CALIBRATION",
     "MSP_SET_PASSTHROUGH",
+    // TrueGlide (audit du 07/11/2026, F4) : nom réel du code 245 (passerelle ESC) ; « MSP_SET_PASSTHROUGH » n'existe
+    // pas dans MSPCodes. Identité de la carte (écrite pour toujours) et GPS / cap / points de passage simulés.
+    "MSP_SET_4WAY_IF",
+    "MSP_SET_BOARD_INFO",
+    "MSP_SET_SIGNATURE",
+    "MSP_SET_RAW_GPS",
+    "MSP_SET_HEADING",
+    "MSP_SET_WP",
     "MSP_DATAFLASH_ERASE",
     "MSP2_SEND_DSHOT_COMMAND",
 ];

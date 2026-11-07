@@ -93,12 +93,9 @@ describe("contre-audit N4 : changements à risque avec la valeur d'avant", () =>
         expect(r[4].before).toBeNull();
     });
     it("rien à confirmer si la valeur ne change pas ou n'est pas à risque", () => {
-        expect(
-            riskyChanges(
-                ["set failsafe_procedure = GPS-RESCUE", "set p_roll = 60", "serial UART2 64 115200 57600 0 115200"],
-                backup,
-            ),
-        ).toEqual([]);
+        expect(riskyChanges(["set failsafe_procedure = GPS-RESCUE", "set p_roll = 60"], backup)).toEqual([]);
+        // audit du 07/11/2026 (F5) : un port série changé (port du récepteur) est maintenant à risque
+        expect(riskyChanges(["serial UART2 64 115200 57600 0 115200"], backup).length).toBe(1);
     });
 });
 

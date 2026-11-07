@@ -454,7 +454,7 @@
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" full-width>
                                 <USwitch
-                                    :model-value="motorsTestingEnabled"
+                                    :model-value="motorsTestingEnabled || testSwitchPending"
                                     size="sm"
                                     @update:model-value="onMotorTestSwitch"
                                 />
@@ -845,10 +845,17 @@ const {
     sendMotorCommand,
     stopAllMotors,
     motorCommandsSent,
-} = useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue);
+} = useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue, testRange);
 
 // TrueGlide: the motor test only starts once the board's own stop value has been read back (see readBoardMotorState)
+// TrueGlide (audit du 07/11/2026, F3) : dernière position voulue de l'interrupteur ; un « non » pendant la relecture
+// de la carte annule le démarrage
+let testSwitchRequest = 0;
+// interrupteur montré sur « oui » pendant la relecture, pour pouvoir l'annuler d'un clic
+const testSwitchPending = ref(false);
 const onMotorTestSwitch = async (checked) => {
+    const request = ++testSwitchRequest;
+    testSwitchPending.value = false;
     if (!checked) {
         motorsTestingEnabled.value = false;
         return;
@@ -861,7 +868,19 @@ const onMotorTestSwitch = async (checked) => {
         showWarningDialog(i18n.getMessage("tfMotorsArmedRefused"));
         return;
     }
-    const board = await readBoardMotorState();
+    testSwitchPending.value = true;
+    let board;
+    try {
+        board = await readBoardMotorState();
+    } finally {
+        if (request === testSwitchRequest) {
+            testSwitchPending.value = false;
+        }
+    }
+    // interrupteur remis sur « non » (ou nouvelle demande) pendant la relecture : on ne démarre pas
+    if (request !== testSwitchRequest) {
+        return;
+    }
     if (!board) {
         showWarningDialog(i18n.getMessage("tfMotorsBoardStopUnknown"));
         return;
@@ -877,6 +896,10 @@ const onMotorTestSwitch = async (checked) => {
 // correspond pas à la valeur envoyée, Johann est prévenu et le test reste refusé jusqu'à une relecture correcte.
 const confirmStoppedAfterTest = async (sentStop) => {
     await wait(300);
+    // test relancé entre-temps : pas de fausse alerte (audit du 07/11/2026, mineur)
+    if (motorsTestingEnabled.value || testSwitchPending.value) {
+        return;
+    }
     const board = await readBoardMotorState();
     if (!board || board.stop !== sentStop) {
         boardMotorState.value = null;

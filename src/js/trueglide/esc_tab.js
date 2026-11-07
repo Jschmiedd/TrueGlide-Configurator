@@ -4,9 +4,9 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v16 (master
-// 29100f6, corrections de l'audit du 06/11/2026 faites par la discussion ESC), sur /test/ à la demande
-// de Johann (06/11) pour son contrôle (fiche TG-A1, partie 5) ; /app/ la recevra avec la prochaine publication.
+// Version de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v16, reconstruite
+// sur place depuis master 26a57e3 (gh-pages 2522d4c du dépôt ESC ; vérifié par l'audit du 07/11/2026, F8). La première
+// v16 venait de 29100f6.
 export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v16/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
@@ -52,6 +52,7 @@ export function detachEscFrame() {
     state.frame = null;
     state.connected = false;
     state.pending = null;
+    releaseInFlight = null;
 }
 
 export function isEscTabHoldingPort() {
@@ -60,22 +61,33 @@ export function isEscTabHoldingPort() {
 
 // Demande à l'onglet ESC de libérer le port USB. Résultat : "disconnected" (port libre), "busy" (lecture, écriture ou
 // flash en cours : ne pas quitter), ou "timeout" (pas de réponse : l'onglet sera fermé, ce qui ferme son port).
+// TrueGlide (audit du 07/11/2026, F7) : une seule demande à la fois. Un 2e clic reçoit la réponse de la 1re (avant, il
+// l'écrasait : la 1re répondait « timeout » et l'onglet se fermait même pendant un flash qui avait répondu « busy »).
+let releaseInFlight = null;
 export function requestEscRelease(timeoutMs = RELEASE_TIMEOUT_MS) {
     if (!isEscTabHoldingPort()) {
         return Promise.resolve("disconnected");
     }
-    return new Promise((resolve) => {
+    if (releaseInFlight) {
+        return releaseInFlight;
+    }
+    releaseInFlight = new Promise((resolve) => {
+        const finish = (what) => {
+            releaseInFlight = null;
+            resolve(what);
+        };
         const timer = setTimeout(() => {
             state.pending = null;
-            resolve("timeout");
+            finish("timeout");
         }, timeoutMs);
         state.pending = (what) => {
             clearTimeout(timer);
-            resolve(what);
+            finish(what);
         };
         state.frame.contentWindow.postMessage(
             { source: "trueglide-configurator", command: "disconnect" },
             ESC_TAB_ORIGIN,
         );
     });
+    return releaseInFlight;
 }

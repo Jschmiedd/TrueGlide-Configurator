@@ -160,7 +160,12 @@ function craftNameFromRecording(rec) {
 }
 
 // Ouvre un fichier carte (texte JSON) ; refuse un autre format ou une autre version.
+// TrueGlide (audit du 07/11/2026, mineur) : taille maximale d'un fichier carte (une récolte fait moins de 1 Mo)
+export const MAX_BOARD_FILE_CHARS = 8 * 1024 * 1024;
 export function parseBoardFile(text, MSPCodes = null) {
+    if (typeof text !== "string" || text.length > MAX_BOARD_FILE_CHARS) {
+        throw new Error("Fichier carte trop gros ou vide : refusé.");
+    }
     let o;
     try {
         o = JSON.parse(text);
@@ -172,6 +177,14 @@ export function parseBoardFile(text, MSPCodes = null) {
     }
     if (o.version !== VERSION) {
         throw new Error(`Version du fichier carte non prise en charge : ${o.version}.`);
+    }
+    const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+    if (
+        !isObject(o.msp) ||
+        (o.cli !== undefined && !isObject(o.cli)) ||
+        (o.writes !== undefined && !Array.isArray(o.writes))
+    ) {
+        throw new Error("Fichier carte incomplet (récolte absente) : refusé.");
     }
     // audit du 06/11/2026 : un fichier carte ne peut contenir que des réglages (rien qui agisse tout de suite)
     if (MSPCodes) {
