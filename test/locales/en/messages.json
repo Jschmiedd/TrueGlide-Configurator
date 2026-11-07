@@ -1,4 +1,10 @@
 {
+    "tfMotorsArmedRefused": {
+        "message": "Refused: the board is armed (radio). Disarm first; the motor test and the motor dialogs only work with the board disarmed."
+    },
+    "tfMotorsStopNotConfirmed": {
+        "message": "Warning: after the test ended, the board did not confirm that the motors are stopped (read back twice). Unplug the battery, then disconnect and reconnect before any new test."
+    },
     "tfMotorsBoardStopUnknown": {
         "message": "Motor test refused: the board's current motor stop value could not be read back (motors not all at rest, or an unknown value). Disconnect, reconnect and try again; if it persists, do not test the motors."
     },
