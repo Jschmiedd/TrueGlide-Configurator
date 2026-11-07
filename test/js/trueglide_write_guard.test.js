@@ -152,3 +152,10 @@ describe("contre-audit (constat 4) : sauvegarde aussi gardée dans le navigateur
         expect(list[0].lines).toEqual(["set a = 11"]);
     });
 });
+
+describe("contre-audit (mineur) : rxfail compte comme réglage à risque", () => {
+    it("rxfail changé : question avec la ligne d'avant", () => {
+        const r = riskyChanges(["rxfail 3 s 1500"], ["rxfail 3 h"]);
+        expect(r).toEqual([{ command: "rxfail 3 s 1500", before: "rxfail 3 h" }]);
+    });
+});

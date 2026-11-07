@@ -105,7 +105,7 @@ export function downloadKeptBackup(backup) {
 // (lue dans la sauvegarde) : [{ command, before }]. Contre-audit N4.
 const RISKY_SET =
     /^set\s+(failsafe_\w+|yaw_motors_reversed|motor_output_reordering|3d_\w+|motor_pwm_protocol|align_board_\w+|small_angle|runaway_takeoff_\w+|mixer_type)\s*=/i;
-const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux)\b|^feature\s+-?3D\b/i;
+const RISKY_LINE = /^(mixer|mmix|smix|resource|timer|dma|map|aux|rxfail)\b|^feature\s+-?3D\b/i;
 
 export function riskyChanges(commands, backupLines) {
     const before = settingLines(backupLines);
@@ -119,7 +119,7 @@ export function riskyChanges(commands, backupLines) {
             previous = before.find((l) => new RegExp(`^set\\s+${name}\\s*=`, "i").test(l)) ?? null;
         } else if (RISKY_LINE.test(c)) {
             const words = c.split(/\s+/);
-            // même réglage : « resource MOTOR 1 », « aux 0 », « mmix 0 », « mixer », « feature 3D »
+            // même réglage : « resource MOTOR 1 », « aux 0 », « mmix 0 », « rxfail 3 », « mixer », « feature 3D »
             const key = /^(resource|timer|dma)$/i.test(words[0])
                 ? words.slice(0, 3)
                 : /^(mixer|map|feature)$/i.test(words[0])
