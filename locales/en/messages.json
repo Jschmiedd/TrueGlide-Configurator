@@ -1,4 +1,7 @@
 {
+    "tfMotorsBoardStopUnknown": {
+        "message": "Motor test refused: the board's current motor stop value could not be read back (motors not all at rest, or an unknown value). Disconnect, reconnect and try again; if it persists, do not test the motors."
+    },
     "translation_version": {
         "message": "0"
     },

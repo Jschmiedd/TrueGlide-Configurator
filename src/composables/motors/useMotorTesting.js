@@ -17,21 +17,14 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
 
     const motorsTestingEnabled = ref(false);
+    // TrueGlide: true once this tab has driven the motors (test enabled at least once)
+    const motorCommandsSent = ref(false);
     const motorValues = ref(new Array(8).fill(getZeroThrottleValue()));
     const masterValue = ref(getZeroThrottleValue());
 
-    // Safety: Keys that don't trigger motor stop
-    const ignoreKeys = new Set([
-        "PageUp",
-        "PageDown",
-        "End",
-        "Home",
-        "ArrowUp",
-        "ArrowDown",
-        "AltLeft",
-        "AltRight",
-        "Tab",
-    ]);
+    // Safety: Keys that don't trigger motor stop. TrueGlide (relecture du 07/11/2026) : Home / End removed: they jump a
+    // slider to an end (full reverse in 3D), so they now stop the test like any other key
+    const ignoreKeys = new Set(["PageUp", "PageDown", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"]);
 
     /**
      * Keyboard safety handler - stops motors on any key press
@@ -49,6 +42,7 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * - Disables arming
      */
     const enableMotorTesting = () => {
+        motorCommandsSent.value = true;
         // Only send DShot command for digital protocols
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
             const buffer = [];
@@ -159,17 +153,15 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);
 
     // Watch arm state changes during motor testing (matches original update_ui arm detection)
-    watch(isArmed, (armed) => {
+    watch(isArmed, () => {
         if (!motorsTestingEnabled.value) {
             return;
         }
 
-        if (armed) {
-            // FC armed via RC: reset sliders to zero throttle to prevent MSP_SET_MOTOR interference
-            const stopValue = getZeroThrottleValue();
-            motorValues.value.fill(stopValue);
-            masterValue.value = stopValue;
-        }
+        // FC armed or disarmed via RC: sliders back to zero throttle. TrueGlide (relecture du 07/11/2026) : the stop is
+        // also SENT, otherwise the board keeps the last slider value and the motor restarts with it at disarm while
+        // the screen shows zero
+        stopAllMotors(getZeroThrottleValue());
     });
 
     return {
@@ -180,5 +172,6 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         slidersDisabled,
         sendMotorCommand,
         stopAllMotors,
+        motorCommandsSent,
     };
 }

@@ -30,7 +30,8 @@ export function benchRange({ min, max, zero, is3d, limited, fraction = BENCH_FRA
  *  - sans 3D : 1000 en DShot (commande d'arrêt), sinon mincommand ;
  *  - 3D en DShot : 1500 exactement. Le firmware ne donne la commande d'arrêt DShot qu'à 1500 (dshot.c,
  *    dshotConvertFromExternal) ; 3d_neutral (1460 par défaut) ferait tourner lentement en marche arrière ;
- *  - 3D en PWM / OneShot / Multishot : 3d_neutral (hors de 1425-1575 : 1500, comme Betaflight).
+ *  - 3D en PWM / OneShot / Multishot : 3d_neutral tel quel (relecture du 07/11/2026 : le firmware garde la valeur
+ *    brute, pwm_output.c ; la ramener à 1500 ferait tourner un ESC 3D calibré sur ce neutre).
  * @param {{ is3d: boolean, digital: boolean, mincommand: number, neutral3d: number }} p
  * @returns {number}
  */
@@ -41,5 +42,42 @@ export function motorStopValue({ is3d, digital, mincommand, neutral3d }) {
     if (digital) {
         return 1500;
     }
-    return neutral3d > 1575 || neutral3d < 1425 ? 1500 : neutral3d;
+    return neutral3d;
+}
+
+/**
+ * Arrêt des moteurs tel que la carte l'applique EN CE MOMENT (essai TG-A1-5 et relecture du 07/11/2026).
+ * Moteurs à l'arrêt, MSP_MOTOR renvoie la valeur d'arrêt convertie avec le mode 3D en marche (dshot.c,
+ * dshotConvertToExternal : 1000 sans 3D, 1500 en 3D ; en PWM la sortie brute : mincommand, ou 3d_neutral en 3D).
+ * C'est la seule source sûre : la configuration lue (MSP_FEATURE_CONFIG) peut différer de ce qui tourne (enregistrement
+ * interrompu). Toute réponse douteuse (moteurs pas tous égaux, valeur inconnue) donne null : le test moteurs est refusé.
+ * @param {number[]} values MSP_MOTOR (0 = sortie inutilisée)
+ * @param {{ digital: boolean, mincommand: number, neutral3d: number }} p
+ * @returns {{ stop: number, is3d: boolean } | null}
+ */
+export function boardStopFromReadback(values, { digital, mincommand, neutral3d }) {
+    const used = (values ?? []).filter((v) => Number.isFinite(v) && v > 0);
+    if (used.length === 0 || used.some((v) => v !== used[0])) {
+        return null;
+    }
+    const v = used[0];
+    if (digital) {
+        if (v === 1000) {
+            return { stop: 1000, is3d: false };
+        }
+        if (v === 1500) {
+            return { stop: 1500, is3d: true };
+        }
+        return null;
+    }
+    if (mincommand === neutral3d) {
+        return null; // impossible de savoir si le 3D est en marche
+    }
+    if (v === mincommand) {
+        return { stop: v, is3d: false };
+    }
+    if (v === neutral3d) {
+        return { stop: v, is3d: true };
+    }
+    return null;
 }

@@ -456,7 +456,11 @@
                         <div class="p-3 border border-red-500/30 rounded-md bg-red-500/5">
                             <p class="text-sm mb-2" v-html="$t('motorsNotice')"></p>
                             <SettingRow :label="$t('motorsEnableControl')" full-width>
-                                <USwitch v-model="motorsTestingEnabled" size="sm" />
+                                <USwitch
+                                    :model-value="motorsTestingEnabled"
+                                    size="sm"
+                                    @update:model-value="onMotorTestSwitch"
+                                />
                             </SettingRow>
                             <!-- TrueGlide: bench safety limit of the motor test (software only, like the ESC tab) -->
                             <SettingRow :label="$t('tfMotorsBenchLimit')" full-width>
@@ -558,7 +562,7 @@ import { useMotorDataPolling } from "@/composables/motors/useMotorDataPolling";
 import { useSaving } from "@/composables/useSaving";
 import { useReboot } from "@/composables/useReboot";
 import { i18n } from "@/js/localization";
-import { benchRange, motorStopValue } from "@/js/trueglide/motor_bench.js";
+import { benchRange, boardStopFromReadback, motorStopValue } from "@/js/trueglide/motor_bench.js";
 
 const API_VERSION_1_47 = "1.47.0";
 
@@ -744,22 +748,36 @@ const minSliderValue = computed(() => {
 });
 
 // TrueGlide (contre-audit N2) : en DShot + 3D, seul 1500 arrête les moteurs ; le neutre ne sert qu'en PWM.
-// TrueGlide (essai TG-A1-5, 07/11/2026) : la carte interprète la valeur avec SON mode 3D et SON protocole, ceux qui
-// tournent, pas ceux modifiés à l'écran (ils ne comptent qu'après l'enregistrement). Calculer l'arrêt avec l'écran
-// faisait tourner les moteurs : 3D coché -> 1500 envoyé à une carte sans 3D (≈ 50 % des gaz) ; 3D décoché -> 1000
-// envoyé à une carte en 3D (marche arrière à fond). L'arrêt suit donc l'état lu sur la carte, mis à jour après
-// chaque enregistrement.
-const liveMotorState = () => ({
-    is3d: isFeatureEnabled("3D"),
-    digital: digitalProtocolConfigured.value,
-    mincommand: fcStore.motorConfig.mincommand,
-    neutral3d: fcStore.motor3dConfig.neutral,
-});
-const boardMotorState = ref(null);
-const captureBoardMotorState = () => {
-    boardMotorState.value = liveMotorState();
+// TrueGlide (essai TG-A1-5 et relecture indépendante, 07/11/2026) : la carte interprète chaque valeur avec le mode 3D
+// QUI TOURNE, pas celui affiché à l'écran ni celui enregistré (une sauvegarde interrompue les fait différer). Calculer
+// l'arrêt avec l'écran faisait tourner les moteurs (3D coché -> 1500 envoyé à une carte sans 3D ≈ 50 % des gaz ;
+// décoché -> 1000 envoyé à une carte en 3D = marche arrière à fond). L'arrêt est donc relu sur la carte (MSP_MOTOR,
+// moteurs à l'arrêt) à l'ouverture de l'onglet et juste avant chaque activation du test ; relecture douteuse = test
+// refusé. Après un enregistrement, la carte redémarre avec les réglages de l'écran.
+const liveMotorState = () => {
+    const live = {
+        is3d: isFeatureEnabled("3D"),
+        digital: digitalProtocolConfigured.value,
+        mincommand: fcStore.motorConfig.mincommand,
+        neutral3d: fcStore.motor3dConfig.neutral,
+    };
+    return { stop: motorStopValue(live), is3d: live.is3d };
 };
-const zeroThrottleValue = computed(() => motorStopValue(boardMotorState.value ?? liveMotorState()));
+const boardMotorState = ref(null);
+const readBoardMotorState = async () => {
+    try {
+        await MSP.promise(MSPCodes.MSP_MOTOR);
+        boardMotorState.value = boardStopFromReadback([...(fcStore.motorData ?? [])], {
+            digital: digitalProtocolConfigured.value,
+            mincommand: fcStore.motorConfig.mincommand,
+            neutral3d: fcStore.motor3dConfig.neutral,
+        });
+    } catch {
+        boardMotorState.value = null;
+    }
+    return boardMotorState.value;
+};
+const zeroThrottleValue = computed(() => (boardMotorState.value ?? liveMotorState()).stop);
 
 // TrueGlide: bench limit (30 % of the throttle range by default, like the ESC tab); the firmware is not touched
 const benchLimited = ref(true);
@@ -792,8 +810,33 @@ const onBenchLimitChange = (checked) => {
 };
 
 // Initialize motor testing with safety features
-const { motorsTestingEnabled, motorValues, masterValue, slidersDisabled, sendMotorCommand, stopAllMotors } =
-    useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue);
+const {
+    motorsTestingEnabled,
+    motorValues,
+    masterValue,
+    slidersDisabled,
+    sendMotorCommand,
+    stopAllMotors,
+    motorCommandsSent,
+} = useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue);
+
+// TrueGlide: the motor test only starts once the board's own stop value has been read back (see readBoardMotorState)
+const onMotorTestSwitch = async (checked) => {
+    if (!checked) {
+        motorsTestingEnabled.value = false;
+        return;
+    }
+    if (configHasChanged.value) {
+        motorsTestingEnabled.value = true; // the composable refuses it and shows the usual message
+        return;
+    }
+    const board = await readBoardMotorState();
+    if (!board) {
+        showWarningDialog(i18n.getMessage("tfMotorsBoardStopUnknown"));
+        return;
+    }
+    motorsTestingEnabled.value = true;
+};
 
 // Initialize configuration tracking
 const { setupConfigWatchers } = useMotorConfiguration(motorsState, motorsTestingEnabled, () => {
@@ -857,8 +900,8 @@ onMounted(async () => {
 
     // Initialize motors state (CRITICAL: must be after MSP data loaded)
     motorsState.initializeDefaults();
-    // TrueGlide: the motor stop value follows the board as it runs (read now, before any change on screen)
-    captureBoardMotorState();
+    // TrueGlide: the motor stop value follows the board as it runs (read back now, before any change on screen)
+    await readBoardMotorState();
 
     // Setup configuration change watchers (CRITICAL: tracks all config changes)
     setupConfigWatchers();
@@ -1437,8 +1480,11 @@ const handleSave = (reboot = true) => {
                 await new Promise((resolve) => setTimeout(resolve, 50));
             }
 
-            // Explicitly stop all motors to ensure no spinning after reboot
-            stopAllMotors(zeroThrottleValue.value);
+            // Explicitly stop all motors to ensure no spinning after reboot. TrueGlide: only if this tab has driven the
+            // motors (relecture du 07/11/2026) : otherwise nothing is sent, the board keeps its own stop
+            if (motorCommandsSent.value) {
+                stopAllMotors(zeroThrottleValue.value);
+            }
             // Give time for motor stop command to be processed
             await new Promise((resolve) => setTimeout(resolve, 100));
 
@@ -1469,8 +1515,8 @@ const handleSave = (reboot = true) => {
                 );
             }
 
-            // TrueGlide: once saved, the board runs the new 3D mode / protocol (applied at EEPROM save)
-            captureBoardMotorState();
+            // TrueGlide: the board reboots with the settings on screen (read back again before any motor test)
+            boardMotorState.value = liveMotorState();
             // Reset state (clears changes and updates defaults)
             resetChanges();
         },

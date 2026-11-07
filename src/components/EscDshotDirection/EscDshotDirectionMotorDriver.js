@@ -144,8 +144,10 @@ class EscDshotDirectionMotorDriver {
     _sendState() {
         const buffer = [];
 
-        for (let i = 0; i < this._numberOfMotors; i++) {
-            buffer.push16(this._state[i]);
+        // TrueGlide (relecture du 07/11/2026) : always 8 values (stop beyond the motor count), the firmware refuses a
+        // shorter MSP_SET_MOTOR than its motor count, including the stop
+        for (let i = 0; i < Math.max(this._numberOfMotors, 8); i++) {
+            buffer.push16(i < this._numberOfMotors ? this._state[i] : this._motorStopValue);
         }
 
         this._EscDshotCommandQueue.pushCommand(MSPCodes.MSP_SET_MOTOR, buffer);

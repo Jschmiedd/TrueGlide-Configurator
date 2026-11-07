@@ -35,12 +35,12 @@ describe("audit 1 (contre-audit N2) : la valeur d'arrêt arrête vraiment les mo
     });
     it("PWM + 3D : le neutre réglé ; PWM sans 3D : mincommand", () => {
         expect(motorStopValue({ is3d: true, digital: false, mincommand: 1000, neutral3d: 1460 })).toBe(1460);
-        expect(motorStopValue({ is3d: true, digital: false, mincommand: 1000, neutral3d: 1700 })).toBe(1500);
+        // relecture du 07/11/2026 : le firmware garde le neutre brut (pwm_output.c), le logiciel aussi
+        expect(motorStopValue({ is3d: true, digital: false, mincommand: 1000, neutral3d: 1700 })).toBe(1700);
         expect(motorStopValue({ is3d: false, digital: false, mincommand: 1070, neutral3d: 1460 })).toBe(1070);
     });
-    it("l'onglet Moteurs utilise cette valeur pour tous ses arrêts", () => {
+    it("l'onglet Moteurs n'envoie jamais minSliderValue comme arrêt", () => {
         const src = fs.readFileSync(path.resolve(__dirname, "../../src/components/tabs/MotorsTab.vue"), "utf8");
-        expect(src).toMatch(/const zeroThrottleValue = computed\(\(\) =>\s*motorStopValue\(/);
         expect(src).not.toMatch(/motorStopValue:\s*minSliderValue/);
         expect(src).not.toMatch(/stopAllMotors\(\s*minSliderValue/);
         expect(src).not.toMatch(/sendMotorCommand\(new Array\(8\)\.fill\(minSliderValue/);
