@@ -459,7 +459,7 @@ async function appliquer(commandes, sansManquants = false) {
         return;
     }
     occupe.value = false;
-    const enregistre = await saveAndVerify(sauvegarde.lines, { commands: commandes });
+    const enregistre = await saveAndVerify(sauvegarde.lines, { commands: commandes, file: sauvegarde.file });
     if (!enregistre.ok) {
         gui_log(`${i18n.getMessage("tftuneApplyError")} ${String(enregistre.error?.message ?? enregistre.error)}`);
         return;
