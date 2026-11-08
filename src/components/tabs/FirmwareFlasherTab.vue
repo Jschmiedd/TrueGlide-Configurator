@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
+import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
@@ -82,6 +82,7 @@ import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup.js";
+import { initialEraseChip, confirmEraseBeforeFlash, shouldOfferRestore } from "../../js/trueglide/flasher_erase.js";
 import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
@@ -150,6 +151,27 @@ export default defineComponent({
             restoreInProgress: false,
             restoreCompleted: false,
         });
+
+        // TrueGlide (audit du 08/11/2026) : flash fait avec effacement complet -> restauration proposée après réussite
+        let flashedWithErase = false;
+        watch(
+            () => state.lastFlashResultClass,
+            (resultClass) => {
+                const offer = shouldOfferRestore({
+                    erased: flashedWithErase,
+                    resultClass,
+                    backup: getLastBackupData(),
+                    restoreInProgress: state.restoreInProgress,
+                    restoreCompleted: state.restoreCompleted,
+                });
+                if (offer) {
+                    flashedWithErase = false;
+                    if (globalThis.confirm($t("tfFlasherRestoreOffer"))) {
+                        handleRestoreBackup();
+                    }
+                }
+            },
+        );
 
         // Verify board dialog refs
         const verifyBoardOpen = ref(false);
@@ -459,8 +481,9 @@ export default defineComponent({
         // Initialize UI setup on mount
         const setupUIHandlers = () => {
             // Setup erase chip setting
-            let result = getConfig("erase_chip");
-            state.eraseChip = result.erase_chip;
+            // TrueGlide (audit du 08/11/2026) : jamais repris d'une ouverture précédente, toujours non au départ
+            state.eraseChip = initialEraseChip(setConfig);
+            let result;
 
             // Setup no reboot setting
             result = getConfig("no_reboot_sequence");
@@ -762,9 +785,8 @@ export default defineComponent({
             }
         };
 
-        const handleEraseChipChange = () => {
-            setConfig({ erase_chip: state.eraseChip });
-        };
+        // TrueGlide (audit du 08/11/2026) : le choix vaut pour cette ouverture de l'onglet seulement (pas mémorisé)
+        const handleEraseChipChange = () => {};
 
         const handleFlashManualBaudChange = () => {
             setConfig({ flash_manual_baud: state.flashManualBaud });
@@ -797,6 +819,12 @@ export default defineComponent({
             if (!(await confirmNonTrueGlideFirmware())) {
                 return;
             }
+
+            // TrueGlide (audit du 08/11/2026) : effacement complet actif -> confirmation (tous les réglages effacés)
+            if (!confirmEraseBeforeFlash(state.eraseChip, () => globalThis.confirm($t("tfFlasherEraseConfirm")))) {
+                return;
+            }
+            flashedWithErase = state.eraseChip;
 
             // Reset any previous backup cache before starting a new flash
             resetLastBackupData();
