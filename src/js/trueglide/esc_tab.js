@@ -4,11 +4,10 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v20
-// (0.33.0-dev · master 2ae8475 ; nouvelle adresse, v16 à v19 laissées telles quelles). Comme la v19, et : plus de
-// renvoi de vitesse pendant l'envoi de l'arrêt avant une lecture (course trouvée par l'audit dans la v19). /test/
-// seulement ; /app/ garde la v18 tant que l'audit n'a pas dit OUI.
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v20/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v21
+// (0.33.0-dev · master 5569d83 ; nouvelle adresse, v16 à v20 laissées telles quelles). Comme la v20, avec les liens du
+// journal en jaune fluo (demande de Johann). /test/ seulement ; /app/ garde la v18 tant que l'audit n'a pas dit OUI.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v21/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
