@@ -11243,5 +11243,17 @@
     },
     "tgPortChoose": {
         "message": "Choisir un port"
+    },
+    "tfFailsafeDropConfirm": {
+        "message": "Procédure failsafe « Tombe » : à la perte du signal radio, les moteurs sont coupés et le drone tombe.\n\nEnvoyer quand même ?"
+    },
+    "tfPowerGuardLowConfirm": {
+        "message": "power_guard_current = $1 A : les gaz seront limités presque tout de suite, le drone ne pourra pas voler (valeur pour les essais au banc). 0 = arrêt.\n\nEnregistrer quand même ?"
+    },
+    "tfGoogleTilesConfirm": {
+        "message": "Afficher le fond satellite ou hybride : les images de la carte viennent de Google, qui reçoit votre adresse IP et la zone affichée. Accepter (une fois pour ce navigateur) ?\n\nSans accord : plan OpenStreetMap."
+    },
+    "tfGoogleTilesShow": {
+        "message": "Vue satellite (Google)"
     }
 }
