@@ -11153,5 +11153,11 @@
     },
     "tfGoogleTilesShow": {
         "message": "Satellite view (Google)"
+    },
+    "tfFlasherEraseConfirm": {
+        "message": "Full chip erase is on: ALL the board settings will be erased (a backup is made before flashing when the board is connected).\n\nContinue?"
+    },
+    "tfFlasherRestoreOffer": {
+        "message": "Flash done with full chip erase. Restore now the settings backup made before flashing?"
     }
 }

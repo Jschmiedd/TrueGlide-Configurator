@@ -11255,5 +11255,11 @@
     },
     "tfGoogleTilesShow": {
         "message": "Vue satellite (Google)"
+    },
+    "tfFlasherEraseConfirm": {
+        "message": "Effacement complet de la puce activé : TOUS les réglages de la carte seront effacés (une sauvegarde est faite avant le flash quand la carte est connectée).\n\nContinuer ?"
+    },
+    "tfFlasherRestoreOffer": {
+        "message": "Flash terminé avec effacement complet. Restaurer maintenant la sauvegarde des réglages faite avant le flash ?"
     }
 }
