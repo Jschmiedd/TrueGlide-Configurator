@@ -24,9 +24,19 @@ class EscDshotDirectionMotorDriver {
 
     activate() {
         this._EscDshotCommandQueue.start();
+        // TrueGlide (audit du 07/11/2026, F4) : le firmware arrête seul les moteurs sans MSP_SET_MOTOR pendant 1 s ;
+        // un moteur qu'on fait tourner reçoit son état toutes les 300 ms (seulement s'il n'y a rien en attente)
+        clearInterval(this._keepAlive);
+        this._keepAlive = setInterval(() => {
+            if (this._isAnythingSpinning() && this._stateStack.length === 0 && this._EscDshotCommandQueue.isEmpty()) {
+                this._sendState();
+            }
+        }, 300);
     }
 
     deactivate() {
+        clearInterval(this._keepAlive);
+        this._keepAlive = null;
         this._EscDshotCommandQueue.stopWhenEmpty();
     }
 

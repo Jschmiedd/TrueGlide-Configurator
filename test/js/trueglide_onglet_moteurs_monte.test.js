@@ -503,3 +503,28 @@ describe("F2 : dernier contrôle avant la carte (useMotorTesting.sendMotorComman
         a.unmount();
     });
 });
+
+describe("F4 : renvoi des valeurs moteurs pendant le test (garde d'1 s du firmware)", () => {
+    it("moteur qui tourne : valeurs renvoyées toutes les 300 ms ; test coupé : plus rien", async () => {
+        board.reset();
+        await mountTab();
+        await clickTestSwitch();
+        const thumbs = [...container.querySelectorAll('[role="slider"]')];
+        thumbs.at(-1).focus();
+        (thumbs.at(-1).closest("li") ?? thumbs.at(-1).parentElement).dispatchEvent(
+            new WheelEvent("wheel", { deltaY: -100, bubbles: true, cancelable: true }),
+        );
+        await settle(50);
+        const n0 = board.setMotorLog.length;
+        await settle(1000);
+        const resent = board.setMotorLog.slice(n0);
+        expect(resent.length).toBeGreaterThanOrEqual(3);
+        expect(resent.every((f) => f.every((v) => v > 1000 && v <= 1300))).toBe(true);
+        await clickTestSwitch();
+        const n1 = board.setMotorLog.length;
+        await settle(1000);
+        expect(board.setMotorLog.length).toBe(n1);
+        expect(board.setMotorLog.at(-1)).toEqual([1000, 1000, 1000, 1000]);
+        unmountTab();
+    });
+});

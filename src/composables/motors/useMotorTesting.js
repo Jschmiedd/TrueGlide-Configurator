@@ -69,6 +69,7 @@ export function useMotorTesting(
         // toucher un seul curseur envoyait 1000 (pleine marche arrière) aux autres moteurs.
         motorValues.value = new Array(8).fill(activeStop);
         masterValue.value = activeStop;
+        startKeepAlive();
         motorCommandsSent.value = true;
         // Only send DShot command for digital protocols
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
@@ -116,9 +117,11 @@ export function useMotorTesting(
         }
 
         // Explicitly stop all motors to prevent spinning after reboot
+        stopKeepAlive();
         stopAllMotors(activeStop);
         testStarted = false;
         activeStop = null;
+        lastSentValues = null;
     };
 
     /**
@@ -166,6 +169,7 @@ export function useMotorTesting(
 
     // Cleanup on unmount — restore to normal connected state (arming disabled)
     onUnmounted(() => {
+        stopKeepAlive();
         document.removeEventListener("visibilitychange", onVisibilityChange);
         if (motorsTestingEnabled.value) {
             disableMotorTesting();
@@ -205,7 +209,29 @@ export function useMotorTesting(
             buffer.push(value & 0xff, (value >> 8) & 0xff);
         }
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
+        lastSentValues = testStarted ? [...values] : null;
         return true;
+    };
+
+    // TrueGlide (audit du 07/11/2026, F4) : le firmware arrête seul les moteurs si aucune trame MSP_SET_MOTOR n'arrive
+    // pendant 1 s (une simple interrogation ne suffit plus). Pendant le test, les dernières valeurs envoyées sont
+    // renvoyées toutes les 300 ms (repassent par le contrôle ci-dessus).
+    let lastSentValues = null;
+    let keepAlive = null;
+    const startKeepAlive = () => {
+        stopKeepAlive();
+        keepAlive = setInterval(() => {
+            if (testStarted && lastSentValues) {
+                sendMotorCommand(lastSentValues);
+            }
+        }, 300);
+    };
+    const stopKeepAlive = () => {
+        if (keepAlive) {
+            clearInterval(keepAlive);
+            keepAlive = null;
+        }
+        lastSentValues = null;
     };
 
     /**
