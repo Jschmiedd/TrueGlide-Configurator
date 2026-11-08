@@ -4,11 +4,11 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v18
-// (0.33.0-dev · master da0ad00 ; nouvelle adresse, v16 et v17 laissées telles quelles). Corrections de l'audit du
-// 07/11/2026, plus : pendant une déconnexion, une lecture ou un flash, seul l'arrêt est envoyé (la v17 pouvait relancer
-// les moteurs pendant « Déconnecter » : retirée). Vérifiée en ligne, OUI de l'audit indépendant (08/11/2026).
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v18/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v19
+// (0.33.0-dev · master 7b948f6 ; nouvelle adresse, v16 à v18 laissées telles quelles). Comme la v18 (da0ad00 : seul
+// l'arrêt est envoyé pendant une déconnexion, une lecture ou un flash), sans les messages d'erreur quand on clique
+// « Lire » pendant que les moteurs tournent.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v19/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
