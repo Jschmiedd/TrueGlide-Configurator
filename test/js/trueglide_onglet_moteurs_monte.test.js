@@ -8,6 +8,9 @@ import { createApp, h, nextTick } from "vue";
 import { createPinia, setActivePinia } from "pinia";
 import "../../src/js/injected_methods.js";
 
+// premier montage de l'onglet (chargement des modules) : plus de 5 s quand toute la suite tourne en parallèle
+vi.setConfig({ testTimeout: 30000 });
+
 globalThis.ResizeObserver ??= class {
     observe() {}
     unobserve() {}

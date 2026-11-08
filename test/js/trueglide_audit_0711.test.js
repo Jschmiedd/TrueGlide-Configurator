@@ -3,6 +3,7 @@ import { describe, it, expect, vi, afterEach } from "vitest";
 import MSPCodes from "../../src/js/msp/MSPCodes.js";
 import { forbiddenWrite, allowedWriteCodes, FORBIDDEN_CODE_NUMBERS } from "../../src/js/trueglide/offline/safety.js";
 import { riskyChanges, RISKY_MSP_NAMES } from "../../src/js/trueglide/write_guard.js";
+import { sameBoard } from "../../src/js/trueglide/offline/identity.js";
 import { attachEscFrame, detachEscFrame, requestEscRelease } from "../../src/js/trueglide/esc_tab.js";
 
 describe("F4 : carte hors ligne, écritures immédiates ou permanentes refusées", () => {
@@ -79,5 +80,22 @@ describe("F7 : onglet ESC, une seule demande de libération à la fois", () => {
         expect(await first).toBe("busy");
         expect(await second).toBe("busy");
         vi.useRealTimers();
+    });
+});
+
+describe("identité : la cible est comparée", () => {
+    const base = {
+        uid: "abc",
+        nom: "SPEEDYBEEF405MINI",
+        cible: "STM32F405",
+        firmware: "BTFL 4.5.4",
+        api: "1.47.0",
+        profil: 0,
+        profilRate: 0,
+    };
+    it("même carte : ok ; autre cible sur la même puce : refusé", () => {
+        expect(sameBoard(base, { ...base }).ok).toBe(true);
+        expect(sameBoard(base, { ...base, nom: "SPEEDYBEEF405V4" })).toEqual({ ok: false, reason: "carte" });
+        expect(sameBoard({ ...base, nom: "" }, { ...base }).ok).toBe(true);
     });
 });
