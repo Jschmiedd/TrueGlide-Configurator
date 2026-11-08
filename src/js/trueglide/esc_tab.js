@@ -5,7 +5,7 @@
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
 // Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v17
-// (0.33.0-dev · d938d8b, nouvelle adresse ; v16 laissée telle quelle). Corrections de l'audit du 07/11/2026 (valeurs par
+// (0.33.0-dev · v17 = master d938d8b, ESC gh-pages f128a10 ; nouvelle adresse, v16 laissée telle quelle). Corrections de l'audit du 07/11/2026 (valeurs par
 // défaut confirmées et sauvegardées, moteurs arrêtés page cachée, firmwares non validés confirmés, AM32 sans nom
 // refusé). Vérifiée en ligne et OUI de l'audit indépendant (08/11/2026).
 export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v17/";
