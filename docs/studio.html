@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Studio · Documentation TRUEGLIDE</title>
+<meta name="description" content="TRUEGLIDE STUDIO calcule un réglage complet à partir de la description du drone (hélice, KV, batterie, masse, style de vol), le compare à des drones de référence et l&#x27;envoie à la carte avec sauvegarde, confirmation et relecture.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="../fonts/polices.css">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+      <li><a href="carte-hors-ligne.html">Carte hors ligne</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html">ESC</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html" aria-current="page">Studio</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#principe">Ce que fait Studio</a></li>
+      <li><a href="#etapes">Régler un drone</a></li>
+      <li><a href="#pas">Pourquoi le pas de l'hélice n'est pas demandé</a></li>
+      <li><a href="#envoi">Envoyer à la carte</a></li>
+      <li><a href="#revenir">Revenir comme avant</a></li>
+      <li><a href="#probleme">En cas de problème</a></li>
+      <li><a href="#guide">Mode d'emploi en images</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Studio</h1>
+<p class="chapeau"><b>TRUEGLIDE STUDIO</b> (menu « Réglage du vol ») calcule un réglage complet à partir de la description de votre drone : taille d'hélice, KV des moteurs, batterie, masse, style de vol. Chaque valeur proposée est expliquée, puis envoyée à la carte avec une sauvegarde avant et une relecture après. Studio s'ouvre aussi seul, sans carte : <a href="../studio/">/studio/</a>.</p>
+<figure>
+  <img src="../assets/img/onglets/studio.webp" alt="Onglet Studio : bouton « Lire la configuration de la carte », formulaire Mon drone">
+  <figcaption>Capture du mode d'emploi Studio (essai du 2 novembre 2026, SpeedyBee F405 Mini) : les cadres rouges numérotés montrent où cliquer.</figcaption>
+</figure>
+
+<h2 id="principe">Ce que fait Studio</h2>
+<ul>
+  <li><b>Lire la configuration de la carte</b> : Studio reçoit le <code>diff all</code> de la carte (ports, KV des moteurs s'il est réglé…). Rien n'est écrit dans la carte.</li>
+  <li>Il compare votre drone à des <b>drones de référence</b> de même taille d'hélice (préréglages Betaflight) et propose protocole moteur, boucle PID, filtres, PID et réglages TrueGlide (limite de courant à 80 % du calibre des ESC, protection anti-surchauffe…).</li>
+  <li>Chaque réglage a sa raison (taille, puissance, ESC, références utilisées), affichée sous le résultat.</li>
+  <li>Les commandes vont dans le <b>profil PID et le profil de rates actifs</b> de la carte.</li>
+</ul>
+
+<h2 id="etapes">Régler un drone</h2>
+<ol>
+  <li>Gardez une copie de votre configuration : onglet <a href="cli.html">CLI</a>, <code>diff all</code>, « Enregistrer sous ».</li>
+  <li>Carte branchée en USB, batterie débranchée (sinon la carte peut changer seule de profil selon le nombre de cellules) : ouvrez <b>Studio</b>, puis <b>Lire la configuration de la carte</b>.</li>
+  <li>Dans <b>Mon drone</b> : taille d'hélice, KV, batterie (cellules), masse en vol (batterie comprise, pesée de préférence), pôles des moteurs, style de vol, châssis, ESC. Puis <b>Calculer le réglage</b>. Un champ obligatoire vide : Studio dit ce qui manque.</li>
+  <li>Lisez le réglage proposé, les commandes, puis le détail des réglages.</li>
+</ol>
+
+<h2 id="pas">Pourquoi le pas de l'hélice n'est pas demandé</h2>
+<p>Studio ne cherche pas la poussée réelle : il compare votre drone à des drones de référence de même taille d'hélice, avec un coefficient d'hélice fixe pour les deux (pas « moyen »). C'est la ligne « Puissance / référence (estim.) ». Avec le fichier du calculateur TALKTRUE FPV XRIG et « Base du réglage : Données du calculateur », le rapport poussée / poids et les gaz de stationnaire viennent de votre hélice réelle (poussée mesurée au banc) ; la correction des PID reste sur l'estimation.</p>
+
+<h2 id="envoi">Envoyer à la carte</h2>
+<ol>
+  <li><b>Hélices retirées.</b> <b>Envoyer à la carte</b> : le logiciel télécharge d'abord une sauvegarde de la carte.</li>
+  <li>Si un réglage touche les moteurs, le failsafe, l'armement, ou si un PID change fortement, une question « ATTENTION » montre chaque valeur avant et après.</li>
+  <li>La carte enregistre puis redémarre ; à la première commande refusée, rien n'est enregistré. Le logiciel relit ensuite la carte (« Carte relue après l'enregistrement »).</li>
+  <li>Contrôle : onglet CLI, <code>diff all</code>.</li>
+</ol>
+<p>Studio peut aussi préparer un réglage sur une <a href="carte-hors-ligne.html">carte hors ligne</a>, envoyé plus tard à la vraie carte.</p>
+
+<h2 id="revenir">Revenir comme avant</h2>
+<p>Collez votre <code>diff all</code> de départ dans l'onglet CLI (il commence par <code>defaults nosave</code> et remet toute la configuration enregistrée), puis <code>save</code>. Si vous utilisez la carte hors ligne, refaites ensuite une récolte.</p>
+
+<h2 id="probleme">En cas de problème</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Ce que vous voyez</th><th>Ce que vous faites</th></tr></thead>
+  <tbody>
+    <tr><td>« À remplir avant de calculer : … »</td><td>Remplissez les champs cités dans « Mon drone », puis « Calculer le réglage ».</td></tr>
+    <tr><td>Rien ne s'affiche après « Calculer »</td><td>Le résultat s'affiche sous « Fichier drone » ; sinon, descendez dans le cadre de Studio (il a sa propre barre de défilement).</td></tr>
+    <tr><td>La carte ne revient pas après l'envoi</td><td>Débranchez puis rebranchez l'USB, Connexion.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="guide">Mode d'emploi en images</h2>
+<p><a href="guides/TRUEGLIDE_STUDIO_mode_emploi.pdf">Mode d'emploi TRUEGLIDE STUDIO (PDF)</a> : 21 étapes en images, avec la carte hors ligne.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

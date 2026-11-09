@@ -39,6 +39,7 @@
       <li><a href="bienvenue.html">Bienvenue</a></li>
       <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
       <li><a href="pre-vol.html">Pré-vol</a></li>
+      <li><a href="carte-hors-ligne.html">Carte hors ligne</a></li>
     </ul>
     <h2>Carte branchée</h2>
     <ul>
@@ -53,6 +54,7 @@
       <li><a href="modes.html">Modes</a></li>
       <li><a href="alimentation.html">Alimentation et batterie</a></li>
       <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html">ESC</a></li>
       <li><a href="servos.html">Servos</a></li>
       <li><a href="failsafe.html">Failsafe</a></li>
     </ul>
@@ -69,6 +71,7 @@
       <li><a href="preset.html">Preset</a></li>
       <li><a href="reglages-pid.html">Réglages de PID</a></li>
       <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html">Studio</a></li>
       <li><a href="reglage-automatique.html">Réglage automatique</a></li>
       <li><a href="ajustements.html">Ajustements</a></li>
     </ul>
@@ -121,8 +124,9 @@
 <ul>
   <li><b>Interrupteur activé</b>, drone armé et en mode ANGLE : le nez descend petit à petit, à la <b>Vitesse de transition</b>, jusqu'à l'<b>Angle de croisière</b>.</li>
   <li>Le manche de tangage reste actif : il ajoute ou retire de l'inclinaison autour de l'angle de transition, dans la limite d'angle habituelle du mode ANGLE (réglage <code>angle_limit</code>). Le total ne dépasse jamais 80° : plus près de 90°, l'estimation de l'attitude n'est pas fiable.</li>
-  <li><b>Interrupteur coupé</b> ou <b>failsafe</b> : le nez remonte petit à petit jusqu'au stationnaire, à la même vitesse.</li>
-  <li><b>Désarmement</b>, <b>GPS RESCUE</b>, <b>ALTHOLD</b> ou <b>POS HOLD</b> : retour immédiat au stationnaire. Ces modes commandent eux-mêmes l'inclinaison.</li>
+  <li><b>Interrupteur coupé</b> : le nez remonte petit à petit jusqu'au stationnaire, à la même vitesse.</li>
+  <li><b>Failsafe</b>, <b>GPS RESCUE</b>, <b>ALTHOLD</b> ou <b>POS HOLD</b> : retour rapide au stationnaire, en 1/3 s environ, de façon progressive (pas de cabrage brutal), quelle que soit la vitesse de transition. Ces modes commandent eux-mêmes l'inclinaison.</li>
+  <li><b>Désarmement</b> : retour immédiat au stationnaire.</li>
   <li>En <b>HORIZON</b> ou en <b>ACRO</b>, le mode SPEEDER n'agit pas.</li>
 </ul>
 <p>Le mode n'existe pas sur les ailes volantes et avions (firmware compilé pour les ailes), ni sur une carte sans accéléromètre. Dans ce cas, l'onglet affiche « Le firmware de la carte n'a pas ces réglages ».</p>

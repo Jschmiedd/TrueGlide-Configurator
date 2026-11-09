@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carte hors ligne · Documentation TRUEGLIDE</title>
+<meta name="description" content="La carte hors ligne garde une copie de votre contrôleur de vol dans le navigateur : on règle le drone avec les onglets habituels sans le brancher, puis on envoie les changements à la vraie carte, avec sauvegarde, confirmation et relecture.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="../fonts/polices.css">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+      <li><a href="carte-hors-ligne.html" aria-current="page">Carte hors ligne</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html">ESC</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html">Studio</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#principe">Ce que fait la carte hors ligne</a></li>
+      <li><a href="#recolter">1. Récolter la carte</a></li>
+      <li><a href="#regler">2. Régler hors ligne</a></li>
+      <li><a href="#envoyer">3. Envoyer à la vraie carte</a></li>
+      <li><a href="#betaflight">Avec une carte Betaflight</a></li>
+      <li><a href="#probleme">En cas de problème</a></li>
+      <li><a href="#guide">Mode d'emploi en images</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Carte hors ligne</h1>
+<p class="chapeau">La <b>carte hors ligne</b> garde une copie de votre contrôleur de vol dans le navigateur. Carte débranchée, vous réglez le drone avec les <b>onglets habituels</b> (PID, taux, ports, modes…). Rien n'est envoyé tant que vous ne rebranchez pas la vraie carte et que vous ne confirmez pas l'envoi.</p>
+<figure>
+  <img src="../assets/img/onglets/carte-hors-ligne.webp" alt="Onglet Moteurs en carte hors ligne : bandeau orange « Carte hors ligne : MON DRONE (SITL), récoltée le… Rien n&#x27;est envoyé à une carte », changements préparés hors ligne : 0">
+  <figcaption>Capture du logiciel avec une carte hors ligne récoltée sur le simulateur <b>TRUEGLIDE</b> (SITL). Le bandeau orange en haut signale qu'on travaille hors ligne : rien n'est envoyé à une carte.</figcaption>
+</figure>
+
+<h2 id="principe">Ce que fait la carte hors ligne</h2>
+<ul>
+  <li>Elle garde dans ce navigateur une copie de la carte (la <b>récolte</b>) : <b>3 cartes au plus</b>, une par contrôleur de vol, reconnu par le numéro unique de sa puce et sa cible.</li>
+  <li>Pour les cartes connues du logiciel (par exemple la SpeedyBee F405 Mini), c'est une <b>carte simulée</b> : le firmware exact de votre carte tourne dans le navigateur et réagit comme la vraie carte (ports refusés remis par défaut, profils, redémarrage…).</li>
+  <li>L'onglet <a href="cli.html">Ligne de commande (CLI)</a> marche aussi hors ligne : seuls les réglages sont gardés ; les commandes qui agissent tout de suite (moteurs, étalonnage, passerelle ESC, effacement…) sont refusées.</li>
+  <li>Avant chaque envoi, le logiciel télécharge une <b>sauvegarde</b> de la vraie carte (fichier « …_sauvegarde_avant_envoi_….txt »), gardée aussi dans le <a href="tableau-de-bord.html">Tableau de bord</a>. Pour revenir en arrière : la coller dans l'onglet CLI, puis <code>save</code>.</li>
+</ul>
+
+<h2 id="recolter">1. Récolter la carte (carte branchée)</h2>
+<ol>
+  <li>Branchez la carte en USB, batterie débranchée, et connectez-vous.</li>
+  <li><a href="tableau-de-bord.html">Tableau de bord</a> : bouton <b>Récolter cette carte</b>. Le logiciel ouvre chaque onglet tout seul (environ 40 s) ; <b>rien n'est écrit dans la carte</b>.</li>
+  <li>Une nouvelle récolte de la même carte remplace l'ancienne.</li>
+</ol>
+
+<h2 id="regler">2. Régler hors ligne (carte débranchée)</h2>
+<ol>
+  <li>Carte débranchée : dans la liste des ports, choisissez <b>Carte hors ligne : &lt;nom du drone&gt;</b>, puis <b>Connexion</b>. Le premier chargement prend quelques secondes.</li>
+  <li>Vérifiez le <b>bandeau orange</b> : il signale la carte hors ligne. Sans bandeau, c'est la vraie carte.</li>
+  <li>Réglez dans les onglets habituels, puis cliquez sur <b>Sauvegarder</b> (ou <b>Enregistrer</b>) comme d'habitude. Sans ce clic, rien n'est gardé.</li>
+  <li>Le compteur <b>Changements préparés</b> monte : il compte les messages envoyés à la carte simulée, pas les valeurs.</li>
+  <li>Profils : les changements vont dans le profil choisi. Revenez sur le profil voulu avant de vous déconnecter : c'est celui de la vraie carte après l'envoi.</li>
+</ol>
+
+<h2 id="envoyer">3. Envoyer à la vraie carte</h2>
+<ol>
+  <li><b>Hélices retirées.</b> Rebranchez la vraie carte et connectez-vous : le Tableau de bord reconnaît la carte récoltée et propose <b>Envoyer les changements préparés</b>.</li>
+  <li>La question montre <b>exactement ce qui partira</b>. Selon le cas, d'autres questions suivent : « La vraie carte a changé depuis la récolte » (en cas de doute : Annuler, puis nouvelle récolte), et « ATTENTION » si un réglage touche les moteurs, le mélangeur, le failsafe, l'armement, l'orientation, les ports, ou si un PID change fortement (avec la valeur d'avant).</li>
+  <li><b>OK</b> : sauvegarde téléchargée, envoi, enregistrement, redémarrage. À la première commande refusée, rien n'est enregistré. <b>Annuler</b> : rien n'est envoyé.</li>
+  <li>Après le redémarrage, le logiciel relit la carte : message « Carte relue après l'enregistrement : … réglage(s) contrôlé(s) un par un, tous en place ». Le compteur revient à 0.</li>
+</ol>
+<p>L'envoi est refusé si ce n'est pas la même carte (autre puce ou autre cible), si le firmware a changé depuis la récolte, ou si le profil actif de la vraie carte a changé.</p>
+
+<h2 id="betaflight">Avec une carte Betaflight</h2>
+<p>La carte hors ligne marche aussi avec une carte restée sous <b>Betaflight 4.5.4 ou plus récent</b>, sans changer de firmware. Essayée le 8 novembre 2026 sur une SpeedyBee F405 Mini sous Betaflight 2025.12.2 : réglage préparé hors ligne, envoyé, relu, puis vérifié dans Betaflight Configurator. Avec un firmware plus ancien, le logiciel affiche « Firmware trop ancien pour la carte hors ligne ». Les onglets propres à TrueGlide (Protections, Speeder…) ne s'appliquent pas à une carte Betaflight.</p>
+
+<h2 id="probleme">En cas de problème</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Ce que vous voyez</th><th>Ce que vous faites</th></tr></thead>
+  <tbody>
+    <tr><td>Pas de « Carte hors ligne » dans la liste des ports</td><td>Récoltez d'abord la carte, carte branchée.</td></tr>
+    <tr><td>« 3 cartes hors ligne sont déjà gardées »</td><td>Tableau de bord : <b>Supprimer</b> une carte gardée, puis récolter.</td></tr>
+    <tr><td>« Changements préparés : 0 » après un changement</td><td>« Sauvegarder » n'a pas été cliqué : refaites le changement et sauvegardez.</td></tr>
+    <tr><td>Pas de bandeau orange</td><td>C'est la vraie carte : déconnectez, choisissez « Carte hors ligne : &lt;nom&gt; », Connexion.</td></tr>
+    <tr><td>Envoi refusé : profils différents de la récolte</td><td>La vraie carte a changé de profil : débranchez la batterie, ou refaites la récolte.</td></tr>
+    <tr><td>Il faut revenir comme avant l'envoi</td><td>Tableau de bord : téléchargez la sauvegarde d'avant l'envoi, collez-la dans l'onglet CLI, puis <code>save</code>.</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="guide">Mode d'emploi en images</h2>
+<p><a href="guides/TRUEGLIDE_carte_hors_ligne_mode_emploi.pdf">Mode d'emploi « carte hors ligne » (PDF)</a> : 18 étapes en images, avec un essai des ports UART hors ligne.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>

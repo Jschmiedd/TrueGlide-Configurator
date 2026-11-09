@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESC · Documentation TRUEGLIDE</title>
+<meta name="description" content="L&#x27;onglet ESC affiche TrueGlide ESC Configurator (logiciel séparé, licence AGPL v3) pour lire, régler et flasher les ESC BLHeli_S, Bluejay et AM32 par la carte de vol, avec un test des moteurs limité et des arrêts contrôlés.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="../fonts/polices.css">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
+    <nav aria-label="Site">
+      <a href="../index.html">Accueil</a>
+      <a href="../docs/index.html" aria-current="page">Documentation</a>
+      <a href="../index.html#telecharger">Télécharger</a>
+      <a href="../index.html#essais">Essais</a>
+    </nav>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+      <li><a href="carte-hors-ligne.html">Carte hors ligne</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html" aria-current="page">ESC</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html">Studio</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#principe">Ce que fait l'onglet ESC</a></li>
+      <li><a href="#lire">Lire et régler les ESC</a></li>
+      <li><a href="#flasher">Flasher les ESC</a></li>
+      <li><a href="#moteurs">Test des moteurs</a></li>
+      <li><a href="#essais">Ce qui est essayé</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>ESC</h1>
+<p class="chapeau">L'onglet <b>ESC</b> (groupe « Installation du drone ») affiche <b>TrueGlide ESC Configurator</b>, un logiciel séparé (licence AGPL v3) adapté d'ESC Configurator. Il lit, règle et flashe les ESC <b>BLHeli_S</b> et <b>Bluejay</b> (processeurs SiLabs) et <b>AM32</b> (processeurs ARM) en passant par la carte de vol (passerelle BLHeli). <b>Hélices retirées</b>, toujours.</p>
+<figure>
+  <img src="../assets/img/onglets/esc.webp" alt="Onglet ESC : page d&#x27;accueil de TrueGlide ESC Configurator, boutons Connecter et Choisir un port, liens du journal de débogage, version 0.33.0-dev en bas à droite">
+  <figcaption>Capture d'un essai réel (8 novembre 2026) : la version de l'onglet s'affiche en bas à droite.</figcaption>
+</figure>
+
+<h2 id="principe">Ce que fait l'onglet ESC</h2>
+<ul>
+  <li><b>Une seule connexion USB à la fois</b> : en entrant dans l'onglet, TrueGlide Configurator se déconnecte de la carte ; on se connecte dans l'onglet avec <b>Connecter</b>. En sortant, l'onglet libère le port (refusé pendant une lecture, une écriture ou un flash).</li>
+  <li><b>Batterie branchée</b> pour lire ou écrire : un ESC sans batterie ne répond pas.</li>
+  <li>Essayé avec le firmware TRUEGLIDE. Avec Betaflight, la passerelle est la même, mais ce n'est pas encore essayé.</li>
+  <li><b>Enregistrer le journal de débogage</b> (en haut, en jaune) : à joindre à tout signalement de problème.</li>
+</ul>
+
+<h2 id="lire">Lire et régler les ESC</h2>
+<ol>
+  <li><b>Connecter</b>, puis <b>Lire les paramètres</b> : chaque ESC s'affiche avec ses réglages.</li>
+  <li>Changer le <b>sens de rotation</b>, le mode 3D, le timing ou la puissance de démarrage demande une confirmation.</li>
+  <li><b>Restaurer les paramètres par défaut</b> : une question liste ce qui change ; une sauvegarde des réglages est faite avant, et le sens des moteurs est gardé.</li>
+  <li><b>Recharger des réglages sauvegardés</b> : remet une sauvegarde (fichier « trueglide-esc-reglages_….json ») ; un fichier qui n'est pas une sauvegarde est refusé sans rien écrire.</li>
+</ol>
+
+<h2 id="flasher">Flasher les ESC</h2>
+<ul>
+  <li>Avant chaque flash, les réglages des ESC sont sauvegardés dans un fichier.</li>
+  <li>Seul <b>Bluejay 0.19.2, J-H-40, 24 kHz</b> est validé par TrueGlide (empreinte SHA-256 vérifiée). Les autres firmwares demandent une confirmation « firmware non validé ».</li>
+  <li>Un layout qui ne correspond pas à l'ESC est refusé : « non flashé : rien n'a été écrit ».</li>
+  <li>AM32 sans nom de fichier en mémoire : refusé, sauf choix en mode avancé. BLHeli_32 est reconnu mais jamais modifié.</li>
+</ul>
+
+<h2 id="moteurs">Test des moteurs</h2>
+<ul>
+  <li>Cocher la case des hélices retirées, puis le test. Valeurs limitées : <b>1000 à 1300</b>, ou <b>1350 à 1650</b> en 3D.</li>
+  <li>Les moteurs s'arrêtent en moins d'une seconde quand on clique <b>Déconnecter</b>, <b>Lire les paramètres</b>, qu'on décoche une case, qu'on quitte l'onglet, qu'on ferme ou recharge la page, ou que la page est cachée.</li>
+  <li>Pendant une déconnexion, une lecture ou un flash, seul l'ordre d'arrêt est envoyé.</li>
+</ul>
+
+<h2 id="essais">Ce qui est essayé</h2>
+<p>Essais au banc du 8 novembre 2026 (SpeedyBee F405 Mini, 4 ESC BLHeli_S 35 A) : lecture, écriture, flash Bluejay 0.19.2 J-H-40, refus d'un mauvais layout, sauvegarde et rechargement des réglages, arrêts des moteurs (Q0 à Q5), tous OK. <b>Pas encore essayé</b> : AM32 sur un vrai ESC, récupération après un flash coupé.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>
