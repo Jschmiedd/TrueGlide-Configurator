@@ -112,12 +112,19 @@ describe("TauriSerial write lock timeout", () => {
     it("still tears the connection down on a broken pipe", async () => {
         mockWrites("Serial port disconnected: Broken pipe");
         const serial = connectedSerial();
+        // The fatal error starts disconnect() without awaiting it. Wait for it
+        // to finish here, or it can end after the jsdom environment is torn
+        // down and fail the run with an unhandled dispatchEvent rejection.
+        const disconnected = new Promise((resolve) => {
+            serial.addEventListener("disconnect", (event) => resolve(event.detail));
+        });
 
         const result = await serial.send(new Uint8Array([1, 2, 3]));
 
         expect(result).toEqual({ bytesSent: 0 });
         expect(writeCalls()).toHaveLength(1);
         expect(serial.connected).toBe(false);
+        expect(await disconnected).toBe(true);
     });
 
     it("retries only the failing chunk in batch write mode", async () => {
