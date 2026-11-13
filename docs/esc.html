@@ -135,7 +135,7 @@
 <h2 id="flasher">Flasher les ESC</h2>
 <ul>
   <li>Avant chaque flash, les réglages des ESC sont sauvegardés dans un fichier.</li>
-  <li>Seul <b>Bluejay 0.19.2, J-H-40, 24 kHz</b> est validé par TrueGlide (empreinte SHA-256 vérifiée). Les autres firmwares demandent une confirmation « firmware non validé ».</li>
+  <li>Deux firmwares sont validés par TrueGlide (empreinte SHA-256 vérifiée) : <b>Bluejay 0.19.2, J-H-40, 24 kHz</b> et <b>Bluejay 0.19.2, J-H-40, 48 kHz</b>. Flashez la même fréquence que celle lue sur l'ESC : dans Bluejay 0.19, la fréquence est fixée par le fichier. Les autres firmwares demandent une confirmation « firmware non validé ».</li>
   <li>Un layout qui ne correspond pas à l'ESC est refusé : « non flashé : rien n'a été écrit ».</li>
   <li>AM32 sans nom de fichier en mémoire : refusé, sauf choix en mode avancé. BLHeli_32 est reconnu mais jamais modifié.</li>
 </ul>
@@ -148,7 +148,7 @@
 </ul>
 
 <h2 id="essais">Ce qui est essayé</h2>
-<p>Essais au banc du 8 novembre 2026 (SpeedyBee F405 Mini, 4 ESC BLHeli_S 35 A) : lecture, écriture, flash Bluejay 0.19.2 J-H-40, refus d'un mauvais layout, sauvegarde et rechargement des réglages, arrêts des moteurs (Q0 à Q5), tous OK. <b>Pas encore essayé</b> : AM32 sur un vrai ESC, récupération après un flash coupé.</p>
+<p>Essais au banc du 8 novembre 2026 (SpeedyBee F405 Mini, 4 ESC BLHeli_S 35 A) : lecture, écriture, flash Bluejay 0.19.2 J-H-40, refus d'un mauvais layout, sauvegarde et rechargement des réglages, arrêts des moteurs (Q0 à Q5), tous OK. Le 10 novembre : flash coupé deux fois exprès (câble USB débranché, puis batterie débranchée) ; l'ESC, lu « FLASH*FAILED », a été reflashé avec succès (Bluejay 0.19.2 J-H-40 48 kHz) et ses réglages rechargés depuis la sauvegarde. <b>Pas encore essayé</b> : AM32 sur un vrai ESC.</p>
   </article>
 </div>
 
