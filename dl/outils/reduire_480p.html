@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Réduire en 480p</title>
+<style>
+:root{--bg:#f6f7f4;--fg:#1d2116;--carte:#fff;--bord:#d9ddd0;--vert:#5f8f0f;--gris:#5c6352;--err:#b3261e}
+@media (prefers-color-scheme:dark){:root{--bg:#15180f;--fg:#e9ecdf;--carte:#1f2318;--bord:#363c2b;--vert:#9ccc3a;--gris:#a7ae98;--err:#ff8a80}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:720px;margin:0 auto;padding:24px 16px}
+h1{font-size:1.5rem;margin:0 0 4px}
+p.sous{color:var(--gris);margin:0 0 20px}
+.carte{background:var(--carte);border:1px solid var(--bord);border-radius:12px;padding:16px;margin-bottom:16px}
+label.depot{display:block;border:2px dashed var(--bord);border-radius:12px;padding:28px 16px;text-align:center;cursor:pointer}
+label.depot.survol{border-color:var(--vert)}
+input[type=file]{display:none}
+.bouton{display:inline-block;background:var(--vert);color:#fff;border:0;border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;text-decoration:none}
+.fichier{border-top:1px solid var(--bord);padding:12px 0}
+.fichier:first-child{border-top:0}
+.nom{font-weight:600;word-break:break-all}
+.etat{color:var(--gris);font-size:.95rem}
+.etat.err{color:var(--err)}
+progress{width:100%;height:10px;margin:6px 0}
+ol{padding-left:20px;margin:0}
+</style>
+</head>
+<body>
+<main>
+<h1>Réduire une vidéo en 480p, avec le son</h1>
+<p class="sous">Tout se fait dans ton navigateur : rien n'est envoyé sur Internet. L'original n'est pas modifié.</p>
+
+<div class="carte">
+  <label class="depot" id="depot">
+    <input type="file" id="choix" accept="video/*" multiple>
+    <strong>Clique ici</strong> pour choisir une ou plusieurs vidéos<br>ou glisse-les dans ce cadre
+  </label>
+</div>
+
+<div class="carte">
+  <ol>
+    <li>La réduction dure <strong>le temps de la vidéo</strong> (1 min de vidéo = environ 1 min).</li>
+    <li><strong>Laisse cet onglet affiché</strong> pendant la réduction, sinon l'image se fige.</li>
+    <li>À la fin, clique sur <strong>« Enregistrer »</strong> : le fichier <code>…_480p_son</code> va dans Téléchargements.</li>
+  </ol>
+</div>
+
+<div class="carte" id="liste" hidden></div>
+<p><button class="bouton" id="lancer" hidden>Lancer la réduction</button></p>
+</main>
+
+<script>
+"use strict";
+const choix = document.getElementById("choix");
+const depot = document.getElementById("depot");
+const liste = document.getElementById("liste");
+const file = [];
+let enCours = false;
+let demarre = false;
+let audioCtx = null;
+const lancer = document.getElementById("lancer");
+
+function typeSortie() {
+    const types = [
+        ["video/mp4;codecs=avc1.42E01E,mp4a.40.2", "mp4"],
+        ["video/mp4", "mp4"],
+        ["video/webm;codecs=vp9,opus", "webm"],
+        ["video/webm;codecs=vp8,opus", "webm"],
+        ["video/webm", "webm"],
+    ];
+    for (const [t, ext] of types) {
+        if (window.MediaRecorder && MediaRecorder.isTypeSupported(t)) {
+            return { type: t, ext };
+        }
+    }
+    return null;
+}
+
+function ajouter(fichiers) {
+    for (const f of fichiers) {
+        if (!f.type.startsWith("video/")) {
+            continue;
+        }
+        const bloc = document.createElement("div");
+        bloc.className = "fichier";
+        bloc.innerHTML = '<div class="nom"></div><progress max="1" value="0"></progress><div class="etat">En attente…</div>';
+        bloc.querySelector(".nom").textContent = f.name;
+        liste.appendChild(bloc);
+        liste.hidden = false;
+        file.push({ f, bloc });
+    }
+    if (!demarre && file.length) {
+        lancer.hidden = false;
+    }
+    suivant();
+}
+
+async function suivant() {
+    if (!demarre || enCours || file.length === 0) {
+        return;
+    }
+    enCours = true;
+    const { f, bloc } = file.shift();
+    try {
+        await reduire(f, bloc);
+    } catch (e) {
+        const etat = bloc.querySelector(".etat");
+        etat.textContent = "Erreur : " + (e && e.message ? e.message : e);
+        etat.classList.add("err");
+    }
+    enCours = false;
+    suivant();
+}
+
+function reduire(f, bloc) {
+    return new Promise((resolve, reject) => {
+        const etat = bloc.querySelector(".etat");
+        const barre = bloc.querySelector("progress");
+        const sortie = typeSortie();
+        if (!sortie) {
+            reject(new Error("ce navigateur ne sait pas enregistrer de vidéo. Utilise Chrome ou Edge."));
+            return;
+        }
+        const url = URL.createObjectURL(f);
+        const video = document.createElement("video");
+        video.src = url;
+        video.playsInline = true;
+        video.preload = "auto";
+
+        video.onerror = () => reject(new Error("vidéo illisible par le navigateur."));
+        video.onloadedmetadata = async () => {
+            const vw = video.videoWidth;
+            const vh = video.videoHeight;
+            const h = Math.min(480, vh);
+            const w = Math.round((vw * h / vh) / 2) * 2;
+            const canvas = document.createElement("canvas");
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext("2d");
+
+            const pistes = [canvas.captureStream(30).getVideoTracks()[0]];
+            try {
+                const source = audioCtx.createMediaElementSource(video);
+                const dest = audioCtx.createMediaStreamDestination();
+                source.connect(dest); // pas de sortie vers les haut-parleurs : la réduction est silencieuse
+                const a = dest.stream.getAudioTracks()[0];
+                if (a) {
+                    pistes.push(a);
+                }
+            } catch (e) {
+                // vidéo sans son : on continue avec l'image seule
+            }
+
+            const flux = new MediaStream(pistes);
+            const morceaux = [];
+            const rec = new MediaRecorder(flux, {
+                mimeType: sortie.type,
+                videoBitsPerSecond: 1200000,
+                audioBitsPerSecond: 128000,
+            });
+            rec.ondataavailable = (ev) => {
+                if (ev.data && ev.data.size) {
+                    morceaux.push(ev.data);
+                }
+            };
+            rec.onstop = () => {
+                URL.revokeObjectURL(url);
+                const blob = new Blob(morceaux, { type: sortie.type.split(";")[0] });
+                const nom = f.name.replace(/\.[^.]+$/, "") + "_480p_son." + sortie.ext;
+                const lien = document.createElement("a");
+                lien.className = "bouton";
+                lien.href = URL.createObjectURL(blob);
+                lien.download = nom;
+                lien.textContent = "Enregistrer " + nom + " (" + (blob.size / 1048576).toFixed(1) + " Mo)";
+                barre.value = 1;
+                etat.textContent = "Terminé" + (pistes.length > 1 ? ", avec le son." : ", sans son (la vidéo d'origine n'en a pas).");
+                etat.after(lien);
+                resolve();
+            };
+
+            const dessiner = () => {
+                if (video.ended) {
+                    return;
+                }
+                ctx.drawImage(video, 0, 0, w, h);
+                if (video.duration) {
+                    barre.value = video.currentTime / video.duration;
+                    etat.textContent = "Réduction… " + Math.round(video.currentTime) + " s / " + Math.round(video.duration) + " s";
+                }
+                if (video.requestVideoFrameCallback) {
+                    video.requestVideoFrameCallback(dessiner);
+                } else {
+                    requestAnimationFrame(dessiner);
+                }
+            };
+            video.onended = () => {
+                ctx.drawImage(video, 0, 0, w, h);
+                setTimeout(() => rec.stop(), 300);
+            };
+
+            try {
+                if (audioCtx && audioCtx.state === "suspended") {
+                    await audioCtx.resume();
+                }
+                rec.start(1000);
+                await video.play();
+                dessiner();
+            } catch (e) {
+                reject(new Error("lecture impossible (" + e.message + ")."));
+            }
+        };
+    });
+}
+
+choix.addEventListener("change", () => {
+    ajouter(choix.files);
+    choix.value = "";
+});
+["dragenter", "dragover"].forEach((t) => depot.addEventListener(t, (e) => {
+    e.preventDefault();
+    depot.classList.add("survol");
+}));
+["dragleave", "drop"].forEach((t) => depot.addEventListener(t, (e) => {
+    e.preventDefault();
+    depot.classList.remove("survol");
+}));
+depot.addEventListener("drop", (e) => ajouter(e.dataTransfer.files));
+lancer.addEventListener("click", async () => {
+    demarre = true;
+    lancer.hidden = true;
+    audioCtx = new AudioContext();
+    await audioCtx.resume();
+    suivant();
+});
+</script>
+</body>
+</html>
