@@ -8,7 +8,7 @@
 // (0.33.0-dev · master f646695 ; nouvelle adresse, v16 à v24 laissées telles quelles). Comme la v24, mais un ESC en
 // échec de flash (FLASH*FAILED) est sauté à l'écriture au lieu de tout bloquer. /test/ seulement (OUI de l'audit) ;
 // /app/ reste en v24 jusqu'à l'essai au banc et l'accord de Johann.
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v25/";
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v26/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
