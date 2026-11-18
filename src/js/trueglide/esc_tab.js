@@ -6,8 +6,8 @@
 
 // Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v27
 // (0.33.0-dev · 18132c7 ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v26, et une carte
-// restée en mode ESC sort de ce mode même quand aucun ESC ne répond. /test/ seulement ; /app/ reste en v24 jusqu'à
-// l'essai au banc et l'accord de Johann.
+// restée en mode ESC sort de ce mode même quand aucun ESC ne répond. Sur /test/ et sur /app/ depuis le 19/11 (essai
+// au banc TGE-V27 réussi, accord de Johann).
 export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v27/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
