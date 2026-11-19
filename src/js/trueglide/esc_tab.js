@@ -4,11 +4,11 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v27
-// (0.33.0-dev · 18132c7 ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v26, et une carte
-// restée en mode ESC sort de ce mode même quand aucun ESC ne répond. Sur /test/ et sur /app/ depuis le 19/11 (essai
-// au banc TGE-V27 réussi, accord de Johann).
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v27/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v28
+// (0.33.0-dev · fe53a6f ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v27, et un réglage
+// commun changé ne recopie plus aux autres ESC que les réglages communs (sens moteur et autres réglages gardés).
+// /test/ seulement ; /app/ reste en v27 jusqu'à l'essai au banc et l'accord de Johann.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v28/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
