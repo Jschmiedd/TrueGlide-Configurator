@@ -6,8 +6,8 @@
 
 // Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v33
 // (0.33.0-dev · 2356d9c ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v32, plus : quand la
-// carte compte trop peu de cellules, le Contrôle des moteurs affiche la tension seule, en rouge. /test/ seulement ; /app/
-// reste en v27 jusqu'à l'essai au banc et l'accord de Johann.
+// carte compte trop peu de cellules, le Contrôle des moteurs affiche la tension seule, en rouge. Validée au banc
+// (TGE-V33) ; /test/ et /app/ en v33 depuis le 20/11.
 export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v33/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
