@@ -179,19 +179,23 @@ export function parseBoardFile(text, MSPCodes = null) {
         throw new Error(`Version du fichier carte non prise en charge : ${o.version}.`);
     }
     const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+    // TrueGlide (22/11/2026) : unsupported et cli sont lus par la carte hors ligne : absents = vides, autre type = refus
     if (
         !isObject(o.msp) ||
-        (o.cli !== undefined && !isObject(o.cli)) ||
-        (o.writes !== undefined && !Array.isArray(o.writes))
+        (o.unsupported !== undefined && !isObject(o.unsupported)) ||
+        (o.cli !== undefined && (!isObject(o.cli) || !Object.values(o.cli).every(Array.isArray))) ||
+        (o.writes !== undefined && !Array.isArray(o.writes)) ||
+        (o.simulee !== undefined && o.simulee !== null && !isObject(o.simulee)) ||
+        (o.simulee?.commandes !== undefined && !Array.isArray(o.simulee.commandes))
     ) {
         throw new Error("Fichier carte incomplet (récolte absente) : refusé.");
     }
+    o.unsupported ??= {};
+    o.cli ??= {};
+    o.writes ??= [];
     // audit du 06/11/2026 : un fichier carte ne peut contenir que des réglages (rien qui agisse tout de suite)
     if (MSPCodes) {
-        const writes = [
-            ...(Array.isArray(o.writes) ? o.writes : []),
-            ...(o.simulee?.commandes ?? []).map((cli) => ({ cli })),
-        ];
+        const writes = [...o.writes, ...(o.simulee?.commandes ?? []).map((cli) => ({ cli }))];
         const bad = forbiddenWrite(writes, MSPCodes);
         if (bad) {
             throw new Error(

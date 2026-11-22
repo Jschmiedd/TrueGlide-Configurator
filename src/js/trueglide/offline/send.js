@@ -25,6 +25,23 @@ import { boardChanged } from "./harvest_state.js";
 import { cliRefused } from "../studio_tab.js";
 import { forbiddenWrite } from "./safety.js";
 
+// TrueGlide (22/11/2026) : résultat d'un envoi réussi, avec tout le résultat de la relecture (relecture en attente,
+// réglages contrôlés, réglages relus avec une autre valeur) ; sinon l'écran disait « non relue » au lieu de « relue à
+// la prochaine connexion », et un réglage relu avec une autre valeur n'était jamais signalé.
+export function sentResult(count, saved, file) {
+    return {
+        ok: true,
+        count,
+        verified: saved.verified,
+        lost: saved.lost,
+        pending: saved.pending,
+        checked: saved.checked,
+        mismatches: saved.mismatches,
+        unchecked: saved.unchecked,
+        file,
+    };
+}
+
 // Rend { ok } ou { ok: false, reason, index, write, reply }.
 export async function sendPrepared({ onProgress, force = false, risksOk = false, backup: earlier = null } = {}) {
     // la carte hors ligne de ce drone (même numéro unique que la carte branchée), parmi celles gardées
@@ -144,5 +161,5 @@ export async function sendPrepared({ onProgress, force = false, risksOk = false,
     };
     saveBoard(rec);
     boardChanged();
-    return { ok: true, count: writes.length, verified: saved.verified, lost: saved.lost, file: backup.file };
+    return sentResult(writes.length, saved, backup.file);
 }

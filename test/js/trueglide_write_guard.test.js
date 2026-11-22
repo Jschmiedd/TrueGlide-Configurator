@@ -226,3 +226,44 @@ describe("relecture : CLI muet juste après le redémarrage", () => {
         expect(verificationMessage({ verified: true, ...r2 }, "f.txt", msg)).toBe("tfVerifyNotRead(1|f.txt)");
     }, 10000);
 });
+
+// Défauts trouvés le 22/11/2026 (portage vers Betaflight, essai BF-HL1).
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { sentResult } from "../../src/js/trueglide/offline/send.js";
+
+describe("carte hors ligne : résultat complet de la relecture après l'envoi", () => {
+    it("relecture en attente : « relue à la connexion », pas « non relue »", () => {
+        const r = sentResult(2, { ok: true, verified: false, lost: false, pending: true }, "f.txt");
+        expect(r.pending).toBe(true);
+        expect(verificationMessage(r, r.file, msg)).toBe("tfVerifyPending(f.txt)");
+    });
+    it("réglage relu avec une autre valeur : signalé", () => {
+        const saved = {
+            ok: true,
+            verified: true,
+            lost: false,
+            checked: 2,
+            mismatches: ["set p_roll = 45"],
+            unchecked: 0,
+        };
+        const r = sentResult(2, saved, "f.txt");
+        expect(r).toMatchObject({ ok: true, count: 2, checked: 2, mismatches: ["set p_roll = 45"], unchecked: 0 });
+        expect(verificationMessage(r, r.file, msg)).toMatch(/^tfVerifyMismatch\(1\|set p_roll = 45\|f.txt\)/);
+    });
+    it("relecture à la connexion : « après l'enregistrement » écrit une seule fois", () => {
+        const none = { verified: true, lost: false, checked: 0, mismatches: [], unchecked: 0 };
+        const texts = {
+            tfVerifyNone: "Carte relue après l'enregistrement : …",
+            tfVerifyAtConnection: "Relecture de la carte après le dernier enregistrement :",
+        };
+        const real = (k, a = []) => texts[k] ?? msg(k, a);
+        // texte de TrueGlideOfflineBox.vue à la reconnexion : le message seul
+        expect(verificationMessage(none, "f.txt", real)).toBe("Carte relue après l'enregistrement : …");
+        const fr = JSON.parse(readFileSync(path.resolve(__dirname, "../../locales/fr/messages.json"), "utf8"));
+        expect(fr.tfVerifyAtConnection).toBeUndefined();
+        expect(
+            readFileSync(path.resolve(__dirname, "../../src/components/trueglide/TrueGlideOfflineBox.vue"), "utf8"),
+        ).not.toMatch(/tfVerifyAtConnection/);
+    });
+});

@@ -120,7 +120,8 @@ onMounted(async () => {
     if (!r) {
         return;
     }
-    const text = `${msg("tfVerifyAtConnection")} ${verificationMessage(r, r.file, msg)}`;
+    // TrueGlide (22/11/2026) : chaque message dit déjà « après l'enregistrement » : pas de préfixe (texte en double)
+    const text = verificationMessage(r, r.file, msg);
     state.sentOk = r.verified && !r.lost && !r.mismatches?.length;
     state.sent = text;
     state.version++;

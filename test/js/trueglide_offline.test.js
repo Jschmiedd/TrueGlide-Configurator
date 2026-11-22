@@ -120,6 +120,23 @@ describe("TrueGlide offline: harvest and offline board", () => {
         expect(() => parseBoardFile('{"format":"trueglide-drone"}')).toThrow(/pas un fichier carte/);
     });
 
+    it("board file: missing parts become empty, wrong types are refused (22/11/2026)", () => {
+        const partial = emptyRecording();
+        delete partial.unsupported;
+        delete partial.cli;
+        delete partial.writes;
+        const o = parseBoardFile(JSON.stringify(partial));
+        expect(o.unsupported).toEqual({});
+        expect(o.cli).toEqual({});
+        expect(o.writes).toEqual([]);
+        const bad = (extra) => () => parseBoardFile(JSON.stringify({ ...emptyRecording(), ...extra }));
+        expect(bad({ unsupported: [] })).toThrow(/incomplet/);
+        expect(bad({ cli: "x" })).toThrow(/incomplet/);
+        expect(bad({ cli: { "get p_roll": "p_roll = 45" } })).toThrow(/incomplet/);
+        expect(bad({ simulee: { commandes: "set p_roll = 45" } })).toThrow(/incomplet/);
+        expect(bad({ simulee: 3 })).toThrow(/incomplet/);
+    });
+
     it("harvest opens the board tabs, never the ESC, flash or CLI tabs", () => {
         const items = [
             { key: "dashboard", mode: "connected" },
