@@ -121,6 +121,22 @@ describe("contre-audit (constat 6) : relecture réglage par réglage", () => {
         );
         expect(r).toEqual({ checked: 1, mismatches: [], unchecked: 2 });
     });
+    it("retrouve un « set » de profil dans la section de ce profil, pas dans un autre (22/11/2026)", async () => {
+        const diff = ["# diff all", "profile 0", "set p_roll = 45", "profile 3", "", "# profile 3", "set p_roll = 52"];
+        const noGet = async () => {
+            throw new Error("pas de get pour un réglage de profil");
+        };
+        expect(await verifySent(["profile 3", "set p_roll = 52"], diff, noGet)).toEqual({
+            checked: 1,
+            mismatches: [],
+            unchecked: 0,
+        });
+        expect(await verifySent(["profile 0", "set p_roll = 52"], diff, noGet)).toEqual({
+            checked: 0,
+            mismatches: [],
+            unchecked: 1,
+        });
+    });
     it("message : jamais « tout en place » sans relecture réelle", () => {
         expect(verificationMessage({ verified: true, checked: 0, mismatches: [], unchecked: 3 }, "f.txt", msg)).toBe(
             "tfVerifyNotRead(3|f.txt)",

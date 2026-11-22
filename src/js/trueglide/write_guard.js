@@ -251,13 +251,26 @@ export function riskyChanges(commands, backupLines) {
 // Réglages envoyés relus après l'enregistrement : chaque « set x = v » hors changement de profil est relu par
 // « get x » ; les autres lignes sont cherchées dans le « diff all » relu. { checked, mismatches, unchecked }.
 export async function verifySent(commands, afterDiff, getFn = (c) => send(c, { timeoutMs: 5000 })) {
-    const after = new Set(settingLines(afterDiff).map((l) => l.toLowerCase()));
+    // TrueGlide (22/11/2026) : chaque ligne du diff all est rattachée à son profil (comme withContext de delta.js), pour
+    // retrouver un « set » de profil dans la section de ce même profil ; trouvé dans un autre profil = non relu.
+    const profileLine = /^(profile|rateprofile|battery_profile|osd_profile)\s+\d+$/i;
+    const after = new Set();
+    let section = "";
+    for (const l of settingLines(afterDiff).map((x) => x.toLowerCase())) {
+        if (profileLine.test(l)) {
+            section = l;
+            continue;
+        }
+        after.add(l.startsWith("set ") ? `${section}\n${l}` : l);
+    }
     const result = { checked: 0, mismatches: [], unchecked: 0 };
     let inProfile = false;
+    let profile = "";
     for (const command of commands ?? []) {
         const c = String(command).trim();
-        if (/^(profile|rateprofile|battery_profile|osd_profile)\s+\d+$/i.test(c)) {
+        if (profileLine.test(c)) {
             inProfile = true;
+            profile = c.toLowerCase().replace(/\s+/g, " ");
             continue;
         }
         const set = c.match(/^set\s+(\w+)\s*=\s*(.*)$/i);
@@ -282,6 +295,8 @@ export async function verifySent(commands, afterDiff, getFn = (c) => send(c, { t
             if (value === null || value.toLowerCase() !== set[2].trim().toLowerCase()) {
                 result.mismatches.push(`${set[1]} : envoyé ${set[2].trim()}, relu ${value ?? "?"}`);
             }
+        } else if (set && after.has(`${profile}\n${`set ${set[1]} = ${set[2].trim()}`.toLowerCase()}`)) {
+            result.checked++;
         } else if (!set && after.has(c.toLowerCase())) {
             result.checked++;
         } else {
