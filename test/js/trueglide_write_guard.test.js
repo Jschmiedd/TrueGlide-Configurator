@@ -283,3 +283,20 @@ describe("carte hors ligne : résultat complet de la relecture après l'envoi", 
         ).not.toMatch(/tfVerifyAtConnection/);
     });
 });
+
+describe("carte hors ligne : message après l'envoi, redémarrage annoncé une seule fois", () => {
+    for (const [lang, word] of [
+        ["fr", /redémarre/g],
+        ["en", /reboot/gi],
+    ]) {
+        const texts = JSON.parse(readFileSync(path.resolve(__dirname, `../../locales/${lang}/messages.json`), "utf8"));
+        const real = (k, a = []) => a.reduce((s, v, i) => s.replace(`$${i + 1}`, v), texts[k].message);
+        for (const pending of [true, false]) {
+            it(`${lang}, relecture ${pending ? "en attente" : "impossible"}`, () => {
+                const r = sentResult(1, { ok: true, verified: false, lost: false, pending }, "f.txt");
+                const text = `${real("tfOfflineSent", [r.count])} ${verificationMessage(r, r.file, real)}`;
+                expect(text.match(word)).toHaveLength(1);
+            });
+        }
+    }
+});

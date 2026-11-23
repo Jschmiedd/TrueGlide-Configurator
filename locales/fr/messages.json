@@ -976,7 +976,7 @@
         "message": "réglage d'onglet : comparer avec la sauvegarde"
     },
     "tfVerifyPending": {
-        "message": "La carte redémarre. Cliquez sur « Connexion » : elle sera relue réglage par réglage à la connexion (Tableau de bord). Sauvegarde : $1."
+        "message": "Cliquez sur « Connexion » : elle sera relue réglage par réglage à la connexion (Tableau de bord). Sauvegarde : $1."
     },
     "tfVerifyNotRead": {
         "message": "La carte n'a pas pu être relue réglage par réglage ($1 réglage(s) non relu(s)) : vérifiez avec diff all. Sauvegarde : $2."
