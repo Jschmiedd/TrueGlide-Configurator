@@ -973,7 +973,7 @@
         "message": "tab setting: compare with the backup"
     },
     "tfVerifyPending": {
-        "message": "The board is rebooting. Click \"Connect\": it will be read back setting by setting at connection (Dashboard). Backup: $1."
+        "message": "Click \"Connect\": it will be read back setting by setting at connection (Dashboard). Backup: $1."
     },
     "tfVerifyNotRead": {
         "message": "The board could not be read back setting by setting ($1 setting(s) not read back): check with diff all. Backup: $2."
