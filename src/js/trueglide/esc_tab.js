@@ -4,11 +4,11 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v35
-// (0.33.0-dev · 1ad4b5d ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v34, plus : TGlide_8
-// affiché, AM32 2.22 (layout 4), rien n'est écrit dans un ESC AM32 au layout non décrit, flash interrompu détecté.
-// /test/ seulement ; /app/ reste en v34 jusqu'à l'essai au banc et l'accord de Johann.
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v35/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v36
+// (0.33.0-dev · 0ed0178 ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v35, plus : réglages
+// communs comparés et écrits seulement entre ESC de même firmware et même version (plus de « ??? »), fichier de réglages
+// 3S ou 4S proposé. /test/ seulement ; /app/ reste en v34 jusqu'à l'essai au banc et l'accord de Johann.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v36/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
