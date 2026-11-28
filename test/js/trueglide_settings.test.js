@@ -93,3 +93,59 @@ describe("TrueGlide navigation safety", () => {
         ]);
     });
 });
+
+describe("TrueGlide vol sans GPS (télémètre et flux optique)", async () => {
+    const { SECTIONS, GET_COMMANDS } = await import("../../src/js/trueglide/settings");
+    const section = SECTIONS.find((s) => s.key === "nogps");
+    const byName = (n) => section.settings.find((s) => s.name === n);
+
+    it("every setting is read by one of the CLI 'get' commands", () => {
+        for (const s of section.settings) {
+            expect(GET_COMMANDS.some((c) => s.name.startsWith(c.replace(/^get /, "")))).toBe(true);
+        }
+    });
+
+    it("choices are names the firmware accepts (src/main/sensors/sensors.c, cli/settings.c)", () => {
+        const firmware = {
+            rangefinder_hardware: [
+                "NONE",
+                "HCSR04",
+                "TFMINI",
+                "TF02",
+                "MTF01",
+                "MTF02",
+                "MTF01P",
+                "MTF02P",
+                "TFNOVA",
+                "NOOPLOOP_F2",
+                "NOOPLOOP_F2P",
+                "NOOPLOOP_F2PH",
+                "NOOPLOOP_F",
+                "NOOPLOOP_FP",
+                "NOOPLOOP_F2MINI",
+                "UPT1",
+            ],
+            opticalflow_hardware: ["NONE", "MT", "UPT1"],
+            altitude_source: ["DEFAULT", "BARO_ONLY", "GPS_ONLY", "RANGEFINDER_PREFER", "RANGEFINDER_ONLY"],
+            poshold_position_source: ["AUTO", "GPS_ONLY", "OPTICALFLOW_ONLY"],
+        };
+        for (const [name, allowed] of Object.entries(firmware)) {
+            for (const v of byName(name).values) {
+                expect(allowed).toContain(v);
+            }
+        }
+    });
+
+    it("shows heights in m and writes cm back, refusing values outside 0.5 - 10 m", () => {
+        const s = byName("poshold_opticalflow_max_range");
+        expect(toDisplay(s, "300")).toBe(3);
+        expect(toRaw(s, 2.5)).toBe("250");
+        expect(validate(s, toRaw(s, 0.4))).toBe(false);
+        expect(validate(s, toRaw(s, 10.5))).toBe(false);
+        const original = { rangefinder_max_range_cm: "400", poshold_position_source: "AUTO" };
+        expect(
+            changeCommands(original, { rangefinder_max_range_cm: 6, poshold_position_source: "OPTICALFLOW_ONLY" })
+                .commands,
+        ).toEqual(["set rangefinder_max_range_cm = 600", "set poshold_position_source = OPTICALFLOW_ONLY"]);
+    });
+});

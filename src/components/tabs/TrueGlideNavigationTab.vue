@@ -6,7 +6,7 @@
     <TrueGlideTab
         tab-name="tf_navigation"
         title="tabTfNavigation"
-        :sections="['navsafety', 'truenav']"
+        :sections="['navsafety', 'nogps', 'truenav']"
         intro="trueglideIntroNavigation"
     />
 </template>

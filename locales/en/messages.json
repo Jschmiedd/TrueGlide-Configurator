@@ -1509,6 +1509,66 @@
     "trueglideNavSafetyHelp": {
         "message": "Limits and safety behaviour of missions (AUTOPILOT mode, TRUENAV firmware) and of GPS rescue. Missions are drawn in the Flight Plan tab or sent from Mission Planner. First flights: open field, low speed, ready to take control back."
     },
+    "trueglideNoGpsTitle": {
+        "message": "Flying without GPS (rangefinder and optical flow)"
+    },
+    "trueglideNoGpsHelp": {
+        "message": "With a rangefinder (exact height) and an optical flow sensor (drift over the ground), the drone holds altitude and position without GPS, at low height, over a textured and lit ground. The sensor connects to a free UART. Not yet checked in real flight: first tests on the bench, then indoors at low height, ready to take control back."
+    },
+    "trueglideSetting_rangefinder_hardware": {
+        "message": "Rangefinder"
+    },
+    "trueglideSetting_rangefinder_hardwareHelp": {
+        "message": "Rangefinder model (height measurement). MTF01 \/ MTF02: MicoAir; UPT1: Upixel UP-T1. NONE: none."
+    },
+    "trueglideSetting_opticalflow_hardware": {
+        "message": "Optical flow sensor"
+    },
+    "trueglideSetting_opticalflow_hardwareHelp": {
+        "message": "Optical flow sensor model (drift over the ground). MT: MicoAir MTF-01 \/ MTF-02; UPT1: Upixel UP-T1. NONE: none."
+    },
+    "trueglideSetting_opticalflow_rotation": {
+        "message": "Optical flow sensor rotation"
+    },
+    "trueglideSetting_opticalflow_rotationHelp": {
+        "message": "Mounting angle of the sensor relative to the front of the drone. 0: sensor arrow pointing forward."
+    },
+    "trueglideSetting_opticalflow_flip_x": {
+        "message": "Flip optical flow X axis"
+    },
+    "trueglideSetting_opticalflow_flip_xHelp": {
+        "message": "Turn on only if the drone drifts the wrong way on the left-right axis in position hold (sensor mounted upside down)."
+    },
+    "trueglideSetting_altitude_source": {
+        "message": "Altitude source"
+    },
+    "trueglideSetting_altitude_sourceHelp": {
+        "message": "DEFAULT: barometer and GPS. RANGEFINDER_PREFER: rangefinder near the ground, barometer higher up. RANGEFINDER_ONLY: rangefinder only (low flight only)."
+    },
+    "trueglideSetting_rangefinder_max_range_cm": {
+        "message": "Rangefinder usable range"
+    },
+    "trueglideSetting_rangefinder_max_range_cmHelp": {
+        "message": "Above this height, the rangefinder reading is no longer used."
+    },
+    "trueglideSetting_poshold_position_source": {
+        "message": "Position hold source"
+    },
+    "trueglideSetting_poshold_position_sourceHelp": {
+        "message": "AUTO: GPS when available, otherwise optical flow. GPS_ONLY: GPS only. OPTICALFLOW_ONLY: optical flow only (no GPS)."
+    },
+    "trueglideSetting_poshold_opticalflow_quality_min": {
+        "message": "Minimum optical flow quality"
+    },
+    "trueglideSetting_poshold_opticalflow_quality_minHelp": {
+        "message": "Below this quality (ground too smooth or too dark), optical flow is not used to hold position."
+    },
+    "trueglideSetting_poshold_opticalflow_max_range": {
+        "message": "Optical flow maximum height"
+    },
+    "trueglideSetting_poshold_opticalflow_max_rangeHelp": {
+        "message": "Above this height, optical flow is no longer used to hold position."
+    },
     "trueglideSetting_ap_max_velocity": {
         "message": "Maximum navigation speed"
     },

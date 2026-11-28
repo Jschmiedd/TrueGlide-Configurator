@@ -71,6 +71,31 @@ export const SECTIONS = [
         ],
     },
     {
+        // Vol sans GPS : télémètre et flux optique (maintien d'altitude et de position). Unités du firmware : cm ; affichées en m.
+        key: "nogps",
+        title: "trueglideNoGpsTitle",
+        help: "trueglideNoGpsHelp",
+        settings: [
+            {
+                name: "rangefinder_hardware",
+                type: "choice",
+                values: ["NONE", "MTF01", "MTF02", "MTF01P", "MTF02P", "UPT1", "TFMINI", "TF02", "TFNOVA"],
+            },
+            { name: "opticalflow_hardware", type: "choice", values: ["NONE", "MT", "UPT1"] },
+            { name: "opticalflow_rotation", type: "number", min: 0, max: 359, unit: "°" },
+            { name: "opticalflow_flip_x", type: "onoff" },
+            {
+                name: "altitude_source",
+                type: "choice",
+                values: ["DEFAULT", "BARO_ONLY", "GPS_ONLY", "RANGEFINDER_PREFER", "RANGEFINDER_ONLY"],
+            },
+            { name: "rangefinder_max_range_cm", type: "number", min: 50, max: 1000, scale: 100, unit: "m" },
+            { name: "poshold_position_source", type: "choice", values: ["AUTO", "GPS_ONLY", "OPTICALFLOW_ONLY"] },
+            { name: "poshold_opticalflow_quality_min", type: "number", min: 0, max: 100, unit: "%" },
+            { name: "poshold_opticalflow_max_range", type: "number", min: 50, max: 1000, scale: 100, unit: "m" },
+        ],
+    },
+    {
         key: "truenav",
         title: "trueglideTruenavTitle",
         help: "trueglideTruenavHelp",
@@ -118,6 +143,10 @@ export const GET_COMMANDS = [
     "get ap_",
     "get gps_rescue",
     "get failsafe_procedure",
+    "get rangefinder",
+    "get opticalflow",
+    "get altitude_source",
+    "get poshold_",
 ];
 
 // Firmware value (string) <-> displayed value. A scaled setting shows e.g. cm/s as m/s.
