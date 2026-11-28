@@ -1,0 +1,21 @@
+<h1>Guide de la sauvegarde</h1>
+<p class="chapeau">Sauvegarder la configuration de la carte avant tout flash, tout gros changement de réglage ou tout envoi de commandes. Avec cette sauvegarde, on peut toujours revenir en arrière.</p>
+
+<h2 id="cli">La sauvegarde complète, par le CLI</h2>
+<ol class="etapes">
+  <li>Carte connectée, ouvrir l'onglet <a href="cli.html">Ligne de commande (CLI)</a>.</li>
+  <li>Taper <code>diff all</code>, puis cliquer sur <b>Enregistrer sous</b> : ce fichier contient les réglages modifiés.</li>
+  <li>Cliquer sur <b>Effacer l'historique</b>, taper <code>dump all</code>, puis <b>Enregistrer sous</b> dans un second fichier : il contient tous les réglages, utile en cas de doute.</li>
+</ol>
+
+<h2 id="tableau-de-bord">Le bouton du Tableau de bord</h2>
+<p>Avec un firmware <b>TRUEGLIDE</b> déjà installé, le bouton <b>Sauvegarder la configuration</b> du <a href="tableau-de-bord.html">Tableau de bord</a> enregistre aussi un <code>diff all</code>.</p>
+
+<h2 id="automatique">Les sauvegardes automatiques</h2>
+<ul>
+  <li>Au moment du flash, le logiciel fait sa propre sauvegarde (<code>diff all</code>) si l'option est active : voir <a href="flasher-le-firmware.html">Flasher le Firmware</a>.</li>
+  <li>Avant d'envoyer des commandes de <a href="studio.html">TRUEGLIDE STUDIO</a> ou les changements de la carte hors ligne, le logiciel enregistre une sauvegarde de la carte sur l'ordinateur.</li>
+</ul>
+
+<h2 id="recoller">Recoller une sauvegarde</h2>
+<p>Dans l'onglet CLI, coller le contenu du fichier <code>diff all</code>, valider, puis taper <code>save</code>. Sur une carte revenue à Betaflight, retirer d'abord les réglages propres à TrueGlide : voir <a href="guide-revenir-a-betaflight.html">Revenir à Betaflight</a>.</p>

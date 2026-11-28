@@ -1,0 +1,30 @@
+<h1>Guide du premier vol</h1>
+<p class="chapeau">Du drone réglé au premier stationnaire, en vérifiant chaque point avant de monter les hélices. Ces étapes servent à voir un défaut de montage ou de réglage sans casse.</p>
+<div class="encart">Aucun logiciel ne garantit qu'un drone vole du premier coup : un moteur mal monté, une hélice à l'envers ou un ESC mal réglé restent possibles. Le firmware <b>TRUEGLIDE</b> est en version d'essai : premier vol réussi le 3 novembre 2026 sur une SpeedyBee F405 Mini, fonctions TrueGlide coupées ; leurs essais en vol sont en cours.</div>
+
+<h2 id="avant">Avant de commencer</h2>
+<ol class="etapes">
+  <li><b>Sauvegarder la configuration</b> : voir le <a href="guide-sauvegarder.html">guide de la sauvegarde</a>.</li>
+  <li>Suivre la <a href="mise-en-route.html">mise en route guidée</a> jusqu'au bout : installation, ports, configuration, récepteur, modes, batterie, moteurs, failsafe.</li>
+  <li>Partir d'un réglage adapté au drone : <a href="studio.html">TRUEGLIDE STUDIO</a> ou l'<a href="assistant-de-reglage.html">Assistant de réglage</a>.</li>
+</ol>
+
+<h2 id="sans-helices">Sans les hélices</h2>
+<ol class="etapes">
+  <li>Retirer les hélices. Brancher la batterie, si possible avec un limiteur de courant (« smoke stopper »).</li>
+  <li>Onglet <a href="moteurs.html">Moteurs</a> : vérifier l'ordre et le sens de rotation de chaque moteur. Les curseurs s'arrêtent à 30&nbsp;% des gaz.</li>
+  <li>Tester l'armement et le <a href="failsafe.html">failsafe</a> avec la radio.</li>
+  <li>Onglet <a href="protections.html">Protections</a> : activer la protection anti-surchauffe, par exemple 100 °C pour la température d'ESC (ESC avec télémétrie de température), et une limite de courant à 80 % du calibre total des ESC (capteur de courant nécessaire).</li>
+  <li>Onglet <a href="osd.html">OSD</a> : cocher les alertes « Gaz limités (TrueGlide) » et « Moteur relancé (TrueGlide) ».</li>
+  <li>Onglet <a href="blackbox.html">Blackbox</a> : enregistrer les premiers vols, pour pouvoir les relire dans le <a href="visualiseur-blackbox.html">Visualiseur Blackbox</a>.</li>
+</ol>
+
+<h2 id="premier-stationnaire">Le premier stationnaire</h2>
+<ol class="etapes">
+  <li>Monter les hélices dans le bon sens.</li>
+  <li>Dans un lieu dégagé, loin des personnes : stationnaire de 30 secondes, atterrir, désarmer, débrancher la batterie.</li>
+  <li>Toucher les moteurs. Tièdes : on peut continuer. Chauds : baisser le curseur maître des PID ou renforcer le filtrage avant d'aller plus loin.</li>
+</ol>
+
+<h2 id="ensuite">Ensuite</h2>
+<p>Ajuster avec les curseurs de l'onglet <a href="reglages-pid.html">Réglages de PID</a> : le curseur maître d'abord, par pas de 5. Relire les journaux Blackbox après chaque changement.</p>

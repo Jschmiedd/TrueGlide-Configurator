@@ -6,6 +6,7 @@
       "pages": [
         { "slug": "mise-en-route", "titre": "Mise en route" },
         { "slug": "flasher", "titre": "Installer le firmware" },
+        { "slug": "cartes-testees", "titre": "Cartes testées" },
         { "slug": "notes-de-version", "titre": "Notes de version" }
       ]
     },
@@ -88,6 +89,21 @@
       "pages": [
         { "slug": "memo-wiki", "titre": "Mémo & Wiki", "onglet": "help", "menu": "Mémo & Wiki", "fichier": "src/components/tabs/HelpTab.vue", "mode": "sitl" },
         { "slug": "cli", "titre": "Ligne de commande (CLI)", "onglet": "cli", "menu": "Ligne de commande (CLI)", "fichier": "src/components/tabs/CliTab.vue", "mode": "sitl" }
+      ]
+    },
+    {
+      "titre": "Guides",
+      "pages": [
+        { "slug": "guide-premier-vol", "titre": "Guide du premier vol" },
+        { "slug": "guide-sauvegarder", "titre": "Guide de la sauvegarde" },
+        { "slug": "guide-revenir-a-betaflight", "titre": "Revenir à Betaflight" }
+      ]
+    },
+    {
+      "titre": "Projet",
+      "pages": [
+        { "slug": "nouvelles", "titre": "Nouvelles" },
+        { "slug": "developpement", "titre": "Développement" }
       ]
     }
   ]
