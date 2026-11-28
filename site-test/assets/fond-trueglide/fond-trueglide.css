@@ -1,0 +1,39 @@
+/* Fond « carte imprimée » TRUEGLIDE : à réutiliser sur toutes les pages TRUEGLIDE.
+   Copier le dossier fond-trueglide/ entier (ce fichier + les deux .svg) ; les chemins des images sont relatifs à ce fichier.
+   Classes :
+     .fond-trueglide        fond d'un bloc (haut de page, bandeau, section), dessin calé en haut et au centre
+     .fond-trueglide-fixe   à ajouter en plus sur <body> : le dessin reste en place quand on fait défiler la page
+   Thème sombre reconnu de trois façons : préférence du système, <html data-theme="dark">, ou <html class="dark"> (Nuxt UI).
+   <html data-theme="light"> force le clair même si le système est en sombre. */
+
+.fond-trueglide {
+  --tg-fond-clair: #f4f5f2;
+  --tg-fond-sombre: #121212;
+  background-color: var(--tg-fond-clair);
+  background-image:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.22), transparent 70%),
+    url("fond-circuit-clair.svg");
+  background-repeat: no-repeat, no-repeat;
+  background-position: center top, center top;
+  background-size: auto, max(100%, 1500px) auto;   /* jamais plus petit que 1500 px : le dessin garde sa finesse */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not(.light) .fond-trueglide {
+    background-color: var(--tg-fond-sombre);
+    background-image:
+      radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%),
+      url("fond-circuit-sombre.svg");
+  }
+}
+:root[data-theme="dark"] .fond-trueglide,
+:root.dark .fond-trueglide {
+  background-color: var(--tg-fond-sombre);
+  background-image:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%),
+    url("fond-circuit-sombre.svg");
+}
+
+.fond-trueglide-fixe { background-attachment: fixed, fixed; min-height: 100vh; }
+/* Téléphones et tablettes : « fixed » saccade ou n'est pas pris en charge, le fond défile alors avec la page */
+@media (hover: none) { .fond-trueglide-fixe { background-attachment: scroll, scroll; } }

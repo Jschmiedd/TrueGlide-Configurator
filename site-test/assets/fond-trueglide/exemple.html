@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fond TRUEGLIDE · exemple</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="fond-trueglide.css">
+<style>
+  /* Mise en page de la démonstration seulement : le fond lui-même vient de fond-trueglide.css */
+  body { margin: 0; font: 16px/1.6 system-ui, sans-serif; color: #1b1d18; }
+  @media (prefers-color-scheme: dark) { body { color: #ececea; } }
+  section { padding: 64px 16px; text-align: center; }
+  .boite { max-width: 640px; margin: 0 auto; padding: 24px; border-radius: 16px; border: 1px solid rgba(128, 128, 128, 0.3);
+    background: color-mix(in srgb, Canvas 80%, transparent); backdrop-filter: blur(6px); }
+  code { font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+  <section class="fond-trueglide">
+    <div class="boite">
+      <h1>Fond TRUEGLIDE</h1>
+      <p>Ce bloc porte la classe <code>fond-trueglide</code>. Le thème sombre suit le système, <code>data-theme="dark"</code> ou la classe <code>dark</code> sur <code>&lt;html&gt;</code>.</p>
+    </div>
+  </section>
+</body>
+</html>
