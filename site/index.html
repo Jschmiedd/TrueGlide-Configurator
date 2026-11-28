@@ -9,25 +9,49 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap">
 <link rel="stylesheet" href="assets/site.css">
 <style>
-  /* Accueil : bandeau d'ouverture sur fond graphite (les deux thèmes), puis sections de lecture */
-  .ouverture { background: #121212; color: #ececea; border-bottom: 3px solid #c6f700; }
-  .ouverture .large { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 36px; align-items: center; padding-block: 56px 48px; }
-  .ouverture .logo { width: min(560px, 100%); display: block; margin-bottom: 22px; }
-  .ouverture h1 { font-size: clamp(30px, 4.4vw, 46px); margin: 0 0 14px; color: #ffffff; }
-  .ouverture p { color: #b9bbb4; font-size: 18px; max-width: 34em; margin: 0 0 22px; }
-  .ouverture .points { list-style: none; padding: 0; margin: 0 0 24px; display: grid; gap: 12px; max-width: 36em; color: #b9bbb4; font-size: 16.5px; }
-  .ouverture .points li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px; }
-  .ouverture .points b { color: #ececea; }
-  .ouverture .boutons { display: flex; gap: 12px; flex-wrap: wrap; }
-  .ouverture .btn { color: #ececea; border-color: #3a3b37; }
-  .ouverture .btn.plein { background: #c6f700; border-color: #c6f700; color: #121212; }
-  .ouverture figure { margin: 0; }
-  .ouverture figure img { border-radius: 10px; border: 1px solid #2f302d; display: block; }
-  .ouverture figcaption { font-size: 13px; color: #8d8f88; margin-top: 8px; }
-  .etat { display: flex; gap: 10px 26px; flex-wrap: wrap; margin-top: 26px; font: 500 14px var(--mono); color: #c6f700; }
-  .etat span::before { content: "■ "; color: #5d6e14; }
+  /* Accueil, version claire : en-tête flottant, bandeau clair au motif TRUEGLIDE (sombre si le thème est sombre) */
+  .entete { position: sticky; top: 10px; margin: 10px auto 0; max-width: 1160px; width: calc(100% - 24px); border: 1px solid var(--bord);
+    border-radius: 16px; background: color-mix(in srgb, var(--fond-2) 82%, transparent); backdrop-filter: blur(10px);
+    box-shadow: 0 6px 24px rgba(20, 24, 10, 0.08); }
+  .entete .large { padding-block: 8px; }
+  .entete nav a { padding: 6px 10px; border-radius: 8px; }
+  .entete nav a:hover, .entete nav a[aria-current] { background: var(--accent-doux); }
+  .ouverture { position: relative; overflow: hidden; margin-top: -64px; padding-top: 64px;
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.22), transparent 70%), url("assets/img/fond-circuit-clair.svg"), var(--fond);
+    background-repeat: no-repeat, no-repeat; background-position: center top, center top; background-size: auto, max(100%, 1500px) auto;
+    border-bottom: 1px solid var(--bord); }
+  .ouverture .large { padding-block: 64px 56px; text-align: center; }
+  .ouverture .logo { display: block; width: min(620px, 92%); margin: 0 auto 26px; }
+  .ouverture .vitre { max-width: 920px; margin: 0 auto; padding: 26px 30px 28px; border-radius: 20px; text-align: left;
+    background: color-mix(in srgb, var(--fond-2) 78%, transparent); backdrop-filter: blur(6px);
+    border: 1px solid var(--bord); box-shadow: 0 18px 50px rgba(20, 24, 10, 0.10); }
+  .ouverture h1 { font-size: clamp(30px, 4.6vw, 50px); margin: 0 0 12px; color: var(--accent); text-align: center; }
+  .ouverture .vitre > p { color: var(--doux); font-size: 18.5px; margin: 0 auto 22px; max-width: 40em; text-align: center; }
+  .ouverture .vitre > p b { color: var(--texte); }
+  .ouverture .points { list-style: none; padding: 0; margin: 0 0 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .ouverture .points li { background: var(--carte); border: 1px solid var(--bord); border-top: 3px solid var(--accent-vif);
+    border-radius: 12px; padding: 14px 14px 12px; font-size: 15px; color: var(--doux); }
+  .ouverture .points li > span { font-size: 22px; display: block; margin-bottom: 4px; }
+  .ouverture .points b { color: var(--texte); display: block; font-family: var(--titre); font-size: 18px; margin-bottom: 4px; }
+  .ouverture .boutons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .ouverture .btn { background: var(--carte); }
+  .ouverture .btn.plein { background: var(--accent-vif); border-color: var(--accent-vif); color: #121212; box-shadow: 0 6px 18px rgba(150, 190, 0, 0.35); }
+  .ouverture .btn.plein:hover { filter: brightness(0.95); }
+  .ouverture figure { margin: 40px auto 0; max-width: 980px; }
+  .ouverture figure img { border-radius: 14px; border: 1px solid var(--bord); display: block; margin: 0 auto; box-shadow: 0 24px 60px rgba(20, 24, 10, 0.18); }
+  .ouverture figcaption { font-size: 13.5px; color: var(--tres-doux); margin-top: 10px; }
+  .etat { display: flex; gap: 8px 10px; flex-wrap: wrap; justify-content: center; margin-top: 22px; font: 500 13.5px var(--mono); }
+  .etat span { background: var(--accent-doux); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 999px; padding: 4px 12px; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ouverture {
+    background-color: #121212; background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/img/fond-circuit-sombre.svg"); } }
+  :root[data-theme="dark"] .ouverture { background-color: #121212;
+    background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/img/fond-circuit-sombre.svg"); }
+  section.bloc:nth-of-type(odd) { background: var(--fond-2); }
+  .fonction { transition: transform .15s, box-shadow .15s, border-color .15s; border-top: 3px solid var(--accent-vif); }
+  .fonction:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(20, 24, 10, 0.08); }
+  @media (prefers-reduced-motion: reduce) { .fonction { transition: none; } .fonction:hover { transform: none; } }
 
-  section.bloc { padding-block: 56px 8px; }
+  section.bloc { padding-block: 56px 48px; }
   section.bloc > .large > h2 { font-size: 32px; margin: 0 0 6px; }
   .sous { color: var(--doux); margin: 0 0 26px; max-width: 46em; }
   .fonctions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
@@ -62,12 +86,16 @@
   .docs-liens a span { display: block; color: var(--doux); font-size: 14.5px; margin-top: 4px; }
 
   @media (max-width: 900px) {
-    .ouverture .large, .telecharger, .ecrans, .docs-liens { grid-template-columns: minmax(0, 1fr); }
+    .telecharger, .ecrans, .docs-liens, .ouverture .points { grid-template-columns: minmax(0, 1fr); }
+    .ouverture .vitre { padding: 20px 16px; }
     .fonctions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 560px) {
     .fonctions { grid-template-columns: minmax(0, 1fr); }
     .chronologie li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+    .entete .large { gap: 4px; }
+    .entete nav { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 4px; scrollbar-width: none; }
+    .entete nav a { white-space: nowrap; }
   }
   .schema-eco { --or: #ffd700; --bleu: #3fa7f5; --neon: #cfe83f; --texte: #e8edf2; background: #06080b; color: #e8edf2;
     border-radius: 16px; padding: 18px 16px 4px; margin: 6px 0 26px; }
@@ -95,23 +123,23 @@
 
 <section class="ouverture">
   <div class="large">
-    <div>
-      <img class="logo" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
+    <img class="logo t-clair" src="assets/img/logo-clair.png" alt="TRUEGLIDE · Control &amp; Fly"><img class="logo t-sombre" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
+    <div class="vitre">
       <h1>Branchez votre carte une fois, réglez votre drone n'importe où.</h1>
       <p><b>TRUEGLIDE CONFIGURATOR</b> simplifie le paramétrage de votre drone FPV, dans votre navigateur et sans aucune installation.</p>
       <ul class="points">
-        <li><span aria-hidden="true">💾</span><div><b>Mode hors ligne complet :</b> branchez votre carte une seule fois pour la lire. Vous pouvez ensuite ajuster tous vos onglets sans câble, où vous voulez, et appliquer les changements au prochain branchement.</div></li>
-        <li><span aria-hidden="true">🛠️</span><div><b>TRUEGLIDE STUDIO :</b> profitez d'un préréglage de départ calculé spécifiquement pour la taille, le poids et les moteurs de votre drone, avec chaque valeur expliquée.</div></li>
-        <li><span aria-hidden="true">🔧</span><div><b>Tout-en-un et sécurisé :</b> flashez vos ESC (Bluejay, BLHeli_S, AM32) directement dans l'interface, suivez un guide de mise en route en 9 étapes et testez vos moteurs en toute sécurité avec une limite automatique à 30&nbsp;% des gaz.</div></li>
+        <li><span aria-hidden="true">💾</span><b>Mode hors ligne complet</b> Branchez votre carte une seule fois pour la lire. Vous pouvez ensuite ajuster tous vos onglets sans câble, où vous voulez, et appliquer les changements au prochain branchement.</li>
+        <li><span aria-hidden="true">🛠️</span><b>TRUEGLIDE STUDIO</b> Profitez d'un préréglage de départ calculé spécifiquement pour la taille, le poids et les moteurs de votre drone, avec chaque valeur expliquée.</li>
+        <li><span aria-hidden="true">🔧</span><b>Tout-en-un et sécurisé</b> Flashez vos ESC (Bluejay, BLHeli_S, AM32) directement dans l'interface, suivez un guide de mise en route en 9 étapes et testez vos moteurs en toute sécurité avec une limite automatique à 30&nbsp;% des gaz.</li>
       </ul>
       <div class="boutons">
         <a class="btn plein" href="https://jschmiedd.github.io/TrueGlide-Configurator/app/">Ouvrir le logiciel</a>
         <a class="btn" href="docs/flasher.html">Installer le firmware</a>
       </div>
-      <div class="etat"><span>TRUEGLIDE 2026.6.2 · base Betaflight 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 33 cartes</span></div>
     </div>
+    <div class="etat"><span>TRUEGLIDE 2026.6.2 · base Betaflight 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 33 cartes</span></div>
     <figure>
-      <img src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
+      <img class="t-clair" src="assets/img/onglets/tableau-de-bord-clair.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE"><img class="t-sombre" src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
       <figcaption>Le tableau de bord du logiciel, connecté au firmware <b>TRUEGLIDE</b> qui tourne en simulateur sur PC.</figcaption>
     </figure>
   </div>
