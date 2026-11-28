@@ -1524,6 +1524,66 @@
     "trueglideNavSafetyHelp": {
         "message": "Limites et comportements de sécurité des missions (mode AUTOPILOT, firmware TRUENAV) et du retour GPS. Les missions se dessinent dans l'onglet Plan de vol ou s'envoient depuis Mission Planner. Premiers vols : terrain dégagé, faible vitesse, prêt à reprendre la main."
     },
+    "trueglideNoGpsTitle": {
+        "message": "Vol sans GPS (télémètre et flux optique)"
+    },
+    "trueglideNoGpsHelp": {
+        "message": "Avec un télémètre (hauteur exacte) et un capteur de flux optique (glissement au-dessus du sol), le drone tient son altitude et sa position sans GPS, à basse hauteur, sur un sol texturé et éclairé. Le capteur se branche sur un UART libre. Pas encore vérifié en vol réel : premiers essais au banc, puis en intérieur à faible hauteur, prêt à reprendre la main."
+    },
+    "trueglideSetting_rangefinder_hardware": {
+        "message": "Télémètre"
+    },
+    "trueglideSetting_rangefinder_hardwareHelp": {
+        "message": "Modèle du télémètre (mesure de hauteur). MTF01 \/ MTF02 : MicoAir ; UPT1 : Upixel UP-T1. NONE : aucun."
+    },
+    "trueglideSetting_opticalflow_hardware": {
+        "message": "Capteur de flux optique"
+    },
+    "trueglideSetting_opticalflow_hardwareHelp": {
+        "message": "Modèle du capteur de flux optique (glissement au-dessus du sol). MT : MicoAir MTF-01 \/ MTF-02 ; UPT1 : Upixel UP-T1. NONE : aucun."
+    },
+    "trueglideSetting_opticalflow_rotation": {
+        "message": "Rotation du capteur de flux optique"
+    },
+    "trueglideSetting_opticalflow_rotationHelp": {
+        "message": "Angle de montage du capteur par rapport à l'avant du drone. 0 : flèche du capteur vers l'avant."
+    },
+    "trueglideSetting_opticalflow_flip_x": {
+        "message": "Inverser l'axe X du flux optique"
+    },
+    "trueglideSetting_opticalflow_flip_xHelp": {
+        "message": "À activer seulement si le drone part dans le mauvais sens sur l'axe gauche-droite en maintien de position (capteur monté à l'envers)."
+    },
+    "trueglideSetting_altitude_source": {
+        "message": "Source de l'altitude"
+    },
+    "trueglideSetting_altitude_sourceHelp": {
+        "message": "DEFAULT : baromètre et GPS. RANGEFINDER_PREFER : télémètre près du sol, baromètre plus haut. RANGEFINDER_ONLY : télémètre seul (vol bas uniquement)."
+    },
+    "trueglideSetting_rangefinder_max_range_cm": {
+        "message": "Portée utile du télémètre"
+    },
+    "trueglideSetting_rangefinder_max_range_cmHelp": {
+        "message": "Au-delà de cette hauteur, la mesure du télémètre n'est plus utilisée."
+    },
+    "trueglideSetting_poshold_position_source": {
+        "message": "Source du maintien de position"
+    },
+    "trueglideSetting_poshold_position_sourceHelp": {
+        "message": "AUTO : GPS si disponible, sinon flux optique. GPS_ONLY : GPS seul. OPTICALFLOW_ONLY : flux optique seul (sans GPS)."
+    },
+    "trueglideSetting_poshold_opticalflow_quality_min": {
+        "message": "Qualité minimale du flux optique"
+    },
+    "trueglideSetting_poshold_opticalflow_quality_minHelp": {
+        "message": "En dessous de cette qualité (sol trop lisse ou trop sombre), le flux optique n'est pas utilisé pour tenir la position."
+    },
+    "trueglideSetting_poshold_opticalflow_max_range": {
+        "message": "Hauteur maximale du flux optique"
+    },
+    "trueglideSetting_poshold_opticalflow_max_rangeHelp": {
+        "message": "Au-dessus de cette hauteur, le flux optique n'est plus utilisé pour tenir la position."
+    },
     "trueglideSetting_ap_max_velocity": {
         "message": "Vitesse maximale en navigation"
     },
