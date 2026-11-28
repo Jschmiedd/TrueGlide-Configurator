@@ -33,6 +33,7 @@
         { "slug": "modes", "titre": "Modes", "onglet": "auxiliary", "menu": "Modes", "fichier": "src/components/tabs/AuxiliaryTab.vue", "mode": "sitl" },
         { "slug": "alimentation", "titre": "Alimentation et batterie", "onglet": "power", "menu": "Alimentation et batterie", "fichier": "src/components/tabs/PowerTab.vue", "mode": "sitl" },
         { "slug": "moteurs", "titre": "Moteurs", "onglet": "motors", "menu": "Moteurs", "fichier": "src/components/tabs/MotorsTab.vue", "mode": "sitl" },
+        { "slug": "esc", "titre": "ESC", "onglet": "esc", "menu": "ESC", "fichier": "src/components/tabs/TrueGlideEscTab.vue", "mode": "hors" },
         { "slug": "servos", "titre": "Servos", "onglet": "servos", "menu": "Servos", "fichier": "src/components/tabs/ServosTab.vue", "mode": "virtuel" },
         { "slug": "failsafe", "titre": "Failsafe", "onglet": "failsafe", "menu": "Failsafe", "fichier": "src/components/tabs/FailsafeTab.vue", "mode": "sitl" }
       ]
@@ -53,6 +54,7 @@
         { "slug": "preset", "titre": "Preset", "onglet": "presets", "menu": "Preset", "fichier": "src/components/tabs/PresetsTab.vue", "mode": "sitl" },
         { "slug": "reglages-pid", "titre": "Réglages de PID", "onglet": "pid_tuning", "menu": "Réglages de PID", "fichier": "src/components/tabs/PidTuningTab.vue", "mode": "sitl" },
         { "slug": "assistant-de-reglage", "titre": "Assistant de réglage", "onglet": "trueglide_tune", "menu": "Assistant de réglage", "fichier": "src/components/tabs/TrueGlideTuneTab.vue", "mode": "sitl" },
+        { "slug": "studio", "titre": "TRUEGLIDE STUDIO", "onglet": "studio", "menu": "Studio", "fichier": "src/components/tabs/TrueGlideStudioTab.vue", "mode": "hors" },
         { "slug": "reglage-automatique", "titre": "Réglage automatique", "onglet": "autotune", "menu": "Réglage automatique", "fichier": "src/components/tabs/AutotuneTab.vue", "mode": "sitl" },
         { "slug": "ajustements", "titre": "Ajustements", "onglet": "adjustments", "menu": "Ajustements", "fichier": "src/components/tabs/AdjustmentsTab.vue", "mode": "sitl" }
       ]
