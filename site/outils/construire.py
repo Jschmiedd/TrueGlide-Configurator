@@ -24,10 +24,6 @@ DOCS = SITE / "docs"
 ARTICLES = DOCS / "_articles"
 CAPTURES = SITE / "assets" / "img" / "onglets"
 
-POLICES = (
-    "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500"
-    "&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Saira+Semi+Condensed:wght@500;600;700&amp;display=swap"
-)
 
 
 def entete(prefixe, courant):
@@ -68,7 +64,7 @@ def page(titre, prefixe, courant, corps, description=""):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(titre)}</title>{meta}
 <link rel="icon" href="{prefixe}assets/img/embleme.png">
-<link rel="stylesheet" href="{POLICES}">
+<link rel="stylesheet" href="{prefixe}fonts/polices.css">
 <link rel="stylesheet" href="{prefixe}assets/site.css">
 </head>
 <body>
