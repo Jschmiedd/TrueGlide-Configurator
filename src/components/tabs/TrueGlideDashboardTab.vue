@@ -174,7 +174,8 @@ import { send, readDumpAll, isMspCliSupported } from "@/composables/useMspCliSes
 import { GET_COMMANDS, parseGet } from "@/js/trueglide/settings";
 import { parsePinio } from "@/js/trueglide/camera_power";
 import { MEMO_PAGE, requestDocsPage } from "@/js/trueglide/docs";
-import { SETUP_STEPS, armingBlockers, batteryInfo, rssiPercent, trueglideStatus } from "@/js/trueglide/dashboard";
+import { SETUP_STEPS, armingBlockers, batteryInfo, linkPercent, trueglideStatus } from "@/js/trueglide/dashboard";
+import { isFailsafeActive } from "@/stores/fc";
 import { setupProgress, loadSetupProgress, currentProgress, setGuideHidden } from "@/js/trueglide/setup_progress";
 import {
     fetchFirmwareIndex,
@@ -203,7 +204,7 @@ const boardLine = computed(() => {
 function refresh() {
     const c = FC.CONFIG ?? {};
     battery.value = batteryInfo(FC.ANALOG?.voltage, FC.BATTERY_STATE?.cellCount);
-    link.value = rssiPercent(FC.ANALOG?.rssi ?? 0);
+    link.value = linkPercent(FC.ANALOG?.rssi ?? 0, isFailsafeActive(c.armingDisableFlags ?? 0));
     const hasGps = have_sensor(c.activeSensors, "gps");
     gps.value = { present: hasGps, sats: FC.GPS_DATA?.numSat ?? 0, fix: Boolean(FC.GPS_DATA?.fix) };
     armingKnown.value = (c.armingDisableCount ?? 0) > 0;

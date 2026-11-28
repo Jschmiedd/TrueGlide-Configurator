@@ -397,6 +397,7 @@ import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
 import WikiButton from "@/components/elements/WikiButton.vue";
 import { i18n } from "@/js/localization";
+import { dropNeedsConfirm } from "@/js/trueglide/failsafe_guard.js";
 import MSP from "@/js/msp";
 import MSPCodes from "@/js/msp/MSPCodes";
 import { mspHelper } from "@/js/msp/MSPHelper";
@@ -758,7 +759,19 @@ const gpsRescueAllowArmingWithoutFix = computed({
 
 // --- Save ---
 
-const saveConfig = () =>
+// TrueGlide (audit du 06/11/2026, mineur) : procédure « Tombe » (DROP) choisie : moteurs coupés à la perte du
+// signal, le drone tombe. Confirmation avant l'envoi, seulement quand elle vient d'être choisie.
+let loadedProcedure = null;
+const saveConfig = () => {
+    if (
+        dropNeedsConfirm(loadedProcedure, failsafeConfig.value.failsafe_procedure) &&
+        !globalThis.confirm(i18n.getMessage("tfFailsafeDropConfirm"))
+    ) {
+        return;
+    }
+    return runSaveConfig();
+};
+const runSaveConfig = () =>
     runSave(
         async () => {
             await MSP.promise(MSPCodes.MSP_SET_RX_CONFIG, mspHelper.crunch(MSPCodes.MSP_SET_RX_CONFIG));
@@ -785,6 +798,7 @@ const saveConfig = () =>
 
 onMounted(async () => {
     await loadConfig();
+    loadedProcedure = failsafeConfig.value?.failsafe_procedure ?? null;
     initializeDefaults();
     await nextTick();
     GUI.content_ready();

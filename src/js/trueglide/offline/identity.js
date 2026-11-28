@@ -23,6 +23,11 @@ export function sameBoard(prepared, connected) {
     if (!prepared?.uid || prepared.uid !== connected.uid) {
         return { ok: false, reason: "carte" };
     }
+    // TrueGlide (audit du 07/11/2026, mineur) : même puce mais autre cible flashée (autre brochage) : refusé
+    const differs = (a, b) => Boolean(a) && Boolean(b) && a !== b;
+    if (differs(prepared.nom, connected.nom) || differs(prepared.cible, connected.cible)) {
+        return { ok: false, reason: "carte" };
+    }
     if (prepared.firmware !== connected.firmware || prepared.api !== connected.api) {
         return { ok: false, reason: "firmware" };
     }

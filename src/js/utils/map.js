@@ -4,6 +4,48 @@ import { Tile, Vector as LayerVector } from "ol/layer";
 import { OSM, XYZ, Vector as SourceVector } from "ol/source";
 import { Icon, Style } from "ol/style";
 import { Point } from "ol/geom";
+import { i18n } from "../localization";
+
+// TrueGlide (audit du 06/11/2026, mineur) : les fonds Google (satellite, hybride) ne sont chargés qu'après accord
+// (une fois, gardé dans ce navigateur). Sans accord : plan OpenStreetMap, aucune requête vers Google.
+const GOOGLE_CONSENT_KEY = "trueglideGoogleTilesConsent";
+const GOOGLE_URLS = {
+    satellite: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+    hybrid: "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+};
+export function googleTilesAllowed(storage = globalThis.localStorage) {
+    try {
+        return storage?.getItem(GOOGLE_CONSENT_KEY) === "yes";
+    } catch {
+        return false;
+    }
+}
+function rememberGoogleConsent(storage = globalThis.localStorage) {
+    try {
+        storage?.setItem(GOOGLE_CONSENT_KEY, "yes");
+    } catch {
+        // navigation privée : l'accord vaut pour cette page seulement
+    }
+}
+// Fond à afficher : un fond Google demande l'accord (confirm) ; refusé -> « street ». Active les URL Google si accepté.
+export function chooseLayer(layerKey, instance, ask = (m) => globalThis.confirm?.(m)) {
+    if (!(layerKey in GOOGLE_URLS)) {
+        return layerKey;
+    }
+    let ok = googleTilesAllowed() || instance?.googleEnabled;
+    if (!ok && ask(i18n.getMessage("tfGoogleTilesConfirm"))) {
+        rememberGoogleConsent();
+        ok = true;
+    }
+    if (!ok) {
+        return "street";
+    }
+    instance?.enableGoogle?.();
+    return layerKey;
+}
+export function defaultMapLayer(wanted = "satellite") {
+    return wanted in GOOGLE_URLS && !googleTilesAllowed() ? "street" : wanted;
+}
 
 const DEFAULT_ZOOM = 17;
 const DEFAULT_LON = 0;
@@ -22,8 +64,10 @@ export function initMap(options = {}) {
         defaultZoom = DEFAULT_ZOOM,
         defaultLon = DEFAULT_LON,
         defaultLat = DEFAULT_LAT,
-        defaultLayer = "satellite",
+        defaultLayer: wantedLayer = "satellite",
     } = options;
+    const googleOk = googleTilesAllowed();
+    const defaultLayer = googleOk ? wantedLayer : defaultMapLayer(wantedLayer);
 
     const lonLat = fromLonLat([defaultLon, defaultLat]);
 
@@ -43,14 +87,14 @@ export function initMap(options = {}) {
         }),
         satellite: new Tile({
             source: new XYZ({
-                url: "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+                url: googleOk ? GOOGLE_URLS.satellite : undefined,
                 tilePixelRatio: devicePixelRatio,
             }),
             visible: defaultLayer === "satellite",
         }),
         hybrid: new Tile({
             source: new XYZ({
-                url: "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}",
+                url: googleOk ? GOOGLE_URLS.hybrid : undefined,
                 tilePixelRatio: devicePixelRatio,
             }),
             visible: defaultLayer === "hybrid",
@@ -134,10 +178,18 @@ export function initMap(options = {}) {
         map.dispose();
     };
 
-    return {
+    const instance = {
         map,
         mapView,
         layers,
+        googleEnabled: googleOk,
+        enableGoogle() {
+            if (!instance.googleEnabled) {
+                layers.satellite.getSource().setUrl(GOOGLE_URLS.satellite);
+                layers.hybrid.getSource().setUrl(GOOGLE_URLS.hybrid);
+                instance.googleEnabled = true;
+            }
+        },
         iconStyleMag,
         iconStyleGPS,
         iconStyleNoFix,
@@ -145,4 +197,5 @@ export function initMap(options = {}) {
         iconGeometry,
         destroy,
     };
+    return instance;
 }

@@ -5,6 +5,7 @@
 // loadBoard() / saveBoard() lisent et écrivent. Le fichier carte s'enregistre aussi sur l'ordinateur.
 
 import { FORMAT, VERSION } from "./board.js";
+import { forbiddenWrite } from "./safety.js";
 
 export const MAX_BOARDS = 3;
 const KEY = "trueglide-cartes-hors-ligne";
@@ -159,7 +160,12 @@ function craftNameFromRecording(rec) {
 }
 
 // Ouvre un fichier carte (texte JSON) ; refuse un autre format ou une autre version.
-export function parseBoardFile(text) {
+// TrueGlide (audit du 07/11/2026, mineur) : taille maximale d'un fichier carte (une récolte fait moins de 1 Mo)
+export const MAX_BOARD_FILE_CHARS = 8 * 1024 * 1024;
+export function parseBoardFile(text, MSPCodes = null) {
+    if (typeof text !== "string" || text.length > MAX_BOARD_FILE_CHARS) {
+        throw new Error("Fichier carte trop gros ou vide : refusé.");
+    }
     let o;
     try {
         o = JSON.parse(text);
@@ -171,6 +177,31 @@ export function parseBoardFile(text) {
     }
     if (o.version !== VERSION) {
         throw new Error(`Version du fichier carte non prise en charge : ${o.version}.`);
+    }
+    const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+    // TrueGlide (22/11/2026) : unsupported et cli sont lus par la carte hors ligne : absents = vides, autre type = refus
+    if (
+        !isObject(o.msp) ||
+        (o.unsupported !== undefined && !isObject(o.unsupported)) ||
+        (o.cli !== undefined && (!isObject(o.cli) || !Object.values(o.cli).every(Array.isArray))) ||
+        (o.writes !== undefined && !Array.isArray(o.writes)) ||
+        (o.simulee !== undefined && o.simulee !== null && !isObject(o.simulee)) ||
+        (o.simulee?.commandes !== undefined && !Array.isArray(o.simulee.commandes))
+    ) {
+        throw new Error("Fichier carte incomplet (récolte absente) : refusé.");
+    }
+    o.unsupported ??= {};
+    o.cli ??= {};
+    o.writes ??= [];
+    // audit du 06/11/2026 : un fichier carte ne peut contenir que des réglages (rien qui agisse tout de suite)
+    if (MSPCodes) {
+        const writes = [...o.writes, ...(o.simulee?.commandes ?? []).map((cli) => ({ cli }))];
+        const bad = forbiddenWrite(writes, MSPCodes);
+        if (bad) {
+            throw new Error(
+                `Ce fichier contient une commande qui n'est pas un réglage (${bad.cli ?? `MSP ${bad.code}`}) : refusé.`,
+            );
+        }
     }
     return o;
 }

@@ -139,8 +139,10 @@ const spinMotor = (motorIndex) => {
 
     const numberOfMotors = config[props.droneConfiguration].Motors.length;
 
-    for (let i = 0; i < numberOfMotors; i++) {
-        const value = i === motorIndex ? props.motorSpinValue : props.motorStopValue;
+    // TrueGlide (relecture du 07/11/2026) : always 8 values (stop beyond the mixer), the firmware refuses a shorter
+    // MSP_SET_MOTOR than its motor count, including the stop
+    for (let i = 0; i < Math.max(numberOfMotors, 8); i++) {
+        const value = i === motorIndex && i < numberOfMotors ? props.motorSpinValue : props.motorStopValue;
         buffer.push(value & 0xff, (value >> 8) & 0xff);
     }
 
@@ -340,15 +342,25 @@ const handleCancel = (e) => {
 };
 
 // Lifecycle
+// TrueGlide (audit du 07/11/2026, M2) : page ou fenêtre cachée -> minuteries ralenties, moteurs plus surveillés :
+// la fenêtre se ferme et arrête les moteurs, comme le test moteurs de l'onglet
+const handleVisibilityChange = () => {
+    if (document.hidden) {
+        close();
+    }
+};
+
 onMounted(async () => {
     initializeConfig();
 
     document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 });
 
 onUnmounted(() => {
     cleanup();
     document.removeEventListener("keydown", handleKeyDown);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 
 // Expose methods

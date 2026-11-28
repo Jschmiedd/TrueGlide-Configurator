@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick } from "vue";
+import { computed, defineComponent, reactive, ref, onMounted, onBeforeUnmount, inject, nextTick, watch } from "vue";
 import BaseTab from "./BaseTab.vue";
 import { i18n } from "../../js/localization";
 import { useDialog } from "@/composables/useDialog";
@@ -82,13 +82,19 @@ import DeviceHandler from "../../js/device_handler";
 import { gui_log } from "../../js/gui_log";
 import FileSystem from "../../js/FileSystem";
 import AutoBackup, { getLastBackupData, resetLastBackupData } from "../../js/utils/AutoBackup.js";
+import { initialEraseChip, confirmEraseBeforeFlash, shouldOfferRestore } from "../../js/trueglide/flasher_erase.js";
 import AutoRestore from "../../js/utils/AutoRestore.js";
 import { EventBus } from "../eventBus";
 import STM32 from "../../js/protocols/webstm32";
 import FC from "../../js/fc";
 import FlasherFlashTab from "./firmware-flasher/FlasherFlashTab.vue";
 import OnlineFirmwarePanel from "./firmware-flasher/OnlineFirmwarePanel.vue";
-import { boardConfirmationNeeded, checkTrueGlideFirmwareFile } from "../../js/trueglide/firmware_source.js";
+import {
+    boardConfirmationNeeded,
+    checkTrueGlideFirmwareFile,
+    hexContainsBoardName,
+    lastBoardLabel,
+} from "../../js/trueglide/firmware_source.js";
 import CONFIGURATOR from "../../js/data_storage";
 
 export default defineComponent({
@@ -145,6 +151,27 @@ export default defineComponent({
             restoreInProgress: false,
             restoreCompleted: false,
         });
+
+        // TrueGlide (audit du 08/11/2026) : flash fait avec effacement complet -> restauration proposée après réussite
+        let flashedWithErase = false;
+        watch(
+            () => state.lastFlashResultClass,
+            (resultClass) => {
+                const offer = shouldOfferRestore({
+                    erased: flashedWithErase,
+                    resultClass,
+                    backup: getLastBackupData(),
+                    restoreInProgress: state.restoreInProgress,
+                    restoreCompleted: state.restoreCompleted,
+                });
+                if (offer) {
+                    flashedWithErase = false;
+                    if (globalThis.confirm($t("tfFlasherRestoreOffer"))) {
+                        handleRestoreBackup();
+                    }
+                }
+            },
+        );
 
         // Verify board dialog refs
         const verifyBoardOpen = ref(false);
@@ -332,7 +359,10 @@ export default defineComponent({
                 state.tfFirmwareCheck = null;
                 return null;
             }
-            state.tfFirmwareCheck = checkTrueGlideFirmwareFile(state.filename, isBoardLive() ? getLocalBoardName() : "");
+            state.tfFirmwareCheck = checkTrueGlideFirmwareFile(
+                state.filename,
+                isBoardLive() ? getLocalBoardName() : "",
+            );
             return state.tfFirmwareCheck;
         };
 
@@ -347,10 +377,7 @@ export default defineComponent({
             state.tfBoardMismatchConfirmed = false;
             refreshTrueGlideCheck();
 
-            flashingMessage(
-                $t("firmwareFlasherFirmwareLocalLoaded", { filename, bytes }),
-                FLASH_MESSAGE_TYPES.NEUTRAL,
-            );
+            flashingMessage($t("firmwareFlasherFirmwareLocalLoaded", { filename, bytes }), FLASH_MESSAGE_TYPES.NEUTRAL);
             enableFlashButton(true);
 
             tracking.sendEvent(tracking.EVENT_CATEGORIES.FLASHING, "FirmwareLoaded", {
@@ -384,6 +411,38 @@ export default defineComponent({
                     return false;
                 }
             }
+            // TrueGlide (audit du 06/11/2026) : contrôle du contenu du fichier, pas seulement de son nom.
+            const parsedHex = firmwareFlashing.getParsedHex();
+            // fichier TrueGlide dont le contenu n'est pas celui de la carte de son nom (fichier renommé) : refusé
+            if (check.isTrueGlide && check.board && hexContainsBoardName(parsedHex, check.board) === false) {
+                await dialog.showYesNo(
+                    $t("tfFlasherContentTitle"),
+                    $t("tfFlasherContentRefused", { fileBoard: check.board }),
+                    {
+                        yesText: $t("close"),
+                        noText: $t("cancel"),
+                    },
+                );
+                return false;
+            }
+            // carte lue en ce moment, que le contenu du fichier ne nomme pas : oui explicite demandé
+            const liveBoard = isBoardLive() ? getLocalBoardName() : "";
+            if (
+                liveBoard &&
+                hexContainsBoardName(parsedHex, liveBoard) === false &&
+                !check.boardMismatch &&
+                !state.tfBoardMismatchConfirmed
+            ) {
+                const confirmed = await dialog.showYesNo(
+                    $t("tfFlasherBoardMismatchTitle"),
+                    $t("tfFlasherContentOtherBoard", { connectedBoard: liveBoard }),
+                    { yesText: $t("tfFlasherNotTrueGlideFlashAnyway"), noText: $t("cancel") },
+                );
+                state.tfBoardMismatchConfirmed = confirmed === true;
+                if (!state.tfBoardMismatchConfirmed) {
+                    return false;
+                }
+            }
             // TrueGlide: a file for another board than the one connected needs an explicit yes too (not only a banner);
             // a local file with no board read right now (disconnected, DFU) too: nothing can be checked
             const need = boardConfirmationNeeded(check, { isLocal: state.localFirmwareLoaded, live: isBoardLive() });
@@ -391,10 +450,13 @@ export default defineComponent({
                 const confirmed = await dialog.showYesNo(
                     $t("tfFlasherBoardMismatchTitle"),
                     need === "mismatch"
-                        ? $t("tfFlasherBoardMismatchWarning", { fileBoard: check.board, connectedBoard: check.connectedBoard })
+                        ? $t("tfFlasherBoardMismatchWarning", {
+                            fileBoard: check.board,
+                            connectedBoard: check.connectedBoard,
+                        })
                         : $t("tfFlasherBoardUnknownWarning", {
                             fileBoard: check.board || "?",
-                            lastBoard: getLocalBoardName() || "?",
+                            lastBoard: lastBoardLabel(getLocalBoardName()),
                         }),
                     {
                         yesText: $t("tfFlasherNotTrueGlideFlashAnyway"),
@@ -419,8 +481,9 @@ export default defineComponent({
         // Initialize UI setup on mount
         const setupUIHandlers = () => {
             // Setup erase chip setting
-            let result = getConfig("erase_chip");
-            state.eraseChip = result.erase_chip;
+            // TrueGlide (audit du 08/11/2026) : jamais repris d'une ouverture précédente, toujours non au départ
+            state.eraseChip = initialEraseChip(setConfig);
+            let result;
 
             // Setup no reboot setting
             result = getConfig("no_reboot_sequence");
@@ -722,9 +785,8 @@ export default defineComponent({
             }
         };
 
-        const handleEraseChipChange = () => {
-            setConfig({ erase_chip: state.eraseChip });
-        };
+        // TrueGlide (audit du 08/11/2026) : le choix vaut pour cette ouverture de l'onglet seulement (pas mémorisé)
+        const handleEraseChipChange = () => {};
 
         const handleFlashManualBaudChange = () => {
             setConfig({ flash_manual_baud: state.flashManualBaud });
@@ -757,6 +819,12 @@ export default defineComponent({
             if (!(await confirmNonTrueGlideFirmware())) {
                 return;
             }
+
+            // TrueGlide (audit du 08/11/2026) : effacement complet actif -> confirmation (tous les réglages effacés)
+            if (!confirmEraseBeforeFlash(state.eraseChip, () => globalThis.confirm($t("tfFlasherEraseConfirm")))) {
+                return;
+            }
+            flashedWithErase = state.eraseChip;
 
             // Reset any previous backup cache before starting a new flash
             resetLastBackupData();

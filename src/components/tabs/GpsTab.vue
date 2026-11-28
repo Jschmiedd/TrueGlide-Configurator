@@ -265,7 +265,7 @@ import MSP from "../../js/msp";
 import MSPCodes from "../../js/msp/MSPCodes";
 import { mspHelper } from "../../js/msp/MSPHelper";
 import { updateTabList } from "../../js/utils/updateTabList";
-import { initMap } from "../../js/utils/map";
+import { initMap, chooseLayer, defaultMapLayer } from "../../js/utils/map";
 import { fromLonLat } from "ol/proj";
 import { ispConnected } from "../../js/utils/connection";
 import { gpsProtocols as getGpsProtocols } from "../../js/sensor_types";
@@ -307,7 +307,7 @@ export default defineComponent({
         const mapRef = ref(null);
         const mapContainerRef = ref(null);
         const mapInstance = ref(null);
-        const activeLayer = ref("satellite");
+        const activeLayer = ref(defaultMapLayer("satellite"));
         const isFullscreen = ref(false);
         const isOnline = ref(false);
         const isWaiting = ref(true);
@@ -447,8 +447,9 @@ export default defineComponent({
             updateTabList(featuresHelper);
         };
 
-        const setLayer = (layerKey) => {
+        const setLayer = (wanted) => {
             if (!mapInstance.value?.layers) return;
+            const layerKey = chooseLayer(wanted, mapInstance.value);
             Object.entries(mapInstance.value.layers).forEach(([key, layer]) => {
                 layer.setVisible(key === layerKey);
             });

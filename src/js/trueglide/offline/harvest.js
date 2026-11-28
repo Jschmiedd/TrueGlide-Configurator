@@ -9,7 +9,7 @@ import FC from "../../fc.js";
 import { serial } from "../../serial.js";
 import { switchTab } from "../../tab_switch.js";
 import { sidebarItems } from "../../../components/sidebar/sidebar_items.js";
-import { send } from "../../../composables/useMspCliSession.js";
+import { send, isMspCliSupported, MIN_FC_VERSION_FOR_MSP_CLI } from "../../../composables/useMspCliSession.js";
 import { addBoard } from "./store.js";
 import { harvestTabs } from "./harvest_tabs.js";
 import { boardIdentity } from "./identity.js";
@@ -52,6 +52,13 @@ export async function harvest() {
     try {
         if (!serial.recorder) {
             throw new Error("Pas de carte branchée à récolter.");
+        }
+        // TrueGlide (audit du 07/11/2026, mineur) : firmware sans CLI par MSP (Betaflight avant 4.5.4) : message clair
+        // au lieu d'un « Timed out » en anglais
+        if (!isMspCliSupported()) {
+            throw new Error(
+                `Firmware trop ancien pour la carte hors ligne (${FC.CONFIG?.flightControllerIdentifier ?? ""} ${FC.CONFIG?.flightControllerVersion ?? "?"}) : il faut Betaflight ${MIN_FC_VERSION_FOR_MSP_CLI} ou plus récent, ou TRUEGLIDE.`,
+            );
         }
         const tabs = harvestTabs(sidebarItems, GUI.allowedTabs);
         offlineState.total = tabs.length + 1;

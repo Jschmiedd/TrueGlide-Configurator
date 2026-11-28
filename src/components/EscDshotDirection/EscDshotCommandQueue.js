@@ -43,6 +43,10 @@ class EscDshotCommandQueue {
         this._queue = [];
     }
 
+    isEmpty() {
+        return this._queue.length === 0;
+    }
+
     _checkQueue() {
         if (0 !== this._queue.length) {
             const command = this._queue.shift();

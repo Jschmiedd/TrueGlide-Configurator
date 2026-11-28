@@ -104,6 +104,13 @@ export function rssiPercent(rssi) {
     return Math.round((Math.max(0, Math.min(1023, rssi)) / 1023) * 100);
 }
 
+// TrueGlide (07/11/2026, vu par Johann : radio éteinte, « Liaison radio 88 % ») : le firmware garde la dernière valeur
+// RSSI quand le signal est perdu. Si la carte signale une perte du signal radio (failsafe / RX_FAILSAFE), la liaison
+// affichée est 0 (« — »), jamais une ancienne valeur.
+export function linkPercent(rssi, failsafe) {
+    return failsafe ? 0 : rssiPercent(rssi);
+}
+
 // State of each TrueGlide feature from the CLI "get" values (strings). A feature whose settings the firmware
 // does not have is left out (plain Betaflight, or a model without it). `sources.escSensor`: feature ESC_SENSOR (serial
 // ESC telemetry) on. A feature set "on" but without the data it works from is flagged with `warn` (i18n keys): the
@@ -118,7 +125,8 @@ export function trueglideStatus(values, pinioBoxes, sources = {}) {
     const escSensor = Boolean(sources.escSensor);
     const speedSource = !knowsDshot || escSensor || dshotTelemetry;
     // the temperature needs extended DShot telemetry on top (dshot_edt ON or FORCE), or a serial ESC sensor
-    const tempSource = escSensor || (knowsDshot ? dshotTelemetry && values.dshot_edt !== "OFF" : values.dshot_edt !== "OFF");
+    const tempSource =
+        escSensor || (knowsDshot ? dshotTelemetry && values.dshot_edt !== "OFF" : values.dshot_edt !== "OFF");
     const out = [];
     if (has("power_guard_esc_temp") || has("power_guard_current")) {
         const temp = num("power_guard_esc_temp");

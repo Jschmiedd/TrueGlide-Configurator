@@ -113,7 +113,16 @@ import { computed, onMounted, reactive, ref } from "vue";
 import BaseTab from "./BaseTab.vue";
 import UiBox from "@/components/elements/UiBox.vue";
 import SettingRow from "@/components/elements/SettingRow.vue";
-import { send, saveAndReconnect, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import { send, discardAndReconnect, isMspCliSupported } from "@/composables/useMspCliSession";
+import {
+    backupBeforeWrite,
+    saveAndVerify,
+    verificationMessage,
+    lowCurrentLimit,
+    riskyChanges,
+    riskyQuestion,
+} from "@/js/trueglide/write_guard.js";
+import FC from "@/js/fc";
 import { gui_log } from "@/js/gui_log";
 import { i18n } from "@/js/localization";
 import {
@@ -180,6 +189,15 @@ async function load() {
     }
 }
 
+// Résultat de la relecture après l'enregistrement : journal, et alerte si un réglage n'est pas en place.
+function reportVerification(saved, file) {
+    const text = verificationMessage(saved, file, (k, a) => i18n.getMessage(k, a));
+    gui_log(text);
+    if (saved.lost || saved.mismatches?.length) {
+        globalThis.alert?.(text);
+    }
+}
+
 async function save() {
     const { commands, errors } = changeCommands(original, edited);
     if (errors.length) {
@@ -189,7 +207,27 @@ async function save() {
     if (!commands.length) {
         return;
     }
+    // power_guard_current de 1 à 9 A : le drone ne pourra pas voler (valeur de banc) : confirmation
+    const low = lowCurrentLimit(commands);
+    if (low !== null && !globalThis.confirm(i18n.getMessage("tfPowerGuardLowConfirm", [low]))) {
+        return;
+    }
+    // TrueGlide (audit du 07/11/2026, F6) : failsafe, perte de signal en vol automatique… : la même question
+    // « réglages à risque » que Studio, Réglage et la carte hors ligne (valeur d'avant : celle lue sur la carte)
+    const beforeLines = Object.entries(original).map(([k, v]) => `set ${k} = ${v}`);
+    const risky = riskyChanges(commands, beforeLines).filter((r) => !/^set\s+power_guard_current\b/i.test(r.command));
+    if (risky.length && !globalThis.confirm(riskyQuestion(risky, (k, a) => i18n.getMessage(k, a)))) {
+        return;
+    }
     state.value = "loading";
+    // audit du 06/11/2026 : sauvegarde (diff all) avant toute écriture, puis relecture après l'enregistrement
+    const backup = await backupBeforeWrite(FC.CONFIG?.craftName || FC.CONFIG?.boardName);
+    if (!backup.ok) {
+        errorText.value = i18n.getMessage("tfOfflineBackupFailed", [backup.reason]);
+        state.value = "error";
+        return;
+    }
+    gui_log(i18n.getMessage("tfStudioBackupSaved", [backup.file]));
     try {
         for (const command of commands) {
             const reply = await send(command);
@@ -206,13 +244,14 @@ async function save() {
         return;
     }
     // "save" reboots the flight controller; the app reconnects like after a preset. "Saved" only once it succeeded.
-    const saved = await saveAndReconnect();
+    const saved = await saveAndVerify(backup.lines, { commands, file: backup.file });
     if (!saved.ok) {
         errorText.value = String(saved.error?.message ?? saved.error);
         state.value = "error";
         return;
     }
     gui_log(i18n.getMessage("trueglideSaved"));
+    reportVerification(saved, backup.file);
 }
 
 // Camera / payload power: a PINIO output switched by a radio switch (USER1..4) or by arming
@@ -257,6 +296,13 @@ async function applyCameraPower() {
         return;
     }
     state.value = "loading";
+    const backup = await backupBeforeWrite(FC.CONFIG?.craftName || FC.CONFIG?.boardName);
+    if (!backup.ok) {
+        errorText.value = i18n.getMessage("tfOfflineBackupFailed", [backup.reason]);
+        state.value = "error";
+        return;
+    }
+    gui_log(i18n.getMessage("tfStudioBackupSaved", [backup.file]));
     try {
         const reply = await send(command);
         const failed = reply.find((line) => line.startsWith("###ERROR") || /Invalid|out of range/i.test(line));
@@ -269,13 +315,14 @@ async function applyCameraPower() {
         await discardAndReconnect();
         return;
     }
-    const saved = await saveAndReconnect();
+    const saved = await saveAndVerify(backup.lines, { commands: [command], file: backup.file });
     if (!saved.ok) {
         errorText.value = String(saved.error?.message ?? saved.error);
         state.value = "error";
         return;
     }
     gui_log(i18n.getMessage("tfCameraDone"));
+    reportVerification(saved, backup.file);
 }
 
 onMounted(load);

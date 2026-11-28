@@ -136,6 +136,7 @@ import ConnectOptionsDialog from "./ConnectOptionsDialog.vue";
 import GUI from "../../js/gui";
 import { addBoard, boardLabel, listBoards, parseBoardFile, setActiveBoard } from "../../js/trueglide/offline/store.js";
 import { OFFLINE_PATH } from "../../js/protocols/OfflineBoardSerial.js";
+import MSPCodes from "../../js/msp/MSPCodes.js";
 
 function selectAndConnect(path) {
     DeviceHandler.devicePicker.selectedDevice = path;
@@ -196,7 +197,7 @@ export default defineComponent({
                 }
                 try {
                     // replaces the offline board of the same drone, or takes a free place (at most 3)
-                    addBoard(parseBoardFile(await file.text()));
+                    addBoard(parseBoardFile(await file.text(), MSPCodes));
                     globalThis.dispatchEvent?.(new Event("trueglide-offline-changed"));
                     selectAndConnect(OFFLINE_PATH);
                 } catch (e) {
@@ -205,9 +206,7 @@ export default defineComponent({
             };
             input.click();
         }
-        const offlineLabel = computed(() =>
-            i18n.getMessage("tfOfflineBoardPort", [boardLabel(offlineBoard.value)]),
-        );
+        const offlineLabel = computed(() => i18n.getMessage("tfOfflineBoardPort", [boardLabel(offlineBoard.value)]));
         const connectedTo = computed(() => connectionStore.connectedTo);
 
         const disconnectLabel = computed(() => {
@@ -386,7 +385,9 @@ export default defineComponent({
                 connectDisconnect();
                 return;
             }
-            import("../../js/tab_switch").then(({ switchTab }) => switchTab("firmware_flasher", { mode: "disconnected" }));
+            import("../../js/tab_switch").then(({ switchTab }) =>
+                switchTab("firmware_flasher", { mode: "disconnected" }),
+            );
         }
 
         async function onConnectClick() {

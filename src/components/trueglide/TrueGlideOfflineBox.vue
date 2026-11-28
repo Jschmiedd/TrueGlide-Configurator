@@ -59,11 +59,30 @@
                 </li>
             </ul>
         </div>
+        <!-- TrueGlide (audit du 06/11/2026) : sauvegardes faites avant chaque envoi, gardées aussi dans le navigateur -->
+        <div v-if="backups.length" class="mt-3 text-sm">
+            <p class="font-semibold">{{ msg("tfBackupsKept", [backups.length]) }}</p>
+            <ul class="mt-1">
+                <li v-for="b in backups" :key="b.file" class="flex flex-wrap items-center gap-2 py-0.5">
+                    <span>{{ b.file }}</span>
+                    <UButton size="xs" variant="soft" @click="downloadKeptBackup(b)">
+                        {{ $t("tfBackupDownload") }}
+                    </UButton>
+                </li>
+            </ul>
+        </div>
     </UiBox>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import {
+    downloadKeptBackup,
+    keptBackups,
+    riskyQuestion,
+    runPendingVerification,
+    verificationMessage,
+} from "@/js/trueglide/write_guard.js";
+import { computed, onMounted } from "vue";
 import { i18n } from "@/js/localization";
 import UiBox from "@/components/elements/UiBox.vue";
 import { useConnectionStore } from "@/stores/connection";
@@ -92,6 +111,29 @@ const msg = (key, args = []) =>
     });
 const connectionStore = useConnectionStore();
 const offline = computed(() => connectionStore.connectedTo === OFFLINE_PATH);
+// Relecture en attente : une écriture enregistrée sans reconnexion automatique est relue à la connexion de la carte.
+onMounted(async () => {
+    if (offline.value || !connectionStore.connectionValid) {
+        return;
+    }
+    const r = await runPendingVerification(boardIdentity(FC.CONFIG).uid);
+    if (!r) {
+        return;
+    }
+    // TrueGlide (22/11/2026) : chaque message dit déjà « après l'enregistrement » : pas de préfixe (texte en double)
+    const text = verificationMessage(r, r.file, msg);
+    state.sentOk = r.verified && !r.lost && !r.mismatches?.length;
+    state.sent = text;
+    state.version++;
+    if (!state.sentOk) {
+        globalThis.alert?.(text);
+    }
+});
+
+const backups = computed(() => {
+    state.version; // dependency
+    return keptBackups();
+});
 const boards = computed(() => {
     state.version; // dependency
     return listBoards();
@@ -170,11 +212,42 @@ async function sendNow() {
     state.sending = true;
     state.sent = "";
     const { sendPrepared } = await import("@/js/trueglide/offline/send.js");
-    const r = await sendPrepared();
+    let r = await sendPrepared();
+    const options = {};
+    // la vraie carte a changé depuis la récolte (ou depuis le dernier envoi) : le pilote décide
+    if (!r.ok && (r.reason === "changee" || r.reason === "inconnue")) {
+        const question =
+            r.reason === "changee"
+                ? msg("tfOfflineBoardChanged", [r.count, r.lignes.join("\n"), r.file])
+                : msg("tfOfflineBoardUnknown", [r.file]);
+        if (globalThis.confirm(question)) {
+            Object.assign(options, { force: true, backup: r.backup });
+            r = await sendPrepared(options);
+        } else {
+            r = { ok: false, reason: "annule", file: r.file };
+        }
+    }
+    // changements à risque : confirmation à part, ligne par ligne, avec la valeur d'avant
+    if (!r.ok && r.reason === "risque") {
+        if (globalThis.confirm(riskyQuestion(r.risky, msg))) {
+            Object.assign(options, { risksOk: true, backup: r.backup });
+            r = await sendPrepared(options);
+        } else {
+            r = { ok: false, reason: "annule", file: r.file };
+        }
+    }
     state.sending = false;
-    state.sentOk = r.ok;
+    state.sentOk = r.ok && !r.lost && !r.mismatches?.length;
     if (r.ok) {
-        state.sent = msg("tfOfflineSent", [r.count]);
+        state.sent = `${msg("tfOfflineSent", [r.count])} ${verificationMessage(r, r.file, msg)}`;
+    } else if (r.reason === "annule") {
+        state.sent = msg("tfOfflineSendCancelledBackup", [r.file]);
+    } else if (r.reason === "sauvegarde") {
+        state.sent = msg("tfOfflineBackupFailed", [r.reply]);
+    } else if (r.reason === "coupure") {
+        state.sent = msg("tfOfflineSendCut", [r.file]);
+    } else if (r.reason === "interdit") {
+        state.sent = msg("tfOfflineSendForbidden", [r.write?.cli ?? `MSP ${r.write?.code}`]);
     } else if (r.reason === "refus") {
         state.sent = msg("tfOfflineSendRefused", [r.write?.cli ?? r.write?.code, r.reply]);
     } else {
@@ -185,7 +258,9 @@ async function sendNow() {
 
 function remove(b) {
     const pending = pendingOf(b.rec);
-    const text = pending ? msg("tfOfflineRemoveConfirmPending", [boardLabel(b.rec), pending]) : msg("tfOfflineRemoveConfirm", [boardLabel(b.rec)]);
+    const text = pending
+        ? msg("tfOfflineRemoveConfirmPending", [boardLabel(b.rec), pending])
+        : msg("tfOfflineRemoveConfirm", [boardLabel(b.rec)]);
     if (!globalThis.confirm(text)) {
         return;
     }

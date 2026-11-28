@@ -13,25 +13,38 @@ import { i18n } from "@/js/localization";
 import FC from "@/js/fc";
 import { bit_check } from "@/js/bit";
 
-export function useMotorTesting(configHasChanged, showWarningDialog, digitalProtocolConfigured, zeroThrottleValue) {
-    const getZeroThrottleValue = () => zeroThrottleValue?.value ?? zeroThrottleValue ?? 1000;
+export function useMotorTesting(
+    configHasChanged,
+    showWarningDialog,
+    digitalProtocolConfigured,
+    zeroThrottleValue,
+    allowedRange = null,
+) {
+    // TrueGlide (2e relecture indépendante du 07/11/2026, point 2) : null = arrêt de la carte pas relu. Alors AUCUNE
+    // valeur n'est envoyée aux moteurs (plus de repli sur l'écran ni sur 1000, qui fait tourner une carte en 3D).
+    const getZeroThrottleValue = () => {
+        const v =
+            zeroThrottleValue && typeof zeroThrottleValue === "object" ? zeroThrottleValue.value : zeroThrottleValue;
+        return Number.isFinite(v) ? v : null;
+    };
+    // affichage seulement (curseurs au repos) ; jamais envoyé
+    const displayZero = () => getZeroThrottleValue() ?? 1000;
 
     const motorsTestingEnabled = ref(false);
-    const motorValues = ref(new Array(8).fill(getZeroThrottleValue()));
-    const masterValue = ref(getZeroThrottleValue());
+    // TrueGlide: true once this tab has driven the motors (test enabled at least once)
+    const motorCommandsSent = ref(false);
+    // TrueGlide: true while the test really runs on the board (enableMotorTesting done, disable not yet)
+    let testStarted = false;
+    // stop value read back on the board when the test started: used for every stop until the test ends, even if the
+    // tab's value is reset meanwhile (a running test must always be stoppable)
+    let activeStop = null;
+    const currentStop = () => (testStarted ? activeStop : getZeroThrottleValue());
+    const motorValues = ref(new Array(8).fill(displayZero()));
+    const masterValue = ref(displayZero());
 
-    // Safety: Keys that don't trigger motor stop
-    const ignoreKeys = new Set([
-        "PageUp",
-        "PageDown",
-        "End",
-        "Home",
-        "ArrowUp",
-        "ArrowDown",
-        "AltLeft",
-        "AltRight",
-        "Tab",
-    ]);
+    // Safety: Keys that don't trigger motor stop. TrueGlide (relecture du 07/11/2026) : Home / End removed: they jump a
+    // slider to an end (full reverse in 3D), so they now stop the test like any other key
+    const ignoreKeys = new Set(["PageUp", "PageDown", "ArrowUp", "ArrowDown", "AltLeft", "AltRight", "Tab"]);
 
     /**
      * Keyboard safety handler - stops motors on any key press
@@ -49,6 +62,15 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * - Disables arming
      */
     const enableMotorTesting = () => {
+        testStarted = true;
+        activeStop = getZeroThrottleValue();
+        // TrueGlide (audit du 07/11/2026, F1) : au départ du test, TOUS les curseurs (et le maître) sont mis sur l'arrêt
+        // relu sur la carte. Avant, ils gardaient la valeur affichée au montage (1000 avant la relecture) : en 3D,
+        // toucher un seul curseur envoyait 1000 (pleine marche arrière) aux autres moteurs.
+        motorValues.value = new Array(8).fill(activeStop);
+        masterValue.value = activeStop;
+        startKeepAlive();
+        motorCommandsSent.value = true;
         // Only send DShot command for digital protocols
         if (digitalProtocolConfigured?.value ?? digitalProtocolConfigured) {
             const buffer = [];
@@ -74,6 +96,10 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * - Stops all motors
      */
     const disableMotorTesting = () => {
+        // TrueGlide (2e relecture, point 2) : test refusé ou jamais démarré -> rien n'est envoyé à la carte
+        if (!testStarted) {
+            return;
+        }
         // Remove keyboard listener
         document.removeEventListener("keydown", disableMotorTest);
 
@@ -91,13 +117,22 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         }
 
         // Explicitly stop all motors to prevent spinning after reboot
-        stopAllMotors();
+        stopKeepAlive();
+        stopAllMotors(activeStop);
+        testStarted = false;
+        activeStop = null;
+        lastSentValues = null;
     };
 
     /**
      * Watch motor testing enable/disable
      */
     watch(motorsTestingEnabled, (enabled) => {
+        // TrueGlide: never start without the board's own stop value (read back on the board)
+        if (enabled && getZeroThrottleValue() === null) {
+            motorsTestingEnabled.value = false;
+            return;
+        }
         // CRITICAL SAFETY: Prevent testing if configuration has changed
         if (enabled && configHasChanged.value) {
             const message = i18n.getMessage("motorsDialogSettingsChanged");
@@ -123,8 +158,19 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         }
     });
 
+    // TrueGlide (2e relecture, point 3) : onglet ou fenêtre cachés -> le navigateur ralentit les minuteries, les
+    // curseurs ne sont plus surveillés : le test est coupé (arrêt envoyé)
+    const onVisibilityChange = () => {
+        if (document.hidden && motorsTestingEnabled.value) {
+            motorsTestingEnabled.value = false;
+        }
+    };
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     // Cleanup on unmount — restore to normal connected state (arming disabled)
     onUnmounted(() => {
+        stopKeepAlive();
+        document.removeEventListener("visibilitychange", onVisibilityChange);
         if (motorsTestingEnabled.value) {
             disableMotorTesting();
         }
@@ -135,21 +181,71 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
      * `@param` {number[]} values - Motor values (length 8), each 1000-2000
      */
     const sendMotorCommand = (values) => {
+        // TrueGlide: an unknown value is never sent (null / NaN would become 0 on the wire)
+        if (!Array.isArray(values) || values.some((v) => !Number.isFinite(v))) {
+            return false;
+        }
+        // TrueGlide (audit du 07/11/2026, F1 et F2) : dernier contrôle avant la carte. Seul l'arrêt relu est permis hors
+        // test ; pendant le test, chaque valeur doit être l'arrêt ou dans la plage des curseurs (limite au banc comprise).
+        const stop = currentStop();
+        const range =
+            allowedRange && typeof allowedRange === "object" && "value" in allowedRange
+                ? allowedRange.value
+                : allowedRange;
+        const allowed = (v) =>
+            v === stop ||
+            (testStarted &&
+                range &&
+                Number.isFinite(range.min) &&
+                Number.isFinite(range.max) &&
+                v >= range.min &&
+                v <= range.max);
+        if (!values.every(allowed)) {
+            console.warn("TrueGlide : valeurs moteurs refusées (hors arrêt et hors plage du test)", values);
+            return false;
+        }
         const buffer = [];
         for (const value of values) {
             buffer.push(value & 0xff, (value >> 8) & 0xff);
         }
         MSP.send_message(MSPCodes.MSP_SET_MOTOR, buffer);
+        lastSentValues = testStarted ? [...values] : null;
+        return true;
+    };
+
+    // TrueGlide (audit du 07/11/2026, F4) : le firmware arrête seul les moteurs si aucune trame MSP_SET_MOTOR n'arrive
+    // pendant 1 s (une simple interrogation ne suffit plus). Pendant le test, les dernières valeurs envoyées sont
+    // renvoyées toutes les 300 ms (repassent par le contrôle ci-dessus).
+    let lastSentValues = null;
+    let keepAlive = null;
+    const startKeepAlive = () => {
+        stopKeepAlive();
+        keepAlive = setInterval(() => {
+            if (testStarted && lastSentValues) {
+                sendMotorCommand(lastSentValues);
+            }
+        }, 300);
+    };
+    const stopKeepAlive = () => {
+        if (keepAlive) {
+            clearInterval(keepAlive);
+            keepAlive = null;
+        }
+        lastSentValues = null;
     };
 
     /**
      * Stop all motors immediately
      */
-    const stopAllMotors = (stopValue = getZeroThrottleValue()) => {
+    const stopAllMotors = (stopValue = currentStop()) => {
+        if (!Number.isFinite(stopValue)) {
+            return false; // TrueGlide: board stop unknown -> nothing sent
+        }
         const values = new Array(8).fill(stopValue);
         sendMotorCommand(values);
         motorValues.value = values;
         masterValue.value = stopValue;
+        return true;
     };
 
     // Arm state detection: FC.CONFIG.mode bit 0 indicates armed (matches original update_arm_status)
@@ -159,17 +255,15 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
     const slidersDisabled = computed(() => !motorsTestingEnabled.value || isArmed.value);
 
     // Watch arm state changes during motor testing (matches original update_ui arm detection)
-    watch(isArmed, (armed) => {
+    watch(isArmed, () => {
         if (!motorsTestingEnabled.value) {
             return;
         }
 
-        if (armed) {
-            // FC armed via RC: reset sliders to zero throttle to prevent MSP_SET_MOTOR interference
-            const stopValue = getZeroThrottleValue();
-            motorValues.value.fill(stopValue);
-            masterValue.value = stopValue;
-        }
+        // FC armed or disarmed via RC: sliders back to zero throttle. TrueGlide (relecture du 07/11/2026) : the stop is
+        // also SENT, otherwise the board keeps the last slider value and the motor restarts with it at disarm while
+        // the screen shows zero
+        stopAllMotors(currentStop());
     });
 
     return {
@@ -180,5 +274,6 @@ export function useMotorTesting(configHasChanged, showWarningDialog, digitalProt
         slidersDisabled,
         sendMotorCommand,
         stopAllMotors,
+        motorCommandsSent,
     };
 }

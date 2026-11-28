@@ -125,7 +125,9 @@ async function download(chosen = entry.value) {
         await props.onFirmware(firmware);
         report(i18n.getMessage("tfOnlineReady", { file: firmware.name }));
     } catch (error) {
-        report(i18n.getMessage("tfOnlineFailed", { error: error?.message ?? error }), true);
+        // TrueGlide (audit du 07/11/2026, mineur) : jamais d'erreur vide « () »
+        const detail = String(error?.message || error || "").trim() || "fichier incomplet ou illisible";
+        report(i18n.getMessage("tfOnlineFailed", { error: detail }), true);
     } finally {
         busy.value = false;
     }

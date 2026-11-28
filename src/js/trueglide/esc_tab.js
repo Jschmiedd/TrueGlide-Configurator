@@ -4,9 +4,11 @@
 // version figée, sans fusionner le code. Une seule connexion USB à la fois : le Configurator se déconnecte de la carte
 // en entrant dans l'onglet, et demande à l'onglet de libérer le port avant d'en sortir (refusé pendant un flash).
 
-// Version figée de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator, v4 ; v1 à v3 restent en
-// ligne). v4 : la coupure tension basse des ESC est toujours désactivée (jamais de moteurs coupés en vol).
-export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v15/";
+// Version figée de la page de TrueGlide ESC Configurator (dépôt Jschmiedd/TrueGlide-ESC-Configurator) : v36
+// (0.33.0-dev · 0ed0178 ; nouvelle adresse, versions précédentes laissées telles quelles). Comme la v35, plus : réglages
+// communs comparés et écrits seulement entre ESC de même firmware et même version (plus de « ??? »), fichier de réglages
+// 3S ou 4S proposé. /test/ seulement ; /app/ reste en v34 jusqu'à l'essai au banc et l'accord de Johann.
+export const ESC_TAB_URL = "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/onglet/v36/";
 export const ESC_TAB_ORIGIN = new URL(ESC_TAB_URL).origin;
 
 const RELEASE_TIMEOUT_MS = 3000;
@@ -51,6 +53,7 @@ export function detachEscFrame() {
     state.frame = null;
     state.connected = false;
     state.pending = null;
+    releaseInFlight = null;
 }
 
 export function isEscTabHoldingPort() {
@@ -59,22 +62,33 @@ export function isEscTabHoldingPort() {
 
 // Demande à l'onglet ESC de libérer le port USB. Résultat : "disconnected" (port libre), "busy" (lecture, écriture ou
 // flash en cours : ne pas quitter), ou "timeout" (pas de réponse : l'onglet sera fermé, ce qui ferme son port).
+// TrueGlide (audit du 07/11/2026, F7) : une seule demande à la fois. Un 2e clic reçoit la réponse de la 1re (avant, il
+// l'écrasait : la 1re répondait « timeout » et l'onglet se fermait même pendant un flash qui avait répondu « busy »).
+let releaseInFlight = null;
 export function requestEscRelease(timeoutMs = RELEASE_TIMEOUT_MS) {
     if (!isEscTabHoldingPort()) {
         return Promise.resolve("disconnected");
     }
-    return new Promise((resolve) => {
+    if (releaseInFlight) {
+        return releaseInFlight;
+    }
+    releaseInFlight = new Promise((resolve) => {
+        const finish = (what) => {
+            releaseInFlight = null;
+            resolve(what);
+        };
         const timer = setTimeout(() => {
             state.pending = null;
-            resolve("timeout");
+            finish("timeout");
         }, timeoutMs);
         state.pending = (what) => {
             clearTimeout(timer);
-            resolve(what);
+            finish(what);
         };
         state.frame.contentWindow.postMessage(
             { source: "trueglide-configurator", command: "disconnect" },
             ESC_TAB_ORIGIN,
         );
     });
+    return releaseInFlight;
 }
