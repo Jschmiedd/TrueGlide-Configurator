@@ -26,23 +26,73 @@ CAPTURES = SITE / "assets" / "img" / "onglets"
 
 
 
+APP = "https://jschmiedd.github.io/TrueGlide-Configurator/app/"
+OUVRIR = [
+    ("TRUEGLIDE CONFIGURATOR", APP, "le logiciel de réglage"),
+    ("TRUEGLIDE STUDIO", APP + "#studio", "réglage de départ, ports, missions"),
+    ("TRUEGLIDE ESC CONFIGURATOR", "https://jschmiedd.github.io/TrueGlide-ESC-Configurator/", "réglage et flash des ESC"),
+]
+GITHUB = [
+    ("Firmware-TrueGlide", "https://github.com/Jschmiedd/Firmware-TrueGlide", "firmware"),
+    ("TrueGlide-Configurator", "https://github.com/Jschmiedd/TrueGlide-Configurator", "logiciel et site"),
+    ("TrueGlide-ESC-Configurator", "https://github.com/Jschmiedd/TrueGlide-ESC-Configurator", "ESC"),
+]
+# pages du menu « Projet » qui ont leur propre entrée dans l'en-tête
+HORS_WIKI = {"telecharger", "nouvelles", "developpement"}
+
+
 def entete(prefixe, courant):
-    """En-tête commun ; prefixe = chemin vers la racine du site ("" ou "../")."""
+    """En-tête commun à tout le site (accueil et documentation) ; prefixe = chemin vers la racine ("" ou "../").
+    courant : "accueil", "wiki", ou le slug d'une page du menu (telecharger, nouvelles, developpement)."""
     liens = [
-        ("Accueil", f"{prefixe}index.html", courant == "accueil"),
-        ("Documentation", f"{prefixe}docs/index.html", courant == "docs"),
-        ("Télécharger", f"{prefixe}index.html#telecharger", False),
+        ("Wiki", f"{prefixe}docs/index.html", courant == "wiki"),
+        ("Télécharger", f"{prefixe}docs/telecharger.html", courant == "telecharger"),
         ("Essais", f"{prefixe}index.html#essais", False),
+        ("Nouvelles", f"{prefixe}docs/nouvelles.html", courant == "nouvelles"),
+        ("Développement", f"{prefixe}docs/developpement.html", courant == "developpement"),
     ]
     nav = "\n".join(
-        f'      <a href="{href}"{" aria-current=\"page\"" if actif else ""}>{texte}</a>' for texte, href, actif in liens
+        f'        <a href="{href}"{" aria-current=\"page\"" if actif else ""}>{texte}</a>' for texte, href, actif in liens
     )
+
+    def deroulant(titre, items):
+        lignes = "\n".join(
+            f'            <li><a href="{href}" target="_blank" rel="noopener"><b>{html.escape(nom)}</b><span>{html.escape(note)}</span></a></li>'
+            for nom, href, note in items
+        )
+        return f"""        <details class="deroulant">
+          <summary>{titre}</summary>
+          <ul>
+{lignes}
+          </ul>
+        </details>"""
+
     return f"""<header class="entete">
   <div class="large">
-    <a class="marque" href="{prefixe}index.html"><img src="{prefixe}assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
-    <nav aria-label="Site">
+    <a class="marque" href="{prefixe}index.html"><img src="{prefixe}assets/img/embleme.png" alt="" width="38" height="38"><b>TRUE<span>GLIDE</span></b></a>
+    <button class="bouton-icone theme-bouton" type="button" aria-pressed="false" title="Thème clair ou sombre">
+      <span class="visuellement-cache">Thème sombre</span>
+      <svg class="icone-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icone-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="bouton-icone menu-bouton" type="button" aria-expanded="false" aria-controls="menu-site">
+      <span class="visuellement-cache">Menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="menu-site" id="menu-site">
+      <nav class="principal" aria-label="Site">
 {nav}
-    </nav>
+      </nav>
+      <div class="outils">
+{deroulant("Ouvrir", OUVRIR)}
+{deroulant("GitHub", GITHUB)}
+        <div class="recherche" role="search">
+          <label class="visuellement-cache" for="recherche">Rechercher dans le wiki</label>
+          <input id="recherche" type="search" placeholder="Rechercher…" autocomplete="off" data-index="{prefixe}docs/recherche.json" data-base="{prefixe}docs/">
+          <ul class="resultats" hidden></ul>
+        </div>
+      </div>
+    </div>
   </div>
 </header>"""
 
@@ -66,6 +116,8 @@ def page(titre, prefixe, courant, corps, description=""):
 <link rel="icon" href="{prefixe}assets/img/embleme.png">
 <link rel="stylesheet" href="{prefixe}fonts/polices.css">
 <link rel="stylesheet" href="{prefixe}assets/site.css">
+<script src="{prefixe}assets/theme.js"></script>
+<script src="{prefixe}assets/site.js" defer></script>
 </head>
 <body>
 {entete(prefixe, courant)}
@@ -140,7 +192,7 @@ def main():
   </article>
 </div>"""
         (DOCS / f"{slug}.html").write_text(
-            page(f"{titre} · Documentation TRUEGLIDE", "../", "docs", corps, resumes[slug]), encoding="utf-8"
+            page(f"{titre} · Documentation TRUEGLIDE", "../", slug if slug in HORS_WIKI else "wiki", corps, resumes[slug]), encoding="utf-8"
         )
 
     sections = []
@@ -164,9 +216,35 @@ def main():
   </article>
 </div>"""
     (DOCS / "index.html").write_text(
-        page("Documentation · TRUEGLIDE", "../", "docs", sommaire, "Documentation du firmware TRUEGLIDE et du logiciel TrueGlide Configurator."),
+        page("Documentation · TRUEGLIDE", "../", "wiki", sommaire, "Documentation du firmware TRUEGLIDE et du logiciel TrueGlide Configurator."),
         encoding="utf-8",
     )
+
+    # index de recherche : une entrée par page et par partie (titre, partie, résumé), lu par assets/site.js
+    index = []
+    for g in groupes:
+        for p in g["pages"]:
+            contenu = articles.get(p["slug"])
+            if not contenu:
+                continue
+            titre = texte(re.search(r"<h1[^>]*>(.*?)</h1>", contenu, re.S).group(1))
+            index.append({"t": titre, "p": "", "u": f"{p['slug']}.html", "x": resumes[p["slug"]][:220]})
+            # texte de chaque partie (jusqu'au titre suivant) : la recherche trouve aussi les mots du corps
+            morceaux = re.split(r'(<h2 id="[^"]+"[^>]*>.*?</h2>)', contenu, flags=re.S)
+            for k in range(1, len(morceaux) - 1, 2):
+                i, t = re.match(r'<h2 id="([^"]+)"[^>]*>(.*?)</h2>', morceaux[k], re.S).groups()
+                corps_partie = re.sub(r"\s+", " ", texte(morceaux[k + 1]))[:4000]
+                index.append({"t": titre, "p": texte(t), "u": f"{p['slug']}.html#{i}", "x": corps_partie})
+    (DOCS / "recherche.json").write_text(json.dumps(index, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+
+    # même en-tête sur l'accueil (index.html est écrit à la main : seul le bloc <header> est remplacé)
+    accueil = SITE / "index.html"
+    t = accueil.read_text(encoding="utf-8")
+    t = re.sub(r'<header class="entete">.*?</header>', lambda m: entete("", "accueil"), t, count=1, flags=re.S)
+    for script in ('<script src="assets/theme.js"></script>', '<script src="assets/site.js" defer></script>'):
+        if script not in t:
+            t = t.replace("</head>", script + "\n</head>", 1)
+    accueil.write_text(t, encoding="utf-8")
 
     print(f"{len(articles)} pages construites")
     if manquantes:

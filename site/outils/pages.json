@@ -102,6 +102,7 @@
     {
       "titre": "Projet",
       "pages": [
+        { "slug": "telecharger", "titre": "Télécharger" },
         { "slug": "nouvelles", "titre": "Nouvelles" },
         { "slug": "developpement", "titre": "Développement" }
       ]
