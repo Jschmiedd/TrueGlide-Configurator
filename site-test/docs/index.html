@@ -6,19 +6,56 @@
 <title>Documentation · TRUEGLIDE</title>
 <meta name="description" content="Documentation du firmware TRUEGLIDE et du logiciel TrueGlide Configurator.">
 <link rel="icon" href="../assets/img/embleme.png">
-<link rel="stylesheet" href="../../fonts/polices.css">
+<link rel="stylesheet" href="../fonts/polices.css">
 <link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/theme.js"></script>
+<script src="../assets/site.js" defer></script>
 </head>
 <body>
 <header class="entete">
   <div class="large">
-    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
-    <nav aria-label="Site">
-      <a href="../index.html">Accueil</a>
-      <a href="../docs/index.html" aria-current="page">Documentation</a>
-      <a href="../index.html#telecharger">Télécharger</a>
-      <a href="../index.html#essais">Essais</a>
-    </nav>
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt="" width="38" height="38"><b>TRUE<span>GLIDE</span></b></a>
+    <button class="bouton-icone theme-bouton" type="button" aria-pressed="false" title="Thème clair ou sombre">
+      <span class="visuellement-cache">Thème sombre</span>
+      <svg class="icone-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icone-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="bouton-icone menu-bouton" type="button" aria-expanded="false" aria-controls="menu-site">
+      <span class="visuellement-cache">Menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="menu-site" id="menu-site">
+      <nav class="principal" aria-label="Site">
+        <a href="../docs/index.html" aria-current="page">Wiki</a>
+        <a href="../docs/telecharger.html">Télécharger</a>
+        <a href="../index.html#essais">Essais</a>
+        <a href="../docs/nouvelles.html">Nouvelles</a>
+        <a href="../docs/developpement.html">Développement</a>
+      </nav>
+      <div class="outils">
+        <details class="deroulant">
+          <summary>Ouvrir</summary>
+          <ul>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/" target="_blank" rel="noopener"><b>TRUEGLIDE CONFIGURATOR</b><span>le logiciel de réglage</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/#studio" target="_blank" rel="noopener"><b>TRUEGLIDE STUDIO</b><span>réglage de départ, ports, missions</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/" target="_blank" rel="noopener"><b>TRUEGLIDE ESC CONFIGURATOR</b><span>réglage et flash des ESC</span></a></li>
+          </ul>
+        </details>
+        <details class="deroulant">
+          <summary>GitHub</summary>
+          <ul>
+            <li><a href="https://github.com/Jschmiedd/Firmware-TrueGlide" target="_blank" rel="noopener"><b>Firmware-TrueGlide</b><span>firmware</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-Configurator" target="_blank" rel="noopener"><b>TrueGlide-Configurator</b><span>logiciel et site</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-ESC-Configurator" target="_blank" rel="noopener"><b>TrueGlide-ESC-Configurator</b><span>ESC</span></a></li>
+          </ul>
+        </details>
+        <div class="recherche" role="search">
+          <label class="visuellement-cache" for="recherche">Rechercher dans le wiki</label>
+          <input id="recherche" type="search" placeholder="Rechercher…" autocomplete="off" data-index="../docs/recherche.json" data-base="../docs/">
+          <ul class="resultats" hidden></ul>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -32,6 +69,7 @@
     <ul>
       <li><a href="mise-en-route.html">Mise en route</a></li>
       <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="cartes-testees.html">Cartes testées</a></li>
       <li><a href="notes-de-version.html">Notes de version</a></li>
     </ul>
     <h2>Sans carte branchée</h2>
@@ -53,6 +91,7 @@
       <li><a href="modes.html">Modes</a></li>
       <li><a href="alimentation.html">Alimentation et batterie</a></li>
       <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html">ESC</a></li>
       <li><a href="servos.html">Servos</a></li>
       <li><a href="failsafe.html">Failsafe</a></li>
     </ul>
@@ -69,6 +108,7 @@
       <li><a href="preset.html">Preset</a></li>
       <li><a href="reglages-pid.html">Réglages de PID</a></li>
       <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html">TRUEGLIDE STUDIO</a></li>
       <li><a href="reglage-automatique.html">Réglage automatique</a></li>
       <li><a href="ajustements.html">Ajustements</a></li>
     </ul>
@@ -95,6 +135,18 @@
       <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
       <li><a href="cli.html">Ligne de commande (CLI)</a></li>
     </ul>
+    <h2>Guides</h2>
+    <ul>
+      <li><a href="guide-premier-vol.html">Guide du premier vol</a></li>
+      <li><a href="guide-sauvegarder.html">Guide de la sauvegarde</a></li>
+      <li><a href="guide-revenir-a-betaflight.html">Revenir à Betaflight</a></li>
+    </ul>
+    <h2>Projet</h2>
+    <ul>
+      <li><a href="telecharger.html">Télécharger</a></li>
+      <li><a href="nouvelles.html">Nouvelles</a></li>
+      <li><a href="developpement.html">Développement</a></li>
+    </ul>
   </aside>
 
   <article class="sommaire">
@@ -104,6 +156,7 @@
     <div class="cartes">
       <a href="mise-en-route.html"><b>Mise en route</b><span>De l&#x27;achat au premier vol : ouvrir le logiciel, brancher la carte, sauvegarder, flasher le firmware TRUEGLIDE, suivre la mise en route guidée en 9 étapes, puis faire un premier vol prudent.</span></a>
       <a href="flasher.html"><b>Installer le firmware</b><span>Cette page explique comment installer le firmware TRUEGLIDE (ou un de ses dérivés TRUENAV et TRUENAV_LIGHT) sur un contrôleur de vol, le mettre à jour, et revenir à Betaflight. Le flash se fait dans l&#x27;onglet Flasher le Firmware.</span></a>
+      <a href="cartes-testees.html"><b>Cartes testées</b><span>Les cartes de vol sur lesquelles le firmware TRUEGLIDE et TRUEGLIDE CONFIGURATOR ont été essayés en vrai, avec la date et le résultat de chaque essai. Une carte seulement compilée n&#x27;est pas dans cette liste.</span></a>
       <a href="notes-de-version.html"><b>Notes de version</b><span>Version 2026.6.2 du firmware TRUEGLIDE et de TrueGlide Configurator. Le firmware est basé sur Betaflight 2026.6.2, le logiciel sur Betaflight App 2026.6.2. Cette page liste ce que TrueGlide ajoute et où en sont les essais.</span></a>
     </div>
     <h2>Sans carte branchée</h2>
@@ -125,6 +178,7 @@
       <a href="modes.html"><b>Modes</b><span>L&#x27;onglet Modes (groupe « Installation du drone ») sert à attribuer les interrupteurs de la radio aux modes de la carte : armement, mode ANGLE, retour GPS, mode SPEEDER de TRUEGLIDE, etc. Un mode s&#x27;active quand la voie AUX choisie est dans la plage réglée.</span></a>
       <a href="alimentation.html"><b>Alimentation et batterie</b><span>L&#x27;onglet Alimentation et batterie (groupe « Installation du drone ») sert à choisir les capteurs de tension et de courant, à régler les seuils d&#x27;alerte de la batterie et à étalonner les mesures pour qu&#x27;elles collent à un multimètre.</span></a>
       <a href="moteurs.html"><b>Moteurs</b><span>L&#x27;onglet Moteurs (groupe « Installation du drone ») sert à choisir le mixeur et le protocole des ESC, puis à tester chaque moteur un par un pour vérifier son ordre et son sens de rotation, hélices retirées.</span></a>
+      <a href="esc.html"><b>ESC</b><span>L&#x27;onglet ESC (groupe « Installation du drone ») sert à régler et à flasher les ESC Bluejay, BLHeli_S et AM32 par la carte de vol, sans quitter le logiciel. Il affiche TRUEGLIDE ESC CONFIGURATOR, un logiciel séparé et libre (licence AGPL v3), dans une version figée.</span></a>
       <a href="servos.html"><b>Servos</b><span>L&#x27;onglet Servos (groupe « Installation du drone ») sert à régler la course de chaque servo (minimum, milieu, maximum), son sens, et à lui faire suivre directement une voie de la radio.</span></a>
       <a href="failsafe.html"><b>Failsafe</b><span>L&#x27;onglet Failsafe (groupe « Installation du drone ») sert à choisir ce que fait le drone quand la liaison radio est perdue : valeurs de repli des voies, délais, puis procédure finale (tomber, atterrir ou revenir au point de départ par GPS).</span></a>
     </div>
@@ -141,6 +195,7 @@
       <a href="preset.html"><b>Preset</b><span>L&#x27;onglet Preset (groupe « Réglage du vol ») sert à appliquer des préréglages tout faits (filtres, PID, débits, radio…) téléchargés depuis des sources en ligne, et à enregistrer ou recharger une sauvegarde complète de la configuration.</span></a>
       <a href="reglages-pid.html"><b>Réglages de PID</b><span>L&#x27;onglet Réglages de PID (groupe « Réglage du vol ») sert à régler la façon dont le drone suit les manches : gains PID, curseurs de réglage simplifié, rates (sensibilité des manches) et filtres. Les valeurs sont écrites dans le profil actif du contrôleur de vol.</span></a>
       <a href="assistant-de-reglage.html"><b>Assistant de réglage</b><span>L&#x27;onglet Assistant de réglage (groupe « Réglage du vol ») calcule un réglage de départ à partir des caractéristiques de votre drone, l&#x27;applique à la carte, et peut analyser la configuration déjà présente sur la carte pour signaler les problèmes.</span></a>
+      <a href="studio.html"><b>TRUEGLIDE STUDIO</b><span>L&#x27;onglet Studio (groupe « Réglage du vol ») affiche TRUEGLIDE STUDIO, qui prépare un drone même carte débranchée : réglage de départ calculé selon le drone, analyse d&#x27;une configuration, ports série, mission GPS et fichier drone. Il sert pour le firmware TRUEGLIDE comme pour Betaflight.</span></a>
       <a href="reglage-automatique.html"><b>Réglage automatique</b><span>L&#x27;onglet Réglage automatique (groupe « Réglage du vol ») analyse un journal de Blackbox enregistré pendant un vol de mesure « chirp » et propose de nouvelles positions pour les curseurs de réglage PID. Il ne fait pas voler le drone : l&#x27;analyse se fait dans le logiciel, après le vol.</span></a>
       <a href="ajustements.html"><b>Ajustements</b><span>L&#x27;onglet Ajustements (groupe « Réglage du vol ») permet de changer certains réglages en vol depuis la radio : un interrupteur ou un potentiomètre modifie par exemple un gain PID, le profil de rates ou le multiplicateur maître, sans brancher le drone au PC.</span></a>
     </div>
@@ -166,6 +221,18 @@
     <div class="cartes">
       <a href="memo-wiki.html"><b>Mémo &amp; Wiki</b><span>L&#x27;onglet Mémo &amp; Wiki (groupe « Outils ») sert à lire la documentation TRUEGLIDE intégrée au logiciel : un mémo d&#x27;une page et un wiki de plusieurs pages, lisibles sans Internet.</span></a>
       <a href="cli.html"><b>Ligne de commande (CLI)</b><span>L&#x27;onglet Ligne de commande (CLI) (groupe « Outils ») sert à taper des commandes texte directement au contrôleur de vol : lire et changer n&#x27;importe quel réglage, sauvegarder toute la configuration dans un fichier ou la recharger.</span></a>
+    </div>
+    <h2>Guides</h2>
+    <div class="cartes">
+      <a href="guide-premier-vol.html"><b>Guide du premier vol</b><span>Du drone réglé au premier stationnaire, en vérifiant chaque point avant de monter les hélices. Ces étapes servent à voir un défaut de montage ou de réglage sans casse.</span></a>
+      <a href="guide-sauvegarder.html"><b>Guide de la sauvegarde</b><span>Sauvegarder la configuration de la carte avant tout flash, tout gros changement de réglage ou tout envoi de commandes. Avec cette sauvegarde, on peut toujours revenir en arrière.</span></a>
+      <a href="guide-revenir-a-betaflight.html"><b>Revenir à Betaflight</b><span>Le firmware TRUEGLIDE se remplace par Betaflight à tout moment, avec le même logiciel. La configuration se récupère avec la sauvegarde faite avant.</span></a>
+    </div>
+    <h2>Projet</h2>
+    <div class="cartes">
+      <a href="telecharger.html"><b>Télécharger</b><span>Tout ce qu&#x27;il faut pour utiliser TRUEGLIDE : le logiciel de réglage, le firmware, et les outils qui les accompagnent. Tout est gratuit et libre, et fourni sans garantie.</span></a>
+      <a href="nouvelles.html"><b>Nouvelles</b><span>Les corrections faites pour TRUEGLIDE et proposées aux logiciels d&#x27;origine. Une fois acceptées, elles profitent à tous les pilotes de Betaflight et d&#x27;ESC Configurator.</span></a>
+      <a href="developpement.html"><b>Développement</b><span>TRUEGLIDE est un logiciel libre : son code est public, chacun peut le lire, le construire et proposer des corrections. Il est fourni sans aucune garantie.</span></a>
     </div>
   </article>
 </div>

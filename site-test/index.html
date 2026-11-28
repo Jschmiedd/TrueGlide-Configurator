@@ -6,7 +6,7 @@
 <title>TRUEGLIDE · firmware et logiciel de vol</title>
 <meta name="description" content="TRUEGLIDE : firmware de contrôleur de vol basé sur Betaflight 2026.6.2, avec des protections, le mode SPEEDER et la navigation GPS, et son logiciel TrueGlide Configurator en français.">
 <link rel="icon" href="assets/img/embleme.png">
-<link rel="stylesheet" href="../fonts/polices.css">
+<link rel="stylesheet" href="fonts/polices.css">
 <link rel="stylesheet" href="assets/site.css">
 <style>
   /* Accueil, version claire : en-tête flottant, bandeau clair au motif TRUEGLIDE (sombre si le thème est sombre) */
@@ -14,8 +14,6 @@
     border-radius: 16px; background: color-mix(in srgb, var(--fond-2) 82%, transparent); backdrop-filter: blur(10px);
     box-shadow: 0 6px 24px rgba(20, 24, 10, 0.08); }
   .entete .large { padding-block: 8px; }
-  .entete nav a { padding: 6px 10px; border-radius: 8px; }
-  .entete nav a:hover, .entete nav a[aria-current] { background: var(--accent-doux); }
   .ouverture { position: relative; overflow: hidden; margin-top: -64px; padding-top: 64px;
     background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.22), transparent 70%), url("assets/fond-trueglide/fond-circuit-clair.svg"), var(--fond);
     background-repeat: no-repeat, no-repeat; background-position: center top, center top; background-size: auto, max(100%, 1500px) auto;
@@ -102,23 +100,56 @@
   @media (max-width: 560px) {
     .fonctions { grid-template-columns: minmax(0, 1fr); }
     .chronologie li { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-    .entete .large { gap: 4px; }
-    .entete nav { margin-left: 0; width: 100%; flex-wrap: nowrap; overflow-x: auto; gap: 4px; scrollbar-width: none; }
-    .entete nav a { white-space: nowrap; }
   }
 </style>
+<script src="assets/theme.js"></script>
+<script src="assets/site.js" defer></script>
 </head>
 <body>
 <header class="entete">
   <div class="large">
-    <a class="marque" href="index.html"><img src="assets/img/embleme.png" alt=""><b>TRUE<span>GLIDE</span></b></a>
-    <nav aria-label="Site">
-      <a href="index.html" aria-current="page">Accueil</a>
-      <a href="docs/index.html">Documentation</a>
-      <a href="#logiciel-fonctions">Logiciel</a>
-      <a href="#telecharger">Télécharger</a>
-      <a href="#essais">Essais</a>
-    </nav>
+    <a class="marque" href="index.html"><img src="assets/img/embleme.png" alt="" width="38" height="38"><b>TRUE<span>GLIDE</span></b></a>
+    <button class="bouton-icone theme-bouton" type="button" aria-pressed="false" title="Thème clair ou sombre">
+      <span class="visuellement-cache">Thème sombre</span>
+      <svg class="icone-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icone-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="bouton-icone menu-bouton" type="button" aria-expanded="false" aria-controls="menu-site">
+      <span class="visuellement-cache">Menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="menu-site" id="menu-site">
+      <nav class="principal" aria-label="Site">
+        <a href="docs/index.html">Wiki</a>
+        <a href="docs/telecharger.html">Télécharger</a>
+        <a href="index.html#essais">Essais</a>
+        <a href="docs/nouvelles.html">Nouvelles</a>
+        <a href="docs/developpement.html">Développement</a>
+      </nav>
+      <div class="outils">
+        <details class="deroulant">
+          <summary>Ouvrir</summary>
+          <ul>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/" target="_blank" rel="noopener"><b>TRUEGLIDE CONFIGURATOR</b><span>le logiciel de réglage</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/#studio" target="_blank" rel="noopener"><b>TRUEGLIDE STUDIO</b><span>réglage de départ, ports, missions</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/" target="_blank" rel="noopener"><b>TRUEGLIDE ESC CONFIGURATOR</b><span>réglage et flash des ESC</span></a></li>
+          </ul>
+        </details>
+        <details class="deroulant">
+          <summary>GitHub</summary>
+          <ul>
+            <li><a href="https://github.com/Jschmiedd/Firmware-TrueGlide" target="_blank" rel="noopener"><b>Firmware-TrueGlide</b><span>firmware</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-Configurator" target="_blank" rel="noopener"><b>TrueGlide-Configurator</b><span>logiciel et site</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-ESC-Configurator" target="_blank" rel="noopener"><b>TrueGlide-ESC-Configurator</b><span>ESC</span></a></li>
+          </ul>
+        </details>
+        <div class="recherche" role="search">
+          <label class="visuellement-cache" for="recherche">Rechercher dans le wiki</label>
+          <input id="recherche" type="search" placeholder="Rechercher…" autocomplete="off" data-index="docs/recherche.json" data-base="docs/">
+          <ul class="resultats" hidden></ul>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -142,7 +173,7 @@
         <a class="btn" href="docs/flasher.html">Installer le firmware</a>
       </div>
     </div>
-    <div class="etat"><span>TRUEGLIDE 2026.6.2 · base Betaflight 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai : 33 cartes</span></div>
+    <div class="etat"><span>TRUEGLIDE 2026.6.2 · base Betaflight 2026.6.2</span><span>premier vol 24a71eb : réussi le 03/11/2026</span><span>version d'essai cb4e3f0 : 33 cartes</span></div>
     <figure>
       <img class="t-clair" src="assets/img/onglets/tableau-de-bord-clair.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE"><img class="t-sombre" src="assets/img/onglets/tableau-de-bord.webp" alt="Tableau de bord du logiciel TrueGlide Configurator, connecté au simulateur TRUEGLIDE">
       <figcaption>Le tableau de bord du logiciel, connecté au firmware <b>TRUEGLIDE</b> qui tourne en simulateur sur PC.</figcaption>
@@ -168,7 +199,7 @@
       <div class="fonction">
         <h3>Santé des moteurs</h3>
         <p>Relance un moteur désynchronisé ou calé, et garde une vitesse juste pour le filtre RPM quand la télémétrie DShot se perd.</p>
-        <div class="chiffre">désactivée par défaut</div>
+        <div class="chiffre">désactivée par défaut · relance en essai</div>
       </div>
       <div class="fonction">
         <h3>Navigation GPS (TRUENAV)</h3>
@@ -196,7 +227,7 @@
     <div class="fonctions">
       <div class="fonction">
         <h3>Carte hors ligne</h3>
-        <p>Préparer son drone sans le brancher : le logiciel récolte une copie de la carte, puis tous les onglets se règlent sur cette copie, à la maison ou au terrain. Avant l'envoi à la vraie carte, la liste exacte des commandes s'affiche. Jusqu'à 3 cartes gardées. Fonctionne avec les cartes sous <b>TRUEGLIDE</b> et sous Betaflight.</p>
+        <p>Préparer son drone sans le brancher : le logiciel récolte une copie de la carte, puis tous les onglets se règlent sur cette copie, à la maison ou au terrain. Avant l'envoi à la vraie carte : sauvegarde de la carte, liste de ce qui partira, question à part pour les réglages à risque, puis relecture. Jusqu'à 3 cartes gardées. Fonctionne avec les cartes sous <b>TRUEGLIDE</b> et sous Betaflight.</p>
         <div class="chiffre">essayée avec la vraie carte · 02/11/2026</div>
       </div>
       <div class="fonction">
@@ -217,7 +248,7 @@
       <div class="fonction">
         <h3>Onglet ESC</h3>
         <p>Régler et flasher les ESC Bluejay, BLHeli_S et AM32 par la carte de vol, sans quitter le logiciel.</p>
-        <div class="chiffre">essayé sur un ESC réel (BLS 35A)</div>
+        <div class="chiffre">essayé sur un ESC BLHeli_S 35 A · AM32 pas encore essayé</div>
       </div>
       <div class="fonction">
         <h3>Flash sûr et plan de vol</h3>
@@ -262,7 +293,7 @@
         <h3>Firmware TRUEGLIDE</h3>
         <div class="version">2026.6.2 · TRUEGLIDE · TRUENAV · TRUENAV_LIGHT</div>
         <ul>
-          <li><b>Version d'essai</b> (révision 24a71eb, 03/11/2026) pour <b>33 cartes</b>, modèle <b>TRUEGLIDE</b>. Premier vol réussi ; fonctions TrueGlide en vol en cours d'essai. Toutes les fonctions TrueGlide sont désactivées par défaut.</li>
+          <li><b>Version d'essai</b> (révision cb4e3f0, 08/11/2026) pour <b>33 cartes</b>, modèle <b>TRUEGLIDE</b>. Seule SPEEDYBEEF405MINI essayée sur une vraie carte : premier vol réussi ; fonctions TrueGlide pas encore essayées en vol. Toutes les fonctions TrueGlide sont désactivées par défaut.</li>
           <li>Installation : depuis le logiciel, onglet <b>Flasher le Firmware</b> (empreinte SHA vérifiée avant le flash).</li>
           <li>Revenir en arrière : reflasher Betaflight, puis recoller son <code>diff all</code>.</li>
         </ul>
@@ -296,7 +327,7 @@
       <li><time datetime="2026-10-23">23/10/2026</time><div><b>Version d'essai : batterie basse et onglet ESC</b><span>Décollage refusé et retour au départ sur batterie basse (7 tests du firmware), onglet ESC dans le logiciel. Pas encore dans les firmwares publiés ni essayés en vol.</span></div></li>
       <li><time datetime="2026-10-28">28/10/2026</time><div><b>Première carte</b><span>SpeedyBee F405 Mini : flash et contrôles à plat, hélices retirées.</span></div></li>
       <li><time datetime="2026-10-29">29/10/2026</time><div><b>Premiers vols</b><span>Vols en ANGLE, fonctions TrueGlide désactivées, journaux blackbox analysés.</span></div></li>
-      <li><time datetime="2026-10-30">30/10/2026</time><div><b>Fonctions TrueGlide au banc</b><span>Limites ESC et courant, relance moteur, température sur la radio, Speeder : vérifiés sans hélices.</span></div></li>
+      <li><time datetime="2026-10-30">30/10/2026</time><div><b>Fonctions TrueGlide au banc</b><span>Limites ESC et courant, relance moteur, température sur la radio, Speeder : vérifiés sans hélices sur le firmware de ce jour. La relance moteur a changé le 31/10 : à refaire sur la version en ligne.</span></div></li>
       <li><time datetime="2026-10-31">31/10/2026</time><div><b>Contrôles et corrections</b><span>Erreurs trouvées par les contrôles corrigées et testées ; baromètre vérifié au banc. Firmware en ligne retiré en attendant les essais en vol.</span></div></li>
       <li><time datetime="2026-11-02">02/11/2026</time><div><b>Logiciel essayé avec la vraie carte</b><span>Studio, carte hors ligne (3 cartes, ports jugés comme le firmware), plan de vol en mètres, onglet ESC v15 : essayés, puis publiés sur le logiciel en ligne.</span></div></li>
       <li><time datetime="2026-11-03">03/11/2026</time><div><b>Premier vol du firmware corrigé</b><span>TRUEGLIDE 24a71eb sur SpeedyBee F405 Mini, fonctions TrueGlide coupées : stable, aucun défaut dans le journal blackbox, 0 erreur I2C.</span></div></li>
@@ -339,7 +370,7 @@
       <div class="fonction">
         <h3>TRUEGLIDE ESC CONFIGURATOR</h3>
         <p>Pour régler et flasher les ESC Bluejay, BLHeli_S et AM32 par la carte de vol. Logiciel séparé, libre (licence AGPL v3), dérivé d'ESC Configurator.</p>
-        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">Découvrir</a> · essayé sur un ESC réel (BLS 35A)</div>
+        <div class="chiffre"><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">Découvrir</a> · essayé sur un ESC BLHeli_S 35 A · AM32 pas encore essayé</div>
       </div>
       <div class="fonction">
         <h3>TRUEGLIDE STUDIO</h3>

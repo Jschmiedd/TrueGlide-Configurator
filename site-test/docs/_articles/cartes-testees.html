@@ -1,0 +1,27 @@
+<h1>Cartes testées</h1>
+<p class="chapeau">Les cartes de vol sur lesquelles le firmware <b>TRUEGLIDE</b> et <b>TRUEGLIDE CONFIGURATOR</b> ont été essayés en vrai, avec la date et le résultat de chaque essai. Une carte seulement compilée n'est pas dans cette liste.</p>
+<div class="encart"><b>Compiler n'est pas essayer.</b> La mise à jour en ligne propose <b>TRUEGLIDE</b> (révision cb4e3f0f2, 8 novembre 2026) pour 33 cartes : elles sont construites et contrôlées, mais une seule a été essayée sur une vraie carte. Liste complète : <a href="flasher.html#cartes-publiees">Installer le firmware, cartes publiées</a>.</div>
+
+<h2 id="speedybee-f405-mini">SpeedyBee F405 Mini (SPEEDYBEEF405MINI)</h2>
+<p>Processeur STM32F405, modèle <b>TRUEGLIDE</b>.</p>
+<div class="tableau"><table>
+  <thead><tr><th>Date</th><th>Essai</th><th>Résultat</th></tr></thead>
+  <tbody>
+    <tr><td>28/10/2026</td><td>Flash et contrôles à plat, hélices retirées</td><td>réussi</td></tr>
+    <tr><td>29/10/2026</td><td>Premiers vols en mode ANGLE, fonctions TrueGlide désactivées</td><td>réussis ; journaux Blackbox analysés</td></tr>
+    <tr><td>30/10/2026</td><td>Fonctions TrueGlide au banc, sans hélices : limites ESC et courant, relance moteur, température sur la radio, Speeder</td><td>vérifiées sur le firmware de ce jour ; la relance moteur a changé le 31/10 et reste à refaire sur la version en ligne</td></tr>
+    <tr><td>31/10/2026</td><td>Baromètre au banc</td><td>vérifié</td></tr>
+    <tr><td>02/11/2026</td><td>Logiciel avec la vraie carte : <a href="studio.html">TRUEGLIDE STUDIO</a>, carte hors ligne (3 cartes), plan de vol en mètres, <a href="esc.html">onglet ESC</a></td><td>essayés</td></tr>
+    <tr><td>03/11/2026</td><td>Premier vol du firmware corrigé (révision 24a71eb, 51 s), fonctions TrueGlide coupées</td><td>stable, aucun défaut dans le journal Blackbox, 0 erreur I2C</td></tr>
+    <tr><td>03/11/2026</td><td>Limite au banc de l'onglet <a href="moteurs.html">Moteurs</a> (30&nbsp;% des gaz)</td><td>contrôlée</td></tr>
+    <tr><td>07/11/2026</td><td>Sécurité du test des moteurs, au banc</td><td>vérifiée (révision précédant cb4e3f0f2)</td></tr>
+    <tr><td>en cours</td><td>Révision en ligne cb4e3f0f2 au banc ; fonctions TrueGlide en vol</td><td>essais en cours</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="esc">ESC essayés</h2>
+<p>L'<a href="esc.html">onglet ESC</a> a été essayé sur un ESC BLHeli_S 35 A. AM32 n'a pas encore été essayé.</p>
+
+<h2 id="autres-cartes">Les autres cartes</h2>
+<p>Les 32 autres cartes de la mise à jour en ligne ne sont pas encore essayées. Les essais en vol des fonctions TrueGlide se font d'abord sur la SpeedyBee F405 Mini ; les autres cartes et les modèles <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b> suivront.</p>
+<p>Sur une carte pas encore essayée, faites le premier essai avec les mêmes précautions : <a href="guide-premier-vol.html">Guide du premier vol</a>.</p>

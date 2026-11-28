@@ -1,0 +1,32 @@
+<h1>ESC</h1>
+<p class="chapeau">L'onglet <b>ESC</b> (groupe « Installation du drone ») sert à régler et à flasher les ESC <b>Bluejay</b>, <b>BLHeli_S</b> et <b>AM32</b> par la carte de vol, sans quitter le logiciel. Il affiche <b>TRUEGLIDE ESC CONFIGURATOR</b>, un logiciel séparé et libre (licence AGPL v3), dans une version figée.</p>
+<figure>
+  <img class="t-sombre" src="../assets/img/onglets/esc.png" alt="Onglet ESC : texte d'introduction en haut, puis TrueGlide ESC Configurator avec son bandeau vert de bienvenue, le choix du port série, le bouton Connecter, et le cadre Avertissement"><img class="t-clair" src="../assets/img/onglets/esc-clair.png" alt="Onglet ESC : texte d'introduction en haut, puis TrueGlide ESC Configurator avec son bandeau vert de bienvenue, le choix du port série, le bouton Connecter, et le cadre Avertissement">
+  <figcaption>Capture du logiciel en ligne (/app/), sans carte branchée. La colonne de droite (contact et contributions) est floutée sur cette capture.</figcaption>
+</figure>
+
+<h2 id="fonctionnement">Comment ça marche</h2>
+<p>La carte de vol sert de pont entre l'ordinateur et les ESC (« passthrough »). Une seule connexion USB est possible à la fois :</p>
+<ul>
+  <li>en entrant dans l'onglet, <b>TRUEGLIDE CONFIGURATOR</b> se déconnecte de la carte ;</li>
+  <li>dans l'onglet, on se connecte à la carte avec le bouton <b>Connecter</b> de <b>TRUEGLIDE ESC CONFIGURATOR</b> ;</li>
+  <li>en quittant l'onglet, le logiciel lui demande de libérer le port USB. Pendant une lecture, une écriture ou un flash, il refuse de partir et affiche « Opération en cours sur les ESC, patientez avant de quitter l'onglet ESC. »</li>
+</ul>
+<p>L'onglet charge une version figée de <b>TRUEGLIDE ESC CONFIGURATOR</b> : elle ne change pas tant qu'une nouvelle version du logiciel ne la remplace pas. Le même logiciel a aussi sa page à part : <a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/">TrueGlide ESC Configurator</a>.</p>
+
+<h2 id="procedure">Régler ou flasher les ESC</h2>
+<ol class="etapes">
+  <li><b>Retirer les hélices.</b></li>
+  <li>Brancher la carte de vol en USB, puis la batterie : les ESC doivent être alimentés pour répondre.</li>
+  <li>Ouvrir l'onglet <b>ESC</b>, choisir le port série, puis <b>Connecter</b>.</li>
+  <li>Lire les réglages des ESC, les modifier puis les écrire, ou flasher un firmware d'ESC.</li>
+  <li>Quitter l'onglet une fois l'opération finie : le port est libéré, et <b>TRUEGLIDE CONFIGURATOR</b> peut se reconnecter à la carte.</li>
+</ol>
+<p>Sans carte branchée, le bouton <b>Ouvrir un fichier de réglages (hors ligne)</b> ouvre un fichier de réglages d'ESC enregistré sur l'ordinateur.</p>
+
+<h2 id="essais">État des essais</h2>
+<div class="encart">L'onglet a été essayé sur un ESC BLHeli_S 35 A. AM32 n'a pas encore été essayé. Le cadre « Avertissement » de l'onglet le rappelle : seul Bluejay a été essayé par TrueGlide sur un drone ; le reste, dont l'ancien BLHeli (SiLabs et Atmel) et AM32, n'a pas été essayé. BLHeli_32 est reconnu, mais ni lu ni modifié. Logiciel fourni sans aucune garantie.</div>
+<p>Le cadre rouge de l'onglet avertit aussi les utilisateurs de Bluejay 0.20.0 : passer à la version 0.21.0, à cause de problèmes de détection de calage et de protection des moteurs dans la version 0.20.0.</p>
+
+<h2 id="moteurs">Lien avec l'onglet Moteurs</h2>
+<p>L'onglet <a href="moteurs.html">Moteurs</a> règle le protocole entre la carte et les ESC (DShot, DShot bidirectionnel…). L'onglet <b>ESC</b> règle les ESC eux-mêmes : sens de rotation, firmware, réglages propres à chaque ESC.</p>

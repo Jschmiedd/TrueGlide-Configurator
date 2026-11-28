@@ -1,0 +1,30 @@
+<h1>Développement</h1>
+<p class="chapeau"><b>TRUEGLIDE</b> est un logiciel libre : son code est public, chacun peut le lire, le construire et proposer des corrections. Il est fourni sans aucune garantie.</p>
+
+<h2 id="depots">Le code source</h2>
+<div class="tableau"><table>
+  <thead><tr><th>Dépôt</th><th>Contenu</th><th>Licence</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://github.com/Jschmiedd/Firmware-TrueGlide">Firmware-TrueGlide</a></td><td>Firmware <b>TRUEGLIDE</b>, <b>TRUENAV</b> et <b>TRUENAV_LIGHT</b>, dérivé de Betaflight 2026.6.2</td><td>GPL-3.0</td></tr>
+    <tr><td><a href="https://github.com/Jschmiedd/TrueGlide-Configurator">TrueGlide-Configurator</a></td><td><b>TRUEGLIDE CONFIGURATOR</b>, dérivé de Betaflight App 2026.6.2, et ce site</td><td>GPL-3.0</td></tr>
+    <tr><td><a href="https://github.com/Jschmiedd/TrueGlide-ESC-Configurator">TrueGlide-ESC-Configurator</a></td><td><b>TRUEGLIDE ESC CONFIGURATOR</b>, dérivé d'ESC Configurator, affiché dans l'<a href="esc.html">onglet ESC</a></td><td>AGPL-3.0</td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="construire">Construire le firmware pour une carte</h2>
+<p>Le nom de la carte est le même que dans Betaflight. Deux façons :</p>
+<ul>
+  <li>sur GitHub : dépôt Firmware-TrueGlide, onglet <b>Actions</b>, flux <b>TrueGlide</b>, <b>Run workflow</b> avec le nom de la carte ;</li>
+  <li>sur un PC Linux : <code>make CONFIG=NOM_DE_LA_CARTE</code>, avec <code>MODELE=TRUENAV</code> ou <code>MODELE=TRUENAV_LIGHT</code> pour les dérivés.</li>
+</ul>
+<p>Compiler ne veut pas dire essayer : voir les <a href="cartes-testees.html">cartes testées</a>.</p>
+
+<h2 id="contribuer">Contribuer</h2>
+<ul>
+  <li><b>Signaler un problème</b> : ouvrir une « issue » sur le dépôt concerné, avec la version du logiciel et du firmware, la carte, et si possible le journal (Blackbox ou journal de débogage).</li>
+  <li><b>Proposer une correction</b> : une demande de modification (« pull request ») sur le dépôt concerné.</li>
+  <li><b>Corrections pour tous</b> : les corrections utiles à Betaflight et à ESC Configurator leur sont aussi proposées. Voir les <a href="nouvelles.html">nouvelles</a>.</li>
+</ul>
+
+<h2 id="licences">Licences</h2>
+<p>GPL-3.0 et AGPL-3.0 : on peut utiliser, étudier, modifier et redistribuer le code, à condition de garder la même licence. Qui distribue une version modifiée doit aussi en fournir le code ; avec l'AGPL, c'est aussi le cas quand le logiciel modifié est utilisé en ligne. Le nom et le logo <b>TRUEGLIDE</b> sont la marque de Talk True FPV.</p>

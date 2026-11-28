@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Revenir à Betaflight · Documentation TRUEGLIDE</title>
+<meta name="description" content="Le firmware TRUEGLIDE se remplace par Betaflight à tout moment, avec le même logiciel. La configuration se récupère avec la sauvegarde faite avant.">
+<link rel="icon" href="../assets/img/embleme.png">
+<link rel="stylesheet" href="../fonts/polices.css">
+<link rel="stylesheet" href="../assets/site.css">
+<script src="../assets/theme.js"></script>
+<script src="../assets/site.js" defer></script>
+</head>
+<body>
+<header class="entete">
+  <div class="large">
+    <a class="marque" href="../index.html"><img src="../assets/img/embleme.png" alt="" width="38" height="38"><b>TRUE<span>GLIDE</span></b></a>
+    <button class="bouton-icone theme-bouton" type="button" aria-pressed="false" title="Thème clair ou sombre">
+      <span class="visuellement-cache">Thème sombre</span>
+      <svg class="icone-lune" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icone-soleil" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <button class="bouton-icone menu-bouton" type="button" aria-expanded="false" aria-controls="menu-site">
+      <span class="visuellement-cache">Menu</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <div class="menu-site" id="menu-site">
+      <nav class="principal" aria-label="Site">
+        <a href="../docs/index.html" aria-current="page">Wiki</a>
+        <a href="../docs/telecharger.html">Télécharger</a>
+        <a href="../index.html#essais">Essais</a>
+        <a href="../docs/nouvelles.html">Nouvelles</a>
+        <a href="../docs/developpement.html">Développement</a>
+      </nav>
+      <div class="outils">
+        <details class="deroulant">
+          <summary>Ouvrir</summary>
+          <ul>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/" target="_blank" rel="noopener"><b>TRUEGLIDE CONFIGURATOR</b><span>le logiciel de réglage</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-Configurator/app/#studio" target="_blank" rel="noopener"><b>TRUEGLIDE STUDIO</b><span>réglage de départ, ports, missions</span></a></li>
+            <li><a href="https://jschmiedd.github.io/TrueGlide-ESC-Configurator/" target="_blank" rel="noopener"><b>TRUEGLIDE ESC CONFIGURATOR</b><span>réglage et flash des ESC</span></a></li>
+          </ul>
+        </details>
+        <details class="deroulant">
+          <summary>GitHub</summary>
+          <ul>
+            <li><a href="https://github.com/Jschmiedd/Firmware-TrueGlide" target="_blank" rel="noopener"><b>Firmware-TrueGlide</b><span>firmware</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-Configurator" target="_blank" rel="noopener"><b>TrueGlide-Configurator</b><span>logiciel et site</span></a></li>
+            <li><a href="https://github.com/Jschmiedd/TrueGlide-ESC-Configurator" target="_blank" rel="noopener"><b>TrueGlide-ESC-Configurator</b><span>ESC</span></a></li>
+          </ul>
+        </details>
+        <div class="recherche" role="search">
+          <label class="visuellement-cache" for="recherche">Rechercher dans le wiki</label>
+          <input id="recherche" type="search" placeholder="Rechercher…" autocomplete="off" data-index="../docs/recherche.json" data-base="../docs/">
+          <ul class="resultats" hidden></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="large doc">
+  <aside>
+    <h2>Documentation</h2>
+    <ul>
+      <li><a href="index.html">Toute la documentation</a></li>
+    </ul>
+    <h2>Premiers pas</h2>
+    <ul>
+      <li><a href="mise-en-route.html">Mise en route</a></li>
+      <li><a href="flasher.html">Installer le firmware</a></li>
+      <li><a href="cartes-testees.html">Cartes testées</a></li>
+      <li><a href="notes-de-version.html">Notes de version</a></li>
+    </ul>
+    <h2>Sans carte branchée</h2>
+    <ul>
+      <li><a href="bienvenue.html">Bienvenue</a></li>
+      <li><a href="flasher-le-firmware.html">Flasher le Firmware</a></li>
+      <li><a href="pre-vol.html">Pré-vol</a></li>
+    </ul>
+    <h2>Carte branchée</h2>
+    <ul>
+      <li><a href="tableau-de-bord.html">Tableau de bord</a></li>
+    </ul>
+    <h2>Installation du drone</h2>
+    <ul>
+      <li><a href="installation.html">Installation</a></li>
+      <li><a href="ports.html">Ports</a></li>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="recepteur.html">Récepteur</a></li>
+      <li><a href="modes.html">Modes</a></li>
+      <li><a href="alimentation.html">Alimentation et batterie</a></li>
+      <li><a href="moteurs.html">Moteurs</a></li>
+      <li><a href="esc.html">ESC</a></li>
+      <li><a href="servos.html">Servos</a></li>
+      <li><a href="failsafe.html">Failsafe</a></li>
+    </ul>
+    <h2>Fonctions TrueGlide</h2>
+    <ul>
+      <li><a href="protections.html">Protections</a></li>
+      <li><a href="speeder.html">Speeder</a></li>
+      <li><a href="securite-navigation.html">Sécurité navigation</a></li>
+      <li><a href="camera.html">Caméra</a></li>
+      <li><a href="telemetrie-radio.html">Télémétrie radio</a></li>
+    </ul>
+    <h2>Réglage du vol</h2>
+    <ul>
+      <li><a href="preset.html">Preset</a></li>
+      <li><a href="reglages-pid.html">Réglages de PID</a></li>
+      <li><a href="assistant-de-reglage.html">Assistant de réglage</a></li>
+      <li><a href="studio.html">TRUEGLIDE STUDIO</a></li>
+      <li><a href="reglage-automatique.html">Réglage automatique</a></li>
+      <li><a href="ajustements.html">Ajustements</a></li>
+    </ul>
+    <h2>Navigation GPS</h2>
+    <ul>
+      <li><a href="gps.html">GPS</a></li>
+      <li><a href="plan-de-vol.html">Plan de vol</a></li>
+    </ul>
+    <h2>Vidéo et lumières</h2>
+    <ul>
+      <li><a href="osd.html">OSD</a></li>
+      <li><a href="emetteur-video.html">Émetteur vidéo</a></li>
+      <li><a href="bandeau-led.html">Bandeau LED</a></li>
+    </ul>
+    <h2>Analyse</h2>
+    <ul>
+      <li><a href="capteurs.html">Capteurs</a></li>
+      <li><a href="blackbox.html">Blackbox</a></li>
+      <li><a href="visualiseur-blackbox.html">Visualiseur Blackbox</a></li>
+      <li><a href="journal-de-bord.html">Journal de bord</a></li>
+    </ul>
+    <h2>Outils</h2>
+    <ul>
+      <li><a href="memo-wiki.html">Mémo &amp; Wiki</a></li>
+      <li><a href="cli.html">Ligne de commande (CLI)</a></li>
+    </ul>
+    <h2>Guides</h2>
+    <ul>
+      <li><a href="guide-premier-vol.html">Guide du premier vol</a></li>
+      <li><a href="guide-sauvegarder.html">Guide de la sauvegarde</a></li>
+      <li><a href="guide-revenir-a-betaflight.html" aria-current="page">Revenir à Betaflight</a></li>
+    </ul>
+    <h2>Projet</h2>
+    <ul>
+      <li><a href="telecharger.html">Télécharger</a></li>
+      <li><a href="nouvelles.html">Nouvelles</a></li>
+      <li><a href="developpement.html">Développement</a></li>
+    </ul>
+    <h2>Sur cette page</h2>
+    <ul>
+      <li><a href="#etapes">Les étapes</a></li>
+      <li><a href="#recoller">Recoller la sauvegarde</a></li>
+      <li><a href="#carte-bloquee">Si la carte ne répond plus</a></li>
+    </ul>
+  </aside>
+
+  <article>
+<h1>Revenir à Betaflight</h1>
+<p class="chapeau">Le firmware <b>TRUEGLIDE</b> se remplace par Betaflight à tout moment, avec le même logiciel. La configuration se récupère avec la sauvegarde faite avant.</p>
+
+<h2 id="etapes">Les étapes</h2>
+<ol class="etapes">
+  <li><b>Sauvegarder la configuration</b> (<code>diff all</code>) : voir le <a href="guide-sauvegarder.html">guide de la sauvegarde</a>.</li>
+  <li>Se procurer le fichier <code>.hex</code> Betaflight de la carte, sur le site ou dans l'application Betaflight.</li>
+  <li>Onglet <a href="flasher-le-firmware.html">Flasher le Firmware</a> : <b>Charger un firmware TrueGlide (.hex)</b> accepte tout fichier <code>.hex</code>. Le cadre <b>Firmware non TrueGlide ?</b> s'affiche.</li>
+  <li>Cliquer sur <b>Flasher le Firmware</b>, puis sur <b>Flasher quand même</b> dans la fenêtre de confirmation.</li>
+  <li>Une fois la carte reconnectée, le <a href="tableau-de-bord.html">Tableau de bord</a> affiche « Betaflight » dans le cadre <b>Firmware</b>.</li>
+</ol>
+
+<h2 id="recoller">Recoller la sauvegarde</h2>
+<p>Les réglages propres à TrueGlide n'existent pas dans Betaflight : retirez-les du fichier <code>diff all</code> avant de le coller dans l'onglet CLI.</p>
+<ul>
+  <li><code>power_guard_*</code> (protection anti-surchauffe)</li>
+  <li><code>speeder_*</code> (mode SPEEDER)</li>
+  <li><code>motor_desync_*</code> et <code>dshot_telemetry_fallback</code> (santé des moteurs)</li>
+  <li><code>crsf_tlm_esc_temp</code> (température des ESC sur la radio)</li>
+</ul>
+
+<h2 id="carte-bloquee">Si la carte ne répond plus</h2>
+<p>Voir <a href="flasher.html#probleme">Installer le firmware, si la carte ne répond plus</a> : mode DFU par les broches ou le bouton BOOT, puis flash normal.</p>
+<figure>
+  <img src="../assets/img/photos/carte-bouton-boot.webp" srcset="../assets/img/photos/carte-bouton-boot-800.webp 800w, ../assets/img/photos/carte-bouton-boot.webp 1200w" sizes="(min-width: 900px) 780px, 100vw" width="1200" height="909" loading="lazy" alt="Carte de vol SpeedyBee F405 Mini posée sur un support de travail, prise USB-C vers l'arrière ; un cercle rouge entoure le petit bouton BOOT, sous le bord avant de la carte">
+  <figcaption>SpeedyBee F405 Mini sur un support de travail : le bouton <b>BOOT</b> (cercle rouge) est sous le bord avant de la carte, du côté opposé à la prise USB-C. L'emplacement change d'une carte à l'autre : voir la notice de la carte.</figcaption>
+</figure>
+<p><b>TRUEGLIDE CONFIGURATOR</b> continue de régler la carte sous Betaflight (4.4 ou plus récent) : les onglets propres au firmware TrueGlide indiquent simplement que la carte n'a pas ces réglages.</p>
+  </article>
+</div>
+
+<footer class="pied">
+  <div class="large">
+    <span><b>TRUEGLIDE</b> · Talk True FPV</span>
+    <span>Firmware et logiciel libres (licence GPL-3.0), dérivés de Betaflight, fournis sans garantie. Le nom et le logo TRUEGLIDE sont la marque de Talk True FPV.</span>
+  </div>
+</footer>
+</body>
+</html>
