@@ -21,7 +21,10 @@
     background-repeat: no-repeat, no-repeat; background-position: center top, center top; background-size: auto, max(100%, 1500px) auto;
     border-bottom: 1px solid var(--bord); }
   .ouverture .large { padding-block: 64px 56px; text-align: center; }
-  .ouverture .logo { display: block; width: min(620px, 92%); margin: 0 auto 26px; }
+  .ouverture .logo { display: flex; align-items: center; justify-content: center; gap: 7%; width: min(620px, 92%); margin: 0 auto 26px; }
+  .ouverture .logo .sphere { flex: 0 0 23%; }
+  .ouverture .logo .sphere img { display: block; width: 100%; height: auto; filter: drop-shadow(0 10px 18px rgba(20, 24, 10, 0.25)); }
+  .ouverture .logo > img { flex: 0 1 70%; min-width: 0; height: auto; }
   .ouverture .vitre { max-width: 920px; margin: 0 auto; padding: 26px 30px 28px; border-radius: 20px; text-align: left;
     background: color-mix(in srgb, var(--fond-2) 78%, transparent); backdrop-filter: blur(6px);
     border: 1px solid var(--bord); box-shadow: 0 18px 50px rgba(20, 24, 10, 0.10); }
@@ -115,7 +118,11 @@
 
 <section class="ouverture">
   <div class="large">
-    <img class="logo t-clair" src="assets/img/logo-clair.png" alt="TRUEGLIDE · Control &amp; Fly"><img class="logo t-sombre" src="assets/img/logo-sombre.png" alt="TRUEGLIDE · Control &amp; Fly">
+    <div class="logo">
+      <!-- Sphère en rotation (WebP animé, fond transparent, calculé par outils/sphere_embleme.py) ; image fixe si le visiteur réduit les animations -->
+      <picture class="sphere"><source media="(prefers-reduced-motion: reduce)" srcset="assets/img/sphere-embleme-fixe.webp"><img src="assets/img/sphere-embleme.webp" width="320" height="320" alt=""></picture>
+      <img class="t-clair" src="assets/img/logo-texte-clair.png" width="871" height="288" alt="TRUEGLIDE · Control &amp; Fly"><img class="t-sombre" src="assets/img/logo-texte-sombre.png" width="871" height="288" alt="TRUEGLIDE · Control &amp; Fly">
+    </div>
     <div class="vitre">
       <h1>Régler simplement, voler en sécurité.</h1>
       <p><b>TRUEGLIDE</b> est un firmware de contrôleur de vol gratuit et libre, basé sur Betaflight 2026.6.2, avec son logiciel de réglage <b>TRUEGLIDE CONFIGURATOR</b>. Le firmware ajoute des protections pour le matériel (surchauffe, courant, relance des moteurs), le mode SPEEDER et, avec <b>TRUENAV</b>, la navigation GPS. Sans réglage, il vole comme Betaflight. Le logiciel prépare et règle votre drone dans le navigateur, même carte débranchée, et règle aussi les cartes sous Betaflight.</p>
