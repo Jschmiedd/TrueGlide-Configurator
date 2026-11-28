@@ -218,6 +218,6 @@ def rendu(liste, c, base):
 if __name__ == "__main__":
     d = Path(sys.argv[1]); graine = int(sys.argv[2])
     liste = composer(graine)
-    (d / "assets/img/fond-circuit-clair.svg").write_text(rendu(liste, "#4b5e0b", 0.19))
-    (d / "assets/img/fond-circuit-sombre.svg").write_text(rendu(liste, "#c6f700", 0.12))
+    (d / "assets/fond-trueglide/fond-circuit-clair.svg").write_text(rendu(liste, "#4b5e0b", 0.19))
+    (d / "assets/fond-trueglide/fond-circuit-sombre.svg").write_text(rendu(liste, "#c6f700", 0.12))
     print("éléments posés :", len(liste))

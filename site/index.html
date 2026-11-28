@@ -17,7 +17,7 @@
   .entete nav a { padding: 6px 10px; border-radius: 8px; }
   .entete nav a:hover, .entete nav a[aria-current] { background: var(--accent-doux); }
   .ouverture { position: relative; overflow: hidden; margin-top: -64px; padding-top: 64px;
-    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.22), transparent 70%), url("assets/img/fond-circuit-clair.svg"), var(--fond);
+    background: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.22), transparent 70%), url("assets/fond-trueglide/fond-circuit-clair.svg"), var(--fond);
     background-repeat: no-repeat, no-repeat; background-position: center top, center top; background-size: auto, max(100%, 1500px) auto;
     border-bottom: 1px solid var(--bord); }
   .ouverture .large { padding-block: 64px 56px; text-align: center; }
@@ -43,9 +43,9 @@
   .etat { display: flex; gap: 8px 10px; flex-wrap: wrap; justify-content: center; margin-top: 22px; font: 500 13.5px var(--mono); }
   .etat span { background: var(--accent-doux); color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); border-radius: 999px; padding: 4px 12px; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ouverture {
-    background-color: #121212; background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/img/fond-circuit-sombre.svg"); } }
+    background-color: #121212; background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/fond-trueglide/fond-circuit-sombre.svg"); } }
   :root[data-theme="dark"] .ouverture { background-color: #121212;
-    background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/img/fond-circuit-sombre.svg"); }
+    background-image: radial-gradient(ellipse 70% 55% at 50% 0%, rgba(198, 247, 0, 0.14), transparent 70%), url("assets/fond-trueglide/fond-circuit-sombre.svg"); }
   section.bloc:nth-of-type(odd) { background: var(--fond-2); }
   .fonction { transition: transform .15s, box-shadow .15s, border-color .15s; border-top: 3px solid var(--accent-vif); }
   .fonction:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(20, 24, 10, 0.08); }
